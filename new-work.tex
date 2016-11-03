@@ -1,0 +1,388 @@
+
+\section{Why not a fixed length representation?}
+
+Our experiments show that our method outperforms the VLAD-based SMK algorithm.
+
+We use a VLAD representation due to its robustness to pose and viewpoint
+  variations that are common in the problem of animal identification.
+Even within an annotation animal features may not always be located in the
+  same regions.
+Methods that extract feature where feature dimensions correspond to spatial
+  locations (\ie{} pyramid, grid, or convolutional networks) can be greatly
+  impacted by the alignment of the annotation~\cite{wu_viewpoint_2015}.
+Because of these disadvantages and the fact that local patterns on the animals
+  we identify tend to be distinguishing, we have chosen to primarily focus on
+  orderless representations.
+
+
+Perhaps additional learning could make up for quantization error.
+But why use learning to make up for information that we lost instead of using
+  learning on top of data that achieves a lower baseline error rate?
+
+\section{Learning the match probability}
+
+This section describes how we learn the annotation-vs-annotation pairwise
+  match probability.
+This problem is similar to the problem of verification.
+However, there are two main differences.
+First, we extend our output space to include the case where two annotations
+  are not comparable.
+Second, is that our annotation representation is an orderless bag of features.
+Normally in verification problems (like human re-identification) a fixed
+  length vector representation would be computed for each annotation and a
+  distance metric would be learned to minimize within-class distance while
+  maximizing between-class distance.
+However, we provide evidence that our orderless set representation provides a
+  richer (albeit more computationally expensive) representation than
+  state-of-the-art fixed length representations.
+Therefore the second distinction of our problem is that we learn a classifier
+  on top a pairwise feature constructed from a set of matches between two
+  orderless bag-of-descriptor annotation representations.
+This classifier is our match probability mechanism.
+
+The match probability mechanism is a classifier where the inputs are two
+  annotations and the output is a probability over the event space:
+match, not match, and not comparable.
+To build such a classifier the following things are required:
+a classification algorithm, a sufficiently large labeled dataset of annotation
+  pairs, and a method for extracting features from the dataset.
+Furthermore the dataset will need to be split into a testing, training
+  dataset, and the training dataset may need to be split into several
+  sub-testing sets and validation sets in order to prevent overfitting.
+
+
+\paragraph{Constructing the annotation pairs}
+Given a database of annotations with name labels we first construct a dataset
+  of annotation pairs.
+There are three types of pairs that we create:
+top correct pairs, top incorrect pairs, and random incorrect pairs.
+For each annotation in the dataset up to $4$ correct pairs are chosen as the
+  top ranked results of a one-vs-many query.
+We also choose up to $3$ incorrect results from the top of this list.
+These top incorrect pairs are our initial guesses at hard negatives, which
+  have been shown to be important for the performance of object categorization
+  and person re-identification algorithms~\cite{shi_embedding_2016,
+  felzenszwalb_object_2010}.
+In addition to the hard-negatives we choose $2$ additional random incorrect
+  annotations that serve as easy negatives and expose the classifier to data not
+  returned by the one-vs-many algorithm.
+
+After all pairs are generated we remove duplicates and label each pair with a
+  multi-class groundtruth label.
+For each pair the label is either match, not match, or not comparable.
+In our most recent data collection efforts we have asked users to explicitly
+  mark the not-comparable and photobomb cases.
+In the case that an explicit label is not available for a pair we mark it as
+  not comparable if the viewpoints too dissimilar (more than two steps apart),
+  otherwise we treat the pair as a match if the two names as not match if the
+  names are different.
+
+We (will) experiment with augmenting the three-label state with the photobomb
+  label.
+In this case the photobomb label is used where it is available, but otherwise
+  we do not attempt to infer it.
+
+
+\paragraph{Constructing the pairwise feature vectors}
+
+Given this set of annotations pairs and labels we construct the features that
+  can be fed to the classification algorithm.
+
+We have performed initial experiments using a Siamese network for both feature
+  extraction and classification, but the results were poor.
+This is likely due to the lack of alignment.
+Having accurate alignment has been shown to be critical for pairwise
+  verification algorithms such as Deep Face~\cite{taigman_deepface_2014}.
+Variations in pose and viewpoint make it challenging to accurately align two
+  animals.
+
+We construct our feature vectors based on the results of one-vs-one matching.
+This prevents our features from depending heavily on the size of the database.
+However, we (will) utilize the database normalizers in order to enrich the
+  one-vs-one matching with information about the database-wide distinctivness of
+  particular patterns.
+We experiment with and without this feature to show the difference.
+
+
+Given two annotations, one-vs-one matching assigns each feature in the first
+  annotation to its reciprocal nearest neighbor in the second annotation.
+The second nearest neighbor in the second image is used as an inter-pair
+  distinctiveness normalizer.
+A score is assigned to each correspondence based on the ratio of the
+  normalizer distance to the match distance.
+If available, we also compute the \LNBNN{} score of each correspondence based
+  on the database normalizer.
+Spatial verification is used to remove spatially inconsistent matches.
+
+To construct a fixed length vector we use the top $N=10$ features \wrt{}
+  either the ratio or \LNBNN{} score.
+Local measures between these features are added to the feature vector.
+The local measures we use are:
+ratio score, \LNBNN{} score, sift distance, inter-pair normalizer distance,
+  database normalizer distance, and spatial verification error (in xy, scale,
+  and orientation).
+We also add global measures such as GPS, quality, viewpoint, and time.
+Currently we only add these raw feature values individually, but we will soon
+  augment this to include the absolute difference between the features.
+
+In the case where a particular data point is missing (\ie{} quality was not
+  labeled or there were less than $N$ matches between two annotations), then a
+  NaN value is used to indicate missing data.
+The problem of learning and predicting with missing data will be addressed by
+  the classification algorithm.
+
+
+\paragraph{Training a classifier}
+ 
+We opt to use a random forest
+  classifier~\cite{ho_random_1995,amit_shape_1997,breiman_random_2001} as our
+  classification algorithm because
+(1) it is an accurate algorithm that can learn complicated decision
+  boundaries.
+% http://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
+(2) it is robust to overfitting,
+(3) it is fast to train and predict,
+(4) it supports a built-in estimate of feature importance,
+(4) it is trivially supports probabilistic multi-class classification, and
+(5) robust method exist for handling missing
+  data~\cite{ding_investigation_2010}.
+
+A random forest is an ensemble of decision trees.
+We use the implementation available in
+  Scikit-Learn~\cite{pedregosa_scikit-learn_2011}.
+Each decision tree is bootstrapped --- \ie{} trained on a randomly selected
+  subset of the data.
+To grow a decision tree a node chooses a feature dimension and a test that
+  induces a binary split of the data.
+The chosen feature dimension and tests are chosen to maximize the information
+  gain --- \ie{} difference in the entropy (\wrt{} the target labels) in the
+  parent and the weighted average of the entropy in the children nodes.
+To increase speed and randomness only a fraction ($\sqrt(N_{feats})$) of the
+  feature dimensions are considered at each node.
+Feature importance is determined by summing the information gain achieved at
+  each node split using that feature.
+Each tree is grown until there are at most $5$ samples in a leaf.
+
+To handle missing data each decision tree uses the ``separate class''
+  method~\cite{ding_investigation_2010}.
+The separate class method treats missing values as a separate measurement.
+In the case of a categorical feature (like quality or viewpoint) each missing
+  value is replaced with an unused value that indicates a new category.
+In the case numerical data each NaN value is replaced with an extremely high
+  or low value to simulate this effect.
+There is strong in the literature that best way to handle missing data is the
+  separate class method when the likelihood that data is missing is dependant on
+  the target class.
+This is the case with many of our features (\eg{} if there are only $N-1$
+  correspondences then the last correspondence value will be NaN which is
+  indicative of a non match case).
+In the case where a NaN value might not be informative (\eg{} quality review
+  is missing), then the forest should disregard it just as if it was a normal
+  non-predictive feature.
+
+To tune the hyperparameters of the classifier for each species we use grid
+  search with $3$-fold cross validation.
+Once trained we this classifier to predict the match probabilities $\Pr{M |
+  \vec{x}}$ of new annotation pairs.
+
+\section{Putting Humans in the Loop}
+
+To put human reviewers into the loop we take advantage of a graph algorithm to 
+(1) choose new pairs to review,
+(1) minimize the number of reviews necessary, and
+(2) handle split/merge error cases.
+
+We present two new review methods, the first has no automatic decisions and
+  the second allows the algorithm to make some automatic decisions.
+Both methods improve upon the baseline, which we will present first.
+
+Previously we have used two review methods.
+The first method used was to issue a one-vs-many query a single annotation at
+  a time and ask the user to review some number of the top results.
+Once the user had finished all reviews the next query was issued and the
+  process repeated.
+This method was slow and cumbersome because of the delay between reviews due
+  to computing queries and that often no matching result was found.
+
+The next iteration of the review procedure was to perform all one-vs-many
+  queries in batch.
+Then the top results of all queries were grouped together, sorted by score and
+  presented to the user one at a time.
+This was much more satisfying for the user because the correct results all
+  jumped to the top of the list.
+The user then verified these results and as the matches started becoming more
+  and more tenuous further down the list the user could opt to stop and re-run
+  the query to search for new matches that could be inferred using the new label
+  information.
+
+While this method was an improvement it still had problems.
+Consider the matches as a graph where the edges represent information between
+  nodes such as the reviewed state.
+Many redundant matches were shown.
+In principle if you are a perfect reviewer to cluster a group of $N$
+  comparable annotations you should only need to make $N-1$ reviews (\ie{} form
+  a spanning tree to define a connected component of positive edges).
+Furthermore, if a negative review is made between two components, then any
+  other edge between those two components is unnecessary to review.
+
+\paragraph{Full Review Algorithm}
+We formalize this in our first graph based review algorithm.
+Given a graph each edge contains the following information:
+\begin{enumerate}
+    \item reviewed state:
+    this indicates if a user reviewed the edge as match, not match, or not
+      comparable.
+    Connected components of matching edges denote the current clustering of the graph.
+
+    \item inferred state:
+    this indicates if two annotations are the same or different.
+    Edges within a connected component are inferred to be the same.
+    Edges that do not match are inferred to be different along with all other
+      edges between the two components that the not match edge is between.
+
+    \item error state:
+    If a not match edge is between two nodes that belong to the same, the
+      component is inconsistent and all edges in the component are labeled as
+      having an error.
+\end{enumerate}
+Edges reviewed as not comparable have no influence on the components or error
+  state other than denoting that that review has been completed.
+
+The minimum number of reviews needed to achieve the groundtruth labeling for a
+  perfect reviewer is $(\sum_{C \in \set{C}} (\card{C} - 1)) +
+  \frac{\card{\set{C}}^2 - \card{\set{C}}}{2}$.
+Where $\set{C}$ is true set of all components.
+This is achieved by reviewing enough positive edges to form a spanning tree
+  for each cluster and then reviewing exactly one comparable edge between each
+  component.
+
+In this scenario to achieve the minimum number of reviews we sort the edges by
+  probability of matching and present them to the user.
+As the user makes reviews the state of the graph is dynamically updated and
+  any edges that have been inferred are removed from needing review unless they
+  are marked as being part of an error case (although in the pure form of this
+  framework it is impossible to generate an error state, any true errors will
+  just continue to propagate).
+We sort by score because we want to review all positive edges first.
+If we review negative edges before positive edges there is a change that we
+  may review more than one edge between two true components, which is more work
+  than is necessary.
+In practice we do not review all negative edges between components, instead we
+  simply assume all remaining edges are negative after no more positive edges
+  have been found after a period of time.
+
+This new review scheme is a massive improvement of the existing review scheme.
+However, it is sensitive to errors.
+To accommodate this we augment the set of edges to review with a small random
+  (or specially selected edges) set of redundant edges that could induce an
+  inconsistent graph state and expose previously made errors.
+We use a algorithm based on minimum s-t-cut to suggest edges to re-review in
+  the event of an error case.
+
+
+\paragraph{Threshold Based Automated Review Algorithm}
+
+To improve on this review scheme even further we make use further use of our
+  learned probabilities.
+We accept a high and low threshold and mark any edge scoring above the
+  threshold as a match and any edge bellow it as a not match.
+Any inconsistent edges are flagged and the rest of the algorithm is the same
+  as the full review algorithm.
+In this was we avoid presenting the user with any matches that are obviously
+  correct thus reducing the number of manual reviews needed.
+As the classification algorithm improves the thresholds can be adjusted until
+  ideally human input is no longer needed.
+
+
+\paragraph{Multi-Cut Based Automated Review Algorithm}
+
+One more tweak we can make to the algorithm it to use multicut instead of the
+thresholding procedure.  The multicut algorithm chooses edges to group and then
+those edges are marked as matches. To avoid errors we augment these results
+with the threshold results in order to induce error states on components.
+
+
+\paragraph{Active Learning}
+Because training a random forest classifier is quick we use reviewed edges to augment 
+our training data and periodically retrain the classifier in the background as
+the user makes more reviews. Once the classifier is trained, the probabilities
+on unreviewed edges are updated and inferred if they are above the threshold / part of the multicut.
+
+
+\paragraph{Component Confidence}
+One state we wish to avoid is when a group of annotations are marked as the
+same because they belong to a very long chain. In practice the probability that the annotations on the endpoints of those chains are the same is actually quite low unless the reviewer is perfect.  
+
+Given a component of annotations we wish to compute the probability that each
+  pair of annotation is the same.
+In the case where there is a user review between then then that probability is
+  a prior probability that the user makes accurate reviews (which is probably
+  somewhere between $.8$ and $.95$).
+If there is a one-vs-one edge then we can use that probability.
+If there is not a one-vs-one edge (because that edge was not suggested by the one-vs-many results) then we need to find a good way to compute that probability.
+
+
+We have a few ideas:
+
+Probability along shortest comparable positive path.
+
+Probability based on posteriors of a 3-clique MRF inference.
+I like this one best and the challenge here is to add edges the component to
+  make it a clique, then add a probability between them (maybe compute it using
+  the RF or use some prior).
+
+
+  The factor graph looks like this for $P(e_{12} | e_{13}, e_{23})$.
+
+\begin{verbatim}
+
+    (1)
+   /   \
+  /     \
+(2)-----(3)
+
+
+e_{12}     | e_{13}    || e_{23}
+==========================================================================
+ match     |  match    || match=alpha, no-match=0.0,  not-comp=(1 - alpha)
+ match     |  no-match || match=0.0,   no-match=beta, not-comp=(1 - beta)
+ no-match  |  match    || match=0.0,   no-match=beta, not-comp=(1 - beta)
+ no-match  |  no-match || match=1/3,   no-match=1/3,  not-comp=1/3
+ -------------------------------------------------------------------------
+ match     |  not-comp || match=1/3,   no-match=1/3,  not-comp=1/3
+ no-match  |  not-comp || match=1/3,   no-match=1/3,  not-comp=1/3
+ not-comp  |  match    || match=1/3,   no-match=1/3,  not-comp=1/3
+ not-comp  |  no-match || match=1/3,   no-match=1/3,  not-comp=1/3
+ not-comp  |  not-comp || match=1/3,   no-match=1/3,  not-comp=1/3
+
+
+ where alpha and beta are prior parameters in the ranges
+ 1.0 > alpha > .5
+ 1.0 > beta > .5
+
+ I'm thinking something like alpha=.8 and beta=.8
+
+\end{verbatim}
+
+The two main states that matter are:
+(1) when two of the three edges match, in that case the third edge is very
+likely to be a match, it might be not-comparable, but it is impossible for it
+to be not a match.
+
+(2) when one edge is a match another edges is a not match, then the last edge
+is very likely not a match, it might be not-comparable, but it is impossible
+for it to be a match.
+
+All other states end up not giving any information about the state of the third
+match.  Perhaps its not exactly a uniform distribution, but whatever it is, it
+will be close.
+
+
+Constructing this factor graph on all 3-cliques in a component will allow us to
+run belief propagation to compute a posterior probability over each edge.
+Edges with a low posterior probability can be flagged for further verification. 
+Then that probability will be updated to the user probabilities and the
+posterior can be recomputed until the entire component is above a threshold of
+confidence (indicated by the max of the probabilities of no-match over all
+  edges).
+

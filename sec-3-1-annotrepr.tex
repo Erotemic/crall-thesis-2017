@@ -1,3 +1,9 @@
+\begin{comment}
+    ./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+    ./texfix.py --fpaths sec-3-1-annotrepr.tex --outline --asmarkdown --numlines=999  -w
+\end{comment}
+
+
 \section{Annotation representation}\label{sec:annotrepr}
   
     For each annotation in the database we
@@ -223,11 +229,6 @@
             g & h & y\\
             0 & 0 & 1
             } = 
-            %\BIGMAT{
-            %\frac{1}{a} \cos{(-\theta )}                                   & \frac{1}{a} \sin{(-\theta )}                                  & x\\
-            %-\frac{1}{d} \sin{(-\theta )} - \frac{c}{a d} \cos{(-\theta )} & \frac{1}{d} \cos{(-\theta )} + \frac{c}{a d} \sin{(-\theta )} & y\\
-            %0                                                              & 0                                                             & 1
-            %}
             \BIGMAT{
             \frac{1}{a} \cos{(\theta )}                                 & -\frac{1}{a} \sin{(\theta )}                                & x\\
             \frac{1}{d} \sin{(\theta )} - \frac{c}{a d} \cos{(\theta )} & \frac{1}{d} \cos{(\theta )} + \frac{c}{a d} \sin{(\theta )} & y\\
@@ -235,7 +236,7 @@
             }
         \end{equation}
         %%---------
-        The position, scale, and orientation can be extract from an
+        The position, scale, and orientation can be extracted from an
           arbitrary affine keypoint shape matrix $\invvrmat$ as follows:
         \begin{equation}\label{eqn:affinewarp}
             \begin{aligned}

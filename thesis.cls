@@ -473,7 +473,7 @@
          {\large\uppercase\expandafter{\@thesistitle}}\\ [12pt]
          By \\ [12pt]
          \@author\\ [12pt]
-         CANDIDACY DRAFT \\ [8pt]
+         THESIS DRAFT \\ [8pt]
          %Major Subject:~~\uppercase\expandafter{\@department}\\ 
          \ifnum\numcomm < 7 \vskip 32pt \else \vskip 24pt \fi
          %\sigblock 
