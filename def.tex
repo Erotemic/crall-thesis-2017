@@ -1,0 +1,604 @@
+%\newcommand{\GZC}{GZGC\zspace}
+%\newcommand{\GZCFull}{Great Zebra and Giraffe Count\zspace}
+
+%\newcommand{\zspace}{\xspace}
+%\newcommand{\zspace}{}
+
+\newcommand{\GZC}{GZC\zspace}
+\newcommand{\GGR}{GGR\zspace}
+\newcommand{\GGRFull}{\txt{Great Grevys Rally}}
+\newcommand{\GZCFull}{Great Zebra Count\zspace}
+
+\newcommand{\groundfalse}{incorrect}
+\newcommand{\groundtrue}{correct}
+\newcommand{\gtname}{\groundtrue{} \name{}}
+\newcommand{\gtnames}{\groundtrue{} \names{}}
+
+
+%%%% TERMINOLOGY %%%%%%
+
+\newcommand{\eyetwo}{\MAT{1 & 0\\0 & 1}}
+
+%\newcommand{\nsum}{``name sum''}
+%\newcommand{\gridcov}{``grid coverage''}
+
+\newcommand{\occurrence}{occurrence\zspace}
+\newcommand{\Occurrence}{Occurrence\zspace}
+\newcommand{\occurrences}{\occurrence{}s\zspace}
+\newcommand{\Occurrences}{\Occurrence{}s\zspace}
+
+\newcommand{\intraoccurrence}{intra-\occurrence{}\zspace}
+\newcommand{\Intraoccurrence}{Intra-\occurrence{}\zspace}
+%\newcommand{\vsexemplar}{vs-exemplar\zspace}
+%\newcommand{\encountermatching}{\encounter{} matching\zspace}
+\newcommand{\vsexemplar}{master database\zspace}
+\newcommand{\masterdatabase}{master database\zspace}
+\newcommand{\Masterdatabase}{Master database\zspace}
+\newcommand{\Vsexemplar}{Master database\zspace}
+
+%\newcommand{\mastername}{master-name\zspace}
+%\newcommand{\mastername}{marked-individual\zspace}
+%\newcommand{\mastername}{marked-individual\zspace}
+\newcommand{\mastername}{master-name\zspace}
+\newcommand{\exemplar}{exemplar\zspace}
+%\newcommand{\occurrencename}{occurrence-name\zspace}
+\newcommand{\tempname}{temporary-name\zspace}
+\newcommand{\tempnames}{temporary-names\zspace}
+\newcommand{\encounter}{encounter\zspace}
+\newcommand{\occurrencename}{encounter\zspace}
+\newcommand{\tempexemplar}{temporary-exemplar\zspace}
+\newcommand{\annotscore}{annotation score\zspace}
+\newcommand{\namescore}{name score\zspace}
+%\newcommand{\annotscore}{\fbox{annotation score}\zspace}
+%\newcommand{\namescore}{\fbox{name score}\zspace}
+
+\newcommand{\annot}{annotation\zspace}
+\newcommand{\annots}{annotations\zspace}
+
+\newcommand{\correspondence}{correspondence\zspace}
+%\newcommand{\match}{match\zspace}
+%\newcommand{\matches}{\match{}es\zspace}
+%\newcommand{\matching}{\match{}ing\zspace}
+
+\newcommand{\matchvec}{match vector\zspace}
+\newcommand{\matchvecs}{\matchvec\zspace}
+
+\newcommand{\name}{name\zspace}
+\newcommand{\Name}{Name\zspace}
+
+
+% Matches when talking about names
+\newcommand{\nmatch}{name match\zspace}
+
+% Matches when talking about features
+\newcommand{\fmatch}{feature match\zspace}
+\newcommand{\Fmatch}{Feature match\zspace}
+
+% Plural versions
+\newcommand{\occurrencenames}{\occurrencename{}s\zspace}
+\newcommand{\encounters}{\encounter{}s\zspace}
+\newcommand{\exemplars}{\exemplar{}s\zspace}
+\newcommand{\masternames}{\mastername{}s\zspace}
+\newcommand{\tempexemplars}{\tempexemplar{}s\zspace}
+\newcommand{\namescores}{\namescore{}s\zspace}
+\newcommand{\annotscores}{\annotscore{}s\zspace}
+\newcommand{\correspondences}{\correspondence{}s\zspace}
+\newcommand{\names}{\name{}s\zspace}
+
+%\newcommand{\masterexemplar}{master-exemplar\zspace}
+%\newcommand{\masterexemplars}{\masterexemplar{}s\zspace}
+
+
+
+% mood='indicative', aspect='imperfect'
+\newcommand{\namescoring}{name scoring\zspace}
+\newcommand{\corresponding}{corresponding\zspace}
+
+
+\newcommand{\Nsumprefix}{Feature-based\zspace}
+\newcommand{\nsumprefix}{feature-based\zspace}
+\newcommand{\csumprefix}{annotation-based\zspace}
+\newcommand{\nscore}{\nsumprefix{} \namescore{}\zspace}
+\newcommand{\cscore}{\csumprefix{} \namescore{}\zspace}
+\newcommand{\nscoring}{\nsumprefix{} \namescoring{}\zspace}
+\newcommand{\cscoring}{\csumprefix{} \namescoring{}\zspace}
+
+
+\newcommand{\pvar}[1]{{\tt{#1}}\zspace}
+
+%\renewcommand{\nsum}{\pvar{nsum}}
+%\newcommand{\csum}{\pvar{csum}}
+\newcommand{\nsum}{\pvar{fmech}}
+\newcommand{\csum}{\pvar{amech}}
+
+%\newcommand{\fmatching}{\fmatch{}ing\zspace}
+%\newcommand{\fmatches}{\fmatch{}es\zspace}
+%\newcommand{\fmatching}{\fmatch{}ing\zspace}
+%\newcommand{\Fmatches}{\Fmatch{}es\zspace}
+%\newcommand{\Fmatching}{\Fmatch{}ing\zspace}
+
+%\newcommand{\namescore}{name score\zspace}
+
+% http://tex.stackexchange.com/questions/28704/defining-a-newcommand-with-variable-name-inside-another-newcommand
+%\makeatletter
+%\newcommand{\pluralize}[1]{%
+%    %\expandafter\newcommand\csname #1s\endcsname{#1{}s}%
+%    \@namedef{#1s}{\\#1s\zspace}
+%}
+%\makeatother
+%\expandafter\newcommand\csname #1s\endcsname{#1{}s}%
+%\pluralize{namescore}
+
+
+% TODO: http://tex.stackexchange.com/questions/259287/how-to-define-a-newcommand-that-expands-into-another-newcommand/259293#259293
+
+
+
+%%%%%%%% MATH %%%%%
+
+    \newcommand{\kp}{\vec{p}}
+    \newcommand{\desc}{\vec{d}}
+    \newcommand{\feat}{f}
+    %\newcommand{\name}{{\tt{nid}}}
+    %\newcommand{\nid}{{\tt{nid}}}
+
+    %\newcommand{\nidnew}{\nid_{\tt{new}}}
+    \newcommand{\nid}{\set{N}}
+    \newcommand{\nids}{\multiset{N}}
+    %\newcommand{\nid}{\set{C}}
+    %\newcommand{\nids}{\multiset{C}}
+    \newcommand{\notnid}{\setcomp{\nid}}
+    \newcommand{\nidnew}{\nid_{\tt{new}}}
+
+    \newcommand{\aid}{\X}
+    \newcommand{\qaid}{\X}
+    \newcommand{\daid}{\Y}
+
+    %\newcommand{\aid}{{\tt{aid}}}
+    %\newcommand{\qaid}{{\tt{qaid}}}
+    %\newcommand{\daid}{{\tt{daid}}}
+    %\newcommand{\annot}{{\tt{aid}}}
+    %\newcommand{\qannot}{{\tt{qaid}}}
+    %\newcommand{\dannot}{{\tt{daid}}}
+    \newcommand{\Feats}{\set{F}}
+    \renewcommand{\fg}{\tt{fg}}
+    \newcommand{\img}{I}
+    \newcommand{\rawimg}{I_{\tt{raw}}}
+    %\newcommand{\pureimg}{I_{\tt{continuous}}}
+    \renewcommand{\K}{\ensuremath{K}}
+    %
+    % TODO: Chuck says dont use subscripts as name
+
+    %\newcommand{\norm}{_{\tt{norm}}}
+    %\newcommand{\Knorm}{\ensuremath{K_{\norm}}}
+    \newcommand{\Knorm}{\ensuremath{\K^{*}}}
+    \newcommand{\descnorm}{\ensuremath{\desc^{*}}}
+    %\newcommand{\descnorm}{\ensuremath{\desc_{\norm}}}
+
+    \newcommand{\query}{\tt{query}}
+    \newcommand{\data}{\tt{data}}
+    %\newcommand{\NN}{\tt{NN}}
+    \newcommand{\NN}{\opname{NN}}
+
+    %\newcommand{\NormDB}{\multiset{D}_{\tt{norm}}}
+    \newcommand{\AnyDB}{\set{D}}
+    \newcommand{\NormDB}{\set{D}_{\tt{norm}}}
+    \newcommand{\ExempDB}{\set{D}_{\tt{exemp}}}
+    \newcommand{\OccurDB}{\set{D}_{\tt{occurr}}}
+
+    \newcommand{\LNBNN}{\tt{LNBNN}}
+    \newcommand{\Matches}{\set{M}}
+    % Keypoint Notation
+    \newcommand{\kpts}{\set{P}}
+    \newcommand{\pt}{\vec{x}}
+    \newcommand{\x}{\vec{x}}
+    \newcommand{\ptcolvec}{\VEC{ x\\ y}}
+    \newcommand{\scale}{\sigma}
+
+    \newcommand{\vmat}{\mat{A}}
+    \newcommand{\invvmat}{\inv{\vmat}}
+    % invV ALWAYS maps from u-circle onto an ellipse
+    %    V ALWAYS maps from ellipse onto the u-circle
+    % ellmat should be the the invV shape matrix. 
+    % but in section 2 I use it as ellmat as V, FUUUU. Fixed...
+    \newcommand{\vMATRIX}{\MAT{a & 0\\c & d}}
+
+    \newcommand{\VMatII}{\MAT{a & 0\\c & d}}
+    \newcommand{\VMatIII}{\MAT{a & 0 & 0\\c & d & 0 \\ 0 & 0 & 1}}
+    \newcommand{\VBigMatIII}{\BIGMAT{a & 0 & 0\\c & d & 0 \\ 0 & 0 & 1}}
+
+    \newcommand{\ellMatrixIII}{\MAT{a & 0 & x\\c & d & y\\ 0 & 0 & 1}}
+
+
+    \newcommand{\ellMATRIXTres}{\MAT{a & 0 & 0\\c & d & 0\\0 & 0 & 1}}
+    \newcommand{\transMATTres}[2]{\MAT{1 & 0 & #1\\0 & 1 & #2\\0 & 0 & 1}}
+    %\newcommand{\rotMATTres}[1]{\MAT{-\sin{#1} & \cos{#1} & 1 \\ \cos{#1} & \sin{#1} & 0 \\0 & 0 & 1}}
+    %%% 
+    % SV definitions
+    \newcommand{\aff}{{\tt aff}}
+    \newcommand{\HmgMat}{\mat{H}}
+
+    %\newcommand{\AffMat}{\mat{H}_{\aff}}
+    %\newcommand{\AffMatij}{\mat{H}_{\aff, i, j}}
+
+    %\newcommand{\rvmat}{\circled{\mat{A}}}
+    \newcommand{\rvmat}{\mat{B}}
+    \newcommand{\invvrmat}{\inv{\rvmat}}
+
+    \newcommand{\ori}{\theta}
+    \newcommand{\momentmat}{\ensuremath{\mat{M}(\pt, \scale)}}
+    \newcommand{\warpedmomentmat}[1]{\ensuremath{\mat{M}(#1\pt, \scale)}}
+    \newcommand{\hessMAT}{\ensuremath{\mat{H}(\pt, \scale)}}
+    \newcommand{\momentmatNOARG}{\mat{M}}
+
+
+
+    % SMK
+    \newcommand{\X}{\set{X}}
+    \newcommand{\Y}{\set{Y}}
+    \newcommand{\C}{\set{C}}
+    %\newcommand{\K}{K}
+    %\newcommand{\V}{V}
+    \newcommand{\Vh}{\hat{V}}
+    %\renewcommand{\M}{M}
+    \newcommand{\M}{M}
+
+
+
+
+%\newcommand{\devcomment}[1]{\darkgreen \emph{/* --- #1 --- */} \black}
+%\newcommand{\chuckcomment}[1]{\chuckblue \emph{/* --- #1 --- */} \black}
+%\renewcommand{\textwidth}{4in}
+%\renewcommand{\caption}[1]{}
+
+%\newcommand{\glossterm}[1]{\emph{#1}}
+\newcommand{\glossterm}[1]{\textbf{#1}}
+
+
+% For concepts directly relating to a code implementation
+\newcommand{\codeobj}[1]{\emph{#1}}
+%\newcommand{\codeobj}[1]{#1}
+\newcommand{\coderef}[1]{#1}
+
+\newcommand{\OrigCref}[1]{\Cref{#1}}
+\renewcommand{\cref}[1]{\Cref{#1}}
+
+
+
+\renewcommand{\c}{\vec{c}}
+\newcommand{\support}{\tt{support}}
+%\newcommand{\support}{\tt{gt}}
+
+\newcommand{\TP}{{\tt{TP}}}
+\newcommand{\TN}{{\tt{TN}}}
+\newcommand{\FN}{{\tt{FP}}}
+\newcommand{\FP}{{\tt{FN}}}
+\newcommand{\KDE}{{\opname{KDE}}}
+\newcommand{\KDEop}{{\opname{KDE}}}
+%\newcommand{\TP}{y\tighteq1}
+%\newcommand{\TN}{y\tighteq-1}
+%\newcommand{\FP}{\tt{FP}}
+%\newcommand{\FN}{\tt{TN}}
+
+\newcommand{\TPsupport}{\set{P}}
+\newcommand{\TNsupport}{\set{N}}
+
+
+%\newcommand{\eqv}{=}
+\newcommand{\eqv}{\equiv}
+
+
+\newcommand{\visitset}{\set{C}}
+%\newcommand{\visitset}{\set{V}}
+\newcommand{\poptotal}{T}
+\newcommand{\nvisit}{c}
+\newcommand{\resight}{m}
+
+
+\newcommand{\Photobomb}{Photobomb\xspace}
+\newcommand{\photobomb}{photobomb\xspace}
+\newcommand{\photobombing}{photobombing\xspace}
+\newcommand{\Photobombing}{Photobombing\xspace}
+\newcommand{\Photobombings}{Photobombings\xspace}
+\newcommand{\photobombings}{photobombings\xspace}
+
+
+%\newcommand{\keywords}[1]{\noindent\textbf{\emph{Index terms}} --- #1}
+%\newcommand{\relatedto}[1]{\noindent\textbf{\emph{Related to}} --- #1}
+%\newcommand{\outline}[1]{\noindent\textbf{\emph{Outline}} --- {\emph{#1}}}
+\newcommand{\keywords}[1]{}
+\newcommand{\relatedto}[1]{}
+\newcommand{\outline}[1]{}
+
+\renewcommand{\E}{\opname{E}}  % Energy
+
+
+\renewcommand{\F}{\Phi}
+\renewcommand{\E}{\opname{E}}  % Energy
+\renewcommand{\P}{\opname{P}}
+\newcommand{\Phat}{\hat{\P}}
+
+\renewcommand{\L}{\set{L}}
+\renewcommand{\A}{\set{A}}
+\newcommand{\ellvec}{\greekvec{\ell}}
+\newcommand{\ellv}{\greekvec{\ell}}
+
+\newcommand{\view}{v}
+
+\renewcommand{\g}{\vec{g}}
+\newcommand{\gps}{\vec{p}}
+%\newcommand{\lat}{a}
+%\newcommand{\lon}{o}
+\newcommand{\lat}{\varphi}
+\newcommand{\lon}{\lambda}
+\renewcommand{\time}{t}
+\newcommand{\haversineFULL}[1]{\sin^{2}\paren{\frac{#1}{2}}}
+\newcommand{\haversine}[1]{\func{\opname{hav}}{#1}}
+
+\newcommand{\qualJunk}{\emph{junk}}
+\newcommand{\qualPoor}{\emph{poor}}
+\newcommand{\qualOk}{\emph{ok}}
+\newcommand{\qualGood}{\emph{good}}
+\newcommand{\qualExcellent}{\emph{excellent}}
+
+
+
+\newcommand{\vpFront}{\emph{front}}
+\newcommand{\vpLeft}{\emph{left}}
+\newcommand{\vpBack}{\emph{back}}
+\newcommand{\vpRight}{\emph{right}}
+\newcommand{\vpFrontLeft}{\emph{front-left}}
+\newcommand{\vpBackLeft}{\emph{back-left}}
+\newcommand{\vpFrontRight}{\emph{front-right}}
+\newcommand{\vpBackRight}{\emph{back-right}}
+
+\newcommand{\vpUp}{\emph{up}}
+\newcommand{\vpDown}{\emph{down}}
+
+\newcommand{\vpF}{{\tt F}}
+\newcommand{\vpL}{{\tt L}}
+\newcommand{\vpB}{{\tt B}}
+\newcommand{\vpR}{{\tt R}}
+\newcommand{\vpFL}{{\tt FL}}
+\newcommand{\vpBL}{{\tt BL}}
+\newcommand{\vpFR}{{\tt FR}}
+\newcommand{\vpBR}{{\tt BR}}
+
+\newcommand{\vpU}{{\tt U}}
+\newcommand{\vpD}{{\tt D}}
+
+\newcommand{\vpUF}{{\tt UF}}
+\newcommand{\vpUL}{{\tt UL}}
+\newcommand{\vpUB}{{\tt UB}}
+\newcommand{\vpUR}{{\tt UR}}
+
+\newcommand{\vpDF}{{\tt DF}}
+\newcommand{\vpDL}{{\tt DL}}
+\newcommand{\vpDB}{{\tt DB}}
+\newcommand{\vpDR}{{\tt DR}}
+
+\newcommand{\vpUFL}{{\tt UFL}}
+\newcommand{\vpDFL}{{\tt DFL}}
+\newcommand{\vpUBL}{{\tt UBL}}
+\newcommand{\vpDBL}{{\tt DBL}}
+
+\newcommand{\vpUFR}{{\tt UFR}}
+\newcommand{\vpDFR}{{\tt DFR}}
+\newcommand{\vpUBR}{{\tt UBR}}
+\newcommand{\vpDBR}{{\tt DBR}}
+
+
+%\newcommand{\edges}{E}
+%\newcommand{\edges}{\Epsilon}
+\newcommand{\edges}{\set{E}}
+
+
+\newcommand{\vpvsI}[1]{#1{\tt{vs}}#1}
+\newcommand{\vpvsB}[2]{#1{\tt{vs}}#2}
+%\newcommand{\vpvsI}[1]{#1-{\tt{vs}}-#1}
+%\newcommand{\vpvsB}[2]{#1-{\tt{vs}}-#2}
+\newcommand{\FvF}{\vpvsI{\vpF}}
+\newcommand{\FRvFR}{\vpvsI{\vpFR}}
+\newcommand{\FLvFL}{\vpvsI{\vpFL}}
+\newcommand{\RvR}{\vpvsI{\vpR}}
+\newcommand{\LvL}{\vpvsI{\vpL}}
+\newcommand{\BRvBR}{\vpvsI{\vpBR}}
+\newcommand{\BLvBL}{\vpvsI{\vpBL}}
+\newcommand{\BvB}{\vpvsI{\vpB}}
+
+\newcommand{\FvFR}{\vpvsB{\vpF}{\vpFR}}
+\newcommand{\FvFL}{\vpvsB{\vpF}{\vpFL}}
+\newcommand{\FRvR}{\vpvsB{\vpFR}{\vpR}}
+\newcommand{\FLvL}{\vpvsB{\vpFL}{\vpL}}
+\newcommand{\LvBL}{\vpvsB{\vpL}{\vpBL}}
+\newcommand{\RvBR}{\vpvsB{\vpR}{\vpBR}}
+\newcommand{\BRvB}{\vpvsB{\vpBR}{\vpB}}
+\newcommand{\BLvB}{\vpvsB{\vpBL}{\vpB}}
+
+
+\renewcommand{\fs}{s}
+\newcommand{\fsv}{\vec{s}}
+
+%\renewcommand{\qaid}{\X}
+%\renewcommand{\daid}{\Y}
+
+%\newcommand{\annotscoreop}{\opname{annot\_score}}
+%\newcommand{\namescoreop}{\opname{name\_score}}
+\newcommand{\annotscoreop}{\opname{K_{\tt annot}}}
+\newcommand{\namescoreop}{\opname{K_{\tt name}}}
+
+\newcommand{\ischosen}{\opname{chosen}}
+\newcommand{\isdupop}{\opname{isgrouped}}
+
+%\newcommand{\inMI}{}
+\newcommand{\iI}{i}
+\newcommand{\iII}{i'}
+\newcommand{\jI}{j}
+\newcommand{\jII}{j'}
+\newcommand{\mI}{m}
+\newcommand{\mII}{m'}
+
+\newcommand{\warp}[1]{{#1}'}
+
+%\newcommand{\inI}[1]{{#1_{1}}}
+%\newcommand{\inII}[1]{{#1_{2}}}
+
+%\newcommand{\idxI}{1}
+%\newcommand{\idxII}{2}
+\newcommand{\idxI}{k}
+\newcommand{\idxII}{\ell}
+\newcommand{\inI}[1]{{#1_{\idxI}}}
+\newcommand{\inII}[1]{{#1_{\idxII}}}
+
+%\newcommand{\inI}[1]{#1}
+%\newcommand{\inII}[1]{#1'}
+
+%\newcommand{\annotI}{\inI{\X}}
+%\newcommand{\annotII}{\inII{\X}}
+%\newcommand{\annot}{\X}
+\newcommand{\annotI}{\X_{1}}
+\newcommand{\annotII}{\X_{2}}
+
+\newcommand{\kpI}{\inI{\kp}}
+\newcommand{\kpII}{\inII{\kp}}
+
+\newcommand{\ptI}{\inI{\pt}}
+\newcommand{\ptII}{\inII{\pt}}
+
+\newcommand{\scaleI}{\inI{\scale}}
+\newcommand{\scaleII}{\inII{\scale}}
+
+\newcommand{\oriI}{\inI{\ori}}
+\newcommand{\oriII}{\inII{\ori}}
+
+\newcommand{\rvmatI}{\inI{\rvmat}}
+\newcommand{\rvmatII}{\inII{\rvmat}}
+
+\newcommand{\invvrmatI}{\inI{\invvrmat}}
+\newcommand{\invvrmatII}{\inII{\invvrmat}}
+
+\newcommand{\xythresh}{t_{\pt}}
+%\newcommand{\orithresh}{t_{{\tt{ori}}}}
+\newcommand{\orithresh}{t_{{\ori}}}
+\newcommand{\scalethresh}{t_{{\scale}}}
+
+\newcommand{\tohmg}[1]{\func{\mu}{#1}}
+\newcommand{\unhmg}[1]{\func{\mu^{-1}}{#1}}
+
+%\newcommand{\refptI}{\inI{\hat{\pt}}}
+\newcommand{\refptI}{\inI{\vec{r}}}
+\newcommand{\ptres}{\tilde{\vec{r}}}
+\newcommand{\xres}{\tilde{r}_x}
+\newcommand{\yres}{\tilde{r}_y}
+
+\newcommand{\isinlierop}{\opname{isinlier}}
+%\newcommand{\isinlierop}{\delta}
+%\newcommand{\HmgMatBest}{\HmgMat_{\tt{homog}}^*}
+\newcommand{\HmgMatBest}{\hat{\HmgMat}}
+
+
+\newcommand{\rhov}{\greekvec{\rho}}
+\newcommand{\dist}{\rho}
+\newcommand{\distiX}[1]{\rho(\desc_i, #1)}
+\newcommand{\distijI}{\dist(\desc_i,\desc_{j_1})}
+\newcommand{\distij}{\dist(\desc_i,\desc_{j})}
+\newcommand{\distkij}[1]{\ensuremath{\dist_{#1}(\desc_i,\desc_{j})}}
+%\newcommand{\distkijI}[1]{\ensuremath{\dist^{#1}(\desc_i,\desc_{j_1})}}
+%\newcommand{\distkijI}[1]{\ensuremath{\dist_{\nid_#1}(\desc_i,\desc_{j_1})}}
+\newcommand{\distkijI}[1]{\ensuremath{\dist_{#1}(\desc_i,\desc_{j_1})}}
+
+
+\newcommand{\matches}[2]{#1\txt{ matches }#2}
+\newcommand{\notmatches}[2]{#1\txt{ does not match }#2}
+\newcommand{\same}[2]{#1\txt{ is }#2}
+\newcommand{\diff}[2]{#1\txt{ is not }#2}
+\newcommand{\comparable}[2]{#1\txt{ comparable }#2}
+\newcommand{\notcomparable}[2]{#1\txt{ non-comparable }#2}
+
+%\newcommand{\matches}[2]{#1\txt{ matches }#2}
+%\newcommand{\notmatches}[2]{#1\txt{ does not match }#2}
+%\newcommand{\same}[2]{\ell_{#1} \eq{} \ell_{#2}}
+%\newcommand{\diff}[2]{\ell_{#1} \neq{} \ell_{#2}}
+%\newcommand{\comparable}[2]{#1\txt{ comparable }#2}
+%\newcommand{\notcomparable}[2]{#1\txt{ incomparable }#2}
+
+\newcommand{\matchXY}{\matches{\X}{\Y}}
+\newcommand{\notmatchXY}{\notmatches{\X}{\Y}}
+\newcommand{\sameXY}{\same{\X}{\Y}}
+\newcommand{\diffXY}{\diff{\X}{\Y}}
+\newcommand{\compXY}{\comparable{\X}{\Y}}
+\newcommand{\notcompXY}{\notcomparable{\X}{\Y}}
+
+\newcommand{\annoti}{\X_{i}}
+\newcommand{\annotj}{\X_{j}}
+\newcommand{\matchij}{\matches{\annoti}{\annotj}}
+\newcommand{\notmatchij}{\notmatches{\annoti}{\annotj}}
+\newcommand{\sameij}{\same{\annoti}{\annotj}}
+\newcommand{\diffij}{\diff{\annoti}{\annotj}}
+\newcommand{\compij}{\comparable{\annoti}{\annotj}}
+\newcommand{\notcompij}{\notcomparable{\annoti}{\annotj}}
+
+%\newcommand{\matches}[2]{\txt{matches}}
+%\newcommand{\same}[2]{\txt{is}}
+%\newcommand{\comparable}[2]{\txt{comparable}}
+
+\newcommand{\sameXX}{\ell_i = \ell_j}
+\newcommand{\compXX}{C_{ij}}
+\newcommand{\notcompXX}{\overbar{C_{ij}}}
+\newcommand{\evidXX}{M_{ij}}
+\newcommand{\bgprobXX}{\phi_{ij}}
+
+\newcommand{\idengraph}{identification graph}
+
+%\newcommand{\lset}{labeled set}
+%\newcommand{\uset}{unlabeled set}
+\newcommand{\lset}{known set}
+\newcommand{\uset}{unknown set}
+
+
+\newcommand{\pymod}[1]{{\tt{#1}}}
+\newcommand{\utool}{\pymod{utool}}
+\newcommand{\vtool}{\pymod{vtool}}
+\newcommand{\guitool}{\pymod{guitooltool}}
+\newcommand{\plottool}{\pymod{plottool}}
+
+\newcommand{\depcache}{dependency cache}
+\newcommand{\depcaches}{dependency caches}
+\newcommand{\Depcache}{Dependency cache}
+\newcommand{\Depcaches}{Dependency caches}
+
+\newcommand{\IBEIS}{IBEIS}
+%\newcommand{\IBEIS}{{\tt{IBEIS}}}
+
+\newcommand{\gia}{graph identification algorithm}
+\newcommand{\Gia}{Graph identification algorithm}
+
+\newcommand{\rpipe}{\ensuremath{\Rightarrow}}
+
+
+% A "w" question
+\newcommand{\wquest}[1]{\emph{#1}} 
+%\newcommand{wquest}[1]{``#1''}
+
+
+
+\newcommand{\pzmasterI}{PZ\xspace}
+\newcommand{\gzall}{GZ\xspace}
+\newcommand{\girmmasterI}{GIRM\xspace}
+%\renewcommand{\st}{\superscript{st}\xspace}
+\newcommand{\QRH}{QRH\xspace{}}
+\newcommand{\QRHCirc}{QRH\xspace{}}
+\newcommand{\QRHEll}{QRH+Affine\xspace{}}
+\newcommand{\AIAlone}{Affine\xspace{}}
+\newcommand{\RIAlone}{Rotation\xspace{}}
+\newcommand{\AIRI}{Affine+Rotation\xspace{}}
+\newcommand{\NoInvar}{No Invariance\xspace{}}
+\newcommand{\viewdiff}{\pvar{viewdiff}}
+\newcommand{\ctrl}{\pvar{ctrl}}
+\newcommand{\timectrl}{\pvar{timectrl}}
+
+\newcommand{\thesis}{candidacy document\zspace}
+\newcommand{\Thesis}{Candidacy document\zspace}
+
+\newcommand{\xdesc}{\vec{x}}
+\newcommand{\ydesc}{\vec{y}}

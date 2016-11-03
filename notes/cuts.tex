@@ -1,0 +1,48 @@
+
+https://en.wikipedia.org/wiki/Minimum_k-cut
+http://www.ccs.neu.edu/home/austin/papers/multicut.pdf
+
+
+Vazirani:  
+    http://www.cc.gatech.edu/fac/Vijay.Vazirani/book.pdf
+    4 - MultiwayCut and k-Cut ................................. 38
+    18 - Multicut and Integer MulticommodityFlow in Trees ..... 146
+    19 - MultiwayCut ............................................ 155
+    20 - Multicut in General Graphs .............................. 168
+    21 - Sparsest Cut .............................................. 180
+
+
+Minimum K-cut -
+    * Find the minimum weight set of edges such that there are $k$ connected compoments. $k$ is part of the input.
+    * This has a 2 - 2/k approximation.
+    
+    Polynomial if $k$ is fixed, but NP-hard if $k$ is considered part of the
+      input.
+    The previous sentense is misleading.
+    This does not mean $k$ is found, you always specify $k$.
+    Running time is $O(|V|^{k^2})$
+
+Multiway Cut - 
+    * Subclass of multicut
+    * Given a set of terminals S = (s1, s2, ..., s3) find the minimum weight
+      set of edges that disconnects the terminals.
+    * This has a 2 - 2/k approximation. THere is also a 3/2 approximation.
+
+Multicut - 
+    Given pairs of terminals ((s1, t1), (s2, t2), ... (sk, tk)) - find minimum weight set of edges that
+    disconnects each s from its corrsponding t.  Each pair is disinct, but
+    verticies within pairs are not required to be distinct.
+
+
+    * Generalizes multiway cut
+    * Dual of Integer multicommodityflow
+    * has O(log k) approximation
+
+k-Multicut - 
+    same as multicut, but at least k pairs are separated.
+
+Sparset Cut -
+    Let G = (V,E) be an undirected graph
+    with capacities, source–sink pairs, and demands defined as in Problem 21.1.
+    The sparsity of cut (S, S) is given by c(S)/dem(S). 
+    The problem is to find a cut of minimum sparsity

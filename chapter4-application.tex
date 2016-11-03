@@ -1,0 +1,1373 @@
+\begin{comment}
+    ./texfix.py --reformat --fpaths chapter4-application.tex
+    ./texfix.py --reformat --fpaths chapter4-application.tex --max-width=150 --diff
+    ./texfix.py --reformat --fpaths chapter4-application.tex --max-width=80 -w
+    ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=99  --section="Correcting errors"
+    ./texfix.py --fpaths chapter5-systemchapter.tex --outline --asmarkdown --numlines=999  -w
+    ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=999 -w
+    # http://jaxedit.com/mark/
+    mdview
+\end{comment}
+
+\chapter{Identification workflow}\label{chap:application}
+
+\section{Introduction}\label{sec:intro4}
+    % INTRODUCE CHAPTER 4
+    In this chapter we discuss the animal identification problem in an on-line
+      setting where many images are continually being added.
+    To address the challenge of on-line identification, we describe an
+      \glossterm{identification workflow}.
+    Using this workflow --- first introduced in~\cref{subsec:introdataprocess}
+      --- a dynamic identification database can be \emph{created} and then
+      \emph{curated} as new information is \emph{continuously integrated}.
+    The identifications produced by this workflow enable subsequent components
+      of \IBEIS{} to estimate population sizes~\cite{rubenstein_ecology_2010}
+      and analyze animal social structure~\cite{reda_visualizing_2011}.
+
+    % DEFINE IDENTIFICATION TASKS
+    For the IBEIS identification workflow to be effective in an on-line
+      setting it must be able to accomplish the following three identification
+      tasks:
+    (1) identify animals as images are added to a small or empty database,
+    (2) identify animals as images are added to a large established database,
+      and
+    (3) use information in new images to detect and recover from
+      identification errors.
+    Each of these tasks must account for and be robust to the imaging
+      challenges discussed in~\cref{sec:challenges} such as occlusion,
+      viewpoint, quality, and \photobombing{}.
+
+    % OUTLINE WORKFLOW SEQUENCE
+    We briefly review the outline of the identification workflow.
+    We assume that \aan{\annot{}} (oriented bounding box) has been localized
+      around each animal in the new images and each \annot{} has been assigned a
+      viewpoint, quality, and species label.
+    The details of these steps are described in the work of Jason
+      Parham~\cite{parham_photographic_2015}.
+    Once the \annots{} have been added to a new set of images, the images are
+      clustered by time and GPS location into groups called
+      \glossterm{\occurrences{}}~\cite{wieczorek_darwin_2012}.
+    Each \occurrence{} is likely to contain multiple \annots{} of the same
+      individual that are close in time, and each \occurrence{} will likely
+      include multiple individuals.
+    We take advantage of this information by performing
+      \glossterm{\intraoccurrence{}} matching.
+    This process groups the \annots{} within \aan{\occurrence{}} and produces
+      a set of \encounters{}.
+    Each \glossterm{\encounter{}} is a set of \annots{} belonging to a single
+      individual within \aan{\occurrence{}}~\cite{j_bonner_markrecapture_2013}.
+    We then match each newly discovered \encounter{} against the
+      \masterdatabase{} in a process referred to as \glossterm{\vsexemplar{}}
+      matching.
+    This integrates the \occurrence{} into the \masterdatabase{}.
+    We then run a series of consistency checks to detect any errors in the
+      \masterdatabase{} using the new information provided by the \occurrence{}.
+
+    % ENUMERATE CHALLENGES
+    This workflow contains six currently unresolved problems that we propose
+      to address in order to complete this thesis.
+    A brief outline of these challenges is as follows.
+    \begin{enumerate}
+
+        \item \textbf{Occurrence clustering}:
+            \devcomment{Maybe this goes into the appendix.}
+            Before \intraoccurrence{} matching can begin, the images must
+              first be grouped into \occurrences{}.
+            In~\cref{sec:occurgroup} we propose an algorithm to automatically
+              group newly added images into \occurrences{}.
+
+        \item \textbf{Intra-occurrence matching to produce encounters}:
+            In \intraoccurrence{} matching the goal is to group sets of
+              unknown \annots{} (within an \occurrence{}) into \encounters{}.
+            The term \glossterm{\encounter{}} refers to the subset of
+              \annots{} in an \occurrence{} belonging to a specific individual.
+            In this problem, none of the individual identities of the
+              \annots{} in an \occurrence{} is known a priori.
+            %We may have access to information such as viewpoint, quality,
+            %  foregroundness, and distinctivness, but in general some or all of
+            %  this information may be missing due to the dynamic nature of the
+            %  problem.
+            %Therefore, our algorithms should be able to use the aforementioned
+            %  information when available, but should not be reliant on it.
+            An example illustrating the input and output of \intraoccurrence{}
+              matching is shown in~\cref{fig:intraoccur}.
+
+            \intraoccur{}
+
+        \item \textbf{Matching an encounter against the database}:
+            Once the individuals in an \occurrence{} have been grouped into
+              \encounters{}, each \encounter{} must be matched against the
+              \masterdatabase{} in a process called \vsexemplar{} matching.
+            Given one or more images of a query individual the matching
+              algorithm must determine two things:
+            (1) does a correct match exist in the database, and
+            (2) if it exists, then which \name{} does it belong to?
+            This problem is made more challenging by considering viewpoint
+              variation, which introduces the potential for a query to correctly
+              match and merge two previously disjoint viewpoints.
+            This allows for a third option:
+            (3) does the query encounter correctly match more than one
+              \name{}?
+            \Cref{fig:bridgethegap} illustrates an example of this case.
+
+            \bridgethegap{}
+
+        \item \textbf{Selecting exemplar \annots{} for each name}:
+            As new images are integrated into the \masterdatabase{} it will be
+              common for a single \name{} to contain hundreds of \annots{}.
+            When performing identification against the \masterdatabase{}, only
+              a subset of \annots{} is chosen to represent each \name{}.
+            This subset should contain a small number of high quality
+              \annots{} --- \glossterm{\exemplars{}} --- that cover a wide
+              variety of viewpoints and poses.
+            \Cref{sec:exempselect} proposes an algorithm for selecting a
+              subset of \exemplar{} \annots{} from \aan{\encounter{}} or
+              \aan{\name{}}.
+
+        \item \textbf{Error recovery}:
+            It is inevitable that manual and algorithmic errors will occur
+              during this workflow.
+            The system must recover from errors where animals are incorrectly
+              marked as the same, and errors where individuals fail to be
+              matched.
+            We refer to the two types of errors as %
+            \glossterm{split cases} (false positives) --- when a single set of
+              \annot{} is incorrectly labeled with one \name{}, and %
+            \glossterm{merge cases} (false negatives) --- when two sets of
+              \annots{} are incorrectly labeled with different \names{}.
+            In practice, there are three causes of errors that occur:
+            (1) human mistake --- when a user makes a mistake during manual
+              review,
+            (2) algorithmic mistake --- when \aan{\groundfalse{}} match has a
+              score above the threshold of automatic acceptance or
+              \aan{\groundtrue{}} match has a score lower than the automatic
+              reject threshold, and
+            (3) insufficient information at the time of initial decision
+              making.
+            If split cases are not caught, then \groundfalse{} matches can
+              ``snowball'' into a single name and cause non-distinctive patterns
+              to appear distinctive.
+            Likewise, if merge cases are not caught then \groundtrue{}
+              distinctive patterns on an individual can start to look
+              non-distinctive \wrt{} the database.
+            The challenge of error recovery is addressed in~\cref{sec:errors},
+              where we discuss algorithms to detect and correct split and merge
+              error cases.
+
+        \item \textbf{Identification verification}:
+            While the single image single-\annot{} identification algorithm
+              --- described in~\cref{chap:matching} --- is useful for searching
+              the database for a ranked list of potential matches, it does not
+              include a decision/verification mechanism.
+            In fact, we argued based on experimental evidence
+              in~\cref{sec:staticsum} that this algorithm should not be used for
+              this purpose because
+            (1) the algorithm returns similarity scores that depend on a
+              dynamic database, and
+            (2) these scores are generally not comparable between different
+              queries.
+            Therefore, in this chapter we address the challenge of deciding if
+              two \annots{} are the same individual, different individuals, or
+              if there is not enough information to tell.
+    \end{enumerate}
+
+    Excluding occurrence clustering, the aforementioned challenges appear
+      conceptually different.
+    However, in~\cref{sec:geniden} we propose a graph based algorithm to
+      address these challenges simultaneously.
+    The proposal consists of two parts:
+    (1) a probabilistic model of \annot{}-vs-\annot{} similarity, and
+    (2) a graph-based framework that utilizes multiple images to make a joint
+      inference about individual identity.
+    We then use this algorithm to address the aforementioned challenges.
+
+\section{Graph identification algorithm}\label{sec:geniden}
+
+    Our goal is to combine information from the matching of several \annots{}
+      simultaneously --- both within the \annots{} from an \occurrence{} and
+      between \annots{} in an \occurrence{} and \annots{} in the
+      \masterdatabase{}.
+    This will allow us to:
+    (1) decide which \annots{} are from the same animal and
+    (2) assign an existing \name{} to the \annots{} or decide that a group of
+      \annots{} represents a new \name{}.
+    In order to do this we will to learn a measure of the probability that two
+      \annots{} show the same animal.
+    Then we will use probabilities between multiple pairs of \annots{} in a
+      graph-based algorithm that determines the animal identities.
+    We refer to this as the ``graph-based identification problem'', and
+      describe the outline of the proposed algorithm in this section.
+    In subsequent sections of this chapter, we describe how its applied to the
+      problems of \intraoccurrence{} and \vsexemplar{} matching described
+      in~\cref{sec:iden4}, and error correction described in~\cref{sec:errors}.
+
+    \leftrightfacematch{}
+
+    Sometimes it is just not possible tell if two \annots{} show the same
+      individual animal.
+    The obvious case of this occurs when one \annot{} shows the left side of
+      an individual and the other shows the right.
+    More subtly, even when the \annots{} have the same viewpoint, occlusions
+      and small differences in body pose can hide the distinguishing
+      information, making it very difficult or even impossible to tell.
+    Conversely, even when the viewpoints of an animal are incompatible ---
+      such as when seeing left and right sides --- if the head is turned
+      directly towards the camera in both cases (as illustrated
+      in~\cref{fig:leftrightfacematch}) we may actually be able to tell if two
+      animals are the same.
+    Therefore, for any pair of \annots{} we have three possible events, the
+      pair is either:
+    % ---
+    (1) \glossterm{matching} --- the same individual and visually comparable,
+    (2) \glossterm{not matching} --- different individuals and visually
+      comparable, or
+    (3) not visually \glossterm{comparable}.
+    % ---
+    A pair is comparable if the same distinguishing region (\eg{}
+      left-shoulder) is clearly visible in both \annots{}.
+    If there are no comparable regions between the two \annots{} --- due to
+      factors like quality, occlusion, and viewpoint --- then we cannot say
+      anything about the likelihood that they are the same based on visual
+      information.
+    As a result, our learned probability will be a mapping from a pair of
+      \annots{} to one of three events, and our graph-based algorithm for
+      determining animal identity must exploit this information.
+
+    \graphexample{}
+
+    The graph algorithm for exploiting the learned probabilities our
+      identification algorithm should use multiple \annots{} simultaneously to
+      decide which are from the same animal to cluster the \annots{}.
+    A simple graph is illustrated in~\cref{fig:graphexample}.
+    In the ideal case where all \annots{} are pristine and have a common
+      viewpoint, then high probability matches between multiple \annots{}
+      provides stronger evidence that all of those \annots{} are the same
+      \name{} than if each match was be considered individually.
+    Likewise, low probabilities between pairs of \annots{} must be overcome by
+      stronger evidence if those two \annot{} are to match.
+    This is why we choose a graph-based approach for our inference algorithm.
+    We must be carefully construct our graph and choose an inference algorithm
+      that does not penalize pairs of \annots{} that are not comparable.
+
+    \subsection{Learning the match probability}
+        Our first task is to learn an \annot{}-vs-\annot{} probability of
+          matching, not matching, and not comparable to replace the LNBNN
+          scoring mechanism from the previous chapter.
+        These probabilities will form the basic information of our graph
+          algorithm.
+        To compute these probabilities we start with our matching algorithm to
+          establish feature \correspondences{} between two \annots{}.
+        Then we build a \glossterm{\matchvec{}} --- a fixed-length set of
+          measurements between two \annots{} that captures a rich notion of both
+          similarity and distinctivness.
+        We use labeled training data to learn a function that transforms a
+          \matchvec{} into a probability distribution over the three possible
+          matching events.
+
+        Given two \annots{} $\X$ and $\Y$, we begin by establishing feature
+          \correspondences{}.
+        This can be done in either a one-vs-one or one-vs-many fashion:
+        the one-vs-one method assigns each feature in \annot{} $\X$ to its
+          nearest neighbor (in descriptor space) in $\Y$, The one-vs-many method
+          is the same one presented in~\cref{sec:baselineranking}.
+        We explore the use of one-vs-one matching for all pairs in a set of
+          unnamed \annots{} because it reliably establishes \correspondences{}
+          regardless of the number of times any specific individual appears.
+        In either case, before constructing the \matchvec{} we remove
+          spatially invalid \correspondences{} using spatial verification as
+          described in~\cref{sec:sver}.
+        We then we construct the \matchvec{} between $\X$ and $\Y$ using both
+          local and global information.
+        A vector of local measurements is made for each feature
+          \correspondence{}.
+        Because the number of \correspondences{} varies, we transform this set
+          of vectors into a fixed length ``local \matchvec{}'' so it can be used
+          as input to a learning algorithm.
+        The final fixed-length \matchvec{} is the result of concatenating the
+          local \matchvec{} with a set of global measurements.
+
+        Before we discuss the details of identification we describe
+        (1) the measures that we propose to use to construct the match vector,
+        (2) how we plan to fix the length of the local \matchvec{}, and
+        (3) our choice of learning algorithm and a training procedure to
+          construct the match probability model.
+        Because the resulting scoring mechanism depends on a dynamic database
+          we will detail how we plan to handle changes in database size.
+
+        \subsubsection{Measures}
+            The purpose of a \matchvec{} is provide a learning algorithm with
+              information needed to determine whether a pair of \annots{} is a
+              match, is not a match, or there is not enough information to tell.
+            To capture this information we choose measures of similarity,
+              distinctivness, alignment, quality, and viewpoint.
+
+            \paragraph{Local measures}
+            Once we have computed feature \correspondences{} using either a
+              one-vs-one or one-vs-many technique we construct a small vector of
+              local measures for each feature \correspondence{}.
+            Each local vector measures %
+            the strength and the distinctivness of the \correspondence{}.
+            Strength is a similarity measure, while distinctiveness is a
+              measure of how crowded the descriptor space is \wrt{} other
+              \annots{} in a from the current species of interest.
+            We refer to this as a ``normalizing database''.
+            In LNBNN we used the $\K\th$ nearest neighbor order statistics to
+              measure this distinctivness.
+            Here we add measures and allow the learning algorithm to choose.
+            Many of the measures we choose will differ depending on the order
+              of the query and matched \annot{}.
+            To increase the discriminating power of the \matchvec{} we
+              experiment with reciprocal versions of all asymmetrical
+              measurements.
+            Reciprocal measurements capture measurements that would have been
+              made if the query and database \annots{} were swapped.
+            Techniques that add symmetry such as reciprocal nearest neighbors
+              have been shown to improve accuracy in matching applications at
+              the cost of efficiency~\cite{qin_hello_2011}.
+
+            \newcommand{\Jname}{\set{J}}
+            We now define the information needed to compute the local
+              measures.
+            Given a feature \correspondence{} we search for the $\K'$ nearest
+              neighbors of the query feature in the normalizing database,
+              $\NormDB$.
+            Similar to normalizer selection~\cref{sub:featmatch}, we constrain
+              this nearest neighbor search such that each returned neighbor
+              belongs to a unique \name{}.
+            \begin{equation}
+                \NN_{\tt{name}}(\NormDB, \desc_i, \K') \eqv
+                \Jname \eqv
+                \dotarrII{j}{\K'} \suchthat
+                    \nid_{j_a} \neq \nid_{j_b} \quad
+                    \forall a, b \where a \neq b
+            \end{equation}
+            In the one-vs-one case this set of normalizing neighbors must be
+              computed in a separate step from establishing \correspondences{}.
+            In the one-vs-many case this has already been done (with $\K' = \K
+              + \Knorm$) because the normalizing database and exemplar database
+              are the same.
+            In both cases the non-reciprocal local measures are defined for
+              each feature in $\desc_i \in \X$ with a spatially verified
+              \correspondence{} in $\desc_j \in \Y$.
+            To compute the reciprocal measures, $\K'$ normalizing neighbors
+              must also be found for each corresponding feature.
+            Additionally, in the one-vs-one case we must search for
+              $\desc_j$'s nearest neighbors in $\X$ until $\desc_i$ is found.
+            Given this information we can now define the local measures.
+
+            \begin{itemize}
+                \item \textbf{LNBNN score}:
+                    This score is defined in~\cref{eqn:lnbnn} and has been
+                      shown to produce useful rankings in our experiments.
+                    Therefore is should also be useful in learning the match
+                      probability.
+                    Note that in the one-vs-one case this value may be
+                      negative if we use definition of the normalizing feature
+                      from~\cref{sub:featmatch}.
+                    However, this is potentially beneficial for the learning
+                      algorithm because it indicates that a normalizing
+                      descriptor is more similar to a query feature than the
+                      corresponding feature.
+
+                \item \textbf{Foregroundness score}:
+                    In~\cref{sub:exptfeatmatchscore} our experiments including
+                      foregroundness provided one of the most significant
+                      increases in accuracy.
+                    We include the foregroundness of $w_i$ and $w_j$
+                      independently in order to learn a good combination of
+                      measures.
+
+                \item \textbf{SIFT \correspondence{} distance}:
+                    This is the Euclidean distance between the query and its
+                      corresponding feature descriptor, $\elltwo{\desc_i -
+                      \desc_j} / Z$.
+                    Recall $Z\tighteq\sqrt{2}$ for SIFT descriptors.
+                    This information is partially contained in the LNBNN
+                      score.
+
+                \item \textbf{SIFT normalizer distance}:
+                    This is the Euclidean distance between the query feature
+                      and its normalizing neighbor, $\elltwo{\desc_i -
+                      \descnorm_{i}} / Z$.
+                    This information is the other part of the LNBNN score.
+
+                \item \textbf{Correspondence neighbor rank}:
+                    \devcomment{
+                    Need to figure out and rectify the difference between the
+                    name based and the \annot{} based nearest neighbor
+                    results.
+                    Especially in the one-vs-one and one-vs-many case.
+                    }
+                    This is the rank of the corresponding feature in the
+                      nearest neighbor list.
+                    In the one-vs-one case this value is always $\baseIdx$,
+                      but the reciprocal version of this measure may be
+                      different.
+                    In the one-vs-many case this value can range from $1$ to
+                      $\K$.
+                    In the reciprocal version if the $\desc_i$ is not in
+                      $\desc_j$'s top $\K'$ nearest neighbors then it is given a
+                      default value equal to the number of descriptors searched.
+                    %Note that if a query feature has more than one
+                    %  \correspondence{} to a \name{} then both
+                    %  \correspondences{} will receive the same value.
+                    %In the one-vs-many case this value is $k \where
+                    %  \ell_{j_k}\teq{}\ell_{j} \AND j_k \in \Jname$, and
+                    %  can range from $\baseIdx$ to $\K$.
+
+                \item \textbf{Nearest unique name distances}:
+                    This simply appends all the distances to the nearest
+                      descriptors from the $\K'$ unique names,
+                      $\curly{\elltwo{\desc_i - \desc_{k}} / Z \quad \forall k
+                      \in \Jname}$.
+                    This includes distances to all candidate normalizers.
+                    In the one-vs-many case this also includes the distance to
+                      other corresponding neighbors.
+                    %\ldots, %\elltwo{\desc_i - \desc_{j_{\K'}}} / Z}$.
+                    The goal of adding this information is to provide a richer
+                      description of the local density around the query feature
+                      in descriptor space.
+                    Note that in the one-vs-many case the SIFT
+                      \correspondence{} distance may be duplicated in these
+                      measures if the \correspondence{} was the nearest
+                      \correspondence{} to that name.
+                    In this case, the position will correspond to its
+                      \correspondence{} neighbor rank.
+
+                \item \textbf{Spatial verification error}:
+                    This is measured using~\cref{eqn:inlierdelta}.
+                    It captures how well this \correspondence{} conforms to
+                      the homography computed between two \annots{}.
+                    We include measurements from spatial verification because
+                      we have observed that \correspondences{} in correct
+                      matches seem to be more aligned than incorrect matches
+                      with similar LNBNN scores.
+
+            \end{itemize}
+
+            \paragraph{Global measures}
+            It is unlikely that a learning algorithm would be able to
+              distinguish between the events where two \annots{} do not match
+              and where two \annots{} are not comparable using only local
+              information.
+            The learning algorithm must also account for the fact that local
+              measures are computed with respect to a dynamic database.
+            An incorrect LNBNN score computed using a small database may be
+              much larger than a correct LNBNN score computed using a large
+              database because more patterns will be distinctive when the
+              database is small.
+            Therefore we propose several global measures to account for these
+              issues.
+            The global measurements we propose are:
+            \begin{itemize}
+
+                \item \textbf{Viewpoint labels}:
+                    These labels are produced using an \annot{} viewpoint
+                      classification algorithm.
+                    For each pair of \annots{} we add three dimensions to the
+                      similarity vector:
+                    (1) the viewpoint label of the first \annot{},
+                    (2) the viewpoint label of the second \annot{}, and
+                    (3) the absolute difference between viewpoint labels of
+                      the \annots{} (done by mapping each viewpoint label to an
+                      angle representing yaw).
+
+                \item \textbf{Quality labels}:
+                    We use the output of a trained \annot{} quality classifier
+                      to obtain three measures of global similarity:
+                    (1) the quality label of the first \annot{},
+                    (2) the quality label of the second \annot{}, and
+                    (3) the absolute difference between quality labels of the
+                      \annots{}.
+
+                \item \textbf{Database size}:
+                    Because several of the measured properties depend on a
+                      dynamic database we include properties of the database ---
+                      such as the number of \annots{} in the database --- are
+                      also included in the vector to provide context.
+
+                \item \textbf{Number of \correspondences{}}:
+                    The number of \correspondences{} between two \annots{} can
+                      provide some information about the quality of a match.
+                    As a rule of thumb, correct pairs of \annots{} tend to
+                      generate more \correspondences{} than incorrect pairs.
+
+                \item \textbf{Total LNBNN score}:
+                    This is the exact LNBNN score measure we have previously
+                      used to rank database \annots{}.
+                    Including this measure should encourage that the learning
+                      algorithm to perform with the same baseline separability
+                      as our original algorithm.
+                    Because other information is also included in the
+                      \matchvec{} the learned probabilities should be more
+                      separable.
+
+            \end{itemize}
+
+        \subsubsection{Computing a fixed-length vector}
+            Now that we have computed a local \matchvec{} for each feature
+              \correspondence{} we must combine this variable length set into a
+              fixed length vector.
+            This is important because machine learning algorithms expect that
+              input vectors have a fixed length and that the dimensions are
+              comparable between inputs.
+
+            \newcommand{\Ltop}{L_{\tt{top}}}
+
+            Typically, there will be less than $100$ feature
+              \correspondences{} after spatial verification.
+            Of these, we have observed that only the top $10$-$15$ LNBNN
+              scores seem to impact the results of the single \annot{}
+              identification algorithm.
+            Therefore we propose to compute a fixed-length vector by simply
+              taking these top $\Ltop\teq=10$ local similarity vectors ordered
+              by LNBNN score.
+            If fewer than $\Ltop$ \correspondences{} occur the missing values
+              are set to default values that will depend on the missing
+              measurement.
+            Also, we can include summaries if there are more than $\Ltop$
+              \correspondences{}.
+
+        \subsubsection{Learning the match probability}
+            % 4.2.1.3: Training:  choice of algorithms
+
+            Given this fixed-length vector we must now learn a function that
+              maps these measures onto probability.
+            This involves choosing a learning algorithm and generating labeled
+              training example.
+            First we discuss two possible learning algorithms for this task.
+            Then we describe how we generate training data and learn the
+              probability model.
+
+            One choice of learning algorithm is a random forest of decision
+              trees~\cite{ho_random_1995,amit_shape_1997,breiman_random_2001}.
+            Each node of each tree in a random forest compares a single
+              dimension of a feature vector to a learned threshold.
+            Depending on the comparison the feature is pushed down the tree
+              either left or right until it reaches a leaf node.
+            Random subsets of feature vector dimensions are used by each tree
+              to reduce the correlation between the tests chosen by different
+              decision trees in the ensemble.
+            Random forests implicitly select the relevant parts of features
+              and return a probability distribution over all classes.
+            Random forests are a natural choice for the multi-class learning
+              problem and therefore are the primary method that we investigate.
+
+            Another choice of learning algorithm is a binary support vector
+              machine (SVM)~\cite{vapnik_statistical_1998}.
+            Two binary SVMs can be combined in order to produce an output over
+              our three event space.
+            An SVM learns a maximum distance hyperplane that separates
+              positive from negative training examples.
+            If training examples are inseparable, then a soft-margin SVM can
+              be used.
+            An SVM is often used with a kernel, which can increase the
+              separating power of the input features but can also lead to
+              overfitting.
+            Examples of commonly used kernels are:
+            the linear kernel, polynomial kernel, and radial basis function.
+            Probability can be obtained from an SVM using Platt's scaling
+              method~\cite{platt_probabilistic_1999}.
+            We note SVMs as an alternative learning algorithm, but because of
+              the extra computation needed to generalize to the multi-class
+              setting and output probability distributions we focus primarily on
+              random forests.
+
+            Now that we have chosen a learning algorithm we must generate
+              training data.
+            To generate training data we must have a labeled set of \annot{}
+              pairs.
+            To collect training data we ask users to label pairs of \annots{}
+              as one of the three matching cases.
+            We augment this collection using labels heuristically generated
+              with our current algorithms.
+            We label a pair of \annots{} as matching if they are both have at
+              least \qualGood{} quality, similar viewpoints, and the same
+              \name{}.
+            Likewise, we label a pair of \annots{} as not matching if it meets
+              the same conditions expect each \annot{} has a different \name{}.
+            We generate not comparable labels by searching for pairs of
+              \annots{} (regardless of name labeling) with different viewpoints
+              and low LNBNN similarity scores.
+            We use this training set to fit a model that learns the match
+              probabilities.
+            To account for labeling errors we inspect the training pairs with
+              the largest differences between the predicted label and the actual
+              label.
+            After correcting these cases we will retrain and repeat this
+              procedure for several iterations.
+
+        \subsubsection{Handling changes in database size}
+            As the \annots{} are added to the database it will be necessary to
+              update our learned probability model.
+            This is because measurements in the \matchvecs{} depend on a
+              dynamic database.
+            We have taken steps to account for this by including database
+              information in the \matchvec{} to provide context to the learning
+              algorithm.
+            This will serve to interpolate match scores between trained
+              database sizes.
+            However, to extrapolate beyond database sizes seen during training
+              it will be necessary to update or retrain our probability model
+              every so often.
+
+            As a baseline we propose an amortized retraining scheme that
+              occurs whenever the database size doubles.
+            This is because we have observed evidence that LNBNN scores
+              decrease as the database grows but by smaller and smaller amounts.
+            The learned model will become out of date as soon as new \annots{}
+              are added to the database, but the probabilities should still be
+              approximately correct.
+            If the chosen learning algorithm can be trained quickly (\eg{} a
+              random forest or linear SVM) then we can adjust our rate of
+              retraining.
+            We will experiment with the amount of time it takes to train a
+              model at different database sizes in order to choose an
+              appropriate schedule.
+
+      \subsection{Graph inference}\label{subsec:graphinf}
+        % 4.2.2:
+        % Here is where you introduce the structure of the graph and the
+        %   different edge types and different vertex sets.
+        % You may need to introduce a little more more about the ideas
+        %   and structures of the algorithms, focusing on the significance
+        %   of the ``non-comparable'' case.
+
+        We now introduce the graph-based identification algorithm.
+        This algorithm infers which \annots{} in a set are likely to show the
+          same individual by combining information across multiple images.
+        The set of input \annots{} is broken into two sets:
+        (1) the \glossterm{\uset{}} --- a set of \annots{} without \name{}
+          labels and
+        (2) the \glossterm{\lset{}} --- a set of \annots{} with \name{}
+          labels.
+        The output of this algorithm is an assignment of new or existing
+          \name{} labels to the unlabeled \annots{} and corrections in the
+          \name{} assignment of the labeled \annots{}.
+
+        As defined this algorithm can address many challenges in the
+          identification workflow.
+        Typically the \uset{} will consist of the \annots{} in an
+          \occurrence{} and the \lset{} will be a subset of \exemplars{} in the
+          \masterdatabase{}.
+        When the \masterdatabase{} is empty, then \intraoccurrence{} matching
+          can be solved using this algorithm.
+        When there is a single unlabeled \annot{} --- the problem addressed
+          in~\cref{chap:matching} --- then \vsexemplar{} matching can be solved
+          using this algorithm.
+        Other sets of \annots{} can be chosen to facilitate merge and split
+          checks.
+        These details will be discussed in further sections.
+
+        In this section we propose how we might implement this algorithm,
+          including the details of graph construction and label inference.
+        We consider three methods.
+        The first optimizes a global multicut objective and directly assigns
+          labels to \annots{}.
+        The second infers a joint probability distribution over the name
+          labels using a directed Bayesian network.
+        The third is an expectation maximization (EM) algorithm that also
+          infers a posterior probability distribution over name labels, but does
+          this using an undirected graph.
+
+        \subsubsection{Graph construction}
+
+            All inference algorithms presented in this section perform
+              inference on an \glossterm{\idengraph{}}.
+            Some algorithms may modify this graph slightly, but the basic
+              construction is the same.
+            To construct the \idengraph{}, each \annot{} becomes a node.
+            An edge in this graph represents the potential that two \annots{}
+              are the same individual.
+            There are three types of edges:
+            (1) a set of edges that connects all potential pairwise matches in
+              the \uset{},
+            (2) a set of edges connecting \annots{} within each \name{} in the
+              \lset{}, and %
+            (3) a set of sparse edges between the \uset{} and the \lset{}.
+            The sparse set of edges is determined by finding feature
+              \correspondences{} between the \uset{} and the \lset{} (similar
+              to~\cref{sub:featmatch}).
+            These different edge types are illustrated
+              in~\cref{fig:edgeexample}.
+
+            \edgeexample{}
+
+            The identification goal is accomplished by optimizing an objective
+              function to cut edges such that the resulting connected components
+              indicate newly identified \names{} in the \uset{} as well as any
+              split or merge cases in the \lset{}.
+            Each edge is weighted based on the pairwise match probability, but
+              the precise definition will depend the inference algorithm.
+            We must take care to correctly weight edges between pairs of
+              \annots{} that are unknown.
+
+            Because the goal of this algorithm is to produce a set of
+              labelings, we are not concerned with labeling two non-comparable
+              \annots{} (that are actually the same) with different name labels
+              if there is no other evidence.
+            Therefore, the we use the probability that two \annots{} are the
+              same as the baseline edge weight (although some algorithms may
+              further modify this).
+
+            Recall that for any pair of \annots{} $(\annoti{}, \annotj{})$
+              there are three possible matching events.
+            These events are disjoint and the probability of these events is
+              formally defined as:
+            \begin{enumerate}
+                \item $\Pr{\matchij}$ = $\Pr{\sameij \isect \compij}$ --- the
+                    probability that two \annot{} match is the probability
+                      that two \annots{} are the same and they are visually
+                      comparable.
+
+                \item $\Pr{\notmatchij}$ = $\Pr{\diffij \isect \compij}$ ---
+                    the probability that two \annots{} do not match is the
+                      probability that two \annots{} are not the same and they
+                      are visually comparable.
+
+                \item $\Pr{\notcompij}$ --- the probability that two \annots{}
+                    are not visually comparable (\eg{} they have different
+                      viewpoints or have their distinguishing patterns
+                      occluded).
+            \end{enumerate}
+
+            We can use our match probabilities to compute the prior
+              probability that two \annots{} are the same (regardless of
+              comparability).
+            Let $\ell_i$ be the inferred name label of \annot{} $i$.
+            Let $p_{ij} = \Pr{\sameXX{}} = \Pr{\same{\annoti}{\annotj}}$ be
+              the probability that two \annots{} are the same.
+            Let $\Pr{\compXX{}} = \Pr{\comparable{\annoti}{\annotj}}$ be the
+              probability that two \annots{} are comparable.
+            We have measured the probability that two \annots{} are the same
+              and comparable as well as the probability that two \annots{} are
+              comparable.
+            We first compute the probability that two \annots{} are the same
+              given that they are comparable.
+            \begin{equation}
+                \Pr{\sameXX \given \compXX} = \frac{ \Pr{\sameXX \AND \compXX} }{\Pr{\compXX}}
+            \end{equation}
+            The event that two \annots{} are comparable has only two states.
+            Thus by the law of total probabilities the probability that any
+              two \annots{} are the same can be expressed as:
+            \begin{equation}\label{eqn:psame}
+                \Pr{\sameXX} = \Pr{\sameXX \given \compXX} \Pr{\compXX}
+                + \Pr{\notcompXX} \bgprobXX
+            \end{equation}
+            where $\bgprobXX = \Pr{\sameXX \given \notcompXX}$ is the
+              background probability that two \annots{} are the same given they
+              are not comparable.
+            Assuming uniform sampling, one obvious definition of the
+              background probability is $\bgprobXX=\frac{1}{\card{\nids}}$,
+              which denotes the probability of randomly choosing two \annots{}
+              of the same animal in a population of size $\card{\nids}$.
+            However, there may be other choices for this background
+              probability.
+            \devcomment{
+            For instance, we may assume that it is equally likely that two
+            non-comparable \annots{} are the same and set $\bgprobXX=.5$.
+            What is the inconsistency between this definition and the multicut
+            objective.
+            }
+
+        \subsubsection{Multicut inference}
+
+            \newcommand{\nAnnots}{M}
+            \newcommand{\nNames}{N}
+            The first inference algorithm we consider is inspired by
+              graph-based algorithms used for computing image
+              segmentations~\cite{kappes_globally_2011,
+              kappes_higherorder_2016}.
+            This algorithm optimizes the multicut objective function.
+            Let $\nAnnots$ be the number of labeled plus the number of
+              unlabeled \annots{}.
+            Let $\edges$ be the set of edges in the \idengraph{}.
+            Let $\L = \curly{1, \ldots, \nNames}$ be the set of possible
+              \name{} labels.
+            Typically we choose many name labels as \annots{} (\ie{} $N=M$) to
+              account for the ``worst case'' where each \annot{} belongs to a
+              different \name{}, but in most cases some name labels will be
+              unused.
+            Let $\ellv \in \L^{\nAnnots}$ be a vector where $\ell_i$ indicates
+              the \name{} assigned to the $i\th$ \annot{}.
+            The edge between each pair of \annots{} $i$ and $j$ is weighted by
+              a real number $\beta_{ij} \in \rangeinin{-\inf, \inf}$ where
+              positive numbers indicate that two \annots{} should receive the
+              same \name{} label, and negative numbers indicate that they should
+              receive different labels.
+            We set $\beta_{ij} = \logit{p_{ij}} = \logitI{p_{ij}}$.
+            For a given labeling of \annots{} the energy of the multicut
+              objective function is the sum of all edge weights where the
+              \annots{} on the edge's endpoints have different labels.
+            In essence a solution where $\ell\getitem{i} \neq \ell\getitem{j}$
+              indicates that the edge between \annots{} $i$ and $j$ has been
+              cut, and the energy is the sum of all cut edge weights.
+            \begin{equation}\label{eqn:cutobjective}
+                \argmin{\ellv \in \L^{M}}
+                \sum_{i,j \in \edges}
+                    \beta_{ij} (\ell\getitem{i} \neq \ell\getitem{j})
+            \end{equation}
+            The resulting connected components define the newly inferred
+              \names{} as illustrated in~\cref{fig:gencutfig}.
+            Because there are no ``unary'' terms, the graph must contain both
+              positive and negative edges for this objective function to be well
+              posed.
+            Note that omitting an edge is equivalent to setting that edge
+              weight to $\beta_{ij}=0$.
+
+            \gencutfig{}
+
+            The goal of the algorithm is to determine which \annots{} are the
+              same.
+            However, we must be very careful in how we define ``same''.
+            The definition of same in~\cref{eqn:psame} contains the term
+              $\bgprobXX=\frac{1}{\card{\nids}}$.
+            However, this may inappropriately penalize the cut algorithm in
+              the case where a set of \annots{} --- all truly belonging to the
+              same individual --- have many non-comparable pairs, but there is a
+              strong path of positive evidence connecting the whole set.
+            In order to ensure that the objective does not penalize a case we
+              set $\bgprobXX=.5 - \eps$ denoting that it is almost completely
+              uncertain as to whether or not the two \annots{} match, but they
+              will not be matched unless there is some indirect evidence that
+              they are the same.
+            Using this definition, the multicut algorithm will not hesitate to
+              label a back-right, back-left, and back \annot{} with the same
+              label if the back-right and back-left both strongly match the back
+              \annot{}, even if the back-right and back-left are non-comparable.
+
+            \devcomment{
+            However, this definition is clearly a hack as it haphazardly breaks fundamental
+            probability assumptions.
+            It is likely that this is due to a misinterpretation of how the match probabilities
+            map onto this objective.
+            What can the algo tell is the same for sure?
+            }
+
+            As defined it is the connected components that define the new
+              \names{} and \emph{not the labels} in the minimum assignment.
+            This is because in the proposed objective function there is no
+              penalty for giving the same \name{} to multiple \annots{} in
+              different connected components if those \annots{} were not
+              neighbors in the input graph.
+            However, it does not change the value of the objective function to
+              ensure all connected components are given different labels.
+            In all discussions we assume this post-processing step has
+              occurred and treat $\ellv$ as if it truly contains distinct
+              labels.
+            Further post-processing can reassign values of these labels as
+              long as it does not change the partitioning, therefore we set
+              $\nid_i = \ell_i$.
+
+        \subsubsection{Other inference algorithms}
+            We are also considering other inference algorithms such as
+              expectation maximization and Bayesian network inference.
+            In each case a major concern will be the handling of three way
+              labeling --- match, not match, and not comparable --- produced by
+              pairwise matching.
+            No matter what inference algorithm is used the output is always a
+              clustering of annotations.
+            This means that graph inference can be used as a black box
+              regardless of the underlying algorithm.
+
+    \subsection{Experimental setup}
+        To determine the effectiveness of the algorithms presented in this
+          section we propose experiments that test
+        (1) the new scoring mechanism's separability and
+        (2) the inference algorithm's identification accuracy.
+        These experiments will be designed so we can compare our previous
+          experiments (see~\cref{sec:experiments}) with new results.
+
+        Separability will be measured using a similar setup similar
+          to~\cref{sub:exptsep}.
+        We construct a set of \groundtrue{} and \groundfalse{} \annot{} pairs.
+        For each pair, we use our new scoring mechanism to compute the
+          probability that two \annots{} are the same.
+        These \groundtrue{} and \groundfalse{} scores define an ROC curve.
+        The new scoring mechanism is successful if the area under the ROC
+          curve is greater than the one measured for LNBNN score separability.
+
+        To measure identification accuracy we will consider two setups.
+        The first is a constrained single image setup that is comparable to
+          the previous experiments.
+        The second will be standalone measure to the overall quality of the
+          inference algorithm.
+        In the first case, we consider performing inference for only a single
+          query \annot{} --- \ie{} only a single unlabeled \annot{}.
+        This is done for multiple query \annots{}.
+        We measure the percent of queries that are assigned the correct label.
+        This measurement can be directly compared to the percent of queries
+          ranked first measured for the single image identification algorithm
+          experiments.
+
+        The second measure of identification accuracy are precision-recall
+          curves.
+        This allows us to test our inference algorithms with multiple query
+          \annots{}.
+        We measure the percent of true positives $\TP$, false negatives $\FN$,
+          and false positives $\FP$.
+        True positives are \groundtrue{} pairs of \annots{} with the same
+          inferred name label.
+        False negatives are \groundtrue{} pairs of \annots{} with the
+          different inferred name label.
+        False positives are \groundfalse{} pairs of \annots{} with the same
+          inferred name label.
+        Using this we can define a precision recall curve.
+        Precision and recall are defined as $p = \frac{\TP}{\TP + \FP}$ and $r
+          = \frac{\TP}{\TP + \FN}$.
+        A solution has greater precision if fewer \groundfalse{} pairs are
+          given the same label.
+        A solution has greater recall if fewer \groundtrue{} pairs are given
+          different labels.
+        This is combined together into an $F_1$-score $F = \frac{2\TP}{2\TP +
+          2\FN + \FP}$, which is the harmonic mean of precision and recall.
+        This will serve as an overall measure to summarize the performance of
+          the inference algorithm.
+
+\section{Occurrences}\label{sec:occurgroup}
+    Before we can address the identification problem in the context of the
+      identification workflow, we must define how images are grouped into
+      occurrences.
+    In this section we propose a clustering algorithm to accomplish this task.
+
+    \paragraph{Occurrence definition}
+    The Darwin Core defines an \occurrence{} as a collection of evidence that
+      shows an organism exists within specific location and span of
+      time~\cite{wieczorek_darwin_2012}.
+    For our purposes this amounts to a cluster of images localized in space
+      and time.
+    We propose that the \occurrence{} grouping algorithm should perform
+      agglomerative clustering on the GPS coordinates and time specified in the
+      image metadata.
+
+    \paragraph{Space-time image distance}
+    Towards this goal we define a space-time feature $\g_i$ for each image
+      $i$, and a pairwise distance, $\Delta(\g_i, \g_j)$, between these
+      features.
+    This feature will a two dimensional feature tuple, %
+    $\g_i = \paren{\time_i, \gps_i}$, where the first component is the POSIX
+      timestamp $\time_i$, and the second component is a GPS coordinate %
+    $\gps_i = \brak{\lat_i, \lon_i}^{T}$, where the angles of latitude and
+      longitude are measured in radians.
+    To compute this distance between two images $\g_i$ and $\g_j$ we first
+      compute the distance in each component of the feature tuple.
+    The difference in time is the absolute value of the timedelta,  %
+    $\Delta_t(\g_i, \g_j) = \abs{\time_i - \time_j}$, which is in seconds.
+
+    % DISTANCE BETWEEN TWO IMAGES (space and final)
+    Next, the distance in space is computed by approximating the Earth as a
+      sphere.
+    In general, the distance between two points on a sphere with radius $r$ is
+      a function of inverse haversines, and is expressed as:
+    \begin{equation}\label{eqn:geodistance}
+        d(\gps_i, \gps_j, r) =
+        2 r \asin{\sqrt{
+            \haversine{\lat_i - \lat_j} +
+            \haversine{\lon_i - \lon_j} +
+            \cos\paren{\lat_i} \cos\paren{\lat_j}}}
+    \end{equation}
+    In the previous equation, $\haversine{\theta} = \haversineFULL{\theta}$ is
+      the half vertical sine function.
+    Thus, we arrive at the spatial distance between two images by estimating
+      the radius of the earth to be $r=6367$ kilometers.
+    \begin{equation}
+        \Delta_s(\g_i, \g_j) = d(\gps_i, \gps_j, 6367).
+    \end{equation}
+    This results in distance in seconds and a distance in kilometers, which
+      are in incompatible units.
+    To combine these distances we convert kilometers to seconds by
+      heuristically estimating the walking speed, $S$, of an animal (for zebras
+      we use $S=2\sciE{-3}$ kilometers per second).
+    This allows us to cancel kilometers from the expression and express GPS
+      distance as a unit of time:
+    $\frac{\Delta_s(\g_i, \g_j)}{S}$.
+    This distance can be interpreted as the total amount of time it would take
+      an animal to move between two points.
+    The total distance between two images is the sum of these components.
+    \begin{equation}\label{eqn:imgdist}
+        \Delta(\g_i, \g_j) =
+        \Delta_t(\g_i, \g_j) + \frac{\Delta_s(\gps_i, \gps_j)}{S}
+    \end{equation}
+    Notice that if there is no difference in GPS location, then this measure
+      becomes to a distance in time.
+
+    \paragraph{Clustering procedure}
+    Having defined pairwise a distance between two images, we proceed to
+      describe the agglomerative clustering algorithm.
+    There are two inputs to the agglomerative clustering algorithm:
+    (1) The matrix of pairwise distance between images, and
+    (2) the minimum distance threshold between two images.
+    The matrix of distances is computed using~\cref{eqn:imgdist}, and we set
+      the distance threshold to $600$ seconds.
+    Any pair of images that is within this threshold connected via a linkage
+      matrix.
+    Connected components in this matrix form the final clusters that we use as
+      \occurrences{}.
+
+    \paragraph{Discussion of occurrences}
+    These computed \occurrences{} are valuable measurements for multiple
+      components of the IBEIS software.
+    At its core an \occurrence{} describes \wquest{when} a group of animals
+      was seen and \wquest{where} that group was seen.
+    However, to answer the questions like \wquest{how many} animals there
+      were, \wquest{who} an animal is, \wquest{who else} is an animal with, and
+      \wquest{where else} have these animals been seen, the \annots{} in the
+      \occurrence{} must be grouped into individual \encounters{} and then
+      matched against the \masterdatabase{}.
+    The next section describes the first of these procedures:
+    the \intraoccurrence{} identification algorithm that produces
+      \encounters{}.
+
+  \section{Identification}\label{sec:iden4}
+    We now discuss how the graph-based algorithm introduced
+      in~\cref{sec:geniden} can be applied in the identification workflow.
+    The input to the graph-based algorithm is a set of \annots{} divided into
+      \aan{\uset{}} and \aan{\lset{}}, which are the \annots{} in
+      \aan{\occurrence{}} and the \exemplars{} in the \masterdatabase{}
+      respectively.
+    The graph-based algorithm will simultaneously group \annots{} in
+      \aan{\occurrence{}} into \encounters{} and then match the \encounters{}
+      against the \masterdatabase{}.
+    This results in a set of clusters, where each cluster represents a single
+      individual and contains the matching \annots{} in both the \encounter{}
+      the \masterdatabase{}.
+
+    This approach to identification addresses the challenges discussed in the
+      introduction of this chapter.
+    The learned probability measure will help the algorithm to account for
+      issues such as quality and viewpoint and improve as images are added to
+      the \masterdatabase{}.
+    Because this algorithm returns a clustering it captures the notion that
+      \aan{\encounter{}} correctly matches zero, one, or multiple
+      \masterdatabase{} \names{}.
+    Because the algorithm simultaneously optimizes the clustering of
+      annotations it will be able to exploit multiple images in \encounters{} to
+      determine \exemplar{} matches.
+    Likewise, matches to multiple \exemplars{} help the algorithm to determine
+      \encounter{} matches.
+
+
+    \subsection{Constructing the basic identification graph}
+    To apply the graph-based algorithm to the identification step in the
+      workflow we initialize a graph using all annotations in the \occurrence{}
+      and the \exemplars{}.
+    There are three sets of edges that must be constructed:
+    (1) edges within the \uset{},
+    (2) edges between the \uset{} and the \lset{}, and
+    (3) edges is between the \lset{}.
+
+    The first step is to construct edges within the \uset{}.
+    We generate feature correspondences for each pair of \annots{} in
+      \aan{\occurrence{}} using the one-vs-one matching algorithm.
+    The \exemplars{} are used as the normalizing database to estimate
+      correspondence distinctiveness.
+    These correspondences are filtered using spatial verification and then
+      used to build the pairwise match-vector.
+    Our learned probability model uses the match-vector to estimate the
+      probability that a pair matches, does not match, or is not comparable.
+    This is then transformed into the pairwise probability that these
+      annotations are the same.
+    The probability is then used as a weight on an edge between the pair.
+
+    The next step is to create edges between the \uset{} and the \lset{}.
+    This is done similarly to the single-image identification algorithm.
+    Feature correspondences are first established in a one-vs-many manner, and
+      then spatial verification removes the spurious correspondences.
+    For any unlabeled \annot{}, the majority of potential \exemplar{} matches
+      will be removed.
+    For each surviving match to an \exemplar{} the feature correspondences are
+      enriched using one-vs-one matching.
+    This enriched set of correspondences is then used to create a
+      match-vector.
+    This sparse set of potential matches is used to create for pairs of
+      annotations between the \uset{} and \lset{}.
+    These edges are weighted using the probability learned using the
+      match-vector.
+
+    The final set of edges is between the \lset{}.
+    In this section we consider that the \lset{} does not contain split
+      errors.
+    Therefore we fully connect the \exemplars{} of each \name{} in the
+      \masterdatabase{}.
+    %If we assume that there are no error in the database then we set the
+    %  probability of being the same to $1$.
+    The weight of the edges within each \name{} is computed in the same way as
+      the edges within the \uset{}.
+    We establish one-vs-one matches and computed the match probability.
+
+    \subsection{Inferring individual identities}
+    Given the basic \idengraph{} the task becomes to infer the \names{} of the
+      individuals.
+    We run the inference algorithm from~\cref{subsec:graphinf} as a black box.
+    The output of this algorithm is a clustering of the annotations.
+    The resulting clusters can then be used to integrate the \occurrence{}
+      into the \masterdatabase{}.
+    For each cluster all \annots{} are relabeled to have the same \name{}.
+    If there are \exemplars{} in the cluster a new \name{} is generated.
+    If all \exemplars{} in a cluster have the same \name{} and no other
+      cluster contains an \exemplar{} with the same \name{}, then all
+      \occurrence{} annotations are given that name.
+    All other cases indicate a naming inconsistency in the original
+      \exemplars{}.
+
+    The graph-based algorithm will detect errors in the \masterdatabase{}
+      using information from the \occurrence{}.
+    If all \exemplars{} from multiple \names{} are grouped into the same
+      cluster, then they are merged into the same \name{}.
+    The non-\exemplar{} annotations from each of these \names{} are also
+      relabeled accordingly.
+    %This algorithm will merge \names{} in the \masterdatabase{} if an
+    %  \encounter{} correctly matches more than one \name{} in the
+    %  \masterdatabase{}.
+    If the \exemplars{} of a \name{} are placed in different clusters, then
+      they are split into different \names{}.
+    In this case more work is needed to relabel the non-\exemplar{}
+      annotations of the split \names{}.
+    Further details of error correction in provided in~\cref{sec:errors}.
+
+\section{Exemplar selection}\label{sec:exempselect}
+    % Change terminology from set cover to maximum weight cover
+    %When the \masterdatabase{} is small it is possible to use all \annots{} as exemplars.
+    As the \masterdatabase{} grows, it becomes necessary to perform matching
+      using only a subset of the \annots{} for each \name{} as \exemplars{}.
+    In the \GZC{} exemplar images were chosen by randomly selecting a set of
+      \annots{} from each viewpoint, biased towards higher quality \annots{}.
+    In this section we propose a modified version of the technique suggested
+      by Alessandro Oddone in his MS thesis~\cite{oddone_mobile_2016} to select
+      set of exemplars that robustly covers a wide range of viewpoints and
+      poses.
+    In other words, want to use a small number of \annots{} to represent a
+      \name{} while increasing the visibility of distinguishing markings across
+      multiple viewpoints and poses.
+    This technique casts exemplar selection as a set cover.
+    Our modification changes the definition of covering sets to use the
+      \annot{}-vs-\annot{} matching probabilities introduced
+      in~\cref{sec:geniden}.
+
+    The input to the exemplar selection algorithm is a \name{}, and the output
+      is a chosen exemplar \annots{} for that \name{}.
+    For each pair of \annots{} belonging to a \name{}, we compute the
+      probabilistic \annot{}-vs-\annot{} similarity.
+    Each \annot{} is then assigned a covering set as itself and the other
+      \annots{} in the \name{} with a similarity score above a threshold $t$.
+    We approximate the solution to the minimum set cover problem using a
+      greedy algorithm and use the resulting set covers to define exemplars.
+    We limit the number of exemplars produced by this algorithm by setting a
+      maximum weight limit.
+    We run this algorithm several times to search for a ``good'' value of $t$.
+    An example demonstrating this process is illustrated
+      in~\cref{fig:exemplarcover}
+
+    \exemplarcover{}
+
+    More formally, each name $\nid = \curly{\X_1 \ldots, \X_n}$ can be seen as
+      the universe set containing its \annots{}, which are the items to cover.
+    To compute the candidate covering sets, we first compute a probabilistic
+      similarity score $p_{ij}$ for each pair of \annots{} $\X_i, \X_j$ in the
+      \name{}.
+    Then, each \annot{} $\X_i$ defines a covering set as $\set{S}_i =
+      \curly{\X_i} \union \curly{\X_j \where p_{ij} > t}$.
+    % FIXME: this is not exactly correct.
+    %Let the variable $x_i$, indicates if the set $\set{S}_i$ is used in the set cover.
+    %Let the variable $y_j$, indicates if annotation $\X_j$ is covered.
+    %The optimal set cover satisfies
+    %\begin{equation}
+    %    \begin{aligned}
+    %    \argmin{\set{C}} \sum_{i \in \set{C}} x_i&\\
+    %    \suchthat \sum_{i \where \X_j \in \set{S}_i} x_i \geq 1 &\quad \forall \X_j \in \nid\\
+    %    x_i \in \curly{0, 1} &\quad \forall i \in \set{C}\\
+    %    \end{aligned}
+    %\end{equation}
+    Searching for the optimal set cover is NP-hard, therefore we use the
+      greedy %
+    $(\ln{\card{\nid}} + 1)$-approximation
+      algorithm~\cite{chvatal_greedy_1979,johnson_approximation_1973,lovasz_ratio_1975}.
+    In each iteration of the algorithm the covering set $\set{S}_i$ that would
+      cover the most uncovered \annots{} is added to the result.
+    The set cover algorithm stops when no set is left uncovered or the maximum
+      weight limit is reached.
+    We search for a value of $t$ that minimizes the difference between the
+      weight of the set cover and the maximum weight limit.
+
+\section{Correcting errors}\label{sec:errors}
+    In this section we discuss split and merge errors and how we account for
+      them in the identification workflow.
+    As more \occurrences{} are integrated into the \masterdatabase{}, the
+      learned similarity measure between \annots{} will improve.
+    If the identification workflow was re-run using the newest match
+      probability model it is likely that the results would improve.
+    Because most results will not change it would be tedious and
+      computationally wasteful to rerun the entire history of the identification
+      workflow.
+    Instead we propose to search for these errors and handle them as they are
+      detected.
+    Once they have been detected we will use the graph-based algorithm ---
+      introduced in~\cref{sec:geniden} --- to correct these error cases.
+
+    Split errors are false positives matches --- \ie{} at least two
+      \annots{} that are not the same individual have been incorrectly
+      labeled with the same \name{} either by an algorithm or a reviewer.
+    An example illustrating a split case is shown in~\cref{fig:splitcase}.
+    Several causes of split errors were previously discussed in the
+      introduction of this chapter.
+
+    % ---
+    Merge errors are false negatives --- \ie{} two or more \names{} in the
+      database are actually the same individual.
+    Some merge cases are not technically errors.
+    For instance, when there are no comparable \annots{} between the two
+      \names{} errors, nothing can be done, but the system still must detect and
+      merge these two \annots{} when intermediate viewpoints are added.
+    An example illustrating a simple merge case is shown
+      in~\cref{fig:mergecase}.
+
+    \splitcase{}
+
+    \mergecase{}
+
+    Error cases will often be detected as a natural consequence of on-line
+      identification.
+    A merge case is detected when a newly observed \encounter{} visually links
+      two \names{}.
+    A split case is detected when the \encounter{} has a strong positive match
+      to one \exemplar{} and a strong negative match to another \exemplar{} with
+      the same \name{}.
+    This means that as an individual is observed more often, the likelihood
+      that the individual is involved in an error case decreases.
+    However, if we were to rely only on the natural error detection, then some
+      error cases would be allowed to persist indefinitely.
+    Specifically, \names{} that have not recently been observed are never
+      considered in these natural error checks.
+    For example, if an animal dies then that animal will never be observed
+      again, and any error cases it is involved with will continue to negatively
+      impact distinctivness measures and our learned match probabilities.
+    Therefore, we must periodically perform additional error checks on subsets
+      of the database.
+
+    \subsection{Split checks}
+        %When a observed \encounters{} is matched against a split case \name{}
+        %  it will tend to match the correct parts of the split case and ignore
+        %  the incorrect parts.
+        %It is difficult to distinguish if these ignored matches are due to
+        %  challenges such as lighting, pose, and viewpoint or if it is due to a
+        %  split error.
+        %This is the reason that we operate as if split errors are not present
+        %  in the identification step of the workflow.
+        %Therefore it is necessary to run periodic checks to detect these
+        %  errors.
+        %We propose to do this using the graph-based algorithm.
+        The input to a split check is a single \name{} from the
+          \masterdatabase{}.
+        All \annots{} in this \name{} are used as nodes in the \idengraph{}.
+        Note that we can not rely on just the \exemplars{} because the
+          non-\exemplar{} \annots{} must also be assigned new \name{} labels.
+        The one-vs-one algorithm establishes correspondences between each pair
+          of \annots{} in the \name{}.
+        The learned probability measure is then used to weight all pairs.
+        A \name{} is likely to contain a split error if the inference
+          algorithm returns more than a single cluster.
+        If the confidence in the clustering is smaller than some threshold
+          then the split case is flagged for manual review before it is
+          accepted.
+
+        We propose to employ several heuristics to prioritize the \names{} for
+          which split detection is run.
+        The first heuristic is the number of \annots{} belonging to a \name{}.
+        The \names{} with the largest number of \annots{} should be checked
+          first because these \names{} are the most likely to propagate errors
+          as more \annots{} are added to the system.
+        Second, we propose to use the GPS and time data to compute the maximum
+          ``speed'' of \aan{\name{}} --- \ie{} we use the pairwise comparisons
+          of \annots{}' GPS coordinates and timestamps to determine an upper
+          bound on the animal's speed.
+        If the speed for a \name{} is above a certain threshold, then this
+          indicates a potential split case.
+        Using these heuristics we can avoid applying the split detection
+          algorithm on all \names{} in the database.
+
+    \subsection{Merge checks}
+        Given a set of annotations we detect and correct any merge cases using
+          the graph-based algorithm.
+        In this context each \annot{} belongs to the \masterdatabase{} and
+          therefore is labeled with a \name{}.
+        We build the \idengraph{} using these annotations as nodes.
+        The annotations within each \name{} are linked with an edge denoting
+          they are the same with probability $1$.
+        The one-vs-many algorithm is used to establish sparse correspondences
+          between \names{} and then the one-vs-one algorithm is used to enrich
+          these correspondences.
+        The most recent probability model is used to weight the edges between
+          the \names{}.
+        The inference procedure is then used to compute a new set of clusters.
+        The detected merge cases are the clusters that contains \annots{}
+          previously labeled with different \names{}.
+        These results can be flagged for manual review or automatically merged
+          depending on a confidence threshold.
+
+        To prioritize subsets of the database for merge checks we can use
+          heuristics based on the least recently checked \names{}.
+        These are \names{} that have not had a recent opportunity to be
+          naturally merged.
+        %Because only the \exemplars{} for a \name{} are need to run merge
+        %  checks, they can be executed faster than split checks.
+        %We can check thousands of annotations for merge errors at once.
+        We propose to run merge checks for randomized subsets of the database
+          weighted by the least recently checked measure.
+        %However, merge checks can be executed faster than split checks.
+        %This is because merge checks only need to use the \exemplars{} for
+        %  matching, and the majority of the computation for a merge check
+        %  consists of one-vs-many matching, which is faster than one-vs-one
+        %  matching used in split checks.
+        %Therefore we can check thousands of annotations for merge errors at
+        %  once.
+        %We propose to run merge checks for large randomized subsets of the
+        %  database.
+
+\section{Summary of the identification workflow}\label{sec:summary4}
+    In this chapter we have described how the single image identification
+      algorithm from~\cref{chap:matching} can be adapted into a dynamic setting.
+    We have introduced a graph-based identification technique that exploits
+      multiple images in an \encounter{} and handles the case where an
+      individual is observed for the first time.
+    We have also shown how \exemplar{} individuals in the \masterdatabase{}
+      may be automatically selected.
+    We have addressed how to use new information to detect and recover from
+      errors that can occur during the matching process.
+
+    % chktex-file 17
+    \paragraph{Outline of proposed work}
+    We have observed that the current single image identification algorithm
+      does not fully address the challenges presented by the identification
+      workflow.
+    We have defined these challenges and proposed a graph-based algorithm to
+      address these challenges.
+    In the next year we propose to:
+    \begin{enumerate}
+
+        \item \textbf{Learn pairwise matching probabilities}:
+            %Choose and implement measures for similarity vector.
+            This first involves detailing and describing exactly what measures
+              are put into the one-vs-one similarity vector.
+            Next we must describe how the global one-vs-one similarity vector
+              and a set of fixed length vectors are transformed into a single
+              fixed length one-vs-one similarity vector.
+            Then we must train probabilistic classifiers to map these
+              similarity vectors onto a probability of matching as well as a
+              confidence in that probability.
+
+        \item \textbf{Perform graph based identification inference}:
+            We propose to identify individuals in a set of \annots{} using
+              graph optimization algorithm that either cuts edges or produces a
+              probability distribution over the most likely \annot{} labeling.
+            This involves describing how the graph is built, how edge weights
+              are assigned, how edges are cut, and what the final
+              identifications are.
+
+        \item \textbf{Apply this algorithm to workflow problems}:
+            As described the graph algorithm can be used to address the
+              challenges of \intraoccurrence{}, matching, \vsexemplar{}
+              matching, exemplar selection, and split/merge error detection and
+              correction.
+            After we the graph algorithm is implemented we will apply it to
+              these steps in the identification workflow.
+    \end{enumerate}

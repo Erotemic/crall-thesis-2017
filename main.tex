@@ -1,0 +1,107 @@
+%! TEX root = main.tex
+
+% Define global boolean flags
+\newif\ifonecolumn{}
+\newif\ifusegraphics{}
+\newif\ifpublishversion{}
+\newif\ifrpilayout{}
+%\onecolumntrue{}
+\usegraphicstrue{}
+\publishversiontrue{}
+\rpilayouttrue{}
+
+% --- Document Settings ---
+%\onecolumnfalse{}
+%\usegraphicsfalse{}
+%\publishversionfalse{}
+%\rpilayoutfalse{}
+% ---
+
+\ifrpilayout{}
+    \documentclass[chap]{thesis}
+\else
+    \ifonecolumn{}
+        \documentclass[chap]{book}
+        \newcounter{firstchapter}
+        \setcounter{firstchapter}{0}
+    \else
+        \documentclass[10pt,twocolumn,letterpaper]{article}
+        \newcommand{\chapter}{\section}
+    \fi
+\fi
+
+\input{CrallPramb}
+\input{CrallDef}
+
+\begin{comment}
+    rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-candidacy-2015/ ~/latex/crall-candidacy-2015
+
+    ./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+\end{comment}
+
+%\includeonly{chapter3-matching, chapter4-application}
+%\includeonly{chapter4-application}
+%\includeonly{chapter5-systemchapter}
+%\includeonly{chapter4-application,chapter5-systemchapter}
+
+
+\author{Jonathan P. Crall}
+\ifrpilayout{}
+    \input{thesis_preamb}
+\else
+\fi
+
+
+\begin{document}
+
+\input{def}
+\input{colordef}
+
+\ifrpilayout{}
+    \input{header}
+    %\titlepagedraft{}
+\else
+    \ifpublishversion{}
+        %\tableofcontents{}
+        %\listoffigures{}    
+    \fi
+\fi
+
+%\newcommand{\fnote}[1]{\footnote{#1}}
+\newcommand{\fnote}[1]{ (#1)}
+\ifpublishversion{}
+    \newcommand{\devcomment}[1]{}
+    \newcommand{\chuckcomment}[1]{}
+    \newcommand{\caplbl}[1]{}
+\else
+    \newcommand{\caplbl}[1]{\red(#1)\black\xspace}
+    \newcommand{\devcomment}[1]{\marginpar{\scriptsize{\darkgreen{}\textbf{#1}\black{}}}}
+    \newcommand{\chuckcomment}[1]{\marginpar{\scriptsize{\chuckblue{}\textbf{#1}\black{}}}}
+\fi
+
+\input{figdef1}
+\input{figdef2}
+\input{figdef3}
+\input{figdef4}
+\input{figdef5}
+\input{figdefexpt.tex}
+\input{figdefindiv.tex}
+\input{figdefdbinfo.tex}
+
+\include{chapter1-intro}
+\include{chapter2-related-work}
+\include{chapter3-matching}
+
+\setcounter{chapter}{3}
+\include{chapter4-application}
+
+\setcounter{chapter}{4}
+\include{chapter5-systemchapter}
+\include{chapter6-conclusion}
+
+\bibliographystyle{ieee}
+\bibliography{My_Library_clean}
+%\nobibliography{My_Library_clean}
+
+\end{document}
+% chktex-file 17

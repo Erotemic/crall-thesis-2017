@@ -1,0 +1,281 @@
+\section{Image feature description}\label{sec:featuredescribe}  
+
+    Once each feature has been localized its visual appearance must be
+      described before it can be matched.
+    The goal of feature description is to encode raw image data into a
+      vector --- \ie{} a \glossterm{descriptor}.
+    To represent the visual appearance of a keypoint a descriptor
+      vector should have the following properties:
+    (1) two visually similar patches produce vectors with a small
+      metric distance and
+    (2) visually dissimilar patches have vectors with large distances
+      between them.
+
+    Constructing such a descriptor vector has been a core problem
+      throughout the history of computer vision.
+    The first texture descriptor robust to small image transformations
+      was the SIFT descriptor first published in
+      1999~\cite{lowe_object_1999, lowe_distinctive_2004}.
+    Since then, other hand-crafted algorithms have been proposed.
+    However, results have always been at least comparable to the SIFT
+      descriptor, and SIFT is still an effective and widely used
+      hand-designed descriptors~\cite{mikolajczyk_performance_2005,
+      calonder_brief_2010, bay_surf_2006, leutenegger_brisk_2011,
+      alahi_freak_2012, jegou_triangulation_2014}.
+    A promising direction for outperforming the SIFT descriptor is
+      descriptor learning~\cite{simonyan_descriptor_2012,
+      simonyan_learning_2014, winder_picking_2009}; specifically
+      descriptor learning using deep neural
+      networks~\cite{razavian_cnn_2014, bengio_representation_2013,
+      russakovsky_imagenet_2014}.
+    This section first describes the basic SIFT algorithm and then
+      provides an overview of alternatives that have been proposed to
+      SIFT{}.
+    Work related to learning descriptor vectors using deep neural
+      networks is discussed later in~\cref{sec:dcnn}.
+      
+    \subsection{SIFT}
+        The \glossterm{SIFT descriptor} is a $128$ dimensional vector
+          that summarizes the spatial distribution of the gradient
+          orientations in an image patch~\cite{lowe_distinctive_2004}.
+        To describe a keypoint with a SIFT descriptor, the keypoint's
+          image data is warped using the affine transform of the scale
+          space gradient image into a normalized reference frame
+          (typically $41 \times 41$ pixels).
+        For a descriptor to be useful in matching it is important that
+          the keypoint is properly localized before a descriptor is
+          computed~\cite{ke_pcasift_2004}.
+        Because it is not always possible to perfectly localize a
+          keypoint, the SIFT descriptor aggregates information into a
+          soft-histogram.
+        Allowing data to contribute to multiple bins helps the SIFT
+          descriptor to be robust to small localization errors and
+          viewpoint variations.
+        Distance between two SIFT descriptors is typically computed
+          using the Euclidean distance.
+        The SIFT descriptor of a patch is visualized
+          in~\cref{fig:vizfeatrow}.
+        %To warp a keypoint to a patch
+        %\[\pt, \vmat, \theta\]
+        %\begin{equation}
+        %\left[\begin{matrix}1 & 0 & \frac{S}{2}\\0 & 1 & \frac{S}{2}\\0 & 0 & 1\end{matrix}\right]
+        %\left[\begin{matrix}3.0 \sqrt{S} & 0 & 0\\0 & 3.0 \sqrt{S} & 0\\0 & 0 & 1\end{matrix}\right]
+        %\left[\begin{matrix}\cos{\left (\theta \right )} & \sin{\left (\theta \right )} & 0\\- \sin{\left (\theta \right )} & \cos{\left (\theta \right )} & 0\\0 & 0 & 1\end{matrix}\right]
+        %\left[\begin{matrix}a & 0 & x\\c & d & y\\0 & 0 & 1\end{matrix}\right]^{-1}
+        %\left[\begin{matrix}1 & 0 & - x\\0 & 1 & - y\\0 & 0 & 1\end{matrix}\right]
+        %\end{equation}
+
+        The structure of a SIFT descriptor is as follows:
+        A $4\times4$ regular grid is superimposing over the normalized patch.
+        Each of the $16$ spatial grid cells contains an orientation histogram
+          discretized into $8$ bins.
+        The SIFT descriptor is the concatenation of all orientation
+          histograms, resulting in a single $16 \times 8 = 128$ dimensional
+          vector.
+
+        The patch information populates the SIFT descriptor as follows:
+        For every pixel, the patch gradient (the derivative in the $x$
+          and $y$ direction) is computed.
+        Next, each pixel computes its gradient magnitude and
+          orientation.
+        Each pixel then casts a weighted vote.
+        The bin that a pixel votes into is computed from its
+          $xy$-location and gradient orientation.
+        The weight of a pixel's vote is based on its gradient magnitude
+          and Gaussian weighted distance to the patch center.
+        To be robust to small localization errors, a pixel's vote is
+          split via trilinear interpolation ($x$-location, $y$-location,
+          and orientation) into the orientation histograms of the pixel's
+          nearest grid cells as well as neighboring orientation bins in
+          each grid cell's orientation histogram.
+
+        Once voting is completed a SIFT descriptor is normalized to
+          account for lighting differences between images.
+        %The resulting $128$ orientation bins are concatenated into a single
+        %  vector.
+        First, the vector is L2-normalized to unit length, which makes
+          the descriptor invariant to linear changes in intensity.
+        Then, a heuristic --- that truncates each dimension to a
+          maximum value of $0.2$ --- is applied to increases robustness
+          to non-linear changes in illumination.
+        Finally the vector is renormalized.
+
+        For storage considerations the resulting $512$-byte floating
+          point (float32) descriptor is typically cast as an array of
+          unsigned $8$-bit integers (uint8), resulting in a $128$-byte
+          descriptor.
+        To reduce the impact of this quantization a trick is to
+          multiply by $512$ instead of $255$ and then truncate values to
+          $255$ before converting from a float to a uint8.
+        Even though each component is $8$-bits and therefore can only
+          store a maximum value of $255$, but because of truncation,
+          L2-normalization, and properties of natural images value
+          overflow is not likely to occur.
+
+        %It is important for descriptors to be correctly localized in order to produce confident matches. 
+        % interpolation schemes help it to be robust to small localization errors. 
+
+        %Feature descriptors depend on correct localization to be successful.
+        %SIFT describes the spatial distribution of intensity patterns 
+        %while being robust to small localization errors or changes in intensity.
+        %aggregates a large amount of information into a 
+    
+       \vizfeatrow{}
+
+    \subsection{Other descriptors and SIFT extensions}
+        Even a decade after its original publication, SIFT remains a
+          popular descriptor for patch-based matching because it is
+          versatile, unsupervised, widely available, and easy to use.
+          %descriptor for patch-based matching because it is competitive with
+          %all of its hand-crafted alternatives, versatile, unsupervised,
+          %widely available, and easy to use \cite{lowe_distinctive_2004,
+          %mikolajczyk_performance_2005, alahi_freak_2012}.
+        The principles used to guide the construction of the SIFT
+          descriptor --- particularly the use of aggregated gradients ---
+          have inspired many variants, extensions, and new
+          techniques~\cite{mikolajczyk_performance_2005,
+          dalal_histograms_2005, bay_surf_2006}.
+        Hand crafted alternatives to SIFT have been developed that are
+          faster to compute and more efficient to store, but these
+          alternatives do not significantly outperform SIFT's matching
+          accuracy on general data~\cite{lowe_distinctive_2004,
+          mikolajczyk_performance_2005, alahi_freak_2012}.
+        %However, if training data is provided, machine learning can be used to
+        %  compute descriptors that can achieve higher matching accuracy.
+        This subsection provides a brief overview of these
+          alternatives.
+
+        % ALTERNATIVES FOR DETECTION
+        The use of aggregated gradient information in SIFT has been
+          adapted for use in other computer vision problems such as
+          detection and scene classification.
+        % GIST
+        The GIST descriptor is a low dimension descriptor used for
+          scene classification that coarsely summarizes rough appearance
+          of an entire image~\cite{oliva_modeling_2001,
+          douze_evaluation_2009}.
+        % HOG
+        The histogram of oriented gradients (HoG) descriptor is a high
+          dimensional descriptor used in detection.
+        The HoG descriptors describes the shapes of objects in an
+          image~\cite{dalal_histograms_2005}.
+        Like the SIFT descriptor, the HoG descriptor illustrates the
+          value of gradient-based image descriptions and has inspired
+          extensions such as the discriminatively trained parts
+          model~\cite{felzenszwalb_object_2010}.
+
+        As a general single-scale patch-based descriptor, the matching
+          accuracy of SIFT has not been significantly outperformed on
+          general datasets.
+        % GLOH
+        One attempt at an improved general descriptor is the Gradient
+          Location-Orientation Histogram (GLOH)
+          descriptor~\cite{mikolajczyk_performance_2005}.
+        GLOH uses a similar structure to SIFT but replaces the
+          rectangular-bins with log-polar bins.
+        GLOH did achieve higher matching accuracy on some datasets, but
+          it was not by a significant margin.
+        %Despite However, domain specific modifications have shown promising
+        %  results.
+        %The Rotation Invariant Feature Transform (RIFT) descriptor
+        %  \cite{lazebnik_sparse_2005} uses concentric circles to make a
+        %  similar modification.
+        %The RIFT descriptor are used in texture classification
+        %\cite{lazebnik_sparse_2005}.
+        Despite the lack of generic success, hand-crafted SIFT variants
+          have been successful when applied to specific tasks.
+        % COLORED SIFT
+        Colored SIFT variants such as opponent-SIFT are valuable in
+          category recognition tasks, where a color difference could be
+          the distinguishing factor between
+          categories~\cite{van_de_sande_evaluating_2010}
+        % SCALE-LESS SIFT
+        % FIXME: this does not flow well. Just said SIFT was not outperformed
+        % THen I say that SLS outperforms it.
+        Combining multiple SIFT descriptors over different scales has
+          also shown moderate improvements.
+        The scale-less SIFT descriptor combines SIFT descriptors
+          computed at multiple scales into a single descriptor.
+        It has been shown to produce more accurate dense
+          correspondences than representing each scale with an individual
+          descriptor~\cite{hassner_sifts_2012}.
+
+        % SURF
+        Efficiency is one area where SIFT has been significantly outperformed.
+        ``Speeded Up Robust Features'' (SURF) is a fast approximation to SIFT
+          based on integral images that achieves similar accuracy using a
+          smaller $64$ dimensional descriptor~\cite{bay_surf_2006}.
+        % DAISY
+        The DAISY descriptor uses a similar binning structure to GLOH, but
+          uses convolutions with Gaussian kernels to quickly aggregate gradient
+          histograms~\cite{tola_fast_2008}.
+        % BINARY PATTERNS
+        Binary descriptors such as local binary patterns
+          (LBP)~\cite{ojala_comparative_1996, zhang_local_2010}, local
+          derivative patterns~\cite{heikkila_description_2009}, and their
+          variants such as BRIEF~\cite{calonder_brief_2010},
+          BRISK~\cite{leutenegger_brisk_2011}, and FREAK~\cite{alahi_freak_2012}
+          also quickly compute compact distinctive descriptors.
+        Binary descriptors are built using multiple pairwise comparisons of
+          average image intensity at predetermined locations.
+        This results in a small descriptor that effectively represents
+          aggregated gradient information.
+
+        Machine learning is able to outperform the matching accuracy of
+          SIFT, however these techniques require training data to adapt
+          to each new problem domain.
+        Learned descriptors make use of the same aggregated gradient
+          information used in the construction of SIFT descriptors.
+        The Liberty, Yosemite, and Notre-Dame buildings datasets are
+          standard datasets for descriptor
+          learning~\cite{brown_discriminative_2011}.
+        Error on these datasets is measured using false positive rate
+          at $95\percent$ recall (FPR95).
+        The baseline SIFT error on this dataset is $27.02\percent$.
+        The configuration of a DAISY descriptor is learned
+          in~\cite{winder_picking_2009} and achieves an error of
+          $15.16\percent$ on the buildings datasets.
+        In~\cite{simonyan_learning_2014}, large scale non-convex
+          optimization is used to learn a spatial pooling configuration
+          of log-polar bins, a dimensionality reduction matrix, and a
+          distance metric to further reduce the FPR95 error to
+          $10.98\percent$.
+        The current state of the art error of $4.56\percent$ on the
+          buildings dataset is achieved using a convolutional neural
+          network~\cite{zagoruyko_learning_2015}.
+
+    \subsection{Discussion --- descriptor choices}
+        %Address these questions:
+        %How should detected image features be represented?
+        %In the previous two chapters we discussed various techniques for
+        %  detecting and describing patch-based image features.
+        %This work guides the answers to the questions presented at the
+        %  beginning of this chapter.
+        %Clearly a middle ground is needed.
+        %We experiment on features with different degrees of invariance.
+        %It is generally desirable for keypoint detection and description
+        %  algorithms to be invariant to small changes the visual appearance of
+        %  an image patch, but this must be balanced with a keypoints ability
+        %  to be descriptive and distinguishing.
+        %Assuming the gravity vector in keypoint detection removes a
+        %  level of invariance that would otherwise cause a horizontal line
+        %  to appear the same as a vertical line.
+        %\paragraph{How should detected image features be represented?}
+        In our application we use the scale invariant feature transform
+          (SIFT)~\cite{lowe_distinctive_2004} as our baseline descriptor
+          because it is one of the most widely used and well known
+          descriptors.
+        SIFT describes images patches in such a way that small
+          localization errors do not significantly impact the resulting
+          representation.
+        Exploration of alternative convolutional descriptors is
+          discussed later in~\cref{sec:dcnn}.
+        %We have explored alternatives to SIFT that learned using deep
+        %  convolutional neural networks.
+        %We will also explore alternatives to SIFT that learned using deep
+        %  convolutional neural networks.
+        %Because we value accuracy over speed in our application, we learn 
+        % all other descriptors used.
+        %Learning descriptors with convolutional networks is further
+        %discussed
+        %in~\cref{sec:deepdesc}.

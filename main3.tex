@@ -1,0 +1,145 @@
+%! TEX root = main.tex
+%<leader> rf is used to refresh folds
+%\newif\ifonecolumn{}
+\newif\ifdraft{}
+\newif\ifpublishversion{}
+\newif\ifthesis{}
+
+%\onecolumntrue{}
+%\onecolumnfalse{}
+
+\draftfalse{}
+\drafttrue{}
+
+\publishversiontrue{}
+%\publishversionfalse{}
+
+
+\thesisfalse{}
+%\thesistrue{}
+
+\ifthesis{}
+    \documentclass[chap]{thesis}
+\else
+    \documentclass[chap]{book}
+    %\documentclass[10pt,twocolumn,letterpaper]{article}
+    %\newcommand{\chapter}{\section}
+    \newcounter{firstchapter}
+    \setcounter{firstchapter}{0}
+\fi
+
+%\usepackage{extsizes}
+
+\input{CrallPramb}
+\input{CrallDef}
+
+%\includeonly{chapter4-application}
+%\includeonly{chapter5-systemchapter}
+%\includeonly{chapter4-application,chapter5-systemchapter}
+
+\ifpublishversion{}
+    \newcommand{\devnewpage}{}
+\else
+    %\newcommand{\devnewpage}{\newpage}
+    \newcommand{\devnewpage}{}
+    % move all floats to the end of document
+    % doesn't quite work
+    %\extrafloats{1000}
+    %\renewcommand\textfraction{1.0}  
+    %\renewcommand\floatpagefraction{.9}
+    %\usepackage{endfloat}
+\fi
+
+
+\begin{comment}
+    rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-candidacy-2015/ ~/latex/crall-candidacy-2015
+    %figures1 figures2 figures3 figures4 figures5 figuresX figuresC 
+\end{comment}
+
+%\author{Jon Crall}
+\author{Jonathan P. Crall}
+
+\ifthesis{}
+    \input{thesis_preamb}
+\fi
+
+
+\begin{document}
+
+\input{def}
+\input{colordef}
+
+\ifthesis{}
+    %\input{header}
+    %\maketitle
+    \titlepagedraft{}
+    \tableofcontents{}
+    %\titlepage{}     
+    %\copyrightpage{}         % optional           
+    %\tableofcontents{}        
+    \listoftables{}          % required if there are tables
+    \listoffigures{}         % required if there are figures
+    %\specialhead{ACKNOWLEDGMENT}
+    %\lipsum[1]
+    %\specialhead{ABSTRACT}
+    %\lipsum[1]
+\else
+    \tableofcontents{}
+    \listoffigures{}         % required if there are figures
+\fi
+
+
+\begin{comment}
+./mass_tex_fixes.py --outline --showtype --sections=0:-6 --fpaths chapter4-application.tex
+./mass_tex_fixes.py --outline --showtype --sections=0:-2 --fpaths chapter4-application.tex
+./mass_tex_fixes.py --outline --showtype --fpaths chapter4-application.tex --nolabel
+./mass_tex_fixes.py --outline --fpaths chapter4-application.tex --numlines=1
+./mass_tex_fixes.py --outline --fpaths chapter4-application.tex --full=[chapter]
+https://mail.google.com/mail/u/0/#inbox/152763bfd16e892a
+
+./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+
+./texfix.py --fpaths main.tex --reformat --fpaths=main.tex --print --nopygments
+--numlines=999 --ignoreinputstartswith=def,Crall,header,colordef,figdef
+\end{comment}
+
+%\newcommand{\fnote}[1]{\footnote{#1}}
+\newcommand{\fnote}[1]{ (#1)}
+\ifpublishversion{}
+    \newcommand{\devcomment}[1]{}
+    \newcommand{\chuckcomment}[1]{}
+    \newcommand{\caplbl}[1]{}
+\else
+    %\newcommand{\caplbl}[1]{}
+    \newcommand{\caplbl}[1]{\red(#1)\black\xspace}
+    \newcommand{\devcomment}[1]{\marginpar{\scriptsize{\darkgreen{}\textbf{#1}\black{}}}}
+    \newcommand{\chuckcomment}[1]{\marginpar{\scriptsize{\chuckblue{}\textbf{#1}\black{}}}}
+\fi
+
+\input{figdef1}
+%\input{figdef2}
+%\input{figdef3}
+%\input{figdef4}
+%\input{figdef5}
+%\input{figdefexpt.tex}
+%\input{figdefindiv.tex}
+%\input{figdefdbinfo.tex}
+
+\include{chapter1-intro}
+%\include{chapter2-related-work}
+%\include{chapter3-matching}
+
+%\setcounter{chapter}{3}
+%\include{chapter4-application}
+
+%\setcounter{chapter}{4}
+%\include{chapter5-systemchapter}
+%\include{chapter6-conclusion}
+
+%\bibliographystyle{plain}
+\bibliographystyle{ieee}
+\bibliography{My_Library_clean}
+
+
+\end{document}
+% chktex-file 17

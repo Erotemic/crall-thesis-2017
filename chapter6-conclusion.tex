@@ -1,0 +1,350 @@
+% +--- CHAPTER --- 
+\begin{comment}
+    ./texfix.py --fpaths chapter6-conclusion.tex --outline --asmarkdown --numlines=99 -w
+\end{comment}
+
+\chapter{Conclusion}\label{chap:conclusion} %
+
+    In this \thesis{} we have addressed the problem of identifying individual
+      animals from images.
+    We have considered two main problems.
+    First given a single bounding box annotation around an animal and given a
+      database of labeled annotations, determine the identity of that individual
+      or say that it is new.
+    Second, we are given a set of labeled and unlabeled annotations, and we
+      determine the identities of all annotations by clustering them.
+    We have also considered the problem of designing a system that to address
+      the main problems in a dynamic context.
+
+    In~\cref{chap:matching} we introduced the single image identification
+      algorithm that addresses the first problem and evaluated this algorithm on
+      three different species.
+    This algorithm produces a ranking of database individuals that are similar
+      to a single query annotation.
+    %The algorithm is integrated into a system designed to address the
+    %  challenges of image analysis in a dynamic context.
+    We have used this algorithm in combination with the effort of citizen
+      scientists to provide an estimate of the number of plains zebras and Masai
+      giraffes in Nairobi National Park.
+    In~\cref{chap:application} we proposed a new algorithm to address the
+      second problem.
+    This algorithm is designed to improve upon the first algorithm by
+      exploiting information in multiple images, naturally resolving errors,
+      requiring less manual interaction, and explicitly handling the case of new
+      animals.
+    The implementation and evaluation will be the main focus of completing
+      this thesis.
+    In~\cref{chap:system} we described the system architecture and outlined
+      improvements to system stability and extensibility.
+    This system is designed to address the challenges of image analysis in a
+      dynamic context.
+    It provides a stateless interface to image analysis algorithms suitable
+      for web-based technologies.
+    Declarative registration of algorithm dependencies allows for the new
+      algorithms to be integrated into the image analysis system.
+
+    To conclude this \thesis{}, we start with discussion of our results as
+      well as limitations of our current system.
+    %We provide an overview of our improvements over existing animal
+    %  identification techniques as well as the current limitations of our
+    %  techniques.
+    Then in~\cref{sec:contributions} we enumerate our current and intended
+      contributions, summarizing the work needed to complete this thesis.
+
+    \section{Discussion}\label{sec:discussresult} 
+
+        Overall our experiments have shown that we are able to accurately rank
+          image of plains zebras, Grevy's zebras, and Masai giraffes.
+        Using this system we have successfully estimated the population of
+          plains zebras and Masai giraffes in Nairobi National Park.
+        We have demonstrated that using information from multiple images
+          improves identification accuracy.
+        We have also shown the importance and the difficulty of addressing the
+          problem of decision/verification in the context of animal
+          identification.
+        Despite the successes of our system, it is not without its
+          limitations.
+        The following list enumerates several limitations of the current
+          system.
+
+        %Our system provides over previous systems such as Stripe Spotter~\cite{lahiri_biometric_2011}
+        %Other animal identification systems like
+        %  SLOOP~\cite{duyck_sloop_2015} 
+        %Using SIFT~\cite{lowe_distinctive_2004} based techniques we
+        %  have been able to outperform previous identification algorithms
+        %  for zebras such as Stripe Spotter~\cite{lahiri_biometric_2011}.
+        %Our system has been designed to be applicable to many different
+        %  species and is more general than other SIFT based systems used
+        %  to identify species such as manta rays~\cite{town_manta_2013},
+        %  leatherback sea turtles~\cite{de_zeeuw_computer_2010}, and
+        %  wildebeests~\cite{bolger_wildid_2011,bolger_computerassisted_2012}.
+        %Of the other animal identification projects SLOOP is the most
+        %  similar to ours in terms of design goals --- such as the
+        %  separation of computer vision components from the system
+        %  architecture~\cite{duyck_sloop_2015,martineztrinidad_relevance_2014}.
+        %Like our system, SLOOP is able to integrate new computer vision
+        %  algorithms to aid in the task of individual identification.
+        %However, the algorithms implemented in SLOOP are biased towards
+        %  identifying small deformable amphibian species such as skinks
+        %  and salamanders, similar to the way that our algorithms are
+        %  biased towards large textured mammals such as zebras and
+        %  giraffes (however both systems are designed with many species
+        %  in mind).
+        %Both systems require more computer vision tools to address the
+        %  challenges presented in identifying any particular species, and
+        %  as such both systems have been set up to incorporate new
+        %  computer vision algorithms as quickly and cleanly as possible.
+        %Recent development of SLOOP is targeted towards relevance
+        %  feedback for improving results while we are focused on
+        %  verification and error correction.
+        %To the best of our knowledge there are no other general purpose
+        %  systems for individual animal identification in development.
+        %Due to the success of both systems, future collaboration may be
+        %  in order.
+        
+        % In this section we discuss the results of our current system as well
+        % as the limitations.
+        %\subsection{Improvements over existing techniques}
+        %%To the best of our knowledge, there has not been an automated
+        %%  identification algorithm developed on this scale.
+        %We have demonstrated the ability to identify animals in
+        %  databases with thousands of annotations.
+        %Our system has integrated animal localization and
+        %  foregroundness algorithms.
+        %SIFT based systems such as
+        %  WILD-ID~\cite{bolger_wildid_2011,bolger_computerassisted_2012},
+
+        %Other algorithms and systems 
+
+        %Other systems such as Stripe
+        %  Spotter~\cite{lahiri_biometric_2011}, Manta
+        %  Matcher~\cite{town_manta_2013} and
+        %  Wild-ID~\cite{bolger_wildid_2011,bolger_computerassisted_2012},
+        %  either do not perform with the same level of automation,
+        %  accuracy, or at the same scale that we do.
+
+         % leatherbacks sea turtles SIFT id \cite{de_zeeuw_computer_2010}
+         % Sloop is a comparable system using SIFT and relavence feedback and deformable matching \cite{duyck_sloop_2015}
+        
+        %\subsection{Limitations}
+
+        \begin{itemize}
+
+            %\item The current limitations of the system are the
+            %  requirement of manual verification of results and the
+            %  inability to run robust consistency checks.
+
+            \item \textbf{Scalability of the identification algorithm}:
+            There may be a limitation in the scalability our nearest-neighbor
+              based algorithms.
+            However, this may be alleviated with the proper selection of
+              exemplars.
+            In the near future we do not see any reason to move away from
+              nearest neighbor based techniques.
+            However, farther down the line it may be necessary to replace or
+              preprocess the current indexing algorithm using a vocabulary based
+              approach.
+
+            \item \textbf{Identification of animals without distinguishing textures}:
+            The SIFT-based matching algorithms that we employ will only be
+              able to match species containing distinctive gradient-based
+              markings.
+            New algorithms will need to be developed for animals with
+              distinguishing shape based features.
+            However, our system design is able to incorporate new algorithms
+              --- such as the whale fluke matching algorithm --- under the same
+              image analysis API{}.
+
+            \item \textbf{Identification of highly deformable animals}:
+            Our algorithms use projective transformations to enforce spatial
+              constraints between matches.
+            While this works well for the species we consider, it will be more
+              difficult to match other species.
+            Future work should seek to more robustly align annotations before
+              comparing them.
+            This might be done directly by warping annotations using
+              non-linear alignment
+              %(like the scale-cascaded alignment in SLOOP~\cite{duyck_sloop_2015})
+            or via localizing and comparing smaller parts.
+            Given a proper alignment, it should be possible to apply
+              state-of-the-art neural network techniques to produce reliable
+              image descriptions and similarities.
+            %Our techniques will not reliable 
+            %Current measures of pairwise probability are not based on
+            %  state-of-the-art neural network techniques involving Siamese
+            %  networks.
+            %Our evaluation of these techniques yielded negative results due
+            %  to insufficient training data and the lack of a robust
+            %  algorithm to align the parts of animals.
+
+            %It is my hope that the work done in this \thesis{} will allow
+            %  for enough diverse training data to be bootstrapped to
+            %  accommodate training data-hungry neural networks.
+            %Future work should seriously consider using a parts-based model
+            %  and computing matching similarity between parts using a Siamese
+            %  network.
+            %Techniques such as VLADNet %
+            %%\ucite{vladnet}
+            %can be used to index these parts to reduce the pairwise search
+            %  space.
+      \end{itemize}
+        
+    
+    \section{Summary of contributions}\label{sec:contributions}
+        This section enumerates the current and intended contributions of this
+          work.
+        The intended contributions serve as a contract for the work needed to
+          complete this thesis.
+      
+        \begin{itemize}
+
+            \item \textbf{The single-image animal identification algorithm}:
+
+                \begin{itemize}
+                    \item We have applied LNBNN~\cite{mccann_local_2012} to
+                      the problem of individual animal identification.
+                    We have performed experiments that demonstrate the effect
+                      of the $\K$ parameter at multiple database sizes.
+                    This is the main focus of our publication
+                      in~\cref{crall_hotspotter_2013}.
+
+                    \item We have accounted for the influence of background
+                      features using a learned a foregroundness measure to
+                      weight the LNBNN scores of feature correspondences.
+                    We have empirically shown the effectiveness of this
+                      procedure.
+
+                    \item We have introduced a \name{} scoring mechanism to
+                      take advantage of information in multiple database
+                      exemplars.
+                    Our experiments have demonstrated the significance of
+                      multiple exemplars for individual identification.
+
+                    \item 
+                        We have introduced a heuristic to account for pose
+                          issues that augments the orientation of query
+                          keypoints.
+                        We have evaluated the effect of various levels of
+                          feature invariance in our experiments.
+                \end{itemize}
+
+           \item \textbf{The annotation-vs-annotation match probability}:
+                We have proposed an algorithm to learn a pairwise match
+                  probability --- the probability that two annotations match, do
+                  not match, or are not comparable.
+                Learning if two annotations are not comparable provides a
+                  measure of confidence about the probability that the
+                  annotations are either the same or different individuals.
+                To learn this match probability we have proposed to use
+                  several local and global measures of similarity.
+                %Learning this probability will enable our algorithm for
+                %  choosing exemplars and our new graph-based identification
+                %  algorithm.
+
+                %This enables identification in databases of all sizes
+                %  (\occurrences{}), the identification of potential merge and
+                %  split cases, and an optimized choice of exemplars.
+                %Work in discussion of match, no match, and not comparable.
+
+           \item \textbf{The graph-based identification algorithm}:
+                We have proposed an algorithm that will use the learned
+                  pairwise match probabilities to perform joint identification
+                  on a set of multiple annotations.
+                In this way we will take advantage of information from
+                  multiple images.
+                This algorithm will facilitate addressing the problems of
+                  \intraoccurrence{} matching, \vsexemplar{} matching,
+                  \exemplar{} selection, and split and merge case detection.
+
+            \item \textbf{The image analysis system architecture}:
+                We have developed a framework --- the \depcache{} --- for
+                  maintaining the results of computer vision algorithms used by
+                  the IBEIS{} system.
+                This declarative framework maintains properties statelessly
+                  derived from a set of dynamic primary objects (\eg{}
+                  annotations{}) and separates the concerns of algorithm
+                  development and system maintenance.
+                The \depcache{} stores the results of expensive computer
+                  vision algorithms and serves as an interactive testing harness
+                  using IPython notebooks.
+                To complete this contribution we will extend the \depcache{}
+                  to fully support for computing and augmenting (\eg{} nearest
+                  neighbor indexers and neural network detectors) that depend on
+                  multiple inputs.
+
+
+      \end{itemize}
+
+    % Not written things in TODO
+    % System --- model UUIDS
+    % System --- primary object properties?
+    % System --- primary object UUIDS
+    \subsection{Proposal timeline}
+    The expected timeline for to complete the proposed work is outlined as
+      follows:
+    \begin{itemize}
+
+        \item July 2016:
+        Implement support for one-to-many edges in the \depcache{}.
+        Implement support for model augmentation in the \depcache{}.
+
+        \item August 2016:
+        Implement one-vs-one refinement of one-vs-many feature matching.
+        Implement the procedure to construct pairwise similarity vectors.
+
+        \item September 2016:
+        Implement the learning procedure for the pairwise similarity model.
+        Perform experiments to test the separability of the learned pairwise
+          similarities.
+        Implement the exemplar selection procedure using learned pairwise
+          similarities.
+
+        \item November 2016:
+        Implement the graph-based identification algorithm.
+        Perform experiments that test the precision and recall of the
+          graph-based inference algorithm.
+
+        \item February 2017:
+        Implement the split, and merge procedures using the graph-based
+          algorithm.
+        Ensure that all new algorithms are properly integrated into the
+          system.
+
+        \item March 2017:
+        Begin final write-up of thesis contributions.
+
+        \item May 2017:
+        Present and defend thesis.
+
+    \end{itemize}
+
+          %\item February 2017 --- 
+          %\item April 2017 --- %Complete write-up of thesis contributions.
+
+
+            %\item An analysis of patch based convolutional descriptors for
+            %    animal identification and discussion of the difficulties.
+            %\item Scoring Mechanism --- extension of LNBNN to instance recognition
+            %\item Parts based matching algorithm based convolutional
+            %    descriptors for instance recognition.
+            %\item Caching scheme for a dynamic individual identification
+            %\item An image-based method for estimating the size of a population.
+            %\item Data augmentation to increase robustness to shadowing.
+            %\item An iterative bootstrapping method for training database curation.
+            %\item Dynamic updates of kd-forests.
+            %\item A visual vocabulary built with convolutional descriptors.
+    %\section{Future work}\label{sec:futurework}
+    %    %
+    %    This thesis is currently in the candidacy stage.
+    %    %The work that will be done in the figure is outlined in
+    %    %  \cref{chap:proposal}, which will be eventually be updated with a
+    %    %  description and evaluation of the advanced techniques.
+    %    In the future this section will be updated.
+
+    %    It may be necessary to normalize the scores with respect to timedelta.
+
+    %    Need to evaluate the scores between annotations of different viewpoints
+    %    (show the bi-modality).
+
+% L___ CHAPTER ___
+

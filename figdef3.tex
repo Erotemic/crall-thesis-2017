@@ -1,0 +1,396 @@
+
+\begin{comment}
+        python -m ibeis.scripts.gen_cand_expts --exec-parse_latex_comments_for_commmands --fname figdef3.tex
+\end{comment}
+
+            
+\begin{comment}
+ibeis --tf _ChipMatchVisualization.show_ranked_matches --qaid 86 --clip-top=4 --saveparts --save figures3/rankedmatches.jpg --diskshow --dpi=256 --clipwhite --colorbar_=False --show_aid=False --score_precision=2 --stack_larger=True --labelsize=12 --titlesize=12 
+
+ibeis --tf _ChipMatchVisualization.show_ranked_matches --qaid 86 --dpath ~/latex/crall-candidacy-2015 --save figures3/rankedmatches.jpg --diskshow --dpi=360 --clipwhite --figsize=12,11 --vert --adjust=.01,.05,.08,.95,.93,.18
+\end{comment}
+\newcommand{\rankedmatches}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{.8\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/rankedmatchesA.jpg}\caption{}\label{sub:rankedmatchesa}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/rankedmatchesB.jpg}\caption{}\label{sub:rankedmatchesb}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/rankedmatchesC.jpg}\caption{}\label{sub:rankedmatchesc}
+\end{subfigure}
+\caption[\caplbl{rankedmatches}Ranked matches]{
+    % ---
+    \caplbl{rankedmatches} The top three ranked results from the
+      identification algorithm.
+    Each results shows the matches to a particular \name{}.
+    The match to the \groundtrue{} name is shown in
+      \Cref{sub:rankedmatchesa}.
+    The matches to the incorrect names are shown in
+      \Cref{sub:rankedmatchesb,sub:rankedmatchesc}.
+    In each result, the query annotation is shown in the top left, the
+      matching database annotations for a specific \name{} are shown in
+      the bottom left and the right.
+    The overall matching score is shown on the top of each result.
+    The feature matched are overlaid on each result and colored by the
+      feature correspondence score.
+    Notice that each database \name{} has a different number of
+      annotations.
+    % ---
+}
+\label{fig:rankedmatches}
+\end{figure}
+}
+
+%\ImageCommand{figures3/rankedmatches.jpg}{\textwidth}{
+%    % ---
+%    The top $4$ ranked results from the identification algorithm.
+%    Each results shows the matches to a particular \name.
+%    In each result, the query annotation is shown in the top left, the
+%      matching database annotations for a specific name are shown in the bottom
+%      left and the right.
+%    The the overall matching score is shown on the top of each result.
+%    The feature matched are overlaid on each result and colored by the
+%      feature score.
+%    Notice that each database \name{} has a different number of annotations.
+%    % ---
+%}
+
+
+
+\begin{comment}
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db GZ_Master1 --aids 2811 2810 --show --notitle --no-inimage  --dpath ~/latex/crall-candidacy-2015/ --save figures3/SceneryMatch.jpg --diskshow --clipwhite --figsize=12,6 --dpi 300
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db GZ_Master1 --tags SceneryMatch --index 5 --show --notitle --no-inimage 
+\end{comment}
+\SingleImageCommand{SceneryMatch}{1}{Scenery match}{
+    An example of two different animals with appearing in front of the same
+    distinctive background illustrating the importance of background
+    downweighting.
+}{figures3/SceneryMatch.jpg}
+
+
+\begin{comment}
+python -m ibeis gen_featweight_worker --dpath ~/latex/crall-candidacy-2015/ --saveparts --save figures3/genfeatweight.png --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --clipwhite --label genfeatweight --db PZ_MTEST
+
+python -m ibeis gen_featweight_worker --dpath ~/latex/crall-candidacy-2015/ --save figures3/genfeatweight.png --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --clipwhite --label genfeatweight --db PZ_MTEST
+
+python -m ibeis gen_featweight_worker --dpath ~/latex/crall-candidacy-2015/ --save figures3/gen_featweight.jpg --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --numlbl --clipwhite --label genfeatweight
+
+python -m ibeis gen_featweight_worker --db GZ_Master1 --dpath ~/latex/crall-candidacy-2015/ --save figures3/gen_featweight.jpg --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --numlbl --clipwhite --label genfeatweight
+
+python -m ibeis gen_featweight_worker --db GIRM_Master1 --dpath ~/latex/crall-candidacy-2015/ --save figures3/gen_featweight.jpg --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --numlbl --clipwhite --label genfeatweight
+\end{comment}
+\MultiImageCommandII{genfeatweight}{.31}{
+    Foregroundness weights
+}{
+    % ---
+    Generation of foregroundness feature weights.
+    \Cref{sub:genfeatweightA} shows the annotation's cropped chip.
+    This chip is passed to the species detector.
+    \Cref{sub:genfeatweightB} shows the species detector outputs an
+      intensity image indicating the likelihood that each pixel belongs
+      to the foreground.
+    \Cref{sub:genfeatweightC} shows the weighted sum of the intensity
+      under each feature is used as that feature's foregroundness score.
+    % ---
+}{figures3/genfeatweightA.png}{figures3/genfeatweightB.png}{figures3/genfeatweightC.png}
+
+
+\begin{comment}
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 1 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+#
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 2 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 3 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 4 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+--verbose 
+\end{comment}
+\SingleImageCommand{namematch}{1}{Name scoring}{
+    % ---
+    Visualization of \nsumprefix{} \namescoring{}.
+    The query annotation is at the top left.
+    Each query feature matches at most one feature in the database
+      annotations.
+    Each line denotes a feature correspondence colored by its matching
+      score.
+    Feature scores from multiple views are combined into a name score
+      shown on top.
+    % ---
+}{figures3/namematch.jpg}
+
+
+\begin{comment}
+
+ibeis sver_single_chipmatch -t default:refine_method=cv2-lmeds-homog,full_homog_checks=True -a default --qaid 18 --dpath ~/latex/crall-candidacy-2015 --save figures3/sverkpts.jpg --label sver --dpi=256 --clipwhite --diskshow --saveparts --figsize=10,10 --norefinelbl
+
+ibeis sver_single_chipmatch -t default:refine_method=cv2-lmeds-homog,full_homog_checks=True -a default --qaid 18 --dpath ~/latex/crall-candidacy-2015/figures3 --save sver_kpts.jpg --label sver --dpi=180 --clipwhite --diskshow
+
+ibeis sver_single_chipmatch -t default:refine_method=cv2-homog,full_homog_checks=False -a default --qaid 18 --dpath ~/latex/crall-candidacy-2015/figures3 --save sver_kpts.jpg --label sver --dpi=180 --clipwhite --diskshow
+
+python -m vtool.spatial_verification --test-spatially_verify_kpts --dpath ~/latex/crall-candidacy-2015/figures3 --save sver_kpts.jpg --label sver --dpi=180 --clipwhite --diskshow
+\end{comment}
+%\SingleImageCommand{sver}{}{sver}{
+%    An example of spatial verification process.
+%    The three images on the top show
+%    (1) the original matches,
+%    (2) the best set of inliers from affine hypothesis generation, and
+%    (3) the final set of homography inliers.
+%    The images on the bottom show the matching images warped and superimposed
+%      by both the best affine and optimal homography transformation.
+%}{figures3/sver_kpts.jpg}
+\newcommand{\sver}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.25\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsA.jpg}\caption{}\label{sub:svera}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.25\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsB.jpg}\caption{}\label{sub:sverb}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.25\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsC.jpg}\caption{}\label{sub:sverc}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.35\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsD.jpg}\caption{}\label{sub:sverd}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.35\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsE.jpg}\caption{}\label{sub:svere}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.35\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsF.jpg}\caption{}\label{sub:sverf}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.35\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/sverkptsG.jpg}\caption{}\label{sub:sverg}
+\end{subfigure}
+\caption[Spatial verification]{
+    % ---
+    An example of spatial verification process.
+    The three images on the top show~\cref{sub:svera} the original
+      matches, \Cref{sub:sverb} the best set of inliers from affine
+      hypothesis generation, and \Cref{sub:sverc} the final set of
+      homography inliers.
+    The images on the bottom show~\cref{sub:sverd,sub:sverf} the
+      matching images warped and superimposed by both the best
+      affine \Cref{sub:svere} and estimated homography
+      transformation~\cref{sub:sverg}.
+    % ---
+}
+\label{fig:sver}
+\end{figure}
+}
+
+
+
+% TODO; http://tex.stackexchange.com/questions/75014/is-it-possible-to-make-a-reference-to-a-subfigure-to-appear-figure-2a-with-cle
+
+\begin{comment}
+        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --aid 44  --dpath ~/latex/crall-candidacy-2015/figures3 --save pzaffkpts.jpg --label pzkptstype --dpi=180 --clipwhite --diskshow --darken
+        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --aid 44  --dpath ~/latex/crall-candidacy-2015/figures3 --save pzcirckpts.jpg --label pzaffkpts --dpi=180 --clipwhite --diskshow --affine-invariance=False --augment_orientation=True --ori --darken
+       
+        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --db GZ_Master1 --aid 1000  --dpath ~/latex/crall-candidacy-2015/figures3 --save gzaffkpts.jpg --label pzkptstype --dpi=180 --clipwhite --diskshow --darken
+        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --db GZ_Master1 --aid 1000  --dpath ~/latex/crall-candidacy-2015/figures3 --save gzcirckpts.jpg --label pzaffkpts --dpi=180 --clipwhite --diskshow --affine-invariance=False --augment_orientation=True --ori --darken
+\end{comment}
+
+\MultiImageCommandII{kptstype}{.45}{
+    Keypoint detection
+}{
+% ---
+Many affine keypoints detected on plains zebras tend to encompass only
+  one or two stripes.
+The distinctive stripe patterns on Grevy's zebras are well captured by
+  affine keypoints, whereas circular keypoints are more spread out.
+For visibility this figure shows a random sample of all keypoints on a
+  darkened image.
+Elliptical keypoints in~\cref{sub:kptstypeA,sub:kptstypeC} are colored
+  by eccentricity and circular keypoints
+  in~\cref{sub:kptstypeB,sub:kptstypeD}  are colored by scale.
+% ---
+}{figures3/pzaffkpts.jpg}{figures3/pzcirckpts.jpg}{figures3/gzaffkpts.jpg}{figures3/gzcirckpts.jpg}
+
+\begin{comment}
+python -m ibeis --tf TestResult.draw_feat_scoresep --db Oxford --disttypes=L2_sift -a default:qhas_any=\(query,\),dpername=1,exclude_reference=True,dsize=2346,minqual=good --save oxfordfeatsep.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "FeatDistSeperability " --label OxfordDist  --figsize=14,3 --top=.8 --hspace=.3 --bottom=0.08 --left=.05 --right=.95 --contextadjust --dpi=256 --clipwhite
+
+python -m ibeis --tf TestResult.draw_feat_scoresep --db Oxford --disttypes=L2_sift -a default:qhas_any=\(query,\),dpername=1,exclude_reference=True,dsize=1000,minqual=ok --save oxfordfeatsep.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "FeatDistSeperability " --label OxfordDist  --figsize=14,3 --top=.8 --hspace=.3 --bottom=0.08 --left=.05 --right=.95 --contextadjust --dpi=256 --clipwhite
+
+\end{comment}
+
+\begin{comment}
+python -m ibeis_cnn.experiments --exec-sift_dataset_separability --save libertysep.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "FeatDistSeperability " --label LibertyFeatDist  --figsize=14,3 --top=.8 --hspace=.3 --bottom=0.08 --left=.05 --right=.95 --contextadjust --dpi=256 --clipwhite
+\end{comment}
+
+\begin{comment}
+python -m ibeis --tf TestResult.draw_feat_scoresep --db PZ_Master1 --disttypes=L2_sift,fg -a timectrl -t best --save pzfeatsep.jpg  --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "FeatDistSeperability " --label LibertyFeatDist  --figsize=14,3 --top=.8 --hspace=.3 --bottom=0.08 --left=.05 --right=.95 --contextadjust --dpi=256 --clipwhite
+python -m ibeis --tf TestResult.draw_feat_scoresep --db PZ_Master1 --disttypes=L2_sift,fg -a timectrl -a timectrl:minqual=good -t best --save pzfeatsep.jpg  --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "FeatDistSeperability " --label LibertyFeatDist  --figsize=14,3 --top=.8 --hspace=.3 --bottom=0.08 --left=.05 --right=.95 --contextadjust --dpi=256 --clipwhite
+\end{comment}
+\MultiImageCommandII{PzVsLiberty}{1}{Comparison between the score separation of patches from plains zebras and the Liberty dataset}{
+% ---
+A comparison the between plains zebras and the standard liberty
+  buildings~\cite{brown_discriminative_2011} dataset.
+Each distance is labeled as either \groundtrue{} or \groundfalse{} pair.
+For each dataset the distribution of patch descriptor distances is plotted with
+  an ROC curve indicating the separability of \groundtrue{} or \groundfalse{}
+  pairs.
+It is much more difficult to separate descriptors from plains zebras than it
+  is to separate descriptors from buildings.
+\Cref{sub:PzVsLibertyA} shows the separability of liberty building descriptor
+  pairs.
+\Cref{sub:PzVsLibertyB} shows the separability of plains zebra descriptor
+  pairs.
+%baseline SIFT distance classification of zebra patch correspondences
+%      is significantly more challenging than liberty building patch
+%      correspondences, and
+% ---
+%}{figures5/patchmatch-roc-liberty-sift.jpg}{figures5/patchmatch-roc-mtest-sift.jpg}
+}{figures3/libertysep.jpg}{figures3/pzfeatsep.jpg}
+
+\MultiImageCommand{figures3/oxfordfeatsep.jpg}{\textwidth}{
+% ---
+    Separation of oxford features
+% ---
+}{OxfordDist}
+
+
+
+\begin{comment}
+python -m ibeis_cnn.ingest_data --test-grab_siam_dataset --db liberty --show --nohud --nometa  --save figures3/libertypatches.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015  --prefix "Patches " --label LibertyPatches --contextadjust --dpi=256 --clipwhite   
+\end{comment}
+
+\begin{comment}
+python -m ibeis_cnn.ingest_data --test-grab_siam_dataset --db liberty --show --nohud --nometa  --save figures3/libertypatches.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015  --prefix "Patches " --label LibertyPatches --contextadjust --dpi=256 --clipwhite   
+\end{comment}
+
+\begin{comment}
+python -m ibeis_cnn.ingest_data --test-grab_siam_dataset --db PZ_MTEST --show --nohud --nometa  --save pzpatches.jpg --diskshow --lightbg  --dpath ~/latex/crall-candidacy-2015/figures3  --prefix "Patches " --label PZPatches --contextadjust --dpi=256 --clipwhite   
+\end{comment}
+\MultiImageCommandII{PzVsLibertyPatches}{1}{Comparison between patches from plains zebras and the Liberty dataset}{
+% ---
+A sample of \groundtrue{} and \groundfalse{} patch matches from the Liberty
+  dataset and the plains zebra dataset.
+\Cref{sub:PzVsLibertyPatchesA} shows examples of liberty patches.
+\Cref{sub:PzVsLibertyPatchesB} shows examples of plains zebra patches.
+In both subfigures the \groundtrue{} matches are shown in blue on the left and
+  the \groundfalse{} matches are shown in red on the right.
+Notice that the \groundfalse{} from plains zebras can be quite similar even
+  though all \groundfalse{} pairs are from different individuals.
+% ---
+}{figures3/libertypatches.jpg}{figures3/pzpatches.jpg}
+
+
+
+
+\begin{comment}
+python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --show --adapteq=True --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting1.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --show --histeq=True --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting1.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+\end{comment} 
+\MultiImageCommandII{eqlighting}{.47}{Keypoint detection with histogram equalization}{
+% ---
+An annotation with few features detected on the body due to lighting
+  conditions is shown in~\cref{sub:eqlightingA}.
+The same annotation with histogram equalization is shown
+  in~\cref{sub:eqlightingB}, however many more features are also detected
+  on the background.
+% ---
+}{figures5/backgroundlighting.jpg}{figures5/backgroundlighting1.jpg}
+
+
+
+\begin{comment}
+python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 1062 --usetex --texknormplot --show 
+
+python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 1062 --usetex --texknormplot --diskshow --saveparts --save figures3/knorm.png --dpi=256 --figsize 30 40  --dpath ~/latex/crall-candidacy-2015/ --hspace .1 --labelsize=42 --reshape 2
+
+879?
+%python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 'special' --usetex --texknormplot --show 
+python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db testdb1  --show --qfx 1 
+
+python -m ibeis.viz.interact.interact_matches --test-testdata_match_interact --show --db PZ_MTEST --qaid 3
+\end{comment}
+\newcommand{\knorm}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormA.png}\caption{}\label{sub:knorma}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormC.png}\caption{}\label{sub:knormb}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormE.png}\caption{}\label{sub:knormc}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormG.png}\caption{}\label{sub:knormd}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormI.png}\caption{}\label{sub:knorme}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormB.png}\caption{}\label{sub:knormf}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormD.png}\caption{}\label{sub:knormg}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormF.png}\caption{}\label{sub:knormh}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormH.png}\caption{}\label{sub:knormi}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.18\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures3/knormJ.png}\caption{}\label{sub:knormj}
+\end{subfigure}
+\caption[\caplbl{knorm}LNBNN feature correspondence scoring]{
+% ---
+\caplbl{knorm} The four nearest neighbors of a distinctive query
+  feature~\cref{sub:knormf}.
+The bottom row shows the warped and normalized features with their SIFT
+  descriptors overlaid.
+The top row shows the annotation from which each feature was extracted.
+The first two neighbors~\cref{sub:knormg,sub:knormh} are correct
+  matches, the third neighbor~\cref{sub:knormi} is an incorrect match,
+  and the fourth neighbor~\cref{sub:knormj} is used as an LNBNN
+  normalizer to score the first three matches.
+%THe first
+% ---
+}
+\label{fig:knorm}
+\end{figure}
+}

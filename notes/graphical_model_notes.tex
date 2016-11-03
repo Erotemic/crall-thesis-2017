@@ -1,0 +1,321 @@
+
+\begin{document}
+Biological Network Reconstruction 
+Causal protien signaling networks derived from multiparamater single-cell data
+Sachs et al. Science 2005
+
+
+%---------------------------------
+% Lecture 1
+
+Major operations: 
+
+Given a joint distrubiton 
+X1,
+
+P(X1, X2, X3, ... Xn)
+
+\textbf{Conditioning : Reduction} - observing a variable, which assigns it a value. 
+Eliminates all possible assignments that are not consistent. 
+
+Reduction on variable X2 by observing its value to be a constant x
+
+P(X1, X2=x, X3, ..., Xn)
+
+\textbf{Conditiong : Renormalization} - Takes an unormalized measure and divides it by
+its sum. Turns it into a normalized probability distribution.
+
+P(X1, X3, ..., Xn | X2=x)
+
+
+\textbf{Marginalization} - takes a probability distribution over large set of variables
+and produces a probability distribution over a subset of values.  Sums over all 
+entries in the PDT (prob distri table) that have a particular value.
+
+marginalize over X2
+
+$\sum_{x \in X2} P(X1, X2=x, ...) = P(X1, X3, ...)$
+
+
+summations can be pushed through the expression as long as it is not pushed through statements involving the variable. 
+
+
+%---------------------------------
+% Lecture 2
+
+Factor \ni unnormalized measures, probability, conditional probability distribution
+
+Fundamental buildings blocks for defining high dimensional distributions. 
+
+A factor is a function $\phi(X1, X2, X3) \righarrow \Real$
+
+The set of arguments that the factor takes is the Scope
+
+
+Operations on factors:
+
+\textbf{Factor product}
+
+$\phi1(A, B) * \phi2(B, C) = \phi12(A, B, C)$
+
+\textbf{Factor marginalization / reduction}
+
+%---------------------------------
+% Lecture 3
+
+Bayes Nets must be non-zero
+P is a product of CPDS CPDS are non-negative
+Need to prove it sums to 1.
+
+%---------------------------------
+% Lecture 5
+
+When can X influence Y?
+
+ * When X is a parent of Y
+ * When X is a child of Y
+ X -> Y
+ X <- Y
+
+ * When X is an ancestor of Y
+ * When X is an descendant of Y
+ X -> W -> Y
+ X <- W <- Y
+
+ * When there is a common cause W of X and Y
+ X <- W -> Y
+
+ ONLY EXCEPTION
+ Two causes have a joint effect
+ this is V-structure
+ * When X and Y have a common effect W
+ X -> W <- Y
+
+
+\textbf{Active trail:}
+Given nothing:
+
+    A trail $X_1 -- X_k$ is active if it has no V-structures
+    $X_{i-1} -> X_i <- X_{i+1}$
+
+Influence can not flow through observed variables
+Given $Z$:
+     A trail $X_1 -- X_k$ is active given $Z$ if 
+     for any V-structure 
+     $X_{i-1} -> X_i <- X_{i+1}$
+     we have that $X_i$ or one of its decedents is observed (\ie{} $\in Z$)
+     and no other $X_i$ is in $Z$
+
+
+%---------------------------------
+% Lecture 6
+
+ For random vars X and Y
+
+ P \models X \perp Y if 
+
+ P(X, Y) = P(X) P(Y)
+ P(X \given Y) = P(X) 
+ P(Y \given X) = P(Y) 
+
+
+ Conditional independence:
+ For sets of rand vars X, Y, Z
+
+ P \models (X \perp Y \given Z) if 
+ P(X, Y | Z) = P(X | Z) * P(Y | Z)
+ P(X | Y,Z) = P(X | Z)
+ P(Y | X,Z) = P(Y | Z)
+
+ or Using factors
+ P(X, Y, Z) \prop \phi1(X, Z) \phi2(Y, Z)
+
+
+%---------------------------------
+ d-separated (X, Y | Z) if there is no active trail between X and Y given Z
+
+
+ If P factorizes over G, and $d-sep_G(X, Y | Z)$ then 
+ P satisfies (X \perp Y | Z) 
+
+
+ Any node is d-separated from its non-descendants given its parents
+
+
+ I-maps (Independence statements)
+
+ I(G) = all dependences in G (X \perp Y \given Z) \where d-sep(X, Y \given Z)
+
+
+ If P factorizes over G, then G is an I-map for P. 
+
+(means can read from G indecencies in P regardless of parameters)
+
+Also if G is an I-map for P, then P factorizes over GFalse
+
+Chain rule for probabilities 
+P(An, ..., A1) = P(An | An-1, ... A1) P(An-1, ..., A1)
+P(A2, A1) = P(A2 | A1) * P(A1)
+P(A4,A3,A2,A1) = P(A4 | A3, A2, A1) * P(A3 | A2,A1) * P(A2|A1) * P(A1)
+
+
+% ---- 
+Gibbs Sampling
+
+
+For some (gibbs) distribution $P_\Phi(X_1, \ldots, \X_n)$
+These could come from a directed or undirected model
+they are just factors. 
+
+We make each assignment a node in a markov chain. 
+
+Transition model given starting state $x$
+
+\begin{comment}
+python << endpython
+
+# P - probability distribution 
+def gibbs_sample(P):
+    """
+    X_list = [X1, X2, ..., Xn]
+    """
+    # Start with an arbitrary ordering
+    X_list = P.random_state()
+    for i in range(n):
+        # Sample value of x_i given the values of the rest
+        Xs_sans_i = X_list[:i] + X_list[i + 1:]
+        x_i = P.sample(given=Xs_sans_i)
+        # Set x_i and iterate for a new variable
+        X_list[i] = x_i
+
+
+
+class JointDistri(object)
+    def sample(self, given):
+        #The chain rule allows us to compute the numerator by simply multiplying all
+        #factors together (operations are linear in the number of factors). We can
+        #get the denominator by simply summing out Xi from the numerator (which is
+        #linear in the number of values of Xi). Therefore it's always tractable.
+        #
+    sample(X_i, given=Xs_sans_i) = sample(X_i, Xs_sans_i) / P(Xs_sans_i)
+endpython
+\end{comment}
+
+
+\[x_i \sampled P_ P_\Phi(X_i \given x_{-i}\]
+
+\end{document}
+
+
+------------------
+DIFFERENCE BETWEEN PROBABILITY AND LIKELIHOOD
+
+
+Given a conclusion A (name is unknown) and an observation B (query
+  descriptors)
+
+Probability attempts to determine the conclusion given the evidence
+$\P(\A \given \B)$
+
+Likelihood supposes a conclusion and reports how likely you were
+to have seen that evidence: $\P(\B \given \A)$.
+
+To convert these you must know the independant probability of the events and
+the evidence.
+
+
+
+--------
+Probability Identities
+
+% http://math.arizona.edu/~jwatkins/a-basics.pdf
+% https://en.wikipedia.org/wiki/Probability_axioms
+
+
+Let $P(A, B)$ = $P(A \and B)$
+
+$P(A \isect B) = P(A \and B) = P(A, B)$
+$P(A \union B) = P(A \or B)$
+
+Bayes rule: $P(A | B) = P(B | A) P(A) / P(B)$
+
+Complement Rule:
+    * $P(A) + P(\not{A}) = 1$
+
+Axiom of probability:
+    * $P(A \and B) = P(A | B) * P(B)$
+    * $P(A \or B) = P(A) + P(B) - P(A \and B)$
+    OR 
+    * $P(A, B) = P(A | B) * P(B)$
+    * $P(A \or B) = P(A) + P(B) - P(A, B)$
+
+Law of total probability:
+    *  $P(A) = \sum_{b} P(A, B=b)$
+    *  $P(A) = \sum_{n} P(A, B_n)$
+    *  $P(A) = \sum_{n} P(A | B_n) P(B_n)$
+
+    # If $C$ is independent of any $B_n$
+    *  $P(A | C) = \sum_{n} P(A | C \and B_n) P(B_n | C)$
+    *  $P(A | C) = \sum_{n} P(A | C \and B_n) P(B_n)$
+
+%Inclusion-Exclusion Rule:
+%    * $P(A \or B) = P(A) + P(B) - P(A \and B)$
+
+Bonferroni Inequality:
+    * $P(A \or B) \leq P(A) + P(B)$
+
+Conditional Probability:
+    * $P(A | B) = \frac{P(A \and B)}{P(B)}$
+
+Probabily Chain Rule:
+    # Note, this is just a generalized version of the conditional probability rule
+    * $P(A_n, ... A_1) = P(A_n | A_{n-1} ... A_1) * P(A_{n-1} ... A_1)$
+    * $P(A_n | A_{n-1} ... A_1) = P(A_n, ... A_1) / P(A_{n-1} ... A_1)$
+    * $P(A_1, A_2, A_3) = P(A_1 | A_2, A_3) * P(A_2, A_3)$
+    * $P(A_1, A_2, A_3) = P(A_1 | A_2, A_3) * P(A_2 | A_3) * P(A_3)$
+
+Conditional Independence:
+     A and B are conditionaly independent given C iff
+     * $P(A, B | C) = P(A | C) * P(B | C)$
+     or equivalently
+     * $P(A | B, C) = P(A | C)$
+
+If A and B are independant iff: 
+   * $P(A) = P(A | B)$
+   * $P(A \and B) = P(A) * P(B)$
+   * $P(A \or B) = P(A) + P(B)$
+
+
+Maximum A-Posteriori (MAP)
+    * $f(\theta | x) = f(x | \theta) g(\theta) / Z$
+    * $Z = \sum_{\nu \in \Theta} f(x | \nu) g(\nu)$
+    SEE ALSO: Bayes Estimators
+
+Inproper priors seem to only happen when there are infinite possibilities
+Lets handle the case of only a finite amount of possibilities
+
+Conditional ``Lensing'' Property:
+    This is where we pick a variable $A_{n}$ and hold it constant
+    ( this was derived from a conversation with Chuck, not sure if I made an error)
+    * lensing on ($A_n$)
+    * $P(A_1 | A_2 ... A_n) = P(A_2 ... A_{n-1} | A_1, A_n) P(A_1 | A_n) / Z$
+    * $Z = \sum_{A_1} P(A_2 ... A_{n-1} | A_1, A_n) P(A_1 | A_n)$
+    
+    or more simply where we hold $C$ constant
+    $P(A | B, C) = P(B | A, C) * P(A | C) / (\sum_{A'} P(B | A', C) P(A' | C))$
+    but 
+    $\sum_{A'} P(B | A', C) P(A' | C) = P(B) P(1) = P(B)$
+    therefore
+    $P(A | B, C) = P(B | A, C) * P(A | C) / P(B)$
+
+    if $C$ was removed this becomes normal Bayes rule
+    $P(A | B) = P(B | A) * P(A) / (\sum_{a} P(B | A=a) P(A=a))$
+    $(\sum_{a} P(B | A=a) P(A=a)) = P(B)$
+    $P(A | B) = P(B | A) * P(A) / P(B)$
+
+
+    DOES?
+    $P(A, B | C) = \sum_{d} P(A, B, D=d | C)$
+    $P(A, B | C) = \sum_{d} P(A, B, | C, D=d) * p(D=d)$
+    $P(A, B, D | C) = P(A, B, | C, D) * p(D)$
+    $P(A, B | C, D) = P(A, B, | C, D) $

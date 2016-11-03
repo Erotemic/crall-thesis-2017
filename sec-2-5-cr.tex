@@ -1,0 +1,237 @@
+\section{Category recognition}\label{sec:cr}  
+
+    Different types of image recognition lie at different points on a
+      spectrum of specificity.
+    If instance recognition is at one end of the spectrum, then
+      category recognition is at the other.
+    %Category recognition is at the other end of the spectrum of
+    %  specificity from instance recognition.
+    The goal of a \glossterm{category recognition} algorithm is to
+      assign a categorical class label to a query
+      image~\cite{everingham_pascal_2010, everingham_pascal_2015,
+      russakovsky_imagenet_2014, deng_imagenet_2009, feifei_oneshot_2006,
+      griffin_caltech256_2007}.
+    The categories often have visual appearances with a high degree of
+      intra-class variance.
+    %\Eg, a sedan and a school both belong to the car category.
+    \Eg{}, a recliner and a bench both belong to the chair category.
+    Image representations and similarity measures are constructed to
+      account for this.
+    Despite this, techniques in category recognition have many
+      similarities to instance recognition techniques.
+    Until the neural network
+      revolution~\cite{krizhevsky_imagenet_2012}, most category
+      recognition techniques have been based on vocabulary
+      methods~\cite{csurka_visual_2004, yang_linear_2009,
+      sanchez_compressed_2013, russakovsky_imagenet_2014,
+      krizhevsky_imagenet_2012} similar to those discussed
+      in~\cref{subsec:bow}.
+    This section first provides a brief overview of this literature.
+    Then, we discuss Naive Bayes classification
+      techniques~\cite{boiman_defense_2008,mccann_local_2012} that play a
+      large role in our baseline animal identification algorithms.
+
+    \subsection{Vocabulary based methods for category recognition}
+        After vocabulary based techniques demonstrated success in
+          instance recognition, these techniques were quickly adapted and
+          applied to category recognition~\cite{csurka_visual_2004}.
+        Thus there are many similarities --- and some differences ---
+          in the techniques used to address these two problems.
+        One of the differences between instance recognition and
+          category recognition is the size of the visual vocabulary.
+        Instance recognition tends to require huge vocabularies
+          ($\OnTheOrderOf{5}$ --- $\OnTheOrderOf{7}$ words) to achieve a
+          fine sampling of descriptor space~\cite{nister_scalable_2006,
+          philbin_object_2007}.
+        In contrast, category recognition uses smaller vocabulary sizes
+          %- \OnTheOrderOf{5}$ 
+        ($\OnTheOrderOf{4}$ words) to more coarsely sample descriptor
+          space~\cite{zhang_local_2006}.
+        However, the vocabularies used in instance recognition have
+          decreased in size with the advent of aggregated representations
+          like VLAD and the Fisher vector~\cite{arandjelovic_all_2013,
+          sanchez_compressed_2013}.
+
+        A second difference between category and instance recognition
+          is how similarity between images is computed.
+        In instance recognition the similarity between bag-of-word
+          vectors is computed using a weighted cosine similarity.
+        However, in category-recognition intra-class variation requires
+          more sophisticated similarity measurements.
+        Here, image similarity is computed using SVMs with different
+          either linear or non-linear kernels such as $\chi^2$, earth
+          mover's distance, Hellinger, and
+          Jensen-Shannon~\cite{zhang_local_2006, varma_learning_2007,
+          vedaldi_efficient_2012}.
+
+        A third difference is the way that spatial information is used.
+        Instead of filtering correspondences using spatial
+          verification, spatial information is incorporated into category
+          recognition algorithms using spatial
+          pyramids~\cite{grauman_pyramid_2005, lazebnik_beyond_2006}.
+        A spatial pyramid sub-divides an image into a hierarchy of
+          grids.
+        Max pooling is often used to select only the strongest features
+          in each spatial region~\cite{boureau_theoretical_2010,
+          boureau_learning_2010}.
+        Each section of the image is encoded using the vocabulary and
+          images are scored based on matches in each region.
+
+        \paragraph{Enhancements to category recognition}
+        There are a wide variety of extensions and enhancements for
+          bag-of-words based image classification, such as soft
+          assignment of visual-words~\cite{liu_defense_2011} and
+          vocabulary optimization~\cite{wang_localityconstrained_2010}.
+        Numerous matching kernels --- both linear and non-linear ---
+          have been developed such as kernel PCA, histogram intersection,
+          and SVM square root bag-of-words
+          vectors~\cite{vedaldi_multiple_2009, maji_classification_2008,
+          perronnin_largescale_2010}.
+
+        % chktex-file 8
+        Generalized coding schemes improve performance over a
+          bag-of-words image encoding.
+        Vocabularies can be seen as codebooks or dictionaries in coding
+          based image classification techniques such as sparse coding and
+          locally constrained linear coding~\cite{jurie_creating_2005,
+          yang_linear_2009, yang_supervised_2010, yang_efficient_2010,
+          wang_localityconstrained_2010}.
+        Many coding schemes learn both the centroids as well as the
+          function that quantizes a raw descriptor into a
+          word~\cite{jurie_creating_2005, yang_linear_2009,
+          yang_supervised_2010, yang_efficient_2010,
+          wang_localityconstrained_2010, vedaldi_multiple_2009}.
+        Techniques other than k-means are used to create vocabularies
+          such as mean shift~\cite{jurie_creating_2005}, coordinate
+          descent with the locally constrained linear code
+          criteria~\cite{wang_localityconstrained_2010}, and random
+          forests~\cite{perronnin_fisher_2007}.
+        Fisher Vectors with linear classifiers have been found to
+          outperform non-linear bag-of-words based SVM classifiers by
+          using an L1-based distance measure and careful L2 and power-law
+          normalization of descriptors~\cite{perronnin_improving_2010,
+          perronnin_largescale_2010-1}.
+
+        %Currently, deep convolutional neural nets nets achieve the
+        %  highest performance on object classification datasets
+        %  \cite{russakovsky_imagenet_2014}.
+
+        %The high speed, high accuracy, and low memory usage made
+        %  bag-of-words the most widely used technique in category
+        %  retrieval.
+
+        %  \paragraph{Relation to this work}
+        %Spatial pyramids would not work for Animals Identification because
+        %  of the large amount of pose variation. Regular grid cells  may be too coarse to 
+        %If grid cells were selected based on part detections then aggregating 
+
+        %\devcomment{Bag-of-Words became outdated for classification in
+        %  2010, when The Fisher Vector took over as the new standard.
+        %Then convnets came in} \cite{perronnin_improving_2010}
+
+        %Extensions of bag-of-words originally 
+        %was in \cite{csurka_visual_2004}.
+
+        %Went to soft-assignment \cite{liu_defense_2011}
+
+        %Added in spatial pyramid
+
+        %Nonlinear SVMs were state of the art \cite{perronnin_largescale_2010, vedaldi_efficient_2012}
+
+    \subsection{\Naive{} Bayes classification}\label{sec:nbnn}  
+
+        The \Naive{} Bayes nearest neighbor (NBNN) classifier is a
+          simple non-parametric algorithm for category recognition that
+          does not quantize descriptor
+          vectors~\cite{boiman_defense_2008}.
+        Boiman responds to the dominance of complex non-linear category
+          recognition algorithms in the field~\cite{varma_learning_2007,
+          marszalek_learning_2007} by showing that simple techniques can
+          compete with complex methods for category recognition.
+        Boiman's paper also provides insight into the magnitude of
+          information loss resulting from quantization.
+          
+        Previous to~\cite{boiman_defense_2008}, nearest neighbor
+          classifiers had shown underwhelming accuracy in category
+          recognition~\cite{varma_unifying_2004, lazebnik_beyond_2006,
+          marszalek_learning_2007}.
+        This was shown to be a result of using image-to-image distance.
+        To remedy this, NBNN aggregates the information from multiple
+          images by swapping the image-to-image distance for an
+          image-to-class distance.
+
+        In NBNN, features of each class are indexed for fast nearest
+          neighbor search, typically with a
+          kd-tree~\cite{bentley_multidimensional_1975}.
+        For each feature, $\desc_i$, in a query image, the algorithm
+          searches for the feature's nearest neighbors in each class,
+          $\opname{NN}_C(\desc_i)$.
+        The result of the algorithm is the class, $C$, that minimizes
+          the image-to-class distance.
+        In other words, the class of a query image is chosen by
+          searching for the class that minimizes the total distance
+          between each query descriptor and the nearest database
+          descriptor in that class.
+        This is expressed in the following equation:
+        \begin{equation}
+            C = \argmin{C} \sum_{i=1}^n ||\desc_i - \opname{NN}_C(\desc_i)||^2
+        \end{equation}
+
+        This formulation where each descriptor is assigned to only a
+          single nearest neighbor has been shown to be a good
+          approximation to the minimum image-to-class Kullback-Leibler
+          divergence~\cite{boiman_defense_2008} --- a measure of how much
+          information is lost when the query image is used to model the
+          entire class.
+
+    \subsection{Local \Naive{} Bayes Nearest Neighbor}\label{sec:lnbnn}  
+
+        Local \Naive{} Bayes nearest neighbor (LNBNN) is an improved
+          version of the NBNN algorithm in both accuracy and
+          speed~\cite{mccann_local_2012}.
+        In the original NBNN formulation a search is executed find each
+          query descriptor's nearest neighbor in the database for each
+          class separately.
+        In contrast, the LNBNN modification searches all database
+          descriptors simultaneously and ignores classes that do not
+          return descriptor matches.
+        
+        Each descriptor $\desc_i$ in the query image searches for its
+          $K+1$ nearest neighbors, $\{\desc_1, \ldots, \desc_K, \desc_{K
+          + 1}\}$ over all classes.
+        The first $K$ neighbors are used as matches.
+        The last nearest neighbor is used as a normalizing term to
+          weight the query descriptor's distinctiveness.
+        Let $(\desc_i, \desc_j)$ be a matching descriptor pair, and let
+          $C$ be the class of $\desc_j$.
+        The score of each match is computed as the distance to the
+          match subtracted from the distance to the normalizer.
+        The score of a class $C$ is the sum of all the descriptor
+          scores that match to it.
+        \begin{equation}
+            s_{i, C} = \elltwo{\desc_j - \desc_K} - \elltwo{\desc_i - \desc_j}
+        \end{equation}
+
+    \subsection{Discussion --- class recognition}
+        %Should image features be quantized?
+        %How should feature matches be scored?
+
+        Progress in category recognition is generally made using
+          techniques that allow classes with high intra-class variance to
+          have lower matching scores.
+        This is of little value to an instance recognition application,
+          therefore we do not investigate most of the techniques in this
+          section.
+        However, the LNBNN~\cite{mccann_local_2012} approach is
+          interesting to us because it is a simple algorithm that does
+          not suffer from quantization artifacts.
+
+        NBNN and LNBNN~\cite{boiman_defense_2008,mccann_local_2012}
+          never achieved state of the art performance in image
+          classification, however they have produced competitive results
+          using simple techniques.
+        The simplicity of the techniques allowed for the authors to
+          gain insight into visual recognition.
+        This simplicity is the main reason we adopt LNBNN as our
+          baseline algorithm for animal identification.
+

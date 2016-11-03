@@ -1,0 +1,179 @@
+\begin{comment}
+    ./texfix.py --fixcap --dryrun
+    ./texfix.py --findcite --unused-important
+    ./texfix.py --findcite --close-keys
+    ./texfix.py --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 -w
+\end{comment}
+
+% +--- CHAPTER --- 
+\chapter{Related work}\label{chap:relatedwork}
+
+    %Individual animal identification is an emerging topic that stems
+    %  from the success of algorithms developed in the maturing field of
+    %  computer vision.
+    %Computer vision algorithms have been applied to the problem of
+    %  individual identification for man species such as %
+    %skinks, geckos, and
+    %  salamanders~\cite{duyck_sloop_2015,martineztrinidad_relevance_2014}, %
+    %mantra rays~\cite{town_manta_2013}, %
+    %leatherback sea turtles~\cite{de_zeeuw_computer_2010}, %
+    %wildebeests~\cite{bolger_wildid_2011,bolger_computerassisted_2012}, %
+    %plains zebras~\cite{lahiri_biometric_2011}, %
+    %gorillas and chimpanzees~\cite{loos_automated_2013}, %
+    %whale sharks~\cite{holmberg_estimating_2009}, %
+    %and African penguins~\cite{loos_automated_2013}.
+    %Computer vision algorithms make up the core of the best performing
+    %  animal identification techniques.
+    %Therefore, the focus of this chapter is to review the computer
+    %  vision algorithms themselves.
+
+    To address the individual animal identification problem we draw
+      upon related research in
+    %---
+    feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2007,
+      perdoch_efficient_2009},
+    %---
+    feature description~\cite{lowe_distinctive_2004,
+      mikolajczyk_performance_2005,simonyan_learning_2014,
+      winder_picking_2009,zagoruyko_learning_2015,han_matchnet_2015},
+    %---
+    approximate nearest neighbor search~\cite{silpaanan_optimised_2008,
+      muja_fast_2009},
+    %---
+    instance recognition~\cite{sivic_efficient_2009,nister_scalable_2006,
+      philbin_object_2007,jegou_hamming_2008,bo_efficient_2009,
+      jegou_aggregating_2012, tolias_aggregate_2013},
+    %---
+    face verification~\cite{chopra_learning_2005,huang_labeled_2007,berg_tomvspete_2012,
+      chen_blessing_2013,taigman_deepface_2014}
+    %---
+    fine-grained recognition~\cite{parkhi_cats_2012,berg_poof_2013,
+      gavves_local_2014},
+    %---
+    category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,
+      mccann_local_2012,boiman_defense_2008,sanchez_compressed_2013},
+    %---
+    and convolutional neural networks~\cite{krizhevsky_imagenet_2012,
+      razavian_cnn_2014, zagoruyko_learning_2015,han_matchnet_2015}.
+    %---
+
+    At a high level main questions addressed by the aforementioned
+      research can be summarized as:
+    How should image features be detected?
+    How should detected image features be represented?
+    How much invariance should features have?
+    Should image features be quantized?
+    How should image feature be matched?
+    How should feature matches be aggregated?
+    How should feature matches be scored?
+    How should all of this be done accurately?
+    How should all of this be done efficiently?
+    Answers to these questions address many of the challenges to animal
+      identification previously introduced in~\cref{sec:challenges}.
+    %Any solution to animal identification must also address all of these
+    %  questions.
+
+    This chapter summarizes literature relevant to addressing these questions
+      in the context of animal identification.
+    %In this chapter we will describe several other works and their similarities
+    %  and differences with animal identification.
+    The outline of this chapter is as follows:
+    \Cref{sec:featuredetect} will discuss feature detection.
+    \Cref{sec:featuredescribe} will discuss feature description.
+    \Cref{sec:ann} will discuss approximate nearest neighbor algorithms.
+    \Cref{sec:ir,sec:cr,sec:fgr}, will discuss approaches to recognition.
+    \Cref{sec:dcnn} will discuss convolutional neural networks.
+    %\Cref{sec:otherid} will discuss other works in individual animal
+    %  identification.
+
+
+\input{sec-2-1-featdetect.tex}
+\input{sec-2-2-featdescrip.tex}
+\input{sec-2-3-neighbors.tex}
+\input{sec-2-4-ir.tex}
+\input{sec-2-5-cr.tex}
+\input{sec-2-6-fgr.tex}
+\input{sec-2-7-dcnn.tex}
+% L___ CHAPTER ___
+
+
+%\section{Other animal identification projects}\label{sec:otherid}
+        
+    \begin{comment}
+    %The body of literature related to image-based individual animal
+    %  identification is relatively small compared to the other topics
+    %  reviewed in this chapter.
+
+    Stripe spotter is an individual identification algorithm developed
+      specifically for zebras~\cite{lahiri_biometric_2011}.
+    Images are carefully cropped to the flank of animal and the strip
+      pattern is discretized using a two dimensional grid called a
+      StripeCode.
+    The edit distance between pairs of StripeCodes is used to define
+      similarity between two individuals.
+    This algorithm is only able to achieve a median rank of $4$ for
+      datasets with fewer than $85$ individuals and has largely been
+      superseded feature matching approaches.
+
+    The most successful animal identification systems have been SIFT
+      based.
+    SIFT based techniques have been shown to be a reliable way of
+      matching many species such as 
+
+
+    %TODO Need to rewrite this conclusion discussion into related work.
+
+    %Using SIFT~\cite{lowe_distinctive_2004} based techniques we have
+    %  been able to outperform previous identification algorithms for
+    %  zebras such as Stripe Spotter~\cite{lahiri_biometric_2011}.
+    %Our system has been designed to be applicable to many different
+    %  species and is more general than other SIFT based systems used to
+    %  identify species such as manta rays~\cite{town_manta_2013},
+    %  whale sharks~\cite{lahiri_biometric_2011},
+    %  leatherback sea turtles~\cite{de_zeeuw_computer_2010}, 
+    %  wildebeests~\cite{bolger_wildid_2011,bolger_computerassisted_2012}
+    %  salamanders~\cite{duyck_sloop_2015,martineztrinidad_relevance_2014}.
+
+    Wildbook ECOCEAN \cite{holmberg_estimating_2009}
+    constellation matching.
+
+    Gorilla and chimp face identification
+      system~\cite{loos_automated_2013}.
+    Contains an algorithm system pipeline that detects, aligns, and recognizes
+      faces.
+    Uses global Gabor features and local SURF features at facial
+      fiducial points.
+    Facial points are used to align the image into a canonical
+      position.
+    Concatenates local and global features into a fixed length vector
+      and uses SVMS for classification of the faces.
+    %Locality Preserving Projections (LPP)
+
+      Penguins~\cite{sherley_spotting_2010}
+      shape contexts
+
+    Of the other animal identification projects SLOOP is the most
+      similar to ours in terms of design goals --- such as the separation
+      of computer vision components from the system
+      architecture~\cite{duyck_sloop_2015,martineztrinidad_relevance_2014}.
+    Like our system, SLOOP is able to integrate new computer vision
+      algorithms to aid in the task of individual identification.
+    However, the algorithms implemented in SLOOP are biased towards
+      identifying small deformable amphibian species such as skinks and
+      salamanders, similar to the way that our algorithms are biased
+      towards large textured mammals such as zebras and giraffes (however
+      both systems are designed with many species in mind).
+    Both systems require more computer vision tools to address the
+      challenges presented in identifying any particular species, and as
+      such both systems have been set up to incorporate new computer
+      vision algorithms as quickly and cleanly as possible.
+    Recent development of SLOOP is targeted towards relevance feedback
+      for improving results while we are focused on verification and
+      error correction.
+    To the best of our knowledge there are no other general purpose
+      systems for individual animal identification in development.
+    Due to the success of both systems, future collaboration may be in
+      order.
+
+    \subsection{Discussion of related techniques}
+    \end{comment}

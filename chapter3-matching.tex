@@ -1,0 +1,92 @@
+% +--- CHAPTER --- 
+\begin{comment}
+    ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
+    ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
+    ./texfix.py --fpaths chapter3-matching.tex --reformat 
+    # http://jaxedit.com/mark/
+\end{comment}
+
+
+
+\chapter{Identification using a single query}\label{chap:matching}
+
+    This chapter addresses the core problem of animal identification in
+      a static context.
+    Given, a \emph{single} annotation depicting an unknown animal and a
+      \emph{static} database of previously identified annotations, the
+      task is to determine the identity of the unknown animal.
+    An \glossterm{annotation} is a rectangular region  of interest
+      around a specific animal within an image.
+    Each known annotation is associated with a \name{} label denoting
+      its individual identity.
+    A \glossterm{\name} refers to a group of annotations known to be
+      the same individual.
+    The identification process assigns a \name{} label to an unknown
+      annotation either as
+    (1) the \name{} label of a matched database annotation or
+    (2) a new \name{} label if no matches are found.
+
+    A static context is chosen for this chapter in order to introduce
+      and determine the effectiveness of the algorithm that identifies a
+      query by ranking the \names{} in the database.
+    In the static context, only a single query annotation is used to
+      perform identification, all \name{} labels in the database are
+      assumed to be correct, and annotations are not added to or removed
+      from the database.
+    This is done to determine what properties of query annotations,
+      configurations of the database, and parameters of the
+      identification algorithm have the highest impact on identification
+      accuracy.
+    In~\cref{chap:application}, the identification algorithm is
+      extended for use in a dynamic context.
+    In the dynamic context, annotations are added and removed from the
+      database, multiple annotations are used to perform identification,
+      and the database is assumed to contain errors.
+
+    The identification algorithm is based on the feature
+      correspondences between a query annotation and a set of database
+      annotations.
+    In each annotation a set of patch-based features is detected at
+      keypoint locations.
+    Then the visual appearance of each patch is described using
+      SIFT~\cite{lowe_distinctive_2004}.
+    A nearest neighbor algorithm establishes a set of feature
+      correspondences between query and annotations in database.
+    A scoring mechanism based on Local \Naive{} Bayes Nearest Neighbor
+      (LNBNN)~\cite{mccann_local_2012} produces a score for each feature
+      correspondence.
+    These scores are then aggregated into a single score for each
+      \name{} in the database, producing a ranked list of \names{}.
+    Identification is performed by applying a classifier (decision
+      algorithm) to the scores in this ranked list.
+    If the top ranked \name{} has a ``high'' score it is likely to be
+      the same individual depicted in the query annotation.
+    If the top ranked \name{} has a ``low'' score it is likely that the
+      query individual is not depicted in any database annotation.
+    An example ranked list returned by the algorithm is illustrated
+      in~\cref{fig:rankedmatches}.
+    In the baseline algorithm this identification decision is left to a
+      user.
+
+    The outline of this chapter is as follows:
+    \Cref{sec:annotrepr} discusses the initial processing of an
+      annotation which involves image normalization, feature extraction,
+      and feature weighting.
+    \Cref{sec:baselineranking,sec:sver} describes the baseline matching
+      and scoring algorithm.
+    The first of these sections focuses on establishing feature
+      correspondences, and the second focuses on verifying the
+      correspondences.
+    \Cref{sec:experiments} provides an experimental evaluation of the
+      single image identification algorithm.
+    These experiments inform the direction we take in our proposal to
+      extend this algorithm.
+    \Cref{sec:staticsum} summarizes this chapter.
+
+    \rankedmatches{}
+
+    \input{sec-3-1-annotrepr.tex}
+    \input{sec-3-2-dbsearch.tex}
+    \input{sec-3-3-sver.tex}
+    \input{sec-3-4-expt.tex}
+% L___ CHAPTER ___

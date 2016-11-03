@@ -1,0 +1,830 @@
+%%%%%%%%%%%%%%%
+% Cross platform stuff
+
+%https://en.wikipedia.org/wiki/Wikipedia:LaTeX_symbols
+\ifwindows{}
+\newcommand{\wincommand}[2]{\renewcommand{#1}{#2}}
+\newcommand{\lincommand}[2]{\newcommand{#1}{#2}}
+\newcommand{\linonlycommand}[2]{}
+\else
+\newcommand{\wincommand}[2]{\newcommand{#1}{#2}}
+\newcommand{\lincommand}[2]{\renewcommand{#1}{#2}}
+\newcommand{\linonlycommand}[2]{\newcommand{#1}{#2}}
+\fi
+%%%%%%%%%%%%%%%
+% MACROS
+%
+\newcommand{\bb}{\mathbb}
+
+%\newcommand{\zspace}{\xspace}
+\newcommand{\zspace}{}
+
+\newcommand{\Naive}{Na\"{\i}ve\zspace}
+\newcommand{\Naively}{Na\"{\i}vely\zspace}
+\newcommand{\naive}{na\"{\i}ve\zspace}
+\newcommand{\naively}{na\"{\i}vely\zspace}
+\newcommand{\iid}{i.i.d.\zspace}
+% WACV 
+% Add a period to the end of an abbreviation unless there's one already
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+
+\def\eg{\emph{e.g}\onedot} \def\Eg{\emph{E.g}\onedot}
+\def\ie{\emph{i.e}\onedot} \def\Ie{\emph{I.e}\onedot}
+\def\cf{\emph{c.f}\onedot} \def\Cf{\emph{C.f}\onedot}
+\def\etc{\emph{etc}\onedot} \def\vs{\emph{vs}\onedot}
+%\def\wrt{w.r.t\onedot}
+\def\dof{d.o.f\onedot}
+\def\etal{\emph{et al}\onedot}
+\makeatother
+
+\newcommand{\wrt}{with respect to\xspace{}}
+
+
+%\newcommand{\one}{1\zspace{}}
+%\newcommand{\two}{2\zspace{}}
+%\newcommand{\three}{3\zspace{}}
+%\newcommand{\four}{4\zspace{}}
+%\newcommand{\five}{5\zspace{}}
+
+\newcommand{\one}{one\zspace{}}
+\newcommand{\two}{two\zspace{}}
+\newcommand{\three}{three\zspace{}}
+\newcommand{\four}{four\zspace{}}
+\newcommand{\five}{five\zspace{}}
+
+
+% Definition of context sensitive articles
+% http://stackoverflow.com/questions/4233707/a-an-substitution-in-latex
+% http://tex.stackexchange.com/questions/43200/extract-first-last-characters-of-macro-argument
+%http://tex.stackexchange.com/questions/132248/test-if-the-first-character-of-a-string-is-a
+%\makeatletter
+%\newcommand\aan[1]{%
+%  a%
+%  \@for\@vowel:=a,e,i,o,u,y,A,E,I,O,U,Y\do{%
+%    \expandafter\ifx\@vowel#1%
+%      n%
+%    \fi
+%  } % keep this space
+%  #1%
+%}
+%\newcommand\Aan[1]{%
+%  A%
+%  \@for\@vowel:=a,e,i,o,u,y,A,E,I,O,U,Y\do{%
+%    \expandafter\ifx\@vowel#1%
+%      n%
+%    \fi
+%  } % keep this space
+%  #1%
+%}
+%\makeatother
+
+
+\makeatletter
+\newcommand\aan[1]{%
+\StrLeft{#1}{1}[\firstchar]%
+a\IfStrEq{\firstchar}{a}{n}{%
+\IfStrEq{\firstchar}{e}{n}{%
+\IfStrEq{\firstchar}{i}{n}{%
+\IfStrEq{\firstchar}{o}{n}{%
+\IfStrEq{\firstchar}{u}{n}{%
+\IfStrEq{\firstchar}{y}{n}{%
+\IfStrEq{\firstchar}{A}{n}{%
+\IfStrEq{\firstchar}{E}{n}{%
+\IfStrEq{\firstchar}{I}{n}{%
+\IfStrEq{\firstchar}{O}{n}{%
+\IfStrEq{\firstchar}{U}{n}{%
+\IfStrEq{\firstchar}{Y}{n}{}}}}}}}}}}}} #1}
+\makeatother
+
+\makeatletter
+\newcommand\Aan[1]{%
+\StrLeft{#1}{1}[\firstchar]%
+A\IfStrEq{\firstchar}{a}{n}{%
+\IfStrEq{\firstchar}{e}{n}{%
+\IfStrEq{\firstchar}{i}{n}{%
+\IfStrEq{\firstchar}{o}{n}{%
+\IfStrEq{\firstchar}{u}{n}{%
+\IfStrEq{\firstchar}{y}{n}{%
+\IfStrEq{\firstchar}{A}{n}{%
+\IfStrEq{\firstchar}{E}{n}{%
+\IfStrEq{\firstchar}{I}{n}{%
+\IfStrEq{\firstchar}{O}{n}{%
+\IfStrEq{\firstchar}{U}{n}{%
+\IfStrEq{\firstchar}{Y}{n}{}}}}}}}}}}}} #1}
+\makeatother
+
+\newcommand{\DIM}{D\zspace}
+\newcommand{\see}[1]{see \cref{#1}}
+\newcommand{\See}[1]{See \cref{#1}}
+\newcommand{\Refin}[1]{Referenced in \cref{#1}}
+\newcommand{\refin}[1]{referenced in \cref{#1}}
+\newcommand{\Imgcite}[1]{Image from~\cite{#1}}
+
+\newcommand{\topic}[1]{\subsubsection{#1}}
+
+%\newcommand{\todo}[1]{\textbf{TODO: #1} \cite{crall2013hotspotterWACV}} 
+
+\renewcommand{\cal}[1]{\mathcal{#1}}
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\subscript}[1]{\ensuremath{_{\textrm{#1}}}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\dsi}{\displaystyle{} \hspace*{5mm}}
+\newcommand{\ind}{\ensuremath{\hspace*{5mm}}}
+\newcommand{\txt}[1]{\textrm{#1}}
+\newcommand{\txtbf}[1]{\textbf{#1}}
+\newcommand{\ttxt}[1]{{\tt #1}}
+\renewcommand{\th}{\superscript{th}\zspace}
+\newcommand{\rd}{\superscript{rd}\zspace}
+\newcommand{\nd}{\superscript{nd}\zspace}
+% st is such a weird command. Doesnt seem to want to work unless it is in 
+% the document on windows. it is pdfcomment's fault
+%\linonlycommand{\st}{\superscript{st}\zspace}
+\newcommand{\st}{\superscript{st}\zspace}
+\newcommand{\bincase}[1]{
+    \ensuremath{
+    \begin{cases}
+    1 & \txt{if } #1 \\
+    0 & \txt{otherwise}
+    \end{cases}
+    }}
+\newcommand{\bincases}[2]{
+    \ensuremath{
+    \begin{cases}
+    #1 & \txt{if } #2 \\
+    0 & \txt{otherwise}
+    \end{cases}
+    }}
+
+\newcommand{\fullbincases}[3]{
+    \ensuremath{
+    \begin{cases}
+    #1 & \txt{if } #2 \\
+    #3 & \txt{otherwise}
+    \end{cases}
+    }}
+
+\newcommand{\tightpad}{\mkern-6mu}
+\newcommand{\tight}[1]{\mkern-6mu#1\mkern-6mu }
+\newcommand{\ttimes}{\tight{\times}}
+\newcommand{\tighteq}{\tight{=}}
+\newcommand{\teq}{\tight{=}}
+
+%\newcommand{\slice}[2]{{[#1:#2]}}
+\newcommand{\slice}[2]{{[#1\mkern-3mu:\mkern-3mu#2]}}
+
+%%%%%%%%%%%%%%%
+% Constants
+\newcommand{\PTIME}{{\tt PTIME}}
+\newcommand{\TAU}{2\pi}
+
+%%%%%%%%%%%
+% MATH MACROS
+\newcommand{\paren}[1]{\left(#1\right)}
+\newcommand{\brak}[1]{\left[#1\right]}
+\newcommand{\curly}[1]{\left\{#1\right\}}
+\newcommand{\func}[2]{\mathbin{#1}\paren{#2}}
+
+\newcommand{\crly}[1]{\curly{#1}}
+\newcommand{\brk}[1]{\brak{#1}}
+
+%%%%%%%%%%%%%%%
+% Operators
+% 
+% Logic
+\newcommand{\assign}{:=}
+\newcommand{\eq}{=}
+%\newcommand{\where}{\;\big\vert\;}
+\newcommand{\whereI}{\;\big\vert\;}
+\newcommand{\whereII}{\mid}
+\newcommand{\where}{\whereII}
+%\newcommand{\where}{\whereI}
+%\newcommand{\given}{\;\big\vert\;}
+\newcommand{\given}{\mid}
+\newcommand*\AND{\txtbf{ and } }
+\newcommand*\OR{\txtbf{ or } }
+\newcommand*\xor{\mathbin{\oplus}}
+\newcommand{\union}{\cup}
+\newcommand{\symdiff}{\Delta}
+\newcommand{\setdiff}{-}
+\newcommand{\Union}{\bigcup}
+\newcommand{\intersect}{\cap}
+\newcommand{\isect}{\cap}
+\renewcommand{\mod}{\txt{mod}}
+\newcommand{\Normal}{\cal{N}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Int}{\mathbb{Z}}
+\newcommand{\eye}{\mat{I}}
+
+\newcommand{\opname}[1]{\operatorname{#1}}
+
+% Probability Operator
+%\newcommand{\probop}{\mathbin{\opname{\mathbb{P}}}}
+%\newcommand{\probop}{\mathbin{\opname{Pr}}}
+\newcommand{\probop}{\mathbin{\opname{P}}}
+\newcommand{\oddsop}{\mathbin{\opname{O}}}
+%\newcommand{\oddsop}{\mathbin{\opname{odds}}}
+%\newcommand{\oddsop}{\mathbin{\mathcal{O}}}
+\newcommand{\expectop}{\mathbb{E}}
+\newcommand{\parzenop}{\mathbin{\hat{\probop}}}
+\newcommand{\Parz}[1]{\parzenop\paren{#1}}
+\newcommand{\logop}{\mathbin{\opname{log}}}
+\newcommand{\lnop}{\mathbin{\opname{ln}}}
+\newcommand{\expop}{\mathbin{\opname{exp}}}
+\newcommand{\distri}{\sim}
+
+
+\RenewDocumentCommand\ln{g}{\IfValueTF{#1}{\logop\paren{#1}}{\logop}}
+\NewDocumentCommand\asin{g}{\IfValueTF{#1}{\opname{asin}\paren{#1}}{\opname{asin}}}
+
+
+% Convolution
+\newcommand{\conv}{\mathop{\scalebox{1.5}{\raisebox{-0.2ex}{$\ast$}}}}
+\newcommand{\laplace}{\nabla^2} 
+\newcommand{\del}{\Delta}
+% Probability
+%\renewcommand{\Pr}[1]{\ensuremath{\txt{Pr} \left(#1\right)}}
+%\renewcommand{\Pr}{\mathbb{P}}
+\renewcommand{\Pr}[1]{\func{\probop}{#1}}
+\newcommand{\Odds}[1]{\func{\oddsop}{#1}}  % this is logit
+\newcommand{\Prs}[2]{\func{\probop_{#1}}{#2}}
+\newcommand{\Ex}[1]{\ensuremath{\expectop \left[#1\right]}}
+\newcommand{\Err}[1]{\func{\opname{Err}}{#1}}
+\newcommand{\ExUnder}[2]{\ensuremath{\underset{#1}{\expectop \left[#2\right]}}}
+\newcommand{\ExSub}[2]{\ensuremath{\expectop_{#1} \left[#2\right]}}
+
+\newcommand{\logit}[1]{\func{{\mathbin{\opname{logit}}}}{#1}}
+\newcommand{\logitI}[1]{\ensuremath{-\ln{\frac{1}{#1} - 1}}}
+\newcommand{\logitII}[1]{\ensuremath{\ln{\frac{#1}{1 - #1}}}}
+\newcommand{\expit}[1]{\func{{\mathbin{\opname{expit}}}}{#1}}
+\newcommand{\expitI}[1]{\ensuremath{\ln{\frac{1}{1 + \exp{#1}}}}}
+
+% Optimization
+\newcommand{\argmax}[1]{\underset{#1}{\opname{argmax}}\;}
+\newcommand{\argmin}[1]{\underset{#1}{\opname{argmin}}\;}
+\newcommand{\argsort}[1]{\underset{#1}{\opname{argsort}}\;}
+\newcommand{\localmax}[1]{\underset{#1}{\opname{localmax}}}
+\newcommand{\arglocalmax}[1]{\underset{#1}{\opname{localmax}}}
+\newcommand{\arglocalextrema}[1]{\underset{#1}{\opname{argextrema}}}
+\newcommand{\argextrema}[1]{\underset{#1}{\opname{argextrema}}}
+% Calculation
+\newcommand{\expI}[1]{\txt{exp}\paren{#1}}
+\newcommand{\expII}[1]{\ensuremath{e^{#1}}}
+\renewcommand{\exp}[1]{\expI{#1}}
+%\renewcommand{\ln}[1]{\txt{ln}\paren{#1}}
+
+\newcommand{\overbar}[1]{\mkern1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern1.5mu}
+%\newcommand{\complement}[1]{\overbar{#1}}
+\newcommand{\setcomp}[1]{\overbar{#1}}
+\newcommand{\indicator}{\mathbbm{1}}
+
+
+% Linear Algebra
+%\newcommand{\sqrtm}[1]{\opname{sqrtm}(#1)}
+\newcommand{\sqrtm}[1]{#1^{\frac{1}{2}}}
+\newcommand{\inv}[1]{#1^{-1}}
+
+\newcommand{\tr}{\opname{Tr}}
+\renewcommand{\det}{\opname{Det}}
+\newcommand{\modop}{\opname{mod}}
+\newcommand{\modfn}[2]{#1\; \modop{} \;\,#2}
+
+\newcommand{\trop}{\txt{Tr}}
+\newcommand{\detop}{\txt{Det}}
+
+\newcommand{\trfn}[1]{\func{\trop}{#1}}
+\newcommand{\detfn}[1]{\func{\detop}{#1}}
+
+\newcommand{\arctantwo}{\opname{arctan2}}
+\newcommand{\arctanII}{\opname{arctan2}}
+\newcommand{\atantwo}[1]{\func{\arctantwo}{#1}}
+\newcommand{\atan}[1]{\func{\arctan}{#1}}
+
+\newcommand{\cov}{\Sigma}
+\newcommand{\ltwonormvec}[1]{\frac{#1}{\elltwo{#1}}} 
+\newcommand{\card}[1]{|#1|} 
+\newcommand{\braket}[2]{\left<#1|#2\right>} 
+\newcommand{\bra}[1]{\left<#1|} 
+\newcommand{\ket}[2]{|#1\right>} 
+%overbar\newcommand{\card}[1]{\txt{card}(#1)} 
+%\newcommand{\sqrtm}[1]{#1^(.5)}
+
+
+%%%%%%%%%%%%%%%
+% Variables
+% 
+
+% Better ensure math with a space  Actually no. just use \cmd\
+%\newcommand{\enmath}[1]{\ensuremath{#1}\zspace}
+
+\newcommand{\mat}[1]{\ensuremath{\mathbf{#1}}} %Should always be capital
+\newcommand{\rand}[1]{\ensuremath{\mathbf{#1}}}  %Should always be capital
+\newcommand{\set}[1]{\ensuremath{\mathcal{#1}}} 
+%\newcommand{\set}[1]{\ensuremath{\mathpzc{#1}}} 
+\newcommand{\multiset}[1]{\ensuremath{\mathscr{#1}}} 
+%\newcommand{\multiset}[1]{\ensuremath{\mathfrak{#1}}} 
+%\newcommand{\multiset}[1]{\ensuremath{\mathrsfs{#1}}} 
+
+%\let\arrowvec\vec % Keep old arrowvec functionality
+\renewcommand{\vec}[1]{\ensuremath{\mathbf{#1}}} %Should always be lowercase
+%\newcommand{\greekvec}[1]{\ensuremath{\boldsymbol{#1}}} %Should always be lowercase
+%\newcommand{\greekvec}[1]{#1}
+\newcommand{\greekvec}[1]{\mbox{\boldmath\ensuremath{#1}}}
+%
+%boldsymbol
+% An explicit vector 
+%  e.g. \VEC{ x \\ y \\ z}
+\newcommand{\VEC}[1]{\ensuremath{
+    \Bigl[\negthinspace \begin{smallmatrix} #1
+    \end{smallmatrix} \negthinspace \Bigr] }}
+\newcommand{\BVEC}[1]{
+    \begin{bmatrix}
+        #1
+    \end{bmatrix}}
+\newcommand{\BIGVEC}[1]{\BVEC{#1}}
+% An explicit matrix 
+% e.g. \MAT{ a & b \\ c & d}
+\newcommand{\MAT}[1]{\ensuremath{
+    \Bigl[ \begin{smallmatrix} #1
+    \end{smallmatrix} \Bigr] }}
+
+\newcommand{\BMAT}[1]{\ensuremath{
+    \left[ \begin{matrix} #1
+    \end{matrix} \right] }}
+\newcommand{\BIGMAT}[1]{\BMAT{#1}}
+
+
+\newcommand{\REAL}{\mathbb{R}}
+%\renewcommand{\Pr}{\color{red} \txtbf{{Pr}} \color{black}}
+
+\newcommand{\ellp}[2]{||#1||_{#2}}
+%\newcommand{\elltwo}[1]{\ellp{#1}{2}}
+\newcommand{\elltwo}[1]{\ellp{#1}{}}
+%\newcommand{\elltwosqrd}[1]{\ellp{#1}{2}^2}
+\newcommand{\elltwosqrd}[1]{||#1||^2}
+\newcommand{\ellone}[1]{\ellp{#1}{1}}
+\newcommand{\ltwo}[1]{||#1||_2}
+\newcommand{\lone}[1]{||#1||_1}
+\newcommand{\len}[1]{|#1|}
+\newcommand{\abs}[1]{|#1|}
+
+%\newcommand{\tau}[1]{|#1|}
+
+
+%%%%%%%%%%%%%%%%%%
+% Common notation
+\newcommand{\boldgreek}[1]{\mbox{\boldmath{$ #1 $}}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\prefers}{\succ}
+\newcommand{\preferseq}{\succeq}
+
+%\newcommand{\binom}[2]{{#1 \choose #2}}
+
+
+\newcommand{\floor}[1]{\left\lfloor{} #1 \right\rfloor}
+\newcommand{\bigoh}[1]{\func{\mathcal{O}}{#1}}
+
+%\newcommand{\rotMATRIXtwo}[1]{\MAT{-\sin{#1} & \cos{#1}\\\;\;\;\cos{#1} & \sin{#1}}}
+\newcommand{\mspc}{\;\;\;}
+\newcommand{\rotMatII}[1]{\MAT{-\sin{#1} & \cos{#1}\\\mspc\cos{#1} & \sin{#1}}}
+\newcommand{\rotMatIII}[1]{
+    \MAT{
+             \cos{#1} &     -\sin{#1} & 0\\
+             \sin{#1} & \mspc\cos{#1} & 0\\ 
+                    0 &             0 & 1
+        }
+}
+\newcommand{\rotBigMatIII}[1]{
+    \BIGMAT{
+             \cos{#1} &     -\sin{#1} & 0\\
+             \sin{#1} &      \cos{#1} & 0\\ 
+                    0 &             0 & 1
+        }
+}
+\newcommand{\invrotMatIII}[1]{
+    \MAT{
+        \mspc\cos{#1} &      \sin{#1} & 0\\
+            -\sin{#1} &      \cos{#1} & 0\\ 
+                    0 &             0 & 1
+        }
+}
+%\newcommand{\invrotMatIII}[1]{\MAT{-\sin{#1} & -\cos{#1}  & 0\\-\cos{#1} & \mspc\sin{#1} & 0\\  0 & 0 &  1}}
+
+\newcommand{\transMatIII}[2]{
+    \MAT{
+        1 & 0 & #1\\
+        0 & 1 & #2\\
+        0 & 0 & 1
+        }
+}
+
+\newcommand{\transBigMatIII}[2]{
+    \BIGMAT{
+        1 & 0 & #1\\
+        0 & 1 & #2\\
+        0 & 0 & 1
+        }
+}
+
+
+\newcommand{\sciE}[1]{\ensuremath{\times 10^{#1}}}
+\newcommand{\E}[1]{\sciE{#1}}
+
+\newcommand{\OnTheOrderOf}[1]{\ensuremath{\sim\mkern-6mu 10^{#1}}}
+
+\newcommand{\suchthat}{\quad\txt{s.t. }}
+\newcommand{\subjectto}{\suchthat}
+%\newcommand{\suchthat}{\txt{ such that }}
+%\newcommand{\subjectto}{\txt{ subject to }}
+
+% Elementwise product / Hadamard Product
+\newcommand{\elemprod}{\circ}
+
+\newcommand{\concat}[2]{\brak{\paren{#1^T}, \paren{#2^T}}^T}
+
+\newcommand{\percent}{\%}
+
+\newcommand{\degrees}{^{\circ}}
+%\renewcommand{\degree}{\degrees}
+%\newcommand{\degree}{^{\circ}}
+
+
+%\newcommand{\baseIdx}{0}
+%\newcommand{\lastIdx}[1]{(#1 - 1)}
+\newcommand{\baseIdx}{1}
+\newcommand{\nextIdx}{2}
+\newcommand{\lastIdx}[1]{#1}
+
+\newcommand{\xdotseqIII}[4]{#1_{#2}, \ldots{}, #1_{#3}, \ldots, #1_{#4}}
+\newcommand{\xdotseqII}[3]{#1_{#2}, \ldots, #1_{#3}}
+
+
+\newcommand{\dotsubseq}[3]{#1_{#2}, \ldots{}, #1_{\lastIdx{#3}}}
+\newcommand{\dotseqxII}[2]{\xdotseqII{#1}{\baseIdx{}}{\lastIdx{#2}}}
+\newcommand{\dotseqIII}[3]{#1_\baseIdx{}, \ldots{}, #1_{#2}, \ldots, #1_{\lastIdx{#3}}}
+\newcommand{\dotseqIV}[3]{#1_\baseIdx{}, #1_\nextIdx{} \ldots, #1_{#2}, #1_{#2 + 1}, \ldots, #1_{\lastIdx{#3}}}
+
+
+\newcommand{\xdotseqIIITwoD}[5]{\xdotseqIII{#1}{\baseIdx,\baseIdx}{#2,#3}{\lastIdx{#4},\lastIdx{#5}}}
+
+
+\newcommand{\dotseqII}[2]{#1_\baseIdx{}, \ldots{}, #1_{\lastIdx{#2}}}
+
+\newcommand{\dotsubarr}[3]{\brak{\dotsubseq{#1}{#2}{#3}}}
+\newcommand{\dotarrII}[2]{\brak{\dotseqxII{#1}{#2}}}
+\newcommand{\dotarrIII}[3]{\brak{\dotseqIII{#1}{#2}{#3}}}
+\newcommand{\dotarrIV}[3]{\brak{\dotseqIV{#1}{#2}{#3}}}
+
+\newcommand{\dotsubset}[3]{\curly{\dotsubseq{#1}{#2}{#3}}}
+\newcommand{\dotsetII}[2]{\curly{\dotseqxII{#1}{#2}}}
+\newcommand{\dotsetIII}[3]{\curly{\dotseqIII{#1}{#2}{#3}}}
+\newcommand{\dotsetIV}[3]{\curly{\dotseqIV{#1}{#2}{#3}}}
+
+\renewcommand{\emptyset}{\varnothing}
+
+
+% https://en.wikipedia.org/wiki/Normal_distribution#Definition
+%\newcommand{\NormalEqnI}{
+%    \frac{1}{\sqrt{\sigma^2 \TAU}}
+%    \exp{-\frac{(x - \mu)^2}{2\sigma^2}}
+%}
+
+\newcommand{\NormalVarEqnI}[2]{
+    \ensuremath{
+    \frac{1}{\sqrt{#2^2 \TAU}}
+    \exp{\frac{-{(#1)}^2}{2#2^2}}
+}
+}
+
+\newcommand{\NormalVarConst}[1]{
+    \ensuremath{
+    \frac{1}{\sqrt{#1^2 \TAU}}
+}}
+
+\newcommand{\NormalVarExp}[2]{
+    \ensuremath{
+    \exp{\frac{-{#1}^2}{2#2^2}}
+}}
+
+\newcommand{\NormalVarEqnII}[2]{
+    \ensuremath{ \NormalVarConst{#2} \NormalVarExp{#1}{#2} }
+}
+\newcommand{\NormEqnII}[2]{\NormalVarEqnII{#1}{#2}}
+
+\newcommand{\NormalEqnI}{\NormalVarEqnI{\ensuremath{x - \mu}}{\sigma}}
+
+\newcommand{\StandardNormalI}{
+    %\NormalVarEqnI{0}{1}
+    %\frac{\expII{-\frac{x^2}{2}}}{\sqrt{\TAU}}
+    \ensuremath{\frac{\expI{-(x^2) / 2}}{\sqrt{\TAU}}}
+}
+
+\newcommand{\StandardNormalKernelI}[1]{
+    %\NormalVarEqnI{0}{1}
+    %\frac{\expII{-\frac{x^2}{2}}}{\sqrt{\TAU}}
+    \ensuremath{\frac{\expI{-(#1^2) / 2}}{\sqrt{\TAU}}}
+}
+
+\newcommand{\ParzenEqn}{
+    \ensuremath{\frac{1}{nh} \sum_{i=1}^n \StandardNormalKernelI{(\frac{x - x_i}{h})}}
+}
+
+% https://en.wikipedia.org/wiki/Multivariate_normal_distribution
+\newcommand{\NormalEqnII}{
+    \ensuremath{
+        \frac{1}{\sqrt{\detfn{\Sigma} {(\TAU)}^k}}
+        \exp{-\frac{{(\vec{x} - \greekvec{\mu})}^T \Sigma^{-1} (\vec{x} - \greekvec{\mu})}{2}}
+    }}
+
+
+%\newcommand{\fboxII}[1]{\fbox{#1}}
+\newcommand{\fboxII}[1]{#1}
+
+
+% ------------
+
+
+\newcommand{\ImageFigureDraft}[4]{ 
+    \begin{figure}[ht!]
+    \centering 
+    \fboxII{\includegraphics[draft,width=#2]{#1}}
+    \caption{\caplbl{#4}#3}\label{fig:#4} 
+    \end{figure} 
+} 
+
+
+\makeatletter
+\newcommand{\ImageCommandDraft}[4]{%
+    \expandafter\newcommand\csname #4\endcsname{\ImageFigureDraft{#1}{#2}{#3}{#4}}%
+}
+\makeatother
+
+
+
+\newcommand{\ImageFigure}[4]{ 
+    \begin{figure}[ht!]
+    \centering 
+    \fboxII{\includegraphics[width=#2]{#1}}
+    \caption{\caplbl{#4}#3}\label{fig:#4} 
+    \end{figure} 
+} 
+
+\makeatletter
+\newcommand{\ImageCommand}[4]{%
+    \expandafter\newcommand\csname #4\endcsname{\ImageFigure{#1}{#2}{#3}{#4}}%
+}
+\makeatother
+
+
+\newcommand{\CaptionedImageFigure}[5]{ 
+    \begin{figure}[ht!]
+    \centering 
+    \fboxII{\includegraphics[width=#2]{#5}}
+    \caption[\caplbl{#1}#3]{\caplbl{#1}#4}\label{fig:#1} 
+    \end{figure} 
+} 
+
+\makeatletter
+% {label}{textwidth_percent}{shortcap}{caption_str}{fpath}
+\NewDocumentCommand\SingleImageCommand{mmmmm}{%
+    \expandafter\newcommand\csname #1\endcsname{\CaptionedImageFigure{#1}{#2\textwidth}{#3}{#4}{#5}}
+}
+\makeatother
+
+
+
+
+% ----------
+% Super hacky def for multiple fig stuffs
+
+%http://tex.stackexchange.com/questions/132956/reduce-space-between-subfigure-and-the-subfigure-captions
+
+% TODO: change to use keyval arguments for multifigure
+% http://tex.stackexchange.com/questions/180147/newcommand-for-tabular-entries-using-keyval
+
+% command to specify up to 4 subfigures
+% FIXME: if one of the IfValueTF goes to its false case it leaves an ungly space between the figure and the caption
+% Not sure how to fix this robustly. Adding \vspace{-1\baselineskip} in the last else seems to help some.
+% chktex-file 39
+\NewDocumentCommand\MultiImageFigure{mmmgggg}{ 
+    \begin{figure}[ht!]
+        \centering 
+        \IfValueTF{#4}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#4}}\caption{}\label{sub:#1A}\end{subfigure}
+           ~~%
+        }{}
+        \IfValueTF{#5}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#5}}\caption{}\label{sub:#1B}\end{subfigure}
+            ~~%
+        }{}
+        \IfValueTF{#6}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#6}}\caption{}\label{sub:#1C}\end{subfigure}
+            ~~%
+        }{}
+        \IfValueTF{#7}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#7}}\caption{}\label{sub:#1D}\end{subfigure}
+            ~~%
+        }{
+            \vspace{-.5\baselineskip}
+        }
+        %\IfValueTF{#8}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1E}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#9}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#9}}\caption{}\label{sub:#1F}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#10}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#10}}\caption{}\label{sub:#1G}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#11}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#11}}\caption{}\label{sub:#1H}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#12}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#12}}\caption{}\label{sub:#1I}\end{subfigure}
+        %    ~~%
+        %}{}
+%\caption[#3]{\caplbl{#1}#3} 
+\caption{\caplbl{#1}#3}  % TODO: use first sentence as the short title.
+\label{fig:#1} 
+    \end{figure} 
+} 
+
+% Set up the keys.  Only the ones directly under /myparbox
+% can be accepted as options to the \myparbox macro.
+%http://tex.stackexchange.com/questions/34312/how-to-create-a-command-with-key-values
+%\pgfkeys{
+% /MultiImageFigure/.is family, /MultiImageFigure,
+% % Here are the options that a user can pass
+% default/.style = 
+%  {width = \textwidth, height = \baselineskip},
+% width/.estore in = \myparboxWidth,
+% height/.estore in = \myparboxHeight,
+%}
+
+
+\NewDocumentCommand\MultiImageFigureII{mmmmgggg}{ 
+    \begin{figure}[ht!]
+        \centering 
+        \IfValueTF{#5}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#5}}\caption{}\label{sub:#1A}\end{subfigure}
+        }{}
+        \IfValueTF{#6}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#6}}\caption{}\label{sub:#1B}\end{subfigure}
+        }{}
+        \IfValueTF{#7}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#7}}\caption{}\label{sub:#1C}\end{subfigure}
+        }{
+            \vspace{-.5\baselineskip}
+        }
+        \IfValueTF{#8}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1D}\end{subfigure}
+        }{}
+\caption[\caplbl{#1}#3]{\caplbl{#1}#4}  % TODO: use first sentence as the short title.
+\label{fig:#1} 
+    \end{figure} 
+} 
+
+
+\NewDocumentCommand\MultiImageFigureDraft{mmmgggg}{ 
+    \begin{figure}[ht!]
+        \centering 
+        \IfValueTF{#4}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[draft,width=\textwidth]{#4}}\caption{}\label{sub:#1A}\end{subfigure}
+           ~~%
+        }{}
+        \IfValueTF{#5}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[draft,width=\textwidth]{#5}}\caption{}\label{sub:#1B}\end{subfigure}
+            ~~%
+        }{}
+        \IfValueTF{#6}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[draft,width=\textwidth]{#6}}\caption{}\label{sub:#1C}\end{subfigure}
+            ~~%
+        }{}
+        \IfValueTF{#7}{
+            \begin{subfigure}[h]{#2\textwidth}
+                \centering
+                \fboxII{\includegraphics[draft,width=\textwidth]{#7}}\caption{}\label{sub:#1D}\end{subfigure}
+            ~~%
+        }{
+            \vspace{-.5\baselineskip}
+        }
+        %\IfValueTF{#8}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1E}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#9}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#9}}\caption{}\label{sub:#1F}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#10}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#10}}\caption{}\label{sub:#1G}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#11}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#11}}\caption{}\label{sub:#1H}\end{subfigure}
+        %    ~~%
+        %}{}
+        %\IfValueTF{#12}{
+        %    \begin{subfigure}[h]{#2\textwidth}
+        %        \centering
+        %        \fboxII{\includegraphics[width=\textwidth]{#12}}\caption{}\label{sub:#1I}\end{subfigure}
+        %    ~~%
+        %}{}
+%\caption[#3]{\caplbl{#1}#3} 
+\caption{\caplbl{#1}#3}  % TODO: use first sentence as the short title.
+\label{fig:#1} 
+    \end{figure} 
+} 
+
+\makeatletter
+\NewDocumentCommand\MultiImageCommand{mmmgggg}{%
+    \expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{#2}{#3}{#4}{#5}{#6}{#7}}
+    %\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{.1}{#3}{#4}{#5}{#6}{#7}}
+}
+\makeatother
+
+
+\makeatletter
+\NewDocumentCommand\MultiImageCommandII{mmmmgggg}{%
+    \expandafter\newcommand\csname #1\endcsname{\MultiImageFigureII{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}
+    %\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{.1}{#3}{#4}{#5}{#6}{#7}}
+}
+\makeatother
+
+%\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}{#10}{#11}{#12}}
+
+
+% chktex-file 9
+\def\lbrak{[}
+\def\rbrak{]}
+\newcommand{\rangeexex}[1]{\lparen#1\rparen}
+\newcommand{\rangeinex}[1]{\lbrak#1\rparen} 
+\newcommand{\rangeexin}[1]{\lparen#1\rbrak}
+\newcommand{\rangeinin}[1]{\lbrak#1\rbrak}
+
+%\newcommand{\rangeexex}[1]{(#1)}
+%\newcommand{\rangeinex}[1]{[#1)} 
+%\newcommand{\rangeexin}[1]{(#1]}
+%\newcommand{\rangeinin}[1]{[#1]}
+
+%\newcommand{\getitem}[1]{[#1]}
+\newcommand{\getitem}[1]{\ensuremath{_{#1}}}
+
+
+\newcommand{\gammav}{\greekvec{\gamma}}
+\newcommand{\deltav}{\greekvec{\delta}}
+\newcommand{\onevec}{\vec{1}}
+\newcommand{\partfrac}[2]{\frac{\partial{} #1}{\partial{} #2}}
+
+\newcommand{\rarrow}{\ensuremath{\rightarrow}}
+
+%\newcommand{\rmultiarrow}{\ensuremath{*\mkern-10mu\rightarrow}}
+%\newcommand{\rmultiarrow}{*\rightarrow}
+%\newcommand{\rmultiarrow}{*\mskip-10mu\rightarrow}
+\newcommand{\rmultiarrow}{\ensuremath{\overset{*}{\rarrow}}}

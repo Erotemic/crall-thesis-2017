@@ -1,0 +1,23 @@
+
+Person reidentification:
+
+* Given: Network of non-overlapping cameras
+* Goal: identify when a new individual seen in camera A is the same as a
+previously seen individual in camera B. 
+
+In re-id terminology there is a gallary of known images and there is a set of
+probe cameras.
+
+Cameras are low resolution
+There are viewpoint, illumination, occlusion, background clustter, blahblah normal stuff
+
+There are inter-camera variations. 
+
+Usually a distance metric M is learned to find a distance between 
+two vector representations of a person. 
+This distance metric is typically some mahalanobis distance matrix.
+
+A track of images from a person establishes multiple pictures of the person.
+Can compute a single feature vector from multiple images to represent a single
+person.
+

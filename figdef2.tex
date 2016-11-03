@@ -1,0 +1,177 @@
+
+\begin{comment}
+        python -m ibeis.scripts.gen_cand_expts --exec-parse_latex_comments_for_commmands --fname figdef2.tex
+\end{comment}
+
+
+
+\begin{comment}
+# Fig for scale space can be seen here
+http://opticalengineering.spiedigitallibrary.org/article.aspx?articleid=1089124
+http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/017204_1_1.png
+\end{comment}
+
+
+% --------
+
+
+\begin{comment}
+python -m vtool.patch --test-draw_kp_ori_steps --dpath ~/latex/cand/ --save figures2/testfindkpdirection.jpg  --figsize=14,9 --dpi=180  --adjust=.04,.05,.1 --diskshow --fname=zebra.png --fx=121 --show --clipwhite --saveparts
+\end{comment}
+%\SingleImageCommand{testfindkpdirection}{.9}{testfindkpdirection}{
+%%---
+%Visualization of the steps involved in computing the dominant gradient
+%  orientations.
+%The top rows shows:
+%(1) the input image with a single elliptical keypoint,
+%(2) the normalized keypoint, (3, 4) the squared x and y image derivatives.
+%The middle row shows:
+%(5) the gradient magnitudes,
+%(6) the Gaussian weighted gradient magnitude,
+%% which defines how much of a vote each pixel has, 
+%(7, 8) the orientation at each pixel.
+%%that defines which bins the pixel will vote for.
+%The final row
+%(9) shows the histogram of weighted orientations.
+%%The circled positions show the orientations with the maximum responce, and the
+%The starred positions show the dominant gradient orientations localized to
+%  sub-orientation accuracy.
+%% ---
+%}{figures2/test_find_kp_direction.jpg}
+
+
+\newcommand{\testfindkpdirection}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionA.jpg}\caption{}\label{sub:testfindkpdirectiona}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionB.jpg}\caption{}\label{sub:testfindkpdirectionb}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionC.jpg}\caption{}\label{sub:testfindkpdirectionc}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionD.jpg}\caption{}\label{sub:testfindkpdirectiond}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionE.jpg}\caption{}\label{sub:testfindkpdirectione}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionF.jpg}\caption{}\label{sub:testfindkpdirectionf}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionG.jpg}\caption{}\label{sub:testfindkpdirectiong}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.23\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{1\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures2/testfindkpdirectionI.jpg}\caption{}\label{sub:testfindkpdirectioni}
+\end{subfigure}
+\caption[\caplbl{testfindkpdirection} Computing the dominant gradient orientation]{
+% ---
+\caplbl{testfindkpdirection} Visualization of the steps involved in
+  computing the dominant gradient orientations.
+The top rows shows:
+\Cref{sub:testfindkpdirectiona} the input image with a single
+  elliptical keypoint, \Cref{sub:testfindkpdirectionb} the normalized
+  keypoint, \Cref{sub:testfindkpdirectionc,sub:testfindkpdirectiond} the
+  squared x and y image derivatives.
+The middle row shows:
+\Cref{sub:testfindkpdirectione} the gradient magnitudes,
+  \Cref{sub:testfindkpdirectionf} the Gaussian weighted gradient
+  magnitude,
+% which defines how much of a vote each pixel has, 
+\Cref{sub:testfindkpdirectiong,sub:testfindkpdirectionh} the
+  orientation at each pixel.
+%that defines which bins the pixel will vote for.
+The final row~\cref{sub:testfindkpdirectioni} shows the histogram of
+  weighted orientations.
+%The circled positions show the orientations with the maximum responce, and the
+The starred positions show the dominant gradient orientations localized
+  to sub-orientation accuracy.
+% ---
+}
+\label{fig:testfindkpdirection}
+\end{figure}
+}
+
+
+%\MultiImageCommand{testfindkpdirection}{.2}{
+%test find kp direction.jpg
+%}{figures2/testfindkpdirectionA.jpg}{figures2/testfindkpdirectionB.jpg}{figures2/testfindkpdirectionC.jpg}{figures2/testfindkpdirectionD.jpg}
+
+%{figures2/testfindkpdirectionE.jpg}{figures2/testfindkpdirectionF.jpg}{figures2/testfindkpdirectionG.jpg}{figures2/testfindkpdirectionH.jpg}{figures2/testfindkpdirectionI.jpg}
+
+%{figures2/test_find_kp_directionA.jpg}{figures2/test_find_kp_directionB.jpg}{figures2/test_find_kp_directionC.jpg}{figures2/test_find_kp_directionD.jpg}
+%{figures2/test_find_kp_directionH.jpg}{figures2/test_find_kp_directionI.jpg}
+
+
+
+\begin{comment}
+python -m plottool.viz_featrow --test-draw_feat_row --dpath ~/latex/cand/ --save figures2/viz_featrow.jpg --figsize=12,6 --dpi 180 --clipwhite --diskshow --fname zebra.png --fx=121  --saveparts
+\end{comment}
+%\SingleImageCommand{vizfeatrow}{.8}{vizfeatrow}{
+%% ---
+%The left shows a SIFT feature superimposed over pixels it describes.
+%The right shows the same SIFT descriptor as a flat histogram.
+%Notice the correspondence between the colors of the histogram bars
+%% ---
+%}{figures2/viz_featrow.jpg}
+\MultiImageCommandII{vizfeatrow}{.4}{A SIFT descriptor}{
+% ---
+\Cref{sub:vizfeatrowA} shows a SIFT feature superimposed over pixels it
+  describes.
+\Cref{sub:vizfeatrowB} shows the same SIFT descriptor as a flat histogram.
+Notice the correspondence between the colors of the histogram bars.
+% ---
+}{figures2/viz_featrowA.jpg}{figures2/viz_featrowB.jpg}
+
+
+
+\begin{comment}
+python -m plottool.draw_sv --test-show_sv_simple --dpath ~/latex/cand/ --save figures2/figSVInlier.jpg --figsize=12,6 --dpi 300 --clipwhite --diskshow
+\end{comment}
+\SingleImageCommand{figSVInlier}{.8}{Visualization of spatial verification}{
+% ---
+Matches before and after spatial verification.
+Inconsistent matches are shown in red.
+Consistent matches are shown in blue.
+Notice that not all spatially consistent matches are correct.
+% ---
+}{figures2/figSVInlier.jpg}
+
+\begin{comment}
+wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
+
+python -m ibeis.scripts.specialdraw scalespace --show  --dpath ~/latex/cand/ --save figures2/ScaleSpaceFigure.png --dpi 120 --clipwhite --diskshow
+
+\end{comment}
+\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
+% ---
+A Gaussian pyramid is used as a scale space representation of an image.
+A property of scale space is that doubling the scale is equivalent to
+  downsampling the image by half.
+The set of images of a specific size correspond to an octave.
+The images within each octave are the intervals.
+% ---
+}{figures2/ScaleSpaceFigure.png}

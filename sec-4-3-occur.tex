@@ -1,0 +1,93 @@
+Before we can address the identification problem in the context of
+  the identification workflow, we must define how images are grouped
+  into occurrences.
+In this section we propose a clustering algorithm to accomplish
+  this task.
+
+\paragraph{Occurrence definition}
+The Darwin Core defines an \occurrence{} as a collection of evidence
+  that shows an organism exists within specific location and span of
+  time~\cite{wieczorek_darwin_2012}.
+For our purposes this amounts to a cluster of images localized in space
+  and time.
+We propose that the \occurrence{} grouping algorithm should perform
+  agglomerative clustering on the GPS coordinates and time specified in
+  the image metadata.
+
+\paragraph{Space-time image distance}
+Towards this goal we define a space-time feature $\g_i$ for each image
+  $i$, and a pairwise distance, $\Delta(\g_i, \g_j)$, between these
+  features.
+This feature will a two dimensional feature tuple, %
+$\g_i = \paren{\time_i, \gps_i}$, where the first component is the
+  POSIX timestamp $\time_i$, and the second component is a GPS coordinate %
+$\gps_i = \brak{\lat_i, \lon_i}^{T}$, where the angles of latitude and
+  longitude are measured in radians.
+To compute this distance between two images $\g_i$ and $\g_j$ we first
+  compute the distance in each component of the feature tuple.
+The difference in time is the absolute value of the timedelta,  %
+$\Delta_t(\g_i, \g_j) = \abs{\time_i - \time_j}$, which is in seconds.
+
+% DISTANCE BETWEEN TWO IMAGES (space and final)
+Next, the distance in space is computed by approximating the Earth as a
+  sphere.
+In general, the distance between two points on a sphere with radius $r$
+  is a function of inverse haversines, and is expressed as:
+\begin{equation}\label{eqn:geodistance}
+    d(\gps_i, \gps_j, r) =
+        2 r \asin{\sqrt{
+            \haversine{\lat_i - \lat_j} +
+            \haversine{\lon_i - \lon_j} +
+            \cos\paren{\lat_i} \cos\paren{\lat_j}}}
+\end{equation}
+In the previous equation, $\haversine{\theta} = \haversineFULL{\theta}$
+  is the half vertical sine function.
+Thus, we arrive at the spatial distance between two images by
+  estimating the radius of the earth to be $r=6367$ kilometers.
+\begin{equation}
+    \Delta_s(\g_i, \g_j) = d(\gps_i, \gps_j, 6367).
+\end{equation}
+This results in distance in seconds and a distance in kilometers, which
+  are in incompatible units.
+To combine these distances we convert kilometers to seconds by
+  heuristically estimating the walking speed, $S$, of an animal (for
+  zebras we use $S=2\sciE{-3}$ kilometers per second).
+This allows us to cancel kilometers from the expression and express GPS
+  distance as a unit of time:
+$\frac{\Delta_s(\g_i, \g_j)}{S}$.
+This distance can be interpreted as the total amount of time it would
+  take an animal to move between two points.
+The total distance between two images is the sum of these components.
+\begin{equation}\label{eqn:imgdist}
+    \Delta(\g_i, \g_j) =
+        \Delta_t(\g_i, \g_j) + \frac{\Delta_s(\gps_i, \gps_j)}{S}
+\end{equation}
+Notice that if there is no difference in GPS location, then this
+  measure becomes to a distance in time.
+
+\paragraph{Clustering procedure}
+Having defined pairwise a distance between two images, we proceed to
+  describe the agglomerative clustering algorithm.
+There are two inputs to the agglomerative clustering algorithm:
+(1) The matrix of pairwise distance between images, and
+(2) the minimum distance threshold between two images.
+The matrix of distances is computed using~\cref{eqn:imgdist}, and we
+  set the distance threshold to $600$ seconds.
+Any pair of images that is within this threshold connected via a
+  linkage matrix.
+Connected components in this matrix form the final clusters that we use
+  as \occurrences{}.
+
+\paragraph{Discussion of occurrences}
+These computed \occurrences{} are valuable measurements for multiple
+  components of the IBEIS software.
+At its core an \occurrence{} describes \wquest{when} a group of animals
+  was seen and \wquest{where} that group was seen.
+However, to answer the questions like \wquest{how many} animals there
+  were, \wquest{who} an animal is, \wquest{who else} is an animal with,
+  and \wquest{where else} have these animals been seen, the annotations
+  in the \occurrence{} must be grouped into individual \encounters{} and
+  then matched against the \masterdatabase{}.
+The next section describes the first of these procedures:
+the \intraoccurrence{} identification algorithm that produces
+  \encounters{}.

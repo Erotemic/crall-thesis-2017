@@ -1,0 +1,398 @@
+
+\newcommand{\tmptw}{.8}
+\begin{comment}
+python -m ibeis.scripts.specialdraw merge_viewpoint_graph --dpath ~/latex/cand/ --save figures4/bridgethegap2.png --figsize=15,15 --clipwhite --diskshow
+python -m ibeis.scripts.specialdraw merge_viewpoint_graph --dpath ~/latex/cand/ --save figures4/bridgethegap2.png --figsize=15,15 --clipwhite --diskshow --constraint
+\end{comment}
+\SingleImageCommand{bridgethegap}{}{A merge case between distinct viewpoints}{
+% ---
+    A new viewpoint matches a back-left and a back-right viewpoint and
+      merges two names.
+    The matches that connect the left and right viewpoint are shown in
+      blue.
+    %is able to  two disjoint sets of annotations.  Two disjoint viewpoints are
+    %merged by a common transition viewpoint.
+% ---
+}{figures4/bridgethegap2.png}
+
+
+
+\begin{comment}
+python -m ibeis.annotmatch_funcs review_tagged_splits --zoom= --dpath ~/latex/cand/ --save figures4/splitcase.png --figsize=15,15 --clipwhite --diskshow
+python -m ibeis.annotmatch_funcs review_tagged_splits --dpath ~/latex/cand/ --save figures4/splitcase.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow --zoom=.7
+
+aids = [14397, 15120, 15600, 15606, 16804, 16930, 16967, 17012, 17062]
+
+\end{comment}
+\SingleImageCommand{splitcase}{\tmptw}{
+    A split case
+}{
+% ---
+A graph of matches showing a split case.
+Two pairs of annotations have been incorrectly labeled with the same name.
+The two edges marked in orange have been flagged as a potential split case.
+This split case can be resolved by cutting the highlighted edges.
+% ---
+}{figures4/splitcase.png}
+
+
+
+
+\begin{comment}
+python -m ibeis.annotmatch_funcs review_tagged_joins --dpath ~/latex/cand/ --save figures4/mergecase.png --figsize=15,15 --clipwhite --diskshow
+python -m ibeis.annotmatch_funcs review_tagged_joins --zoom=.5 --dpath ~/latex/cand/ --save figures4/mergecase.jpg --figsize=10,4 --dpi 260 --clipwhite --diskshow
+\end{comment}
+\SingleImageCommand{mergecase}{\tmptw}{A merge case}{
+% ---
+An example of a merge case found in the \GZC{}.
+Two sets of annotations are incorrectly marked as different individuals.
+The two annotations marked in orange have been flagged as a potential merge
+  case.
+This merge case can be resolved by drawing an edge between the highlighted
+  annotations.
+% ---
+}{figures4/mergecase.png}
+
+
+\begin{comment}
+python -m ibeis.algo.preproc.preproc_occurrence compute_occurrence_groups --dpath ~/latex/cand/ --save figures4/occurgraph.png --figsize=40,40 --clipwhite --diskshow
+python -m ibeis.algo.preproc.preproc_occurrence compute_occurrence_groups --dpath ~/latex/cand/ --save figures4/occurgraph.png --figsize=7,7 --dpi 220 --clipwhite --diskshow
+python -m ibeis.algo.preproc.preproc_occurrence compute_occurrence_groups --show --zoom=.8 --dpath ~/latex/cand/ --save figures4/occurgraph.jpg --figsize=30,10 --dpi 160 --clipwhite --diskshow
+\end{comment}
+%\SingleImageCommand{occurgraph}{.8\tmptw}{occurgraph}{
+%occurgraph.jpg
+%}{figures4/occurgraph.jpg}
+
+\begin{comment}
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=22825,22186,22187,22828,22840,22842,22843,22847,22848,22849,22852,22121,22122,22124,22125,22126,22642,22643,22644,22645,22646,22647,22826 --adjust=.05 --dpath ~/latex/cand/ --save "figures4/occurimgs.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow
+
+
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=22825,22186,22187,22828,22840,22842,22843,22847,22848,22849,22852,22121,22122,22124,22125,22126,22642,22643,22644,22645,22646,22647,22826 --adjust=.05 --dpath ~/t2 --save "occurimg.jpg" --figsize=18,8 --clipwhite --dpi=280 --diskshow --saveparts
+
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=1,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000 --adjust=.05 --dpath ~/t2 --save "notoccurimg.jpg" --figsize=18,8 --clipwhite --dpi=280 --diskshow --saveparts
+
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=22642,22643,22644 --adjust=.05 --dpath ~/t2 --save "encimg.jpg" --figsize=18,8 --clipwhite --dpi=280 --diskshow --saveparts
+
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=254,14911,15050,15247,15377,15405,15535,7530,4138,7713,9807,9934,24279,24579,25495,25496,21719,23602,21019,21022,22825,22826,22828,22121,22122,22124,22125,22186,22126,22187,22840,22642,22643,22842,22843,22644,22847,22848,22645,22849,22646,22647,22852 --adjust=.05 --dpath ~/t3 --save "occurimg2.jpg" --figsize=18,8 --clipwhite --dpi=280 --diskshow 
+
+
+python -m ibeis.viz.viz_image gcshow_multi_images --db PZ_Master1 --gids=1,100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000 --adjust=.05 --dpath ~/t2 --save "occurimg.jpg" --figsize=18,8 --clipwhite --dpi=280 --diskshow --saveparts
+\end{comment}
+
+\MultiImageCommandII{intraoccur}{.4}{
+    \Intraoccurrence{} matching}{
+% ---
+\Intraoccurrence{} matching.
+\Cref{sub:intraoccurA} shows a group of images in an \occurrence{} with
+  bounding boxes around unknown annotations.
+\Cref{sub:intraoccurB} illustrates the result of \intraoccurrence{}
+  matching, which is a graph where an edge between two annotations
+  denotes that pair is a correct match.
+The connected components (denoted by color) of this graph are the
+  \encounters{}.
+% ---
+}{figures4/occurimgs.jpg}{figures4/occurgraph.png}
+
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw intraoccurrence_connected --dpath ~/latex/cand/ --save figures4/precut.png --figsize=40,40 --clipwhite --diskshow
+\end{comment}
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw intraoccurrence_connected --dpath ~/latex/cand/ --save figures4/postcut.png --figsize=40,40 --clipwhite --diskshow --postcut
+\end{comment}
+\MultiImageCommandII{gencutfig}{.44}{
+    Identification graphs
+}{
+% ---
+The identification algorithm builds a graph of potential matches.
+\Cref{sub:gencutfigA} shows the input graph to the identification
+  algorithm.
+Blue edges are drawn between the \uset{}, orange edges are drawn
+  between the \uset{} and \lset{}, and colored edges corresponding to
+  \names{} are drawn between nodes in the \lset{}.
+A colored border is drawn around annotations in the \lset{}.
+\Cref{sub:gencutfigB} shows the result of identification, which is a
+  graph where an edge between two annotations denotes that
+  pair correctly matches.
+The connected components denoted by color of this graph are the new
+  individuals.
+% ---
+}{figures4/precut.png}{figures4/postcut.png}
+
+
+\begin{comment}
+python << endpython
+def test():
+    return bar
+endpython
+pip install git+https://github.com/johnyf/nx2tikz.git
+\end{comment}
+
+
+%For Masai giraffes
+%$\nvisit_1 = 89$
+%$\nvisit_2 = 17$
+%$\resight = 10 $
+%%index = 151.3
+%%variance = 60.175479378231799
+
+
+\begin{comment}
+python -m utool.util_latex gcmake_score_tabular:0 --show
+python << endpython
+import sympy as sym
+nvisit_1, nvisit_2, resight = sym.symbols('c_1 c_2 m')
+sqrt = sym.sqrt
+c1 = nvisit_1 = 940
+c2 = nvisit_2 = 433
+c3 = resight  = 115
+sqrt = np.sqrt
+index = (nvisit_1 * nvisit_2) / resight 
+variance = 1.96 * sqrt((nvisit_1 ** 2 * nvisit_2 * (nvisit_2 - resight)) / (resight ** 3))
+print('index = %r' % (index,))
+print('variance = %r' % (variance,))
+import utool as ut
+row_lbls = ['Plains zebras', 'Masai giraffes']
+col_lbls = [r'$\nvisit_1$', r'$\nvisit_2$', r'$\resight$', r'$\poptotal$']
+values = [['$940$', '$422$', '$114$', '$3539.3 \pm 554.3$'], 
+          ['$89$',   '$17$',  '$10$', '$151.3 \pm 60.17$']]
+
+title='Estimated populations of plains zebras and Masai giraffes in Nairobi National Park from the \\GZC{}.'
+label = 'popest'
+
+tabularstr = ut.make_table2(row_lbls, col_lbls, values, title=title, label=label)
+tabularcmd = ut.latex_newcommand(ut.latex_sanatize_command_name(label), tabularstr)
+print(tabularcmd)
+endpython
+\end{comment}
+
+
+\newcommand{\popest}{
+\begin{table}[ht!]
+\centering
+%\begin{tabular}{|c|rrr|c|}
+\caption[\caplbl{tbl:popest}Results of the \GZC{}]{
+% ---
+\caplbl{tbl:popest}Results of the \GZC{}.
+For each species, the identification algorithm was used to determine:
+($\nvisit_1$) the number of individuals sighted on March 1\st{},
+  ($\nvisit_2$) the number of individuals sighted on March 2\nd{},
+  ($\resight$) and the total number of resighted individuals.
+The Lincoln-Petersen index (\Cref{eqn:lpi}) was then used to estimate
+  ($\poptotal$) the total population size of plains zebras and Masai
+  giraffes in Nairobi National Park.
+% ---
+}
+\label{tbl:popest}
+\begin{tabular}{l rrr c}
+\toprule
+Species        & $\nvisit_1$ & $\nvisit_2$ & $\resight$ & $\poptotal$       \\
+\midrule
+Plains zebras  & $940$       & $422$       & $114$      & $\mathbf{3539.3} \pm 554.3$\\
+\midrule
+Masai giraffes & $89$        & $17$        & $10$       & $\mathbf{151.3} \pm 60.17$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+}
+
+
+
+\begin{comment}
+        python -m ibeis.algo.hots.testem test_em --diskshow --no-cnn --dpath ~/latex/cand/ --save "figures4/emgraphprior.png" --figsize=11,4 --clipwhite --dpi=180 --diskshow
+        python -m ibeis.algo.hots.testem test_em --diskshow --no-cnn --dpath ~/latex/cand/ --save "figures4/emgraphpost.png" --postem --figsize=11,4 --clipwhite --dpi=180 --diskshow
+\end{comment}
+\MultiImageCommandII{emgraph}{.4}{An EM-based identification graph}{
+    % ---
+    The graph associated with the expectation maximization algorithm.
+    The red $\nid$ nodes represent potential labels for the blue $\X$
+      annotation nodes.
+    The measure pairwise probability of being the same is shown on
+      edges between annotations.
+    The probabilities of name labelings are shown on the orange edges.
+    The prior probabilities of name labelings are shown on the left.
+    The posterior probabilities of the name labelings are shown on the
+      right.
+    Note that we chose to constrain the number of labels to be
+      different from the number of annotations, but this need not be the
+      case.
+    % ---
+}{figures4/emgraphprior.png}{figures4/emgraphpost.png}
+
+
+\begin{comment}
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=2 --dpath ~/latex/cand/ --save "figures4/bayesII.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=3 --dpath ~/latex/cand/ --save "figures4/bayesIII.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=4 --dpath ~/latex/cand/ --save "figures4/bayesIV.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow
+\end{comment}
+%\MultiImageCommand{bayesnets}{.3}{
+%    % ---
+%    The proposed Bayesian network with 2, 3, and 4 annotations.
+%    Note that the variables used here are different than in other
+%      sections.
+%    The top row contains a node for each anotations representing its
+%      probability distribution over the possible name labelings.
+%    The middle row represents if two annotations are the same or not.
+%    The bottom row holds the observed probabilities of two annotations
+%      being the same.
+%    % ---
+%}{figures4/bayesII.jpg}{figures4/bayesIII.jpg}{figures4/bayesIV.jpg}
+\newcommand{\bayesnets}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.15\textwidth}
+\centering
+%\includegraphics[width=\textwidth]{figures1/ThreeSixtyFigureA.jpg}\caption{}\label{sub:ThreeSixtyFigureA}
+\includegraphics[width=\textwidth]{figures4/bayesII.jpg}\caption{}\label{sub:bayesnesA}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.24\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures4/bayesIII.jpg}\caption{}\label{sub:bayesnesB}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.47\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures4/bayesIV.jpg}\caption{}\label{sub:bayesnesC}
+\end{subfigure}
+\caption[\caplbl{bayesnets}The identification graph as a Bayses net]{\caplbl{bayesnets}
+% ---
+    The identification graph in the form of a Bayesian network with 2, 3, and 4 annotations.
+    Note that the variables used here are different than in other sections.
+    The top row contains a node for each anotations representing its probability distribution over the possible name labelings.
+    The middle row represents if two annotations are the same or not.
+    The bottom row holds the observed probabilities of two annotations being the same.
+% ---
+}
+\label{fig:bayesnets}
+\end{figure}
+}
+
+\begin{comment}
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=2 --modeltype=markov --dpath ~/latex/cand/ --save "figures4/markovII.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=3 --modeltype=markov --dpath ~/latex/cand/ --save "figures4/markovIII.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=4 --modeltype=markov --dpath ~/latex/cand/ --save "figures4/markovIV.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+\end{comment}
+\MultiImageCommand{markovnets}{.3}{
+    The corresponding markov networks for the proposed Baysian models.
+}{figures4/markovII.jpg}{figures4/markovIII.jpg}{figures4/markovIV.jpg}
+
+\begin{comment}
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=2 --modeltype=junc --dpath ~/latex/cand/ --save "figures4/juncII.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=3 --modeltype=junc --dpath ~/latex/cand/ --save "figures4/juncIII.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+    python -m ibeis.algo.hots.bayes make_name_model --num-annots=4 --modeltype=junc --dpath ~/latex/cand/ --save "figures4/juncIV.jpg" --figsize=18,8 --clipwhite --dpi=180 --diskshow
+\end{comment}
+\MultiImageCommand{juncnets}{.3}{
+    The corresponding junction trees corresponding to the cliques in the markov
+    network. These structures are used for belief propogation on the proposed
+    Baysian models.
+}{figures4/juncII.jpg}{figures4/juncIII.jpg}{figures4/juncIV.jpg}
+
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw --exec-merge_viewpoint_graph \
+    --dpath ~/latex/cand/ \
+    --save figures4/bridgethegap.png --figsize=8,8 --dpi 220 \
+    --clipwhite --diskshow
+\end{comment}
+\SingleImageCommand{Rhombicuboctahedron}{.3 }{The rhombicuboctahedron}{
+% ---
+    We propose to model viewpoints and viewpoint differences using
+    the rhombicuboctahedron.
+% ---
+}{figures4/Rhombicuboctahedron.jpg}
+
+
+\begin{comment}
+    python -m ibeis.scripts.specialdraw general_identify_flow --save figures4/pairprob.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10
+\end{comment}
+\SingleImageCommand{pairprob}{1}{Annotation-vs-annotation probability flowchart}{
+% ---
+    Information flow of the annotation-vs-annotation similarity.
+    Local and global features are combined into a constant length
+      ``similarity vector''.
+    A classifier learns to label a similarity vector as either matching or
+      not matching.
+    A probability is extracted from the output of the of this classifier.
+    This probability will be used later in the in identification algorithm
+      as edge weights on a graph.
+% ---
+}{figures4/pairprob.png}
+
+\begin{comment}
+    python -m ibeis.scripts.specialdraw graphcut_flow --save figures4/cutiden.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10
+\end{comment}
+\SingleImageCommand{cutiden}{1}{Graph-based identification flowchart}{
+% ---
+    Given the algorithm to produce a match probability between two
+    annotations the identification algorithm first generates a graph of
+    potential matches and then cuts edges resulting in identifications.
+% ---
+}{figures4/cutiden.png}
+
+
+\begin{comment}
+    python -m ibeis.scripts.specialdraw intraoccurrence_connected --show --small --save figures4/edgeexample.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10
+\end{comment}
+\SingleImageCommand{edgeexample}{1}{Edge types for graph cuts}{
+% ---
+    The different types of edges in the graph.
+    The \lset{} annotations have colored borders denoting a known
+      \name{} label.
+    The \uset{} annotations have colored borders denoting an unknown
+      \name{} label.
+    Each potential match is represented with an edge.
+    Orange edges are between the \uset{} and \lset{}.
+    Purple edges are within the \uset{}.
+    Other colored edges are between the \lset{}.
+% ---
+}{figures4/edgeexample.png}
+
+
+\begin{comment}
+    python -m ibeis.scripts.specialdraw intraoccurrence_connected --show --smaller --save figures4/graphexample.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10
+\end{comment}
+\SingleImageCommand{graphexample}{1}{An identification graph}{
+% ---
+    A simple identification graph.
+    Edges are weighted using a learned probability that the annotations are
+      matching, not matching, or not comparable.
+    The goal is to partition this graph into by individual identity.
+    The colors in this graph denote different edge types which are discussed
+      in~\cref{subsec:graphinf}.
+% ---
+}{figures4/graphexample.png}
+
+
+\begin{comment}
+    python -m ibeis.core_annots --test-compute_one_vs_one --aids=5245,5161 --show --db PZ_Master1 --save figures4/leftrightfacematch.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10 
+
+      % PZ_Master1 aids=5161,5245
+      %python -m ibeis --tf make_name_graph_interaction --db PZ_Master1 --aids=5161,5245 --show --no-with-all
+      % python -m ibeis.core_annots --test-compute_one_vs_one --aids=5161,5245 --show --db PZ_Master1
+      % Fix the one-vs-one algorithm to show this
+\end{comment}
+\SingleImageCommand{leftrightfacematch}{\tmptw}{Matchable annotations with incompatible viewpoints}{
+    % ---
+    The above annotations are able to be matched even though they have
+      been assigned incompatible \vpFrontLeft{} and \vpFrontRight{}
+      viewpoints.
+    This is because we assign viewpoint as a global attribute of an
+      annotation instead of labeling viewpoints of each animal's parts.
+    % ---
+}{figures4/leftrightfacematch.png}
+
+\begin{comment}
+    python -m ibeis.scripts.specialdraw setcover_example --show --save figures4/exemplarcover.png --diskshow --clipwhite --dpath ~/latex/cand/ --figsize=24,10  --arrow-width=.4 --line-width=1
+\end{comment}
+\SingleImageCommand{exemplarcover}{\tmptw}{Example of exemplar selection}{
+% ---
+    An example of exemplar selections.
+    The number of requested exemplars is $3$.
+    A directed arrow $\X \rightarrow \Y$ denotes that annotation $\Y$ is in
+      the candidate covering set of annotation $\X$.
+    A blue border is drawn around annotations chosen as exemplars.
+% ---
+}{figures4/exemplarcover.png}
+

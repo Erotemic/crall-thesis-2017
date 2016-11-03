@@ -1,0 +1,707 @@
+
+    %We then discuss design goals and introduce proposals for their
+    %  implementation.
+    %Details of the proposals are discussed in individual sections.
+
+    %In this chapter we discuss the challenge of building a software package to
+    %  maintain primary and derivative data of images and annotations.
+
+    % CHALLENGES:
+    %(\eg{} image URIs, GPS data, annotation bounding boxes, \ldots),
+    %(\eg{} SIFT descriptors, annotation matches, detection models, \ldots),
+    % Abstracted away caching w/ cache invalidation. 
+    % Ease of experimentation and comparision between algorithms
+    % Hyperparamter optimization
+
+    %
+    % are examples of primary data and
+    %   are examples of derived data
+
+    % This is the problem we intend to address in this chapter --- we want to
+    % develop a framework to abstract algorithm inputs and dependencies away
+    % from the developer and allows for the developer to  interactively write
+    % algorithms to extract features, train models, and perform comparisons
+    % between objects while also testing different hyperparamter settings.
+
+
+\newcommand{\DependencyCache}{Dependency Cache}
+
+\chapter{System architecture}\label{chap:system}
+
+    In this chapter we describe a system architecture designed to aid in the
+      development and deployment of the computer vision algorithms used by
+      IBEIS{}.
+
+    It is common to use directed acyclic graphs implement pipelines.
+    Other related work is GNU Make, Luigi, Oozie, Azkaban, Airflow.
+    Ours differs because instead of specifying general task
+      dependencies we are specifying object dependencies.
+    The design of our dependency cache is to efficiently compute
+      multiple levels of hierarchical derivative information from a
+      single root object.
+    This is well suited for computer vision applications because often
+      there are many choices of algorithms and features that are
+      repeatably applied to many instances of the same base object
+      (\eg{} an image).
+    In addition to computing dependencies of a single object, multiple
+      objects can be specified as input to a function.
+    In this way a function can train a model (\eg{} an SVM, Neighbor
+      Indexer, DCNN, \ldots).
+    This multi-input model can then be referenced either by the input
+      that created it, or it can be detached from it and referenced by a
+      unique UUID{}.
+    This allows for efficient and organized training, testing, and
+      distribution of learned models.
+    The provenance information of how this model was created is always
+      maintained even if the original inputs cease to exist.
+    Furthermore, algorithms that make comparisons, classifications,
+      and or just output results in general can also be implemented
+      here.
+    These algorithms are testable and comparable through the test
+      harness which is available in an IPython notebook interface.
+
+    The main differences between us and Luigi are:
+    * we have less boilerplate code because we implement a less
+      general design.
+    * we support a more functional design.
+    Functions can be executed and tested completely outside the scope
+      of the depcache.
+    * We are focused on quickly changing parameters settings and
+      searching for good values for parameter settings.
+    Therefore configuration objects are central to our design.
+    * The test harness is a good example of this.
+       
+    What we do not do:
+    Hadoop integration, everything currently runs locally.
+    However, Luigi could be used to implement the back end of our data
+      registration interface.
+    The main novelty of this interface is not to be yet another DAG
+      workflow manager.
+    We believe the main contribution of this interface is a low
+      barrier to entry model of implementing and testing computer vision
+      algorithms.
+
+    TODO:{} abstract away row-id inputs.
+    Row-id input is nice because of its efficiency.
+    Every object is represented by an integer akin to a C++ pointer.
+    However, this is less friendly to a new user.
+    There should be an alternative mode to have inputs to registered
+      functions be native types of the variables that are needed.
+    The depcache should do any loading that is needed behind the
+      scenes.
+
+    % https://github.com/spotify/luigi
+    % https://media.readthedocs.org/pdf/luigi/latest/luigi.pdf
+
+
+    Not only must the image analysis system Between the raw images and
+      all of the derived information, there is a large amount of data
+      that needs to be maintained by the IBEIS image analysis system.
+
+    In order to 
+    
+    * developing algorithms
+    * testing and comparing multiple configurations on different
+    datasets
+    * maintaining large amounts of datasets
+    * Information is derived under multiple configurations
+    * Models are trained on multiple pieces of information 
+
+    
+    We maintain a common structure that handles 
+    * Precomputed Features
+    * Models (nn indexer)
+    * Algorithms (nn indexer)
+    * User interactions?
+
+    the system architecture of the IBEIS image
+      analysis module, which allows for the development, testing, and
+      maintenance of computer vision algorithms.
+
+    The image analysis component of IBEIS fundamentally keeps track of
+      two primary objects:
+    images and annotations.
+    However, between all of the computer vision algorithms and their
+      different settings the system can end up generating a lot of
+      derived data.
+    This introduces a problem that is often dealt with using
+      memoization or caching, however when the bounding box of an
+      annotation is changed many of these derived properties become
+      invalid.
+
+    To handle these problems we defined the
+      \glossterm{\DependencyCache{}} class.
+    This is a directed acyclic multi-graph that is able to store the
+      results of feature extraction algorithms, and set-to-set
+      comparison results.
+    This cache is primarily built for handling data that can be
+      deterministically derived given its input and configuration
+      parameters.
+
+    This cache is extensible and allows for new algorithms to be
+      incorporated into Image Analysis as plugins.
+    The user simply writes the algorithm as a function which accepts
+      input annotations and a configuration.
+    If any features not provided by the system are required those are
+      written as standalone functions which again just take in a parent
+      object (like an annotation) and return a result.
+    These functions or classes are registered as plugins using Python
+      decorators.
+    Optionally, a configuration object can be specified.
+    The system can use these configurations to grid search for an
+      optimal set of parameters.
+
+    \section{Dependency cache}\label{sec:depc}
+
+        \subsection{Root nodes}
+
+            This are the non-recomputable root of the graph.
+            This is a first class object like an annotation or an
+              image.
+
+            It is possible for there to be more than one root node.
+            For instance image and annotation could be in the same
+              graph, with annotation being an ancestor of image.
+            However, because an annotation is not automatically
+              recomputable, there must be is a user interaction that
+              separates any two root nodes in the graph.
+            Any non-recomputable node in the system can be viewed as
+              the root of its own \DependencyCache{}.
+
+        \subsection{Derived single-input nodes}
+
+            For a configuration and a single set of parents (at most
+              one parent from each ancestor node), a single-input
+              function computes a Dependant property and returns the
+              result.
+
+        \subsection{Derived multi-input nodes}
+
+            An algorithm might also take in multiple sets of parents
+              from of the same type.
+            For instance an identification algorithm might take in a
+              set of query annotations and a set of database
+              annotations, or a neighbor index might just take in a
+              single set of annotations.
+
+            There is a case when the two inputs are from the same
+              table.
+            This is a Cartesian-product-input node.
+
+        \subsection{Non-derived nodes}
+
+            The system also allows for non-derived nodes.
+            These nodes store the result of some user interaction, and
+              as such, are not deterministic.
+
+            If a parent of a non-derived node is altered, by default
+              the non-derived node must be deleted.
+            However, if the manual interaction is a segmentation mask,
+              and the bounding box of the parent annotation was simply
+              translated by a few pixels, it would be best if the system
+              was able to modify the original input.
+            Thus the user can specify a modification function for a
+              node that can alter a user input given a change to a
+              parent.
+
+        \subsection{Implicit Edges}
+
+            The computation of a node is allowed to use another node
+              in its computation function.
+            This implicitly adds an edge between these two nodes that
+              is not expressed in the DAG visualization.
+            It is ok to do this if the configuration for the accessed
+              node is specified in the configuration to the first node.
+
+            It is even ok to access node in a cyclic fashion as long
+              as there are no cycles in configuration space.
+            (\ie{} a chip with config1 can ask for the keypoints
+              computed on a chip with config2)
+        
+        \subsection{Configuration}
+
+            Configurations are combined over paths in the DAG{}.
+
+        \subsection{External Storage}
+
+            Data in the cache can either be stored internally or
+            externally
+
+        \subsection{Getters}
+
+            A getter in the dependency cache is asked to return the properties
+              of a table at rows that correspond to a root under a
+              configuration.
+
+            If the row does not exist there are three options:
+            return None, recompute it, or get the input from an external
+              source (such as Wildbook).
+
+            In the case of a manual interaction, recomputation is
+              marked as requested, and execution is blocked until the
+              interaction is complete or an error is thrown.
+
+        \subsection{Setters}
+           
+            Setters are used to either modify a manual node or set
+              information from an external source.
+
+        \subsection{Test Harness}\label{sec:testharn}
+         
+            The test harness makes use of the configurations.
+            An algorithm is simply a node in the DAG and a test
+              harness iterates over different configuration settings.
+
+        \subsection{Graph modification}\label{sec:modification}
+
+            Any modification made to the headers appropriately
+              modifies the structure and steps are taken to rectify the
+              database.
+            Recomputation occurs as necessary.
+
+            Algorithm modifications can be made by adding a config
+              param and preserving old behavior or bumping an algorithm
+              version flag which indicates that all previous results
+              must be invalidated.
+
+    %\section{Testing}\label{sec:testing}
+    %utool doctests
+
+
+    \section{IBEIS-IA definition}\label{sec:ibeisdepc}
+
+        Enumerates the exact way the dependency cache is used to
+          create the IBEIS image analysis system.
+
+        \subsection{IBEIS DAG / DAM}
+        \begin{comment}
+        python -m ibeis.control.IBEISControl --test-show_depc_graph --save figures5/digraph.png --dpath ~/latex/crall-candidacy-2015/ --diskshow --clipwhite --reduced --dpi=120
+
+        python -m ibeis.control.IBEISControl --test-show_depc_graph --save figures5/digraph.png --dpath ~/latex/crall-candidacy-2015/
+        \end{comment}
+        \ImageCommand{figures5/digraph.png}{\textwidth}{
+            % ---
+            dependency digraph
+            % ---
+        }{digraph}
+        \digraph{}
+
+
+        \subsection{Using system to handle photobombs}
+            \keywords{heuristic, turking, segmentation\\}
+            \relatedto{annotation property}
+
+            It is a challenging task to segment two overlapping
+              animals with similar textures.
+            At this only provides a minor barrier to identification we
+              choose to manually segment photobombs when they become a
+              problem.
+            This will allow for the system to build up training data
+              that can eventually be used to learn how to segment out a
+              foreground animal in an annotation.
+
+            To address the issue of photobombing in the \GGR{}, I will
+              manually paint over the photobombed sections of images
+              using a matplotlib \ucite{mpl} interaction whenever a
+              photobomb occurs in matching.
+
+            Ideally we would have trained a state of the art segmentation
+              technique --- like a CNN --- to segment out the primary animal in
+              each annotation.
+            However, the implementation, training, testing, and evaluation of
+              such techniques is outside the scope of this work.
+\begin{comment}
+./mass_tex_fixes.py --outline --fpaths chapter5-systemchapter.tex --numlines=1
+\end{comment}
+
+
+\section{Dependency Cache Design}\label{sec:depc}
+
+    \paragraph{Related Work}
+
+        It is common to use directed acyclic graphs implement
+          pipelines.
+        Other related work is GNU Make, Luigi, Oozie, Azkaban,
+          Airflow, and Dryad.
+        Of these, Luigi --- a python based pipeline manager --- is the
+          most similar to our system.
+        Ours differs because instead of specifying general task
+          dependencies we are specifying object dependencies.
+
+    \subsection{Assumptions}
+        We distinguish ourselves from previous work by targeting a
+          more niche application:
+        dependency caches for computer vision algorithm development in
+          Python.
+
+         \begin{itemize}
+            \item It is assumed that there is one root-object and multiple
+              instances of these objects will be created.
+         \end{itemize}
+
+    \subsection{Types of derived data}
+        We identify and distinguish between three types of derived
+          data:
+        (1) features,
+        (2) comparisons, and
+        (3) models.
+        %
+        Features are properties directly derived from an object and
+          correspond with an object in a one-to-one manner (\eg{} an
+          annotation and its chip, or an image and a set of raw
+          detections from a bounding box detector).
+        % 
+        Comparisons determine a notion of similarity or difference
+          between a fixed size set of objects.
+        Typically comparisons are pairwise.
+        (\eg{} SIFT descriptors between two annotations are compared
+          to find correspondences).
+        %
+        Models are often learned from a set of multiple objects and
+          are described with a many-to-one relationship (\eg{} a kd-tree
+          indexer indexes the features of many annotations, and a neural
+          network may be trained to detect bounding boxes using many
+          images.).
+        Models are often used to generate features or make
+          comparisons.
+
+        This introduces a problem that is often dealt with using
+          memoization or caching.
+        However, when certain properties of a primary object (such as
+          a bounding box of an annotation) are changed many of these
+          derived properties become invalid.
+
+\section{Dependency Cache Details}\label{sec:depcdetails}
+
+For each dependency cache there is a single root object.
+Multiple instances of this object can be created.
+
+A table is made for each property in the \depcache{}.
+Tables may have multiple properties.
+All properties of a table are computed at the same time for some
+  number of root instances.
+
+Results of a property are either stored internally in an SQL Database
+  or externally in a file.
+Filenames are derived automatically from dependency information.
+
+Multiple roots can be used to specify models.
+When a model is a dependency of a computation the model is either
+  specified in the input using the input to the model, or using the
+  model's UUID{}.
+
+
+\subsection{Determining root-most inputs}
+
+Inputs to a table are determined by finding the ``root most'' tables
+  in an ``expanded input graph''.
+An expanded input graph takes the table node and creates an expanded
+  input graph based on its parents.
+
+\paragraph{Expanded input graph}
+An expanded input graph is computed between the root node and the
+  table node.
+First all paths from the root to the table are enumerated as a list of
+  edges (recall the \depcache{} is a multi-digraph, so an edge is
+  specified as a 3-tuple $(u, v, k)$).
+Each edge is associated with a ``local input-id'' which specifies if
+  an edge is one-to-one or many-to-one as well as the $k$ edge key.
+Different inputs will be distinguished by accumulated local input-ids.
+Each path is then traversed from the table to the root.
+The local-input ids along the way are accumulated in a list and
+  appended to the node label at each step (duplicate consecutive
+  input-ids are removed).
+This results in a graph where the table node is the only sink and
+  there are multiple source nodes which are specify a different set of
+  root objects.
+
+\paragraph{Root-most tables}
+To specify the inputs to a table it is convenient to specify only the
+  ids of the root objects and a configuration object.
+However, when some dependencies have multiple inputs (such as model
+  classifications) it is more convenient to specify multiple inputs.
+A specifiable node is one that is either a source node or a node with
+  multiple inputs.
+
+The ``root-most'' tables a subset of specifiable inputs such that all
+  paths from source nodes to the sink node there is exactly one
+  specifiable node identified as ``root-most''.
+(Removing all the child edges of the root-most nodes would cut all
+  sources from the sink).
+These represent the sets of inputs that must be specified by a user.
+In the case where all paths are one-to-one properties the user
+  specifies just a single root object.
+In the case where two root objects are compared the list of root pairs
+  is specified.
+If a model is involved the id of the model must be specified as well
+  (for convenience a default values can be specified in the
+  configuration).
+
+\paragraph{Computing input order}
+Given the set of inputs we must walk down the dependency graph and
+  lookup or compute intermediate values between the specified nodes and
+  the target node.
+To do this we topologically sort the nodes in the expanded input graph
+  and compute them in this order.
+For each branch in the tree (a set of paths from a source to the sink)
+  we compute a branch id.
+
+\expandedinput{}
+
+
+\section{Test Harness}\label{sec:testharn}
+
+We have developed a test harness to explore the configuration space of
+  our algorithms.
+Currently the test harness is only capable of performing grid search
+  and interactive search.
+
+\paragraph{Major goals}:
+\begin{itemize}
+    \item Reproducibility of experiments.
+    \item Ease of algorithm comparisons. 
+    \item Reporting of results.
+\end{itemize}
+  
+
+There are many related works on hyper-parameter optimization that are
+  applicable here.
+Extensions would be to incorporate random search, A/B testing, and
+  Bayesian hyper-parameter optimization methods.
+
+Random search has shown to be superior to grid search for hyper parameter
+  optimization of neural networks~\cite{bergstra_random_2012}.
+%pass
+\cite{hutter_sequential_2011}
+
+
+
+    \paragraph{Bulleted lists (for draft document only)}
+    A summary of the design goals of the images analysis module are:
+    \begin{itemize}
+        \item Dependant property storage and retrieval of data with automatic
+            dependency pipeline execution. 
+        \item Reproducible experiments.
+        \item Distribution through ``publication'' of trained models.
+        \item Extensible for new algorithm integration.
+        \item Automatic hyper parameter optimization.
+        \item Maintain data provenance / data lineage. (The history of data ownership, where did this data come from?)
+    \end{itemize}
+
+    A summary of \depcache{} features are:
+    \begin{itemize}
+
+        \item New algorithms are integrated into the system by
+          registering the algorithms, its output types, its
+          dependencies, and its configurations.
+
+        \item Algorithms can be implemented to accept single inputs
+          for feature extraction, multiple inputs for model training,
+          and pairwise inputs for primary object comparisions.
+
+        \item Results are cached based on a unique hash of their input
+          and configuration dependencies.
+        This allows for results to be implicitly invalidated if the
+          parent object changes.
+
+        \item Registered configurations define hyper paraemters of
+          models.
+        A result comparison function can be registered in order to
+          automatically optimize hyper-parameters through grid-search,
+          random search, or baysian based techniques.
+
+        \item Registered configurations also allow for experiments to
+          be reproduced.
+        Experiemnts are tagged with a hash and manifest file
+          indicating how the experiment was run.
+
+        \item Trained models that are ``publishable'' are not
+          invalidated if a source of parent data is removed.
+        These models can be downloaded to other instances of image
+          analysis and used without the parent data.
+        However at least a fingerprint of what the parent data was is
+          always maintained.
+
+    \end{itemize}
+
+    These challenges are summarized as:
+    \begin{itemize}
+        \item Adding, removing, and modifying primary data.
+        \item Algorithm configurations.
+        \item Dependant computations.
+    \end{itemize}
+
+
+    \paragraph{The system architecture should}
+    \begin{itemize}
+
+        \item Integrate of algorithms from multiple sources across
+          multiple languages.
+
+        \item Correctly compute and cache algorithm results based on
+          all relevant inputs.
+
+        \item Allow trained models to be distributed and used by other
+          instances of the image analysis software.
+
+        \item Invalidate cached results if the source data changes
+          (note that there is an exception for ``publishable'' results
+          such as trained models such as quality classifiers)
+
+        \item Have the capacity to augment models without completely
+          rebuilding their structure (\eg{} adding points to a nearest
+          neighbor kd-tree index).
+
+        \item Optimize hyper-parameters of an algorithm given a method
+          to compare results.
+
+    \end{itemize}
+
+
+    \paragraph{Goals}
+    \begin{itemize}
+        \item \textbf{Abstract need for caching away from the developer}:
+        We aim to have all caches created and invalided based on the
+          algorithm dependency structure and the requested
+          configurations.
+
+        \item \textbf{Lazy and configurable and computation of
+                heirarchical derivative data}: 
+            Make derived data such as features a top-level attribute
+              of a root-object (annotation) such that it is evaluated as
+              needed and stored as specified.
+
+          \item \textbf{Efficient integration of new algorithms}:
+            Functional design with minimal boilerplate.
+            To integrate a new table into the \depcache{} all that is
+              needed is a function that computes the requested outputs
+              given the appropriate inputs.
+            This function is register with the \depcache{} using a
+              decorator.
+            This makes it simple to integrate independently developed
+              algorithms.
+
+          \item \textbf{Train models in a reproducible manner}:
+            Models can be simple such as a kd-tree indexer or complex
+              such as a neural network classifier.
+            A model should contain at least a fingerprint of the data
+              and configuration that was used to compute it.
+            Models should also be distributable so they can be used in
+              systems they were not necessarily trained on.
+
+          \item \textbf{Modular testing}:
+            Functions registered with the \depcache{} should be able
+              to be tested without heavy reliance on the \depcache{}
+              itself.
+            However, the \depcache{} should make testing easier by
+              having the ability to quickly supply test input data.
+            Any property of the \depcache{}  should be recomputable
+              on-the-fly without effecting the state of the cache for
+              both testing and timing purposes.
+            The \depcache{} should be able to automatically test and
+              time each table.
+      \end{itemize}
+
+    \paragraph{Image Analysis Modules Design}
+        \begin{itemize}
+
+            \item We designed the module to have a low barrier to
+              entry.
+            We aim to clearly point out entry points into program
+              execution.
+            We have aim to have a small startup time with both low
+              import module overhead and low open database overhead.
+
+            \item Doc-strings are used as documentation, examples, and
+              unit tests.
+            Most functions show an example that loads the necessary
+              data to step through an understand / debug / enhance or
+              develop a function.
+
+            \item \Depcache{} marshals data around with getters (lazy
+              computation) and setters.
+
+            \item Module functionality split between different
+              standalone packages.
+            Helpers and general utilities are in \utool{}.
+            Computer vision algorithms are in \vtool{}.
+            Plotting functions are in \plottool{}, GUI functions are
+              in \guitool{}.
+        \end{itemize}
+
+     \paragraph{Features}
+         \begin{itemize}
+             \item One-to-one properties that belong to each
+                 root-object.
+             \item One-vs-one comparisons between objects.
+             \item One-vs-many comparisons between an object and a set of
+                 objects.
+             \item Training or building of many-to-one models.
+             \item Properties and models computed by the \depcache{} are
+                 highly configuration.
+         \end{itemize}
+
+
+
+    % Sources to cite:
+    % http://www.mitre.org/sites/default/files/publications/pr-15-1254-architectural-model-mitre-research-blueridge.pdf
+    % http://www.computer.org/csdl/proceedings/ssdbm/2004/2146/00/21460423.pdf
+    % http://www.alexanderpokluda.ca/coursework/cs848/CS848%20Paper%20Presentation%20-%20Alexander%20Pokluda.pdf
+    % http://uazone.org/demch/papers/bddac2013-bigdata-infrastructure-v06.pdf
+    % http://www.rosebt.com/uploads/8/1/8/1/8181762/big_data_the_management_revolution.pdf
+    % http://www.sciencedirect.com/science/article/pii/S0167739X14002015 - Pegasus, has transformation from abstract to executable workflow
+
+    %We propose extensions to this architecture to support both result caching
+    %  and hyperparameter optimization as well as reproducible model training
+    %  and distribution.
+
+    \item \textbf{Maintain data provenance}:
+
+    \item \textbf{Interactity}
+
+        Development should be an interactive experience.
+        Computer algorithms tend have more empirically than
+          theoretical justification.
+        This process of trail and error should be reflected in the
+          algorithm development process.
+
+        \begin{itemize}
+
+            \item \textbf{Data and algorithm interaction}:
+                The developer should have the ability to explore
+                  the data interactively and manually specify tags or
+                  properties (such as causes of failure cases) that
+                  may be relevant to a specific task.
+                The developer should be able to browse root
+                  objects, inspect dependant properties, and run
+                  algorithms from an interactive interface.
+                Algorithms should have an intuitive ``entry point''
+                  which demonstrates how to acquire the necessary
+                  data to start stepping through algorithm logic.
+
+            \item \textbf{Discoverablity}:
+                Ideally the learning curve should be low by making
+                  the system have a high level of discoverability ---
+                  that is a new developer should be able to sit down
+                  at the system and be able to intuitively ``play
+                  with'' and manipulate objects to see an immediate % tangible
+                results.
+                We envision that this design goal will be met using
+                  IPython and autocompletion.
+                It is then our challenge to develop a discoverable
+                  API{}.
+        \end{itemize}
+
+
+    Of these goals, interactivity is the least important for addressing
+      the challenges.
+    Maintaining data providence is essential.
+    %There are several factors that cause the design of such an
+    %  organization scheme to be challenging.
+    %Developers must be able to run feasibility studies to test if the system
+    %is able to identify a new species of animal.  The system is demoed on a
+    %regular basis and is regularly updated for live use in the field.  New
+    %algorithms are integrated.  Existing algorithms are updated and modified.
+    %Algorithms are often run with different configurations.
+    %We envision a framework which addresses these challenges by
+    %  satisfying several design goals.

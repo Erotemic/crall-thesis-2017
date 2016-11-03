@@ -1,0 +1,257 @@
+
+\begin{comment}
+        python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+        python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --show --adapteq=True --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting1.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+        python -m ibeis --tf show_chip --aid 9970 --db PZ_Master1 --show --histeq=True --affine-invariance=True --dpath ~/latex/crall-candidacy-2015/ --save figures5/backgroundlighting1.jpg --figsize=10,4 --dpi 180 --clipwhite --diskshow
+\end{comment} 
+\newcommand{\backgroundlighting}{
+\begin{figure}[H]
+\centering
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/backgroundlighting.jpg}}\caption{}\label{sub:noeq}
+\end{subfigure}
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/backgroundlighting1.jpg}}\caption{}\label{sub:witheq}
+\end{subfigure}
+~~% --
+\caption[Background lighting]{
+% ---
+An annotation with few features detected on the body due to lighting
+  conditions is shown in \cref{sub:noeq}.
+The same annotation with histogram equalization is shown in
+  \cref{sub:witheq}, howver many more features are also detected on the
+  background.
+% ---
+}
+\label{fig:backgroundlighting}
+\end{figure}
+}
+
+
+\begin{comment}
+    % manually copied these
+    python -m ibeis_cnn --tf pz_patchmatch --ds liberty --test --weights=liberty:current --arch=siaml2_128 --test --lightbg
+    python -m ibeis_cnn --tf pz_patchmatch --ds pzmtest --test --weights=liberty:current --arch=siaml2_128 --testall  --lightbg  # NOQA
+
+    cp /media/raid/work/PZ_MTEST/_ibsdb/_ibeis_cache/nets/patchmatch-_1686_ugtzhautrfzsiizh-/diagnostics/hist_eras009_epochs0121_txlcuebpovsypuyw/hlhtm3cz_00000000.jpg ~/latex/crall-candidacy-2015/figures5/patchmatch-roc-mtest-sift.jpg
+    cp /media/raid/work/PZ_MTEST/_ibsdb/_ibeis_cache/nets/patchmatch-_1686_ugtzhautrfzsiizh-/diagnostics/hist_eras009_epochs0121_txlcuebpovsypuyw/wpwmify9_00000000.jpg ~/latex/crall-candidacy-2015/figures5/patchmatch-roc-mtest-cnn.jpg
+    cp /home/joncrall/.config/ibeis_cnn/training/liberty/diagnostics/hist_eras009_epochs0121_txlcuebpovsypuyw/fig\(3\)_liberty\;dict\(detector\=\'dog\'\,_pairs\=250000\)_hist_eras009_epochs0121_txlcuebpovsypuyw__CNN_scores._#data\=20000_.jpg ~/latex/crall-candidacy-2015/figures5/patchmatch-roc-liberty-cnn.jpg
+    cp /home/joncrall/.config/ibeis_cnn/training/liberty/diagnostics/hist_eras009_epochs0121_txlcuebpovsypuyw/fig\(4\)_liberty\;dict\(detector\=\'dog\'\,_pairs\=250000\)_hist_eras009_epochs0121_txlcuebpovsypuyw__SIFT_scores._#data\=20000_.jpg ~/latex/crall-candidacy-2015/figures5/patchmatch-roc-liberty-sift.jpg
+\end{comment}
+\newcommand{\siamlIIroc}{
+\begin{figure}[H]
+\centering
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/patchmatch-roc-liberty-sift.jpg}}\caption{}\label{sub:siamlIIrocA}
+\end{subfigure}
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/patchmatch-roc-liberty-cnn.jpg}}\caption{}\label{sub:siamlIIrocB}
+\end{subfigure}
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/patchmatch-roc-mtest-sift.jpg}}\caption{}\label{sub:siamlIIrocC}
+\end{subfigure}
+~~% --
+\begin{subfigure}[b]{0.47\textwidth}
+\centering
+\fbox{\includegraphics[width=\textwidth]{figures5/patchmatch-roc-mtest-cnn.jpg}}\caption{}\label{sub:siamlIIrocD}
+\end{subfigure}
+~~% --
+\caption[Siamese network roc]{
+    % ---
+    A comparison between the score distributions and ROC curves of patch
+      descriptor distances of SIFT and \siamLII{} CNN (trained on liberty) using a
+      liberty test set and a zebra test set.
+    \Cref{sub:siamlIIrocA,sub:siamlIIrocC} show SIFT results on liberty and
+      plains zebras.
+    \Cref{sub:siamlIIrocB,sub:siamlIIrocD} show \siamLII{} results on liberty
+      and plains zebras.
+    These plots suggests that
+    (1) baseline SIFT distance classification of zebra patch correspondences
+      is significantly more challenging than liberty building patch
+      correspondences, and
+    (2) the advantages of \siamLII{} based descriptors over SIFT descriptors
+      seen in the liberty datasets do not transfer to our zebra datasets.
+    %On the liberty test set the FPR95 score based on SIFT is $.23$
+    %  (\cref{sub:siamlIIrocA}) , and the score for \siamLII is $.15$
+    %  (\cref{sub:siamlIIrocB}).
+    %However, using a sample of patches from zebra datasets the score based on
+    %  SIFT is $.84$ (\cref{sub:siamlIIrocC}) , and the score for \siamLII is
+    %  $.90$.
+    % ---
+}
+\label{fig:siamlIIroc}
+\end{figure}
+}
+
+
+
+\begin{comment}
+python -m ibeis_cnn.draw_net --test-make_architecture_pydot_graph --show --netx-cnn-hack --figsize=18,2 --save=figures5/siaml2arch.png --dpath ~/latex/crall-candidacy-2015/  --clipwhite --diskshow
+\end{comment}
+\SingleImageCommand{siamLIIarch}{\textwidth}{siamLIIarch}{
+    % ---
+    Illustration of the main branch in the \siamLII{} architecture that computes
+      a descriptor from an image patch.
+    Durring training two images pushed through this network, the error is
+      computed by comparing descriptor values and the weights in each layer are
+      updated.
+    The dropout layers are removed after training.
+    % ---
+}{figures5/siaml2arch.png}
+
+
+\begin{comment}
+        python -m ibeis_cnn.models.siam --test-constrastive_loss --show --save=figures5/contrastive.png --dpath ~/latex/crall-candidacy-2015/  --clipwhite --diskshow --figsize=10,4 --lightbg
+\end{comment}
+\SingleImageCommand{contrastive}{\textwidth}{contrastive}{
+% ---
+Contrastive loss objective function.
+The correct and incorrect distance shows the loss of \groundtrue{} and
+  \groundfalse{} pairs of training examples as a function of energy.
+The energy of a pair of training examples is the Euclidean distance between
+  their computed descriptors.
+% ---
+}{figures5/contrastive.png}
+
+
+\begin{comment}
+    python -m ibeis.control.IBEISControl --test-show_depc_annot_graph --reduced --save=figures5/reduced_annot_depc.png --dpath ~/latex/crall-candidacy-2015/  --clipwhite --diskshow --figsize=7,7  --dpi=220
+\end{comment}
+
+\begin{comment}
+    python -m ibeis.control.IBEISControl --test-show_depc_image_graph --reduced --save=figures5/reduced_image_depc.png --dpath ~/latex/crall-candidacy-2015/  --clipwhite --diskshow  --figsize=4,4 --dpi=220
+\end{comment}
+
+
+\begin{comment}
+        python -m ibeis.scripts.specialdraw double_depcache_graph --save=figures5/doubledepc.png --dpath ~/latex/cand/  --diskshow --figsize=20,10 --dpi=96 --testmode --show --clipwhite --arrow-width=5 --line-width=2
+\end{comment}
+\SingleImageCommand{doubledepc}{.9}{IBEIS \depcache{}}{
+    % ---
+    %The transitive reduction~\cite{aho_transitive_1972} of IBEIS image and
+    %  annotation dependency cache.
+    %We show the transitive reduction because the actual dependency graph has a
+    %  messy visualization.
+    %The transitive reduction more clearly shows the underlying dependency
+    %  structure and more accurately reflects the order of execution (note that
+    %  the transitive reduction when multi-edges are included has not yet been
+    %  properly defined).
+    The IBEIS annotation \depcache{} and image \depcache{}.
+    The two graphs are connected by a user decision node.
+    Root objects are shown in red.
+    Note that the yellow node indicates a user decision and is not directly
+      part of the \depcache{}.
+    This node is placed to show that the results of one dependency cache can
+      be used as primary objects of another.
+    % ---
+}{figures5/doubledepc.png}
+
+
+\begin{comment}
+python -m dtool.depcache_table show_input_graph --show --dpath=~/latex/cand --save=figures5/expandedinput.png --diskshow
+\end{comment}
+\SingleImageCommand{expandedinput}{.9}{Expanded input graph}{
+% ---
+This is a simplified example of the dependency cache for the selective match
+  kernel algorithm.
+It is a good example of the power of the dependency cache because there are
+  two multi-input / model nodes (vocab and inverted index).
+This figure shows how the ``source-most'' (shown in red) input in determined for
+  the green table node.
+It is possible to specify other inputs (pink nodes), but the ``source-most''
+  input is minimal.
+% ---
+}{figures5/expandedinput.png}
+
+
+
+
+% TODO: http://www.siafoo.net/article/15
+% extend python lexer for doctest support
+%\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+\newmintedfile[pythonscript]{python}{
+%fontfamily=tt,
+linenos=true,
+%numberblanklines=true,
+%numbersep=12pt,
+%numbersep=5pt,
+gobble=0,
+%frame=leftline,
+%framerule=0.4pt,
+%framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+fontsize=\scriptsize{},
+%obeytabs=false,
+%mathescape=false
+samepage=false, %with this setting you can force the list to appear on the same page
+%showspaces=false,
+%showtabs =false,
+%texcl=false,
+}
+
+\newminted{pycon}{%
+    linenos=false,
+    gobble=0,
+    funcnamehighlighting=true,
+    tabsize=4,
+    fontsize=\scriptsize{},
+    samepage=false, %with this setting you can force the list to appear on the same page
+}
+
+
+\newminted{python}{
+%fontfamily=tt,
+linenos=false,
+%numberblanklines=true,
+%numbersep=12pt,
+%numbersep=5pt,
+gobble=0,
+%frame=leftline,
+%framerule=0.4pt,
+%framesep=2mm,
+funcnamehighlighting=true,
+tabsize=4,
+fontsize=\scriptsize{},
+%obeytabs=false,
+%mathescape=false
+samepage=false, %with this setting you can force the list to appear on the same page
+%showspaces=false,
+%showtabs =false,
+%texcl=false,
+}
+    
+
+\newcommand{\egregister}{
+%\begin{listing}[!ht]
+\begin{figure}[!ht]
+\centering
+\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+\fbox{
+%\inputminted[linenos,tabsize=4,fontsize=\footnotesize]{python3}{egregister.py}
+\pythonscript{egregister.py}
+}
+\caption[\caplbl{egregister} Example of a registered \depcache{} function]{
+% ---
+\caplbl{egregister} A simplified version of the function that compute
+  features given a chip.
+This function is registered with the annotation \depcache{} in a
+  declarative style using the current API{}.
+This property can be accessed using the \depcache{} as shown in the
+  doctest example.
+%\depcache{}
+% ---
+}\label{fig:egregister}
+\end{figure}
+%\end{listing}
+}

@@ -1,0 +1,246 @@
+\section{Annotation representation}\label{sec:annotrepr}
+  
+    For each annotation in the database we
+    (1) normalize the image geometry and intensity,
+    (2) compute features,
+    (3) and weight the features.
+    % Chip Extract
+    Image normalization rotates, crops, and resizes an annotation from
+      its image.
+    This helps to remove background clutter and roughly align the
+      annotations in pose and scale.
+    The extracted and normalized region is referred to as a
+      \glossterm{chip}.
+    % Feat Detect
+    Then, a set of features ---  a keypoint and descriptor pair --- is
+      computed.
+    Keypoints are detected at multiple locations and scales within the
+      chip, and a texture based descriptor vector is extracted at each
+      keypoint.
+    % Featweight
+    Finally, each feature is assigned a probabilistic weight using a
+      foregroundness classifier.
+    This helps remove the influence of background features.
+
+    \subsection{Chip extraction}
+
+        % Bounding box + orientation
+        Each annotation has a bounding box and an orientation specified
+          in a previous detection step.
+        For zebras and giraffes, the orientation of the chip is chosen
+          such that the top of the bounding box is roughly parallel to
+          the back of the animal.
+
+        A chip is a extracted by jointly rotating, scaling, and
+          cropping an annotation's parent image using Lanczos
+          resampling~\cite{lanczos_applied_1988}.
+        The scaling resizes the image such that the cropped chip has
+          approximately $450^2$ pixels and it maintains the aspect ratio
+          of the bounding box.
+        If specified in the pipeline configuration, adaptive histogram
+          equalization~\cite{pizer_adaptive_1987} is applied to the chip,
+          however this is not used in the experimental evaluation
+          presented later in this chapter.
+
+    \subsection{Keypoint detection and description}
+
+        Keypoints are detected within each annotation's chip using a
+          modified implementation of the Hessian detector described
+          in~\cite{perdoch_efficient_2009} and reviewed
+          in~\cref{sec:featuredetect}.
+        This produces a set of elliptical features localized in space,
+          scale, shape, and orientation.
+        Each keypoint is described using the
+          SIFT~\cite{lowe_distinctive_2004} descriptor that was reviewed
+          in~\cref{sec:featuredescribe}.
+        The resulting keypoint-descriptor pairs are an annotation's
+          features.
+        Further details about the keypoint structure are given
+          in~\cref{sec:kpstructure}.
+
+        We choose a baseline feature detection algorithm that produces
+          affine invariant keypoints with the gravity vector.
+        Affine invariant (\ie{} shape adapted) keypoints detect
+          elliptical patches instead of circular ones.
+        We choose affine invariant keypoints because the animals we
+          identify will be seen from many different viewpoints.
+        Because all chips have been rotated into an upright position,
+          we assign all keypoints a constant orientation --- this is the
+          gravity vector assumption~\cite{perdoch_efficient_2009}.
+        However, these baseline settings may not be appropriate for all
+          species.
+
+        It is important to select the appropriate level of invariance
+          for each species we identify.
+        % Shape 
+        Our experiments in~\cref{sub:exptinvar} vary several parameters
+          related to invariance in keypoint detection.
+        To determine if affine invariance is appropriate for animal
+          identification we experiment with both circular and elliptical
+          keypoints.
+        % Orientation 
+        We also experiment with different levels of orientation
+          invariance.
+        The gravity vector assumption holds in the case of rigid
+          non-poseable objects (\eg{} buildings), if the image is
+          upright.
+        Clearly, for highly poseable animals, this assumption is more
+          questionable.
+        However, full rotation invariance (using dominant gradient
+          orientations) has intuitive problems.
+        Patterns (like ``V'' and ``$\Lambda$'') that might contribute
+          distinguishing evidence that two annotations match, would
+          always appear identical under full rotation invariance.
+        Ideally orientation selection would be made based on the pose
+          of the animal.
+
+        We introduce a simple orientation heuristic to help match keypoints
+          from the same animal in the presence of small pose variations.
+        Instead of extracting a single keypoint in the direction of gravity or
+          multiple keypoints in the directions of the dominant gradient
+          orientation we extract 3 descriptors at every keypoint:
+        one in the direction of gravity, and the other two offset at
+          $\pm15\degrees$.
+        This provides a middle ground between rotation invariance and the
+          gravity vector.
+        Using this heuristic, it will be more likely to extract similar
+          descriptors from two annotations of the same animal seen from slightly
+          different poses.
+
+        %In our experiments we will investigate replacing the SIFT descriptor
+        %  features extracted from a deep convolutional neural network.
+
+    \subsection{Feature weighting}
+     
+        In animal identification, there will often be many annotations
+          containing the same background.
+        Photographers may take many photos in a single place and camera
+          traps will contribute many images with the same background.
+        Without accurate background masking, regions of an annotation
+          from different images containing the same background may
+          strongly match and outscore matches to correct individuals.
+        An example illustrating two different individuals seen in front
+          of the same distinctive background is shown
+          in~\cref{fig:SceneryMatch}.
+        To account for this, each feature is given a weight based on
+          its probability of belonging to the foreground --- its
+          ``foregroundness''.
+        This weight is used indicate the importance of a feature in
+          scoring and spatial verification.
+
+        Foregroundness is derived from a species detection algorithm
+          developed by Jason Parham~\cite{parham_photographic_2015}.
+        The input to the species detection algorithm is the
+          annotation's chip, and the output is an intensity image.
+        Each pixel in the intensity image represents the likelihood
+          that it is part of a foreground object.
+
+        A single feature's foregroundness weight is computed for each
+          keypoint in an annotation as follows:
+        The region around the keypoint in the intensity image is warped
+          into a normalized reference frame.
+        Each pixel in the normalized intensity patch is weighted using
+          a Gaussian falloff based on the pixel's distance from the
+          center of the patch.
+        The sum of these weighted intensities is the feature's
+          foregroundness weight.
+        The steps of feature weight computation are illustrated
+          in~\cref{fig:genfeatweight}.
+
+        \SceneryMatch{}
+
+        \genfeatweight{}
+
+    \subsection{Keypoint structure overview}\label{sec:kpstructure}
+        %Before we discuss the computation of the we review the structure of
+        %  a keypoint.
+        The keypoint of a feature is represented as:
+        $\kp\tighteq(\pt, \vmat, \ori)$, %
+        The vector $\pt\tighteq\ptcolvec$ is the feature's
+          $xy$-location.
+        The scalar $\theta$ is the keypoint orientation.
+        The lower triangular matrix $\vmat\tighteq\VMatII$ encodes the
+          keypoint's shape and scale.
+        This matrix skews and scales a keypoint's elliptical shape into
+          a unit circle.
+        A keypoint is circular when $a\tighteq{}d$ and $c\tighteq0$.
+        %If $c\tighteq0$, there is no skew and if $a\tighteq{}d$ the keypoint
+        %  is circular.
+        The keypoint scale is related to the determinant of this matrix
+          and can be extracted as: %
+        $\sigma = \frac{1}{\sqrt{\detfn{\vmat}}} =
+          \frac{1}{\sqrt{ad}}$.
+        All of this information can be encoded in a single affine
+          matrix.
+
+        \paragraph{Encoding keypoint parameters in an affine matrix}
+        It will be useful to construct two transformations that encode
+          all keypoint information in a single matrix.
+        The first, $\rvmat$, maps a keypoint in an annotation into a
+          normalized reference frame --- the unit circle.
+        The second transformation, $\inv{\rvmat}$ is the inverse, which
+          warps the normalized reference frame back onto the keypoint.
+        To construct $\rvmat$, the keypoint is centered at the origin
+          $(0, 0)$ using translation matrix, $\mat{T}$.
+        Then $\vmat$ is used to skew and scale the keypoint into a unit
+          circle.
+        Finally, the keypoint's orientation is normalized by rotating
+          $-\theta$ radians using a rotation matrix $\mat{R}$.
+        \begin{equation}\label{eqn:RVTConstruct}
+          %\rvmat=\paren{\invrotMatIII{\paren{-\ori}} \VMatIII \transMATIII{-x}{-y}}
+            \rvmat=\mat{R} \vmat \mat{T} = \rotBigMatIII{\paren{-\ori}} \VBigMatIII \transBigMatIII{-x}{-y}
+        \end{equation}
+        The construction of $\inv{\rvmat}$ is performed similarly.
+        % see vtool.keypoint.get_invVR_mats_oris
+        \begin{equation}\label{eqn:invTVRConstruct}
+             \inv{\rvmat} = \inv{\mat{T}} \inv{\vmat} \inv{\mat{R}} = 
+             \transBigMatIII{x}{y}
+             \BIGMAT{
+                \frac{1}{a}     & 0               & 0\\
+                -\frac{c}{a d}  & \frac{1}{d}     & 0\\
+                0               & 0               & 1
+                }
+             \rotBigMatIII{\paren{\ori}}
+        \end{equation}
+
+        \paragraph{Extracting keypoint parameters from an affine matrix}
+        During the spatial verification step, described
+          in~\cref{sec:sver}, keypoints are warped from one image into
+          the space of another.
+        It will be useful to extract the keypoint parameters from an
+          arbitrary keypoint matrix.
+        This will allows us to directly compare properties of
+          corresponding right side of~\cref{eqn:invTVRConstruct}.
+        Given an arbitrary affine matrix $\inv{\rvmat}$ representing
+          keypoint $\kp$, we show how the individual parameters $(\pt,
+          \scale, \ori)$ can be extracted.
+        First consider the components of $\inv{\rvmat}$ by simplifying
+          the right side of~\cref{eqn:invTVRConstruct}.
+        \begin{equation}\label{eqn:ArbInvRVTMat}
+            \inv{\rvmat} = 
+            \BIGMAT{
+            e & f & x\\
+            g & h & y\\
+            0 & 0 & 1
+            } = 
+            %\BIGMAT{
+            %\frac{1}{a} \cos{(-\theta )}                                   & \frac{1}{a} \sin{(-\theta )}                                  & x\\
+            %-\frac{1}{d} \sin{(-\theta )} - \frac{c}{a d} \cos{(-\theta )} & \frac{1}{d} \cos{(-\theta )} + \frac{c}{a d} \sin{(-\theta )} & y\\
+            %0                                                              & 0                                                             & 1
+            %}
+            \BIGMAT{
+            \frac{1}{a} \cos{(\theta )}                                 & -\frac{1}{a} \sin{(\theta )}                                & x\\
+            \frac{1}{d} \sin{(\theta )} - \frac{c}{a d} \cos{(\theta )} & \frac{1}{d} \cos{(\theta )} + \frac{c}{a d} \sin{(\theta )} & y\\
+            0                                                           & 0                                                           & 1
+            }
+        \end{equation}
+        %%---------
+        The position, scale, and orientation can be extract from an
+          arbitrary affine keypoint shape matrix $\invvrmat$ as follows:
+        \begin{equation}\label{eqn:affinewarp}
+            \begin{aligned}
+                \pt     &= \VEC{x\\y} \\
+                \scale  &= \sqrt{\detfn{\invvrmat}}\\
+                \ori    &= \modfn{\paren{-\atantwo{f, e}}}{\TAU}
+            \end{aligned}
+        \end{equation}

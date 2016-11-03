@@ -1,0 +1,158 @@
+\section{Notes}
+
+Restricting to using only the top scoring features within a query annotation seems to work well. 
+
+It has to do with this idea of distinction. 
+
+There are features that might not even show up. 
+
+What is the probability that a feature even exists in the database?
+
+
+Zebras have two types of features (that lie on a spectrum)
+
+(1) Those that distinguish them from other species, and
+(2) Those that distinguish themselves from other zebras.
+
+This is an oversimplification
+
+A fine-grained class is a subclass of a superclass.
+We can view the superclass (zebra in species) as the parent in a
+hierarchical taxonomy.
+This parent is a class in the parent-class-space.
+The goal of fine-grained recognition is to classify an object as a
+subclass --- a child node of the parent class --- (eg fred the zebra).
+For us fine-grained class is in the target-class-space.
+
+More generally, for preforming fine-grained recognition, an objects features
+can be partitioned into two types of features:
+
+(1) Features that distinguish it in the parent-class space.
+(2) Features that distinguish it in the target-class space.
+
+All types of classification call into this structure.
+In fine grained species recognition the parent-class space might be
+animal-species, while the target-class space might be birds.
+Given that this is a bird species (of the parent-class space), classify
+the subspecies.
+
+For individual identification the parent-class species is the sub-species
+(eg Grevy's zebra / plains zebra).
+The target class is the individual.
+
+Only the features that distinguish between classes in the target-class
+space are useful in any sort of classification.
+If feature extraction includes features from the parent-class space it
+will cause confusion in the classifier unless the classifier is built in
+such a way that it can ignore such features.
+
+
+However, features in the parent-class space are not exactly mutually
+exclusive of features in the target-class space.
+A stripe might be indicative of a zebra, but depending on the subtleties
+of the shape it may individually identify it as well.
+
+
+This argues that we need feature extraction that can accurately describe
+such subtleties.
+
+
+\paragraph{What do do when features aren't there?}
+
+At some point --- enough --- distinctive descriptors have been matched, so it doesn't bother the classifier that 
+you haven't matched more.
+
+This argues again for taking the top X most distinctive descriptors.
+
+
+\paragraph{Nearest neighbors as bag-of-words}
+
+If we treat every descriptor in the database as its own word in a bag of words,
+we can compute the bag of words vector for a query by assigning each query
+descriptor to its k nearest neighbors.
+
+
+Idea for chapter 5:
+
+System Structure
+
+Dependency Cache
+
+How I operate the system.
+
+Things that I did with the system:
+
+\paragraph{Tags}
+
+I tagged several cases as ``interesting''. 
+
+Talk about other tags used.
+
+
+\paragraph{Advantages of Naive Bayes}
+% https://www.quora.com/Classification-machine-learning/When-should-I-use-a-K-NN-classifier-over-a-Naive-Bayes-classifier
+Handles missing data in the query image.  Although, it does not handle missing data from the database image.
+
+
+
+\paragraph{Experiment Ideas}
+How much worse do results get when you remove the best matching annotation?
+How fast?
+
+\paragraph{VsOne Ideas}
+
+Spatial verification produces false correspondences by matching a large random distribution of keypoints 
+to a small random distribution of keypoints. 
+
+We need a way to discourage scale change in the estimated transformation because the
+scale of both annotations should be more or less the same? 
+
+This obviously is not always true.
+But we can use a configuration to get the majority of the cases when it is
+  true.
+
+\paragraph{Viewpoint co-visiblity ideas}
+    With the animals of a particular species we can define a common set of
+      viewpoints and poses that all members of that species can be seen in.
+    \begin{itemize}
+        \item a high degree of distinctive co-visible distinctive features implies identity-equivalence with high probability
+        \item a low degree of distinctive co-visible distinctive features does not imply identity-inequivalence 
+        \item a low degree of co-visible features from the same viewpoint implies identity-inequivalence with high probability
+        \item identity-equivalence is transitive
+        \item non-compatible (disjoint) viewpoints implies no co-visibility
+    \end{itemize}
+    % define:
+    % identity-equivilence
+    % identity-inequivilence
+    % identity-indeterminacy
+    % co-visible
+    %This classification puts the system in a state of error until 
+    %Inversely, if two unoccluded regions of the same viewpoints do not have
+    %  any visual similarity then name-inequivalence can be concluded.
+
+
+\paragraph{Determining False Negatives}
+Look at names that only have one encounter.
+If this number grows as the database size grows, it is evidence that the
+  algorithm is missing matches.
+This might be the case for some plains zebras which are not distinctive.
+
+
+\paragraph{Space}
+
+Once you are so far from any point in space, you can only be so certain about where you are. 
+You need to be at least close to some point.
+
+once you are so far from any point in space, you can only be so certain about where you are. 
+
+
+\paragraph{
+Naive Bayes works so well because it is a voting procedure.
+The idea of voting is intuitive, natural, and easily understood.
+If all the members of the population need to come to a consensus on something, 
+voting is the only procedure (apart from violence, intuitively speaking)
+that can solve this problem.
+But who gets to vote and what each agents preferences and prerogative are is not always clear.
+
+
+}
