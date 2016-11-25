@@ -1,0 +1,155 @@
+
+\paragraph{Constructing the annotation pairs}
+
+To generate the pairwise dataset we first run one-vs-many matching 
+to create a ranked list for each annotation in the database.
+
+For each query annotation we then create 
+
+ * $4$ top correct pairs
+ * $4$ middle correct pairs
+ * $4$ bottom correct pairs
+ * $3$ top incorrect pairs
+ * $2$ random incorrect pairs
+
+Note that top is with respect to the one-vs-many score.
+This gives us $4$ images that should be marked as similar, also note that these are just the  $3$  produce similar scores. 
+
+
+After all pairs are generated we remove duplicates and label each pair with a
+  multi-class groundtruth label.
+For each pair the label is either match, not match, or not comparable.
+In our most recent data collection efforts we have asked users to explicitly
+  mark the not-comparable and photobomb cases.
+In the case that an explicit label is not available for a pair we mark it as
+  not comparable if the viewpoints too dissimilar (more than two steps apart),
+  otherwise we treat the pair as a match if the two names as not match if the
+  names are different.
+
+\paragraph{Constructing the pairwise feature vectors}
+
+We construct our feature vectors based on the results of one-vs-one matching.
+This prevents our features from depending heavily on the size of the database.
+However, we (will) utilize the database normalizers in order to enrich the
+  one-vs-one matching with information about the database-wide distinctivness of
+  particular patterns.
+We experiment with and without this feature to show the difference.
+
+Given two annotations, one-vs-one matching assigns each feature in the first
+  annotation to its reciprocal nearest neighbor in the second annotation.
+The second nearest neighbor in the second image is used as an inter-pair
+  distinctiveness normalizer.
+A score is assigned to each correspondence based on the ratio of the
+  normalizer distance to the match distance.
+If available, we also compute the \LNBNN{} score of each correspondence based
+  on the database normalizer.
+Spatial verification is used to remove spatially inconsistent matches.
+
+To construct a fixed length vector we use the top $N=10$ features \wrt{}
+  either the ratio or \LNBNN{} score.
+Local measures between these features are added to the feature vector.
+The local measures we use are:
+ratio score, \LNBNN{} score, sift distance, inter-pair normalizer distance,
+  database normalizer distance, and spatial verification error (in xy, scale,
+  and orientation).
+We also add global measures such as GPS, quality, viewpoint, and time.
+We both add the individual values of these features as well as deltas between
+  them.
+For GPS we use the haversine distance, for viewpoint we use radial difference,
+  and for all other measures we use the absolute difference.
+We also incorporate an extra speed dimension by dividing the GPS delta by the
+  time delta.
+
+In the case where a particular data point is missing (\ie{} quality was not
+  labeled or there were less than $N$ matches between two annotations), then a
+  NaN value is used to indicate missing data.
+The problem of learning and predicting with missing data will be addressed by
+  the classification algorithm.
+
+
+
+\paragraph{Training a classifier}
+To handle missing data each decision tree uses the ``separate class''
+  method~\cite{ding_investigation_2010}.
+To tune the hyperparameters of the classifier for each species we use grid
+  search with $3$-fold cross validation.
+Once trained we this classifier to predict the match probabilities $\Pr{M |
+  \vec{x}}$ of new annotation pairs.
+
+
+A random forest is an ensemble of decision trees.
+Each decision tree is bootstrapped --- \ie{} trained on a randomly selected
+  subset of the data.
+To grow a decision tree a node chooses a feature dimension and a test that
+  induces a binary split of the data.
+The chosen feature dimension and tests are chosen to maximize the information
+  gain --- \ie{} difference in the entropy (\wrt{} the target labels) in the
+  parent and the weighted average of the entropy in the children nodes.
+To increase speed and randomness only a fraction ($\sqrt(N_{feats})$) of the
+  feature dimensions are considered at each node.
+Feature importance is determined by summing the information gain achieved at
+  each node split using that feature.
+Each tree is grown until there are at most $5$ samples in a leaf.
+
+We evaluate this classifier with the same measures used to evaluate the
+  one-vs-many identification algorithm:
+the cumulative match characteristic at rank 1 and the receiver operating
+  characteristics AUC{}.
+This provides a measure of classification accuracy and separability.
+
+\paragraph{Feature Pruning}
+We determined the effectiveness of each of the features we have chosen.  We
+then removed features that were not important to classification across both
+species. We determined this by looking at individual feature importances as
+well as the marginal feature importance across categories (\eg{} we determined
+which features were the most effective sorters)
+
+On GZ Master removing features caused minor improvement in separation from
+$.975$ to $.976$.
+
+First reduced shape goes to 286 dimensions
+
+We determined that the summary statistics 
+\begin{verbatim}
+for PZ_Master1 these were some of the marginals investigated
+
+Importance of globals-vs-locals
+            ave_w    weight  num
+global   0.009955  0.149329   15
+summary  0.007076  0.410411   58
+local    0.001103  0.440261  399
+
+Importance of locals summaries
+         ave_w    weight  num
+sum   0.013721  0.260705   19
+mean  0.004470  0.084938   19
+std   0.002645  0.050261   19
+NaN   0.001456  0.604096  415
+
+Importance of local sorters
+                    ave_w    weight  num
+NaN              0.007668  0.559739   73
+weighted_ratio   0.003006  0.171342   57
+norm_dist        0.001307  0.074478   57
+weighted_lnbnn   0.000814  0.046411   57
+lnbnn            0.000780  0.044468   57
+lnbnn_norm_dist  0.000751  0.042799   57
+ratio            0.000545  0.031040   57
+match_dist       0.000521  0.029722   57
+
+Importance of local ranks
+        ave_w    weight  num
+NaN  0.007668  0.559739   73
+2    0.001177  0.156489  133
+1    0.001140  0.151625  133
+0    0.000994  0.132147  133
+\end{verbatim}
+
+
+A very interesting trend is that the very top features aren't the most
+important features.  It turns out that higher ranked features tend to be the
+most important.  On the GZ dataset ranks around 21 were the most important for
+PZ ranks around 12 were the best. To account for this phenomena we simply take
+the top 5 local features with a stride of 5.
+
+
