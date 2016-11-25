@@ -14,29 +14,29 @@ gvim ~/code/ibeis/regen_figdefexpt.sh
 % -------------------------------
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn    --hargv=expt
+python -m ibeis -e rank_cmc --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn    --hargv=expt
 \end{comment}                                                                                                                                         
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cdf --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn    --hargv=expt
+python -m ibeis -e rank_cmc --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn    --hargv=expt
 \end{comment}                                                                                                                                         
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a ctrl timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --hargv=expt
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a ctrl timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --hargv=expt
 \end{comment}
 
 
 \begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
-python -m ibeis -e rank_cdf --db humpbacks_fb -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db Seals -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db snails_drop1 -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db LF_Bajo_bonito -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a ctrl -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
-python -m ibeis -e rank_cdf --db humpbacks_fb -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db Seals -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db snails_drop1 -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cdf --db LF_Bajo_bonito -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
+python -m ibeis -e rank_cmc --db humpbacks_fb -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db Seals -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db snails_drop1 -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db LF_Bajo_bonito -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a ctrl -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
+python -m ibeis -e rank_cmc --db humpbacks_fb -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db Seals -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db snails_drop1 -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
+python -m ibeis -e rank_cmc --db LF_Bajo_bonito -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
 \end{comment}
 
 \MultiImageCommandII{BaselineExpt}{1}{Baseline experiment identification accuracy}{
@@ -61,17 +61,17 @@ python -m ibeis -e rank_cdf --db LF_Bajo_bonito -a ctrl -t baseline --prefix "Ba
 % -----------------------------------
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label PZForeground  --cmap-hack=spring
+python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label PZForeground  --cmap-hack=spring
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label GZForeground --cmap-hack=spring
+python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label GZForeground --cmap-hack=spring
 
-python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True],fgw_thresh=[None,.8] --show
+python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True],fgw_thresh=[None,.8] --show
 \end{comment}
 
 %\begin{comment}
-%python -m ibeis -e rank_cdf --db GIRM_Master1 -a timectrl1h -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
+%python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
 %\end{comment}
 
 \MultiImageCommandII{ForegroundExpt}{1}{
@@ -93,15 +93,15 @@ The effect of the foregroundness weight on identification accuracy}{
 % -----------------------------------
 
 %\begin{comment}
-%python -m ibeis -e rank_cdf --db PZ_Master1   -a timectrl   -t featscoremetch  --hargv=expt --prefix "LNBNN" --label PZLNBNN
+%python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t featscoremetch  --hargv=expt --prefix "LNBNN" --label PZLNBNN
 %\end{comment}
 
 %\begin{comment}
-%python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl   -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GZForeground
+%python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GZForeground
 %\end{comment}
 
 %\begin{comment}
-%python -m ibeis -e rank_cdf --db GIRM_Master1 -a timectrl1h -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
+%python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
 %\end{comment}
 
 % -------------------------------
@@ -111,15 +111,15 @@ The effect of the foregroundness weight on identification accuracy}{
 % --- Same Viewpoint
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label PZInvar --cmap-hack=Set1
+python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label PZInvar --cmap-hack=Set1
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label GZInvar --cmap-hack=Set1
+python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label GZInvar --cmap-hack=Set1
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a timectrl1h -t invar  --hargv=expt --prefix "Invariance" --label GIRMInvar --cmap-hack=Set1
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t invar  --hargv=expt --prefix "Invariance" --label GIRMInvar --cmap-hack=Set1
 \end{comment}
 
 \MultiImageCommandII{InvarExpt}{1}{
@@ -143,15 +143,15 @@ Results of the same-viewpoint invariance experiment}{
 
 % --- Across Viewpoints
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label PZInvarView  --cmap-hack=Set2
+python -m ibeis -e rank_cmc --db PZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label PZInvarView  --cmap-hack=Set2
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GZInvarView --cmap-hack=Set2
+python -m ibeis -e rank_cmc --db GZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GZInvarView --cmap-hack=Set2
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GIRMInvarView --cmap-hack=Set2
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GIRMInvarView --cmap-hack=Set2
 \end{comment}
 \MultiImageCommandII{InvarViewExpt}{1}{
 Results of the different-viewpoint invariance experiment}{
@@ -183,15 +183,15 @@ Results of the different-viewpoint invariance experiment}{
 
 % --- Explicit K 
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a timectrl   -t CircQRH_K --hargv=expt --prefix "K " --label PZKTime  --cmap-hack=gnuplot
+python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t CircQRH_K --hargv=expt --prefix "K " --label PZKTime  --cmap-hack=gnuplot
 \end{comment}
 \begin{comment}
 
-python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl   -t Ell_K     --hargv=expt --prefix "K " --label GZKTime --cmap-hack=gnuplot
+python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t Ell_K     --hargv=expt --prefix "K " --label GZKTime --cmap-hack=gnuplot
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a timectrl1h -t Ell_K     --hargv=expt --prefix "K " --label GIRMKTime --cmap-hack=gnuplot
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t Ell_K     --hargv=expt --prefix "K " --label GIRMKTime --cmap-hack=gnuplot
 \end{comment}
 
 
@@ -256,15 +256,15 @@ ibeis -e rank_surface --db GIRM_Master1 -a varysize_td1h:qmin_pername=3,dpername
 % -------------------------------
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db PZ_Master1   -a varypername_td   -t CircQRH_ScoreMech:K=3   --hargv=mech --prefix "Score Method" --label PZNscore  --ncolor-hack=6 --cmap-hack=jet
+python -m ibeis -e rank_cmc --db PZ_Master1   -a varypername_td   -t CircQRH_ScoreMech:K=3   --hargv=mech --prefix "Score Method" --label PZNscore  --ncolor-hack=6 --cmap-hack=jet
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GZ_Master1   -a varypername_td   -t Ell_ScoreMech:K=1     --hargv=mech --prefix "Score Method" --label GZNscore --ncolor-hack=6 --cmap-hack=jet
+python -m ibeis -e rank_cmc --db GZ_Master1   -a varypername_td   -t Ell_ScoreMech:K=1     --hargv=mech --prefix "Score Method" --label GZNscore --ncolor-hack=6 --cmap-hack=jet
 \end{comment}
 
 \begin{comment}
-python -m ibeis -e rank_cdf --db GIRM_Master1 -a varypername_td1h:qmin_pername=3,dpername=[1,2] -t Ell_ScoreMech:K=2     --hargv=mech --prefix "Score Method" --label GIRMNscore --ncolor-hack=6 --cmap-hack=jet
+python -m ibeis -e rank_cmc --db GIRM_Master1 -a varypername_td1h:qmin_pername=3,dpername=[1,2] -t Ell_ScoreMech:K=2     --hargv=mech --prefix "Score Method" --label GIRMNscore --ncolor-hack=6 --cmap-hack=jet
 \end{comment}
 
 
@@ -300,7 +300,7 @@ python -m ibeis -e scores --db PZ_Master1   -a timectrl -t best --filt :without_
 \begin{comment}
 python -m ibeis -e scores --db GZ_Master1   -a timectrl -t best     --filt : --hargv=scores --prefix "Separability "  --label GZScoreAll
 python -m ibeis -e scores --db GZ_Master1   -a timectrl -t best     --filt :without_tag=photobomb --hargv=scores --prefix "Separability "  --label GZScoreAll
-python -m ibeis -e rank_cdf --db GZ_Master1   -a timectrl -t best best:chip_sqrt_area=700 --filt : --show
+python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl -t best best:chip_sqrt_area=700 --filt : --show
 \end{comment}
 
 \begin{comment}

@@ -14,10 +14,7 @@ Because of these disadvantages and the fact that local patterns on the animals
   we identify tend to be distinguishing, we have chosen to primarily focus on
   orderless representations.
 
-
-Perhaps additional learning could make up for quantization error.
-But why use learning to make up for information that we lost instead of using
-  learning on top of data that achieves a lower baseline error rate?
+*REPORT SMK RESULTS*
 
 \section{Learning the match probability}
 
@@ -122,8 +119,12 @@ ratio score, \LNBNN{} score, sift distance, inter-pair normalizer distance,
   database normalizer distance, and spatial verification error (in xy, scale,
   and orientation).
 We also add global measures such as GPS, quality, viewpoint, and time.
-Currently we only add these raw feature values individually, but we will soon
-  augment this to include the absolute difference between the features.
+We both add the individual values of these features as well as deltas between
+  them.
+For GPS we use the haversine distance, for viewpoint we use radial difference,
+  and for all other measures we use the absolute difference.
+We also incorporate an extra speed dimension by dividing the GPS delta by the
+  time delta.
 
 In the case where a particular data point is missing (\ie{} quality was not
   labeled or there were less than $N$ matches between two annotations), then a
@@ -185,9 +186,15 @@ To tune the hyperparameters of the classifier for each species we use grid
 Once trained we this classifier to predict the match probabilities $\Pr{M |
   \vec{x}}$ of new annotation pairs.
 
+We evaluate this classifier with the same measures used to evaluate the
+  one-vs-many identification algorithm:
+the cumulative match characteristic at rank 1 and the receiver operating
+  characteristics AUC{}.
+This provides a measure of classification accuracy and separability.
+
 \section{Putting Humans in the Loop}
 
-To put human reviewers into the loop we take advantage of a graph algorithm to 
+To put human reviewers into the loop we take advantage of a graph algorithm to
 (1) choose new pairs to review,
 (1) minimize the number of reviews necessary, and
 (2) handle split/merge error cases.
@@ -311,7 +318,9 @@ on unreviewed edges are updated and inferred if they are above the threshold / p
 
 \paragraph{Component Confidence}
 One state we wish to avoid is when a group of annotations are marked as the
-same because they belong to a very long chain. In practice the probability that the annotations on the endpoints of those chains are the same is actually quite low unless the reviewer is perfect.  
+  same because they belong to a very long chain.
+In practice the probability that the annotations on the endpoints of those
+  chains are the same is actually quite low unless the reviewer is perfect.
 
 Given a component of annotations we wish to compute the probability that each
   pair of annotation is the same.
@@ -319,10 +328,27 @@ In the case where there is a user review between then then that probability is
   a prior probability that the user makes accurate reviews (which is probably
   somewhere between $.8$ and $.95$).
 If there is a one-vs-one edge then we can use that probability.
-If there is not a one-vs-one edge (because that edge was not suggested by the one-vs-many results) then we need to find a good way to compute that probability.
+If there is not a one-vs-one edge (because that edge was not suggested by the
+  one-vs-many results) then we need to find a good way to compute that
+  probability.
 
 
-We have a few ideas:
+As a baseline we implement a very simple algorithm.
+We specific two thresholds:
+a positive jump threshold and a negative jump threshold:
+$t_{posjump}$  and $t_{negjump}$.
+The positive jump threshold states that if an two nodes within a connected
+  component are separated by more than $t_{posjump}$ positive review edges then
+  any unreviewed edges that could decrease that distance are added back into the
+  priority queue.
+Likewise, the negative jump threshold states that nodes between negative
+  components should not be separated by more than a $t_{negjump}$ distance over
+  positive or negative reviewed edges.
+In the automated case this heuristic can be augmented to consider edges above
+  or below the scoring threshold as reviewed.
+
+
+To improve this algorithm we have a few ideas that we suggest for future work:
 
 Probability along shortest comparable positive path.
 
@@ -386,3 +412,571 @@ posterior can be recomputed until the entire component is above a threshold of
 confidence (indicated by the max of the probabilities of no-match over all
   edges).
 
+
+
+\section{Experiments and Results}
+
+To demonstrate the results of enriching features with one-vs-one
+  correspondences we perform the following experiment.
+We select a set of annotation pairs using the method outlined earlier.
+We first assign each pair a score using its baseline LNBNN score computed
+  earlier.
+If no score was computed it is given a score of zero.
+We then apply one-vs-one matching augmentation to each pair and score each
+  pair using the ratio test.
+We then apply spatial verification on top of the one-vs-one augmentation.
+The results of this test are as follows using the AUC of the ROC curve to
+  indicate separability.
+  
+To further improve on these baseline results we apply a learning stage using a
+random forest classifier. To avoid bias hyperparameter settings are fixed to
+the optimal settings found using a grid search on an external dataset. 
+We estimate performance of the learning algorithm using 10-fold cross
+validation on the experimental dataset. The average over these runs is the
+score we report.
+
+
+\begin{verbatim}
+
+Plains Zebras (PZ_Master1)
+| Method          |    AUC | % error decrease |
+|-----------------+--------+------------------|
+| 1vM-LNBNN       | 0.9388 |              0.0 |
+| 1v1-RAT         | 0.9499 |            18.09 |
+| 1v1-RAT+SVER    | 0.9505 |            19.10 |
+| 1v1-RAT+SVER+RF | 0.9738 |            57.28 |
+
+Grevy's Zebras (GZ_Master1)
+| Method          |    AUC | % error decrease |
+|-----------------+--------+------------------|
+| 1vM-LNBNN       | 0.9363 |             0.00 |
+| 1v1-RAT         | 0.9646 |            44.42 |
+| 1v1-RAT+SVER    | 0.9668 |            47.88 |
+| 1v1-RAT+SVER+RF | 0.9810 |            70.17 |
+
+\end{verbatim}
+
+
+\paragraph{SMK Results}
+
+\begin{verbatim}
+
+Plains zebras: (PZ_Master1)
+| Method     | % correct @ rank #1 |
+|------------+---------------------|
+| 1vM-LNBNN  | 75.60               |
+| VLAD-ASMK  | 69.69               |
+
+Grevy's zebras:  (GZ_Master1)
+| Method     | % correct @ rank #1 |
+|------------+---------------------|
+| 1vM-LNBNN  | 84.94               |
+| VLAD-ASMK  | 70.87               |
+
+\end{verbatim}
+
+These results are without spatial verification or foregroundness weighting.
+The ASMK results are slightly above what they should be because I trained the
+  vocabulary using the database annotations, which will cause some amount of
+  overfitting.
+This shows that the LNBNN algorithm still outperforms SMK even when SMK has a
+  clear advantage.
+We have have tested our SMK implementation by reproducing the results on
+  standard datasets~\cite{tolias_2012} to ensure that it has the best chance
+  possible to match the results of the LNBNN algorithm.
+These results indicate that quantization error is still a problem when using 
+a fixed length annotation wide image representation.
+The fine detail captured by local descriptors is lost in the aggregation.
+
+
+\paragraph{Variable Importance}
+
+Our intuition is that matching is driven by a small subset of very distinctive
+  features on these animals and not by the combined distinctivness over all
+  features.
+
+Interestingly we find that the most important features are aggregate
+  statistics instead of the selected top matches.
+
+Perhaps the top scoring matches do not reliably map to the distinctive
+descriptors driving the matching. 
+
+The weighted variable importance for Grevy's zebras is: 
+\begin{verbatim}
+
+Plains zebras: (PZ_Master1)
+nonan
+{
+    'sum_norm_dist'      : 0.2121,
+    'n_total'            : 0.1504,
+    'sum_match_dist'     : 0.1479,
+    'sum_lnbnn_norm_dist': 0.1249,
+    'sum_ratio'          : 0.1197,
+    'sum_sver_err_xy'    : 0.1104,
+    'sum_sver_err_ori'   : 0.0557,
+    'sum_sver_err_scale' : 0.0435,
+    'yaw_delta'          : 0.0155,
+    'sum_lnbnn'          : 0.0070,
+    'yaw_1'              : 0.0067,
+    'yaw_2'              : 0.0062,
+}
+withnan
+{
+    'sum_norm_dist'                   : 0.0642,
+    'n_total'                         : 0.0617,
+    'sum_match_dist'                  : 0.0543,
+    'sum_ratio'                       : 0.0480,
+    'sum_lnbnn_norm_dist'             : 0.0421,
+    'mean_ratio'                      : 0.0417,
+    'std_sver_err_xy'                 : 0.0351,
+    'mean_sver_err_xy'                : 0.0333,
+    'mean_lnbnn_norm_dist'            : 0.0298,
+    'std_ratio'                       : 0.0259,
+    'sum_sver_err_xy'                 : 0.0249,
+    'mean_sver_err_ori'               : 0.0200,
+    'lnbnn2_sver_err_ori'             : 0.0182,
+    'std_sver_err_ori'                : 0.0175,
+    'match_dist1_sver_err_ori'        : 0.0152,
+    'std_norm_dist'                   : 0.0132,
+    'norm_dist2_sver_err_ori'         : 0.0131,
+    'std_lnbnn_norm_dist'             : 0.0129,
+    'norm_dist1_sver_err_ori'         : 0.0123,
+    'ratio2_sver_err_ori'             : 0.0123,
+    'ratio2_ratio'                    : 0.0123,
+    'lnbnn_norm_dist1_sver_err_ori'   : 0.0119,
+    'mean_match_dist'                 : 0.0119,
+    'lnbnn_norm_dist0_sver_err_ori'   : 0.0117,
+    'sum_sver_err_ori'                : 0.0106,
+    'match_dist0_sver_err_ori'        : 0.0096,
+    'time_delta'                      : 0.0094,
+    'std_match_dist'                  : 0.0093,
+    'match_dist2_sver_err_ori'        : 0.0089,
+    'ratio1_ratio'                    : 0.0078,
+    'gps_delta'                       : 0.0078,
+    'std_sver_err_scale'              : 0.0078,
+    'time_1'                          : 0.0075,
+    'norm_dist0_sver_err_ori'         : 0.0071,
+    'time_2'                          : 0.0067,
+    'lnbnn_norm_dist2_sver_err_ori'   : 0.0066,
+    'lnbnn1_sver_err_ori'             : 0.0065,
+    'lnbnn2_sver_err_xy'              : 0.0061,
+    'ratio1_sver_err_ori'             : 0.0057,
+    'ratio2_sver_err_xy'              : 0.0056,
+    'ratio2_sver_err_scale'           : 0.0056,
+    'match_dist1_sver_err_scale'      : 0.0055,
+    'match_dist2_sver_err_scale'      : 0.0054,
+    'lnbnn0_sver_err_ori'             : 0.0050,
+    'ratio0_sver_err_ori'             : 0.0049,
+    'norm_dist2_sver_err_scale'       : 0.0049,
+    'sum_sver_err_scale'              : 0.0048,
+    'lnbnn_norm_dist2_sver_err_xy'    : 0.0045,
+    'norm_dist2_sver_err_xy'          : 0.0044,
+    'gps0_2'                          : 0.0043,
+    'speed'                           : 0.0040,
+    'gps0_1'                          : 0.0040,
+    'lnbnn1_sver_err_scale'           : 0.0040,
+    'yaw_delta'                       : 0.0039,
+    'gps1_1'                          : 0.0038,
+    'gps1_2'                          : 0.0038,
+    'norm_dist1_sver_err_xy'          : 0.0036,
+    'lnbnn0_sver_err_xy'              : 0.0036,
+    'match_dist2_sver_err_xy'         : 0.0036,
+    'lnbnn1_sver_err_xy'              : 0.0036,
+    'lnbnn_norm_dist2_lnbnn_norm_dist': 0.0034,
+    'ratio1_sver_err_scale'           : 0.0033,
+    'ratio0_sver_err_scale'           : 0.0033,
+    'match_dist0_sver_err_xy'         : 0.0030,
+    'match_dist1_sver_err_xy'         : 0.0029,
+    'lnbnn_norm_dist1_sver_err_xy'    : 0.0029,
+    'ratio0_sver_err_xy'              : 0.0029,
+    'lnbnn0_sver_err_scale'           : 0.0027,
+    'mean_norm_dist'                  : 0.0027,
+    'lnbnn_norm_dist0_sver_err_xy'    : 0.0027,
+    'norm_dist0_sver_err_xy'          : 0.0026,
+    'lnbnn_norm_dist2_sver_err_scale' : 0.0026,
+    'lnbnn_norm_dist1_sver_err_scale' : 0.0026,
+    'lnbnn2_lnbnn_norm_dist'          : 0.0026,
+    'qual_2'                          : 0.0025,
+    'qual_1'                          : 0.0025,
+    'ratio1_sver_err_xy'              : 0.0025,
+    'norm_dist2_lnbnn_norm_dist'      : 0.0025,
+    'norm_dist2_match_dist'           : 0.0022,
+    'match_dist1_lnbnn_norm_dist'     : 0.0022,
+    'norm_dist2_ratio'                : 0.0022,
+    'lnbnn_norm_dist2_norm_dist'      : 0.0021,
+    'lnbnn0_lnbnn_norm_dist'          : 0.0021,
+    'mean_sver_err_scale'             : 0.0021,
+    'norm_dist1_lnbnn_norm_dist'      : 0.0020,
+    'match_dist0_lnbnn_norm_dist'     : 0.0020,
+    'norm_dist0_sver_err_scale'       : 0.0020,
+    'match_dist2_norm_dist'           : 0.0020,
+    'match_dist2_lnbnn_norm_dist'     : 0.0020,
+    'lnbnn1_lnbnn_norm_dist'          : 0.0020,
+    'ratio2_norm_dist'                : 0.0019,
+    'lnbnn_norm_dist1_lnbnn_norm_dist': 0.0019,
+    'norm_dist0_lnbnn_norm_dist'      : 0.0019,
+    'norm_dist1_sver_err_scale'       : 0.0019,
+    'match_dist0_sver_err_scale'      : 0.0019,
+    'lnbnn_norm_dist0_lnbnn_norm_dist': 0.0019,
+    'ratio2_lnbnn_norm_dist'          : 0.0017,
+    'ratio0_ratio'                    : 0.0017,
+    'ratio0_lnbnn_norm_dist'          : 0.0015,
+    'ratio1_lnbnn_norm_dist'          : 0.0014,
+    'lnbnn_norm_dist0_ratio'          : 0.0014,
+    'match_dist0_ratio'               : 0.0014,
+    'lnbnn_norm_dist2_match_dist'     : 0.0014,
+    'norm_dist1_ratio'                : 0.0014,
+    'lnbnn0_match_dist'               : 0.0013,
+    'lnbnn2_ratio'                    : 0.0013,
+    'norm_dist1_norm_dist'            : 0.0013,
+    'norm_dist0_ratio'                : 0.0013,
+    'norm_dist2_norm_dist'            : 0.0013,
+    'lnbnn_norm_dist1_match_dist'     : 0.0013,
+    'lnbnn0_norm_dist'                : 0.0013,
+    'qual_delta'                      : 0.0013,
+    'lnbnn_norm_dist2_ratio'          : 0.0013,
+    'lnbnn1_ratio'                    : 0.0013,
+    'match_dist1_ratio'               : 0.0013,
+    'lnbnn_norm_dist1_ratio'          : 0.0013,
+    'norm_dist1_match_dist'           : 0.0013,
+    'match_dist2_match_dist'          : 0.0013,
+    'lnbnn2_norm_dist'                : 0.0013,
+    'lnbnn_norm_dist1_norm_dist'      : 0.0013,
+    'lnbnn_norm_dist0_norm_dist'      : 0.0013,
+    'match_dist1_norm_dist'           : 0.0012,
+    'match_dist0_norm_dist'           : 0.0012,
+    'lnbnn0_ratio'                    : 0.0012,
+    'ratio1_norm_dist'                : 0.0012,
+    'lnbnn1_match_dist'               : 0.0012,
+    'lnbnn2_match_dist'               : 0.0012,
+    'lnbnn_norm_dist0_match_dist'     : 0.0012,
+    'norm_dist0_match_dist'           : 0.0012,
+    'match_dist1_match_dist'          : 0.0012,
+    'ratio2_match_dist'               : 0.0012,
+    'match_dist2_ratio'               : 0.0012,
+    'lnbnn_norm_dist0_sver_err_scale' : 0.0012,
+    'norm_dist0_norm_dist'            : 0.0012,
+    'match_dist0_match_dist'          : 0.0012,
+    'ratio1_match_dist'               : 0.0012,
+    'lnbnn1_norm_dist'                : 0.0011,
+    'ratio0_match_dist'               : 0.0011,
+    'lnbnn2_sver_err_scale'           : 0.0011,
+    'ratio0_norm_dist'                : 0.0011,
+    'yaw_1'                           : 0.0011,
+    'yaw_2'                           : 0.0010,
+    'sum_lnbnn'                       : 0.0005,
+    'mean_lnbnn'                      : 0.0004,
+    'std_lnbnn'                       : 0.0004,
+    'lnbnn1_lnbnn'                    : 0.0000,
+    'lnbnn_norm_dist0_lnbnn'          : 0.0000,
+    'lnbnn0_lnbnn'                    : 0.0000,
+    'lnbnn_norm_dist2_lnbnn'          : 0.0000,
+    'lnbnn2_lnbnn'                    : 0.0000,
+    'lnbnn_norm_dist1_lnbnn'          : 0.0000,
+    'match_dist0_lnbnn'               : 0.0000,
+    'norm_dist1_lnbnn'                : 0.0000,
+    'match_dist2_lnbnn'               : 0.0000,
+    'norm_dist2_lnbnn'                : 0.0000,
+    'match_dist1_lnbnn'               : 0.0000,
+    'norm_dist0_lnbnn'                : 0.0000,
+    'ratio0_lnbnn'                    : 0.0000,
+    'ratio1_lnbnn'                    : 0.0000,
+    'ratio2_lnbnn'                    : 0.0000,
+}
+withnan_ratio
+{
+    'sum_norm_dist'        : 0.1053,
+    'sum_match_dist'       : 0.0862,
+    'n_total'              : 0.0833,
+    'sum_ratio'            : 0.0726,
+    'mean_ratio'           : 0.0648,
+    'std_sver_err_xy'      : 0.0485,
+    'std_ratio'            : 0.0475,
+    'mean_sver_err_xy'     : 0.0457,
+    'sum_sver_err_xy'      : 0.0407,
+    'mean_sver_err_ori'    : 0.0343,
+    'std_norm_dist'        : 0.0255,
+    'mean_match_dist'      : 0.0218,
+    'std_sver_err_ori'     : 0.0185,
+    'ratio2_ratio'         : 0.0183,
+    'std_match_dist'       : 0.0168,
+    'sum_sver_err_ori'     : 0.0164,
+    'ratio2_sver_err_ori'  : 0.0153,
+    'time_delta'           : 0.0151,
+    'gps_delta'            : 0.0127,
+    'std_sver_err_scale'   : 0.0122,
+    'ratio2_sver_err_xy'   : 0.0120,
+    'time_1'               : 0.0114,
+    'ratio2_sver_err_scale': 0.0109,
+    'ratio1_sver_err_ori'  : 0.0109,
+    'ratio0_sver_err_ori'  : 0.0104,
+    'time_2'               : 0.0100,
+    'ratio1_ratio'         : 0.0096,
+    'speed'                : 0.0071,
+    'ratio0_sver_err_xy'   : 0.0071,
+    'mean_norm_dist'       : 0.0069,
+    'gps0_2'               : 0.0067,
+    'sum_sver_err_scale'   : 0.0064,
+    'ratio2_norm_dist'     : 0.0063,
+    'ratio1_sver_err_scale': 0.0062,
+    'gps1_2'               : 0.0061,
+    'gps0_1'               : 0.0061,
+    'yaw_delta'            : 0.0060,
+    'gps1_1'               : 0.0059,
+    'ratio1_sver_err_xy'   : 0.0057,
+    'mean_sver_err_scale'  : 0.0055,
+    'ratio0_ratio'         : 0.0054,
+    'ratio0_sver_err_scale': 0.0050,
+    'ratio2_match_dist'    : 0.0048,
+    'qual_2'               : 0.0044,
+    'qual_1'               : 0.0041,
+    'ratio1_norm_dist'     : 0.0034,
+    'ratio1_match_dist'    : 0.0033,
+    'ratio0_match_dist'    : 0.0030,
+    'ratio0_norm_dist'     : 0.0029,
+    'qual_delta'           : 0.0021,
+    'yaw_1'                : 0.0017,
+    'yaw_2'                : 0.0015,
+}
+
+
+
+
+Grevy's Zebras (GZ_Master1)
+For the classifier trained without any nan-values
+nonan
+{
+    'n_total'            : 0.2718,
+    'sum_norm_dist'      : 0.1956,
+    'sum_ratio'          : 0.1679,
+    'sum_match_dist'     : 0.1017,
+    'sum_sver_err_xy'    : 0.0973,
+    'sum_lnbnn_norm_dist': 0.0830,
+    'sum_sver_err_ori'   : 0.0452,
+    'sum_sver_err_scale' : 0.0320,
+    'sum_lnbnn'          : 0.0056,
+}
+withnan
+{
+    'sum_norm_dist'                   : 0.0917,
+    'n_total'                         : 0.0790,
+    'sum_match_dist'                  : 0.0634,
+    'sum_lnbnn_norm_dist'             : 0.0559,
+    'sum_ratio'                       : 0.0559,
+    'mean_ratio'                      : 0.0526,
+    'mean_match_dist'                 : 0.0501,
+    'mean_sver_err_ori'               : 0.0307,
+    'sum_sver_err_ori'                : 0.0298,
+    'std_ratio'                       : 0.0293,
+    'mean_sver_err_xy'                : 0.0266,
+    'std_sver_err_ori'                : 0.0199,
+    'norm_dist2_sver_err_ori'         : 0.0123,
+    'lnbnn1_sver_err_ori'             : 0.0122,
+    'mean_norm_dist'                  : 0.0119,
+    'match_dist2_sver_err_ori'        : 0.0114,
+    'norm_dist1_sver_err_ori'         : 0.0113,
+    'time_delta'                      : 0.0112,
+    'lnbnn_norm_dist1_sver_err_ori'   : 0.0109,
+    'std_sver_err_xy'                 : 0.0104,
+    'sum_sver_err_scale'              : 0.0089,
+    'lnbnn_norm_dist2_sver_err_ori'   : 0.0085,
+    'speed'                           : 0.0084,
+    'lnbnn_norm_dist0_sver_err_ori'   : 0.0084,
+    'gps_delta'                       : 0.0076,
+    'std_match_dist'                  : 0.0073,
+    'match_dist1_sver_err_ori'        : 0.0072,
+    'norm_dist1_sver_err_xy'          : 0.0066,
+    'std_norm_dist'                   : 0.0066,
+    'mean_lnbnn_norm_dist'            : 0.0063,
+    'norm_dist0_sver_err_ori'         : 0.0062,
+    'ratio2_sver_err_ori'             : 0.0062,
+    'norm_dist2_sver_err_xy'          : 0.0061,
+    'lnbnn_norm_dist2_sver_err_xy'    : 0.0059,
+    'sum_sver_err_xy'                 : 0.0058,
+    'match_dist2_sver_err_xy'         : 0.0056,
+    'lnbnn2_sver_err_xy'              : 0.0055,
+    'lnbnn2_sver_err_ori'             : 0.0054,
+    'match_dist0_sver_err_ori'        : 0.0053,
+    'ratio1_sver_err_ori'             : 0.0053,
+    'lnbnn_norm_dist0_sver_err_xy'    : 0.0048,
+    'match_dist0_sver_err_xy'         : 0.0047,
+    'match_dist1_sver_err_xy'         : 0.0046,
+    'ratio2_sver_err_xy'              : 0.0042,
+    'norm_dist0_sver_err_xy'          : 0.0042,
+    'lnbnn_norm_dist1_sver_err_scale' : 0.0038,
+    'time_1'                          : 0.0038,
+    'lnbnn1_sver_err_xy'              : 0.0037,
+    'ratio0_sver_err_ori'             : 0.0036,
+    'lnbnn_norm_dist1_sver_err_xy'    : 0.0035,
+    'norm_dist1_sver_err_scale'       : 0.0034,
+    'std_lnbnn_norm_dist'             : 0.0033,
+    'time_2'                          : 0.0032,
+    'ratio2_ratio'                    : 0.0032,
+    'ratio0_sver_err_xy'              : 0.0032,
+    'gps1_1'                          : 0.0032,
+    'match_dist2_sver_err_scale'      : 0.0031,
+    'ratio1_sver_err_xy'              : 0.0030,
+    'gps0_1'                          : 0.0029,
+    'gps1_2'                          : 0.0028,
+    'lnbnn_norm_dist2_norm_dist'      : 0.0027,
+    'gps0_2'                          : 0.0026,
+    'lnbnn_norm_dist2_match_dist'     : 0.0025,
+    'lnbnn0_sver_err_ori'             : 0.0024,
+    'lnbnn2_sver_err_scale'           : 0.0024,
+    'lnbnn_norm_dist0_sver_err_scale' : 0.0024,
+    'mean_sver_err_scale'             : 0.0023,
+    'lnbnn_norm_dist2_sver_err_scale' : 0.0023,
+    'std_sver_err_scale'              : 0.0022,
+    'lnbnn2_lnbnn_norm_dist'          : 0.0020,
+    'norm_dist2_sver_err_scale'       : 0.0020,
+    'match_dist2_ratio'               : 0.0019,
+    'ratio2_sver_err_scale'           : 0.0019,
+    'match_dist2_lnbnn_norm_dist'     : 0.0019,
+    'lnbnn_norm_dist2_ratio'          : 0.0018,
+    'ratio2_match_dist'               : 0.0018,
+    'lnbnn2_norm_dist'                : 0.0018,
+    'ratio1_sver_err_scale'           : 0.0017,
+    'match_dist1_sver_err_scale'      : 0.0017,
+    'match_dist1_match_dist'          : 0.0017,
+    'ratio1_ratio'                    : 0.0017,
+    'norm_dist0_lnbnn_norm_dist'      : 0.0017,
+    'lnbnn0_lnbnn_norm_dist'          : 0.0016,
+    'lnbnn1_lnbnn_norm_dist'          : 0.0016,
+    'match_dist2_match_dist'          : 0.0016,
+    'lnbnn0_sver_err_xy'              : 0.0016,
+    'match_dist0_sver_err_scale'      : 0.0016,
+    'lnbnn1_sver_err_scale'           : 0.0016,
+    'match_dist0_lnbnn_norm_dist'     : 0.0015,
+    'norm_dist1_match_dist'           : 0.0015,
+    'ratio2_norm_dist'                : 0.0015,
+    'lnbnn1_match_dist'               : 0.0015,
+    'yaw_1'                           : 0.0015,
+    'lnbnn2_match_dist'               : 0.0015,
+    'lnbnn2_ratio'                    : 0.0015,
+    'match_dist1_lnbnn_norm_dist'     : 0.0015,
+    'lnbnn_norm_dist1_ratio'          : 0.0015,
+    'lnbnn_norm_dist0_lnbnn_norm_dist': 0.0014,
+    'ratio2_lnbnn_norm_dist'          : 0.0014,
+    'norm_dist0_sver_err_scale'       : 0.0014,
+    'lnbnn_norm_dist2_lnbnn_norm_dist': 0.0014,
+    'lnbnn_norm_dist0_ratio'          : 0.0014,
+    'lnbnn1_ratio'                    : 0.0014,
+    'norm_dist2_lnbnn_norm_dist'      : 0.0014,
+    'norm_dist1_lnbnn_norm_dist'      : 0.0013,
+    'ratio0_sver_err_scale'           : 0.0013,
+    'match_dist1_ratio'               : 0.0013,
+    'lnbnn_norm_dist1_lnbnn_norm_dist': 0.0013,
+    'yaw_delta'                       : 0.0012,
+    'norm_dist0_ratio'                : 0.0012,
+    'ratio0_lnbnn_norm_dist'          : 0.0012,
+    'norm_dist2_match_dist'           : 0.0012,
+    'lnbnn_norm_dist1_match_dist'     : 0.0012,
+    'norm_dist2_ratio'                : 0.0012,
+    'lnbnn0_norm_dist'                : 0.0012,
+    'match_dist0_match_dist'          : 0.0011,
+    'lnbnn0_sver_err_scale'           : 0.0011,
+    'match_dist0_ratio'               : 0.0011,
+    'lnbnn_norm_dist0_match_dist'     : 0.0011,
+    'norm_dist0_match_dist'           : 0.0011,
+    'norm_dist1_ratio'                : 0.0011,
+    'lnbnn0_match_dist'               : 0.0011,
+    'lnbnn0_ratio'                    : 0.0010,
+    'ratio0_match_dist'               : 0.0010,
+    'ratio1_match_dist'               : 0.0010,
+    'lnbnn1_norm_dist'                : 0.0010,
+    'norm_dist1_norm_dist'            : 0.0010,
+    'ratio0_ratio'                    : 0.0009,
+    'norm_dist0_norm_dist'            : 0.0009,
+    'ratio1_lnbnn_norm_dist'          : 0.0009,
+    'lnbnn_norm_dist1_norm_dist'      : 0.0009,
+    'match_dist0_norm_dist'           : 0.0009,
+    'match_dist1_norm_dist'           : 0.0009,
+    'ratio1_norm_dist'                : 0.0009,
+    'norm_dist2_norm_dist'            : 0.0009,
+    'match_dist2_norm_dist'           : 0.0009,
+    'ratio0_norm_dist'                : 0.0009,
+    'lnbnn_norm_dist0_norm_dist'      : 0.0008,
+    'yaw_2'                           : 0.0008,
+    'qual_1'                          : 0.0008,
+    'qual_2'                          : 0.0006,
+    'mean_lnbnn'                      : 0.0004,
+    'qual_delta'                      : 0.0004,
+    'std_lnbnn'                       : 0.0004,
+    'sum_lnbnn'                       : 0.0002,
+    'lnbnn_norm_dist2_lnbnn'          : 0.0001,
+    'lnbnn0_lnbnn'                    : 0.0000,
+    'match_dist0_lnbnn'               : 0.0000,
+    'norm_dist1_lnbnn'                : 0.0000,
+    'lnbnn2_lnbnn'                    : 0.0000,
+    'lnbnn1_lnbnn'                    : 0.0000,
+    'norm_dist0_lnbnn'                : 0.0000,
+    'match_dist2_lnbnn'               : 0.0000,
+    'norm_dist2_lnbnn'                : 0.0000,
+    'lnbnn_norm_dist0_lnbnn'          : 0.0000,
+    'ratio0_lnbnn'                    : 0.0000,
+    'lnbnn_norm_dist1_lnbnn'          : 0.0000,
+    'ratio2_lnbnn'                    : 0.0000,
+    'match_dist1_lnbnn'               : 0.0000,
+    'ratio1_lnbnn'                    : 0.0000,
+}
+withnan_ratio
+{
+    'n_total'              : 0.1180,
+    'sum_norm_dist'        : 0.1075,
+    'sum_ratio'            : 0.0978,
+    'sum_match_dist'       : 0.0811,
+    'mean_ratio'           : 0.0763,
+    'mean_match_dist'      : 0.0583,
+    'mean_sver_err_ori'    : 0.0410,
+    'mean_sver_err_xy'     : 0.0406,
+    'sum_sver_err_ori'     : 0.0389,
+    'std_ratio'            : 0.0382,
+    'std_sver_err_ori'     : 0.0257,
+    'std_sver_err_xy'      : 0.0184,
+    'time_delta'           : 0.0181,
+    'mean_norm_dist'       : 0.0163,
+    'std_norm_dist'        : 0.0141,
+    'sum_sver_err_xy'      : 0.0124,
+    'speed'                : 0.0121,
+    'gps_delta'            : 0.0117,
+    'ratio2_sver_err_ori'  : 0.0114,
+    'sum_sver_err_scale'   : 0.0112,
+    'ratio2_sver_err_xy'   : 0.0103,
+    'std_match_dist'       : 0.0102,
+    'ratio1_sver_err_ori'  : 0.0099,
+    'ratio0_sver_err_xy'   : 0.0086,
+    'ratio1_sver_err_xy'   : 0.0086,
+    'ratio0_sver_err_ori'  : 0.0081,
+    'ratio2_sver_err_scale': 0.0068,
+    'ratio2_ratio'         : 0.0066,
+    'time_1'               : 0.0060,
+    'std_sver_err_scale'   : 0.0058,
+    'mean_sver_err_scale'  : 0.0056,
+    'time_2'               : 0.0054,
+    'ratio0_sver_err_scale': 0.0053,
+    'gps1_1'               : 0.0049,
+    'ratio1_sver_err_scale': 0.0047,
+    'gps1_2'               : 0.0046,
+    'gps0_1'               : 0.0044,
+    'ratio1_ratio'         : 0.0043,
+    'gps0_2'               : 0.0042,
+    'ratio2_match_dist'    : 0.0034,
+    'ratio1_norm_dist'     : 0.0031,
+    'ratio2_norm_dist'     : 0.0027,
+    'ratio1_match_dist'    : 0.0026,
+    'ratio0_ratio'         : 0.0025,
+    'ratio0_norm_dist'     : 0.0024,
+    'ratio0_match_dist'    : 0.0024,
+    'yaw_1'                : 0.0023,
+    'yaw_delta'            : 0.0018,
+    'qual_1'               : 0.0010,
+    'yaw_2'                : 0.0010,
+    'qual_2'               : 0.0007,
+    'qual_delta'           : 0.0005,
+}
+
+
+
+
+
+\end{verbatim}
