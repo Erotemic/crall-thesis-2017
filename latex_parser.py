@@ -78,6 +78,8 @@ class _Reformater(object):
             'skip_types': ['comment', 'keywords', 'outline', 'devnewpage',
                            'devcomment', 'renewcommand', 'newcommand', 'setcounter',
                            'bibliographystyle', 'bibliography'],
+            'extra_skip_types': [],
+            'skip_figures': False,
             'numlines': 0,
             'max_width': 120,
             'nolabel': True,
@@ -88,6 +90,10 @@ class _Reformater(object):
             'remove_leading_space': True,
             #skip_subtypes = ['comment']
     })
+
+    @property
+    def skip_types(self):
+        return self._config['skip_types'] + self._config['extra_skip_types']
 
     def _put_debug_type(self, block, outline=False):
         """
@@ -150,7 +156,8 @@ class _Reformater(object):
                 if self._config['asmarkdown']:
                     header_block = '\n'.join(self.get_sentences())
                 else:
-                    header_block = ut.unindent('\n'.join(self.reformat_blocks(stripcomments=False)))
+                    _block = '\n'.join(self.reformat_blocks(stripcomments=False))
+                    header_block = ut.unindent(_block)
 
             if self._config['numlines'] >= 1 and self.subtype == 'par':
                 if self.parent_type() in self.rawformat_types:
@@ -188,15 +195,16 @@ class _Reformater(object):
         else:
             if allow_multiline_headers and len(self.lines) > 1:
                 # Header is multiline
-                header_block = '\n'.join(self.lines)
+                _block = '\n'.join(self.lines)
                 max_width = self._config['max_width']
-                header_block = ut.format_multi_paragraphs(header_block, myprefix=True, sentence_break=True, max_width=max_width)
+                _block = ut.format_multi_paragraphs(_block, myprefix=True, sentence_break=True, max_width=max_width)
                 if self.type_ == 'ImageCommand':
-                    header_block = header_block.replace('ImageCommand', 'ImageCommandDraft')
+                    _block = _block.replace('ImageCommand', 'ImageCommandDraft')
                 if self.type_ == 'MultiImageFigure':
-                    header_block = header_block.replace('MultiImageFigure', 'MultiImageFigureDraft')
+                    _block = _block.replace('MultiImageFigure', 'MultiImageFigureDraft')
                 if self.type_ == 'MultiImageFigureII':
-                    header_block = header_block.replace('MultiImageFigureII', 'MultiImageFigureDraft')
+                    _block = _block.replace('MultiImageFigureII', 'MultiImageFigureDraft')
+                header_block = _block
             else:
                 header_block = self.lines[0]
 
@@ -266,7 +274,8 @@ class _Reformater(object):
                 return []
 
         if outline:
-            skip_types = self._config['skip_types']
+            # skip_types = self._config['skip_types']
+            skip_types = self.skip_types
             skip_subtypes =  self._config['skip_subtypes']
         else:
             skip_types = []
@@ -278,22 +287,37 @@ class _Reformater(object):
         child_nodes = self.children
         def is_skiptype(node):
             skip_types_ = skip_types
-            skip_figures = self._config['asmarkdown']
-            skip_figures = False
+            # skip_figures = self._config['asmarkdown']
+            skip_figures = self._config['skip_figures']
+            # skip_figures = False
+            flag = None
             if skip_figures:
                 hackfigtypes = ['mergecase', 'splitcase', 'popest',
                                 'ThreeSixty', 'PoseExample',
                                 'OcclusionAndDistractors',
                                 'ShadowAndIllumination',
                                 'OccurrenceCompliment', 'Quality', 'Age',
-                                'doubledepc']
-                skip_types_ += hackfigtypes
+                                'mergecase', 'splitcase', 'doubledepc',
+                                'gencutfig', 'exemplarcover', 'edgeexample',
+                                'leftrightfacematch', 'graphexample',
+                                'intraoccur', 'bridgethegap', 'rankedmatches',
+                                'SceneryMatch', 'genfeatweight', 'knorm',
+                                'namematch', 'sver', 'DatabaseInfo',
+                                'timedist', 'kptstype', 'ScoreSep',
+                                'PzVsLibertyPatches', 'PzVsLiberty']
+                skip_types_ = skip_types_ + hackfigtypes
                 if x.type_.lower().endswith('figure'):
-                    return False
-            return x.type_ not in skip_types
+                    flag = True
+                if x.type_.lower().endswith('expt'):
+                    flag = True
+                if x.type_.startswith('Fail'):
+                    flag = True
+            if flag is None:
+                flag = x.type_ in skip_types_
+            return flag
 
-        skip_type_flags = [is_skiptype(x)  for x in child_nodes]
-        child_nodes = ut.compress(child_nodes, skip_type_flags)
+        is_unskipped = [not is_skiptype(x) for x in child_nodes]
+        child_nodes = ut.compress(child_nodes, is_unskipped)
 
         skip_subtype_flags = [x.subtype not in skip_subtypes for x in child_nodes]
         child_nodes = ut.compress(child_nodes, skip_subtype_flags)
@@ -308,6 +332,7 @@ class _Reformater(object):
         flags = [(count == 0 or count == len(child_nodes) - 1) or not (x.subtype == 'space' and y.subtype == 'space')
                  for count, (x, y) in enumerate(ut.itertwo(child_nodes, wrap=True))]
         child_nodes = ut.compress(child_nodes, flags)
+        # print('child_nodes = %r' % (child_nodes,))
 
         # combine / collapse / merge consecutive nodes of the same subtype.
         # FIXME: CAUSES BUGS CHANGES INTERNAL STATE. VERY BAD

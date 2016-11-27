@@ -37,6 +37,8 @@
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-candidacy-2015/ ~/latex/crall-candidacy-2015
 
     ./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+    ./texfix.py --fpaths main.tex --outline --numlines=0 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+    ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
 \end{comment}
 
 %\includeonly{chapter3-matching, chapter4-application}

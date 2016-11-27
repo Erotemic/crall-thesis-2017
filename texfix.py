@@ -902,7 +902,41 @@ def main():
     @ut.argv_flag_dec(indent='    ')
     def outline():
         """
-        ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+        Examples:
+            ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
+            ./texfix.py --fpaths chapter4-application.tex --outline --numlines=0 --showtype --asmarkdown --extra_skip_types=equation,lines --skip_figures=True
+            ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
+
+            # Write out an outline of the sections including each topic sentence
+            ./texfix.py --fpaths chapter4-application.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w
+            ./texfix.py --fpaths chapter3-matching.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w
+
+
+        Usages:
+            ./texfix.py --fpaths <list-of-tex-files> --outline
+
+        Description:
+            --numlines=<num>
+                each section only outputs the first <num> lines
+            --asmarkdown
+                returns markdown instead of LaTeX
+            -w
+                writes outline to file instead of stdout
+            --ignoreinputstartswith=<pats>
+                ignores \input{fpath} commands where fpaths.startswith(pats)
+            --showtype
+                Outputs the type of each block next to the outline which helps with debugging
+            --noindent
+                Output latex does not contain any indents
+            --skip_figures
+                Hack to remove a predefined set of figure commands
+
+
+            I forget exactly what these do
+            --singleline
+            --keeplabel
+            --sections
+
         """
         fpaths = testdata_fpaths()
 
@@ -937,6 +971,7 @@ def main():
             print('---outline---')
             outline = True
             # outline = False
+            print(ut.repr4(root._config))
             outline_text = root.summary_str(outline=outline, highlight=False)
             summary = root.summary_str(outline=outline, highlight=True)
             if not ut.get_argflag('-w'):
