@@ -137,13 +137,15 @@ def check_doublewords():
             #    break
             for size in [2, 4, 6, 8, 10]:
                 for sequence in ut.iter_window(words, size=size):
-                    sequence_norm = [re.sub('[^a-zA-Z0-9]', '', s.lower()) for s in sequence]
+                    sequence_norm = [re.sub('[^a-zA-Z0-9]', '', s.lower())
+                                     for s in sequence]
                     if sequence_norm[0] == '' or 'mathpart' in sequence_norm[0]:
                         continue
                     #if ut.allsame(sequence_norm):
                     if check_palendrome(sequence_norm):
                         print('sequence_norm = %r' % (sequence_norm,))
-                        print(('Potential repeat of %r ' % (sequence_norm,)) + node.parsed_location_span())
+                        print(('Potential repeat of %r ' % (sequence_norm,)) +
+                              node.parsed_location_span())
                         found_duplicates.append(sequence_norm)
                         found_lines.append(line_)
                         found_linenos.append(num)
@@ -197,7 +199,8 @@ def check_doublewords():
                     continue
                 if len(matches) == 1:
                     #print(w)
-                    print(('Bad caps word %r ' % (w,)) + node.fpath_root() + ' at line ' + str(node.line_num))
+                    print(('Bad caps word %r ' % (w,)) + node.fpath_root() + ' at line ' +
+                          str(node.line_num))
                     flagged_words.append(w)
                     flag = True
             if flag:
@@ -313,7 +316,8 @@ def fix_conference_title_names(clean_text, key_list=None):
 
     bibtex_dict = bib_database.get_entry_dict()
 
-    isect = set(ignore_confkey).intersection(set(constants_tex_fixes.CONFERENCE_TITLE_MAPS.keys()))
+    _s2 = set(constants_tex_fixes.CONFERENCE_TITLE_MAPS.keys())
+    isect = set(ignore_confkey).intersection(_s2)
     assert len(isect) == 0, repr(isect)
 
     #ut.embed()
@@ -466,8 +470,10 @@ def fix_conference_title_names(clean_text, key_list=None):
             authors = six.text_type(entry['author'])
             for truename, alias_list in constants_tex_fixes.AUTHOR_NAME_MAPS.items():
                 pattern = six.text_type(
-                    ut.regex_or([ut.util_regex.whole_word(alias) for alias in alias_list]))
-                authors = re.sub(pattern, six.text_type(truename), authors, flags=re.UNICODE)
+                    ut.regex_or([ut.util_regex.whole_word(alias)
+                                 for alias in alias_list]))
+                authors = re.sub(pattern, six.text_type(truename), authors,
+                                 flags=re.UNICODE)
             entry['author'] = authors
 
     """
@@ -475,9 +481,6 @@ def fix_conference_title_names(clean_text, key_list=None):
     inprocedings = converence paper
 
     """
-
-    #conftitle_to_types_set_hist = {key: set(val) for key, val in conftitle_to_types_hist.items()}
-    #print(ut.dict_str(conftitle_to_types_set_hist))
 
     print(ut.list_str(sorted(unknown_confkeys)))
     print('len(unknown_confkeys) = %r' % (len(unknown_confkeys),))
@@ -543,7 +546,8 @@ def fix_section_title_capitalization(tex_fpath, dryrun=True):
         #'the great zebra and giraffe count'
 
         #new_section_title = section_title.lower()
-        new_text = dict_['spaces'] + '\\' + dict_['section_type'] + '{' + new_section_title + '}'
+        new_text = (dict_['spaces'] + '\\' + dict_['section_type'] +
+                    '{' + new_section_title + '}')
         VERBOSE = True
         if VERBOSE:
             old_text = match.string[slice(*match.span())]
@@ -616,7 +620,7 @@ def findcite():
 
     print('ALL')
     ignore = ['JP', '?']
-    citekey_list = ut.setdiff_ordered(sorted(ut.unique_keep_order2(citekey_list)), ignore)
+    citekey_list = ut.setdiff_ordered(sorted(ut.unique(citekey_list)), ignore)
     #print(ut.indentjoin(citekey_list))
     print('len(citekey_list) = %r' % (len(citekey_list),))
 
@@ -764,7 +768,8 @@ def main():
             text = ut.readfrom(fpath)
             buffer = text.split('\n')
             pat = '\n' + ut.positive_lookahead('Warning')
-            warn_list = list(filter(lambda x: x.startswith('Warning'), re.split(pat, output)))
+            warn_list = list(filter(lambda x: x.startswith('Warning'),
+                                    re.split(pat, output)))
             delete_linenos = []
 
             if not (fixcmdterm or fixlbl or fixcite):
