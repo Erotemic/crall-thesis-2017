@@ -1,4 +1,7 @@
 """
+./texfix.py --fpaths chapter4-application.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True --showtype --pars_per_section=1
+
+
 ./texfix.py --reformat --outline  --fpaths chapter4-application.tex
 ./texfix.py --reformat --fpaths chapter4-application.tex --print
 ./texfix.py --reformat --outline  --fpaths testchap.tex
@@ -31,6 +34,11 @@
 
 
 ./texfix.py --outline --keeplabel --fpaths sec-2-1-featdetect.tex --print --showtype --debug-latex
+
+
+python -m utool.util_inspect check_module_usage --pat="latex_parser.py"
+python -m utool.util_inspect get_internal_call_graph --show --modpath=latex_parser.py --with_doctests --show
+
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 import re
@@ -67,10 +75,9 @@ def hack_read_figdict():
     return figdict
 
 
-class _Reformater(object):
+class _ReformatMixin(object):
 
     _config = ut.argparse_dict({
-            'compress_consecutive': False,
             #'skip_subtypes': ['comment', 'def'],
             'skip_subtypes': ['comment', 'devmark'],
             #'skip_types': ['comment', 'keywords', 'outline', 'devnewpage'],
@@ -86,8 +93,10 @@ class _Reformater(object):
             'showtype': False,
             'asmarkdown': False,
             'includeon': True,
+            'pars_per_section': None,
             'full': [],
             'remove_leading_space': True,
+            'expand_macros': True,
             #skip_subtypes = ['comment']
     })
 
@@ -103,7 +112,8 @@ class _Reformater(object):
         # show_type = True
         if show_type:
             type_just = 20
-            type_str = self.type_
+            type_str = str(self.level) + '.'
+            type_str += self.type_
             if self.subtype is not None:
                 type_str += '.' + self.subtype
             type_part = type_str.ljust(15) + ('(%3d)' % (len(self.lines)))
@@ -334,36 +344,18 @@ class _Reformater(object):
         child_nodes = ut.compress(child_nodes, flags)
         # print('child_nodes = %r' % (child_nodes,))
 
-        # combine / collapse / merge consecutive nodes of the same subtype.
-        # FIXME: CAUSES BUGS CHANGES INTERNAL STATE. VERY BAD
-        if self._config['compress_consecutive'] and False:
+        if self._config['pars_per_section'] is not None:
+            count = 0
+            num_sequential_pars = []
+            for child in child_nodes:
+                if child.type_ != 'lines':
+                    count = 0
+                if child.subtype == 'par':
+                    count += 1
+                num_sequential_pars.append(count)
             import numpy as np
-            if self._config['numlines'] > 0 or self.in_full_outline_section(outline):
-                flags = [not (x.type_ == 'lines' and y.type_ == 'lines' and x.subtype == y.subtype)
-                         for (x, y) in ut.itertwo(child_nodes)]
-            else:
-                flags = [not (x.type_ == 'lines' and y.type_ == 'lines')
-                         for (x, y) in ut.itertwo(child_nodes)]
-
-            # Merge lines in the grouped nodes together
-            grouped_nodes = np.split(child_nodes, np.where(flags)[0] + 1)
-            child_nodes = []
-            for nodes in grouped_nodes:
-                if len(nodes) == 0:
-                    pass
-                elif len(nodes) == 1:
-                    child_nodes.append(nodes[0])
-                else:
-                    node = nodes[0]
-                    for node_ in nodes[1:]:
-                        if node.subtype == 'space' and node_.subtype != 'space':
-                            node.subtype = node_.subtype
-                        node.lines += node_.lines[:]
-                    child_nodes.append(node)
-
-        #if self.type_ == 'chapter':
-        #    section_slice = ut.get_argval('--sections', type_='fuzzy_subset', default=slice(None, None, None))
-        #    child_nodes = child_nodes[section_slice]
+            flags = np.array(num_sequential_pars) <= self._config['pars_per_section']
+            child_nodes = ut.compress(child_nodes, flags)
 
         header_blocks = self._summary_headerblocks(outline=outline)
         # Make child strings
@@ -396,38 +388,37 @@ class _Reformater(object):
         block_parts += footer_blocks
         return block_parts
 
-    def summary_str(self, outline=False, highlight=False, depth=None):
-        block_parts = self.summary_str_blocks(outline, depth=depth)
-        summary = '\n'.join(block_parts)
+    def postprocess_macros(self, summary):
+        """
+        Does a search and replace to expand latex macros found in a string
+        """
+        # Hack to deal with figures
+        if self._config['includeon'] and self._config['asmarkdown']:
+            figdict = hack_read_figdict()
+            for key, val in figdict.items():
+                figcomment = strip_latex_comments(val)
+                figcomment = re.sub(r'\\caplbl{' + ut.named_field('inside', '.*?') + '}', '', figcomment)
+                # figcomment = '*' + '\n'.join(ut.split_sentences2(figcomment)) + '*'
+                figcomment = '\n'.join(ut.split_sentences2(figcomment))
+                figstr = '![`%s`](%s.jpg)' % (key, key) + '\n' + figcomment
+                # figstr = '![%s](figures1/%s.jpg)' % (figcomment, key)
+                summary = summary.replace('\\' + key + '{}', figstr)
+        if self._config['asmarkdown']:
+            summary = re.sub(r'\\rpipe{}', r'=>', summary)
+            summary = re.sub(r'\\rarrow{}', r'->', summary)
+            summary = re.sub(r'\\rmultiarrow{}', r'\\*->', summary)
 
-        if outline:
-            # Hack to deal with figures
-            if self._config['includeon'] and self._config['asmarkdown']:
-                figdict = hack_read_figdict()
-                for key, val in figdict.items():
-                    figcomment = strip_latex_comments(val)
-                    figcomment = re.sub(r'\\caplbl{' + ut.named_field('inside', '.*?') + '}', '', figcomment)
-                    # figcomment = '*' + '\n'.join(ut.split_sentences2(figcomment)) + '*'
-                    figcomment = '\n'.join(ut.split_sentences2(figcomment))
-                    figstr = '![`%s`](%s.jpg)' % (key, key) + '\n' + figcomment
-                    # figstr = '![%s](figures1/%s.jpg)' % (figcomment, key)
-                    summary = summary.replace('\\' + key + '{}', figstr)
-            if self._config['asmarkdown']:
-                summary = re.sub(r'\\rpipe{}', r'=>', summary)
-                summary = re.sub(r'\\rarrow{}', r'->', summary)
-                summary = re.sub(r'\\rmultiarrow{}', r'\\*->', summary)
+        # hack to replace straightup definitions
+        # TODO: read from def.tex
+        cmd_map, cmd_map1 = self.read_static_defs()
+        defmap = self.parse_newcommands()
+        cmd_map.update(defmap.get(0, {}))
+        cmd_map1.update(defmap.get(1, {}))
 
-            # hack to replace straightup definitions
-            # TODO: read from def.tex
-            cmd_map, cmd_map1 = self.read_static_defs()
-            defmap = self.parse_newcommands()
-            cmd_map.update(defmap.get(0, {}))
-            cmd_map1.update(defmap.get(1, {}))
-
-            #cmd_map = {}
-            for key, val in cmd_map.items():
-                summary = summary.replace(key + '{}', val)
-                summary = summary.replace(key + '}', val + '}')  # hack
+        #cmd_map = {}
+        for key, val in cmd_map.items():
+            summary = summary.replace(key + '{}', val)
+            summary = summary.replace(key + '}', val + '}')  # hack
 
         # HACK for \\an
         def argrepl(match):
@@ -445,95 +436,108 @@ class _Reformater(object):
         pat = '\\\\[Aa]an{' + ut.named_field('arg1', '[ A-Za-z0-9_]*?') + '}'
         summary = re.sub(pat, argrepl, summary)
 
+        # Try and hack replace commands with one arg
+        for key, val in cmd_map1.items():
+            val_ = val.replace('\\', r'\\').replace('#1', ut.bref_field('arg1'))
+            pat = '\\' + key + '{' + ut.named_field('arg1', '[ A-Za-z0-9_]*?') + '}'
+            # re.search(pat, summary)
+            # summary_ = summary
+            summary = re.sub(pat, val_, summary)
         #cmd_map = {}
-        if outline:
-            # Try and hack replace commands with one arg
-            for key, val in cmd_map1.items():
-                val_ = val.replace('\\', r'\\').replace('#1', ut.bref_field('arg1'))
-                pat = '\\' + key + '{' + ut.named_field('arg1', '[ A-Za-z0-9_]*?') + '}'
-                # re.search(pat, summary)
-                # summary_ = summary
-                summary = re.sub(pat, val_, summary)
-            #cmd_map = {}
-            for key, val in cmd_map.items():
-                summary = summary.replace(key + '{}', val)
-                summary = summary.replace(key + '}', val + '}')  # hack
-                # Be very careful when replacing versions without curlies
-                esckey = re.escape(key)
-                keypat = esckey + '\\b'
-                summary = re.sub(keypat, re.escape(val), summary)
+        for key, val in cmd_map.items():
+            summary = summary.replace(key + '{}', val)
+            summary = summary.replace(key + '}', val + '}')  # hack
+            # Be very careful when replacing versions without curlies
+            esckey = re.escape(key)
+            keypat = esckey + '\\b'
+            summary = re.sub(keypat, re.escape(val), summary)
 
-            # Try and hack replace commands with one arg
-            for key, val in cmd_map1.items():
-                val_ = val.replace('\\', r'\\').replace('#1', ut.bref_field('arg1'))
-                pat = '\\' + key + '{' + ut.named_field('arg1', '[ =,A-Za-z0-9_]*?') + '}'
-                # re.search(pat, summary)
-                #summary_ = summary
-                summary = re.sub(pat, val_, summary)
-                # if 'pvar' in key:
-                #     if summary_ == summary:
-                #         raise Exception('agg')
+        # Try and hack replace commands with one arg
+        for key, val in cmd_map1.items():
+            val_ = val.replace('\\', r'\\').replace('#1', ut.bref_field('arg1'))
+            pat = '\\' + key + '{' + ut.named_field('arg1', '[ =,A-Za-z0-9_]*?') + '}'
+            # re.search(pat, summary)
+            #summary_ = summary
+            summary = re.sub(pat, val_, summary)
+            # if 'pvar' in key:
+            #     if summary_ == summary:
+            #         raise Exception('agg')
+        return summary
+
+    def postprocess_for_markdown(self, summary):
+        """
+        Replaces common latex expressions with markdown equlivalents
+        """
+        summary = re.sub(r'\\ensuremath', r'', summary)
+        summary = re.sub(r'\\_', r'_', summary)
+        summary = re.sub(r'\\ldots{}', r'...', summary)
+        summary = re.sub(r'\\eg{}', r'e.g.', summary)
+        summary = re.sub(r'\\Eg{}', r'E.g.', summary)
+        # summary = re.sub(r'\\wrt{}', r'w.r.t.', summary)
+        summary = re.sub(r'\\wrt{}', r'with respect to', summary)
+        summary = re.sub(r'\\etc{}', r'etc.', summary)
+        summary = re.sub(r'\\ie{}', r'i.e.', summary)
+        summary = re.sub(r'\\st{}', r'-st', summary)
+        summary = re.sub(r'\\nd{}', r'-nd', summary)
+        # summary = re.sub(r'\\glossterm{', r'\\textbf{', summary)
+        summary = re.sub(r'glossterm', r'textbf', summary)
+        summary = re.sub(r'\\OnTheOrderOf{' + ut.named_field('inside', '.*?') + '}', '~10^{' + ut.bref_field('inside') + '}', summary)
+        summary = re.sub(r'~\\cite{' + ut.named_field('inside', '.*?') + '}', ' ![cite](' + ut.bref_field('inside') + ')', summary)
+        summary = re.sub(r'~\\cite\[.*?\]{' + ut.named_field('inside', '.*?') + '}', ' ![cite][' + ut.bref_field('inside') + ']', summary)
+        # summary = re.sub(r'~\\cite{' + ut.named_field('inside', '.*?') + '}', '', summary)
+        # summary = re.sub(r'~\\cite\[.*?\]{' + ut.named_field('inside', '.*?') + '}', '', summary)
+        def parse_cref(match):
+            if match.re.pattern.startswith('~'):
+                pref = ' '
+            else:
+                pref = ''
+            inside = match.groupdict()['inside']
+            parts = inside.split(',')
+            type_ = parts[0][0:parts[0].find(':')]
+            # phrase = '[' + ut.conj_phrase(parts, 'and') + ']()'
+            phrase = ut.conj_phrase(['[`' + p + '`]()' for p in parts], 'and')
+            # phrase = '[' + ','.join(parts) + ']()'
+            if type_ == 'fig':
+                return pref + 'Figure ' + phrase
+            elif type_ == 'sec':
+                return pref + 'Section ' + phrase
+            elif type_ == 'subsec':
+                return pref + 'Subsection ' + phrase
+            elif type_ == 'chap':
+                return pref + 'Chapter ' + phrase
+            elif type_ == 'eqn':
+                return pref + 'Equation ' + phrase
+            elif type_ == 'tbl':
+                return pref + 'Table  ' + phrase
+            elif type_ == 'sub':
+                return pref + phrase
+            elif type_ == '#':
+                return pref + phrase
+            else:
+                raise Exception(type_ + ' groupdict=' + str(match.groupdict()))
+        summary = re.sub(r'~\\[Cc]ref{' + ut.named_field('inside', '.*?') + '}', parse_cref, summary)
+        summary = re.sub(r'\\Cref{' + ut.named_field('inside', '.*?') + '}', parse_cref, summary)
+
+        summary = re.sub(r'\\emph{' + ut.named_field('inside', '.*?') + '}', '*' + ut.bref_field('inside') + '*', summary)
+        summary = re.sub(r'\\textbf{' + ut.named_field('inside', '.*?') + '}', '**' + ut.bref_field('inside') + '**', summary)
+        summary = re.sub(r'\$\\tt{' + ut.named_field('inside', '[A-Z0-9a-z_]*?') + '}\$', '*' + ut.bref_field('inside') + '*', summary)
+        # summary = re.sub(r'{\\tt{' + ut.named_field('inside', '.*?') + '}}', '*' + ut.bref_field('inside') + '*', summary)
+        summary = re.sub(r'{\\tt{' + ut.named_field('inside', '.*?') + '}}', '`' + ut.bref_field('inside') + '`', summary)
+        summary = re.sub('\n\n(\n| )*', '\n\n', summary)
+        summary = re.sub(ut.positive_lookbehind('\s') + ut.named_field('inside', '[a-zA-Z]+') + '{}', ut.bref_field('inside'), summary)
+        summary = re.sub( ut.negative_lookbehind('`') + '``' + ut.negative_lookahead('`'), '"', summary)
+        summary = re.sub('\'\'', '"', summary)
+        return summary
+
+    def summary_str(self, outline=False, highlight=False, depth=None):
+        block_parts = self.summary_str_blocks(outline, depth=depth)
+        summary = '\n'.join(block_parts)
+
+        if outline and self._config['expand_macros']:
+            summary = self.postprocess_macros(summary)
 
         if self._config['asmarkdown']:
-            summary = re.sub(r'\\ensuremath', r'', summary)
-            summary = re.sub(r'\\_', r'_', summary)
-            summary = re.sub(r'\\ldots{}', r'...', summary)
-            summary = re.sub(r'\\eg{}', r'e.g.', summary)
-            summary = re.sub(r'\\Eg{}', r'E.g.', summary)
-            # summary = re.sub(r'\\wrt{}', r'w.r.t.', summary)
-            summary = re.sub(r'\\wrt{}', r'with respect to', summary)
-            summary = re.sub(r'\\etc{}', r'etc.', summary)
-            summary = re.sub(r'\\ie{}', r'i.e.', summary)
-            summary = re.sub(r'\\st{}', r'-st', summary)
-            summary = re.sub(r'\\nd{}', r'-nd', summary)
-            # summary = re.sub(r'\\glossterm{', r'\\textbf{', summary)
-            summary = re.sub(r'glossterm', r'textbf', summary)
-            summary = re.sub(r'\\OnTheOrderOf{' + ut.named_field('inside', '.*?') + '}', '~10^{' + ut.bref_field('inside') + '}', summary)
-            summary = re.sub(r'~\\cite{' + ut.named_field('inside', '.*?') + '}', ' ![cite](' + ut.bref_field('inside') + ')', summary)
-            summary = re.sub(r'~\\cite\[.*?\]{' + ut.named_field('inside', '.*?') + '}', ' ![cite][' + ut.bref_field('inside') + ']', summary)
-            # summary = re.sub(r'~\\cite{' + ut.named_field('inside', '.*?') + '}', '', summary)
-            # summary = re.sub(r'~\\cite\[.*?\]{' + ut.named_field('inside', '.*?') + '}', '', summary)
-            def parse_cref(match):
-                if match.re.pattern.startswith('~'):
-                    pref = ' '
-                else:
-                    pref = ''
-                inside = match.groupdict()['inside']
-                parts = inside.split(',')
-                type_ = parts[0][0:parts[0].find(':')]
-                # phrase = '[' + ut.conj_phrase(parts, 'and') + ']()'
-                phrase = ut.conj_phrase(['[`' + p + '`]()' for p in parts], 'and')
-                # phrase = '[' + ','.join(parts) + ']()'
-                if type_ == 'fig':
-                    return pref + 'Figure ' + phrase
-                elif type_ == 'sec':
-                    return pref + 'Section ' + phrase
-                elif type_ == 'subsec':
-                    return pref + 'Subsection ' + phrase
-                elif type_ == 'chap':
-                    return pref + 'Chapter ' + phrase
-                elif type_ == 'eqn':
-                    return pref + 'Equation ' + phrase
-                elif type_ == 'tbl':
-                    return pref + 'Table  ' + phrase
-                elif type_ == 'sub':
-                    return pref + phrase
-                elif type_ == '#':
-                    return pref + phrase
-                else:
-                    raise Exception(type_ + ' groupdict=' + str(match.groupdict()))
-            summary = re.sub(r'~\\[Cc]ref{' + ut.named_field('inside', '.*?') + '}', parse_cref, summary)
-            summary = re.sub(r'\\Cref{' + ut.named_field('inside', '.*?') + '}', parse_cref, summary)
-
-            summary = re.sub(r'\\emph{' + ut.named_field('inside', '.*?') + '}', '*' + ut.bref_field('inside') + '*', summary)
-            summary = re.sub(r'\\textbf{' + ut.named_field('inside', '.*?') + '}', '**' + ut.bref_field('inside') + '**', summary)
-            summary = re.sub(r'\$\\tt{' + ut.named_field('inside', '[A-Z0-9a-z_]*?') + '}\$', '*' + ut.bref_field('inside') + '*', summary)
-            # summary = re.sub(r'{\\tt{' + ut.named_field('inside', '.*?') + '}}', '*' + ut.bref_field('inside') + '*', summary)
-            summary = re.sub(r'{\\tt{' + ut.named_field('inside', '.*?') + '}}', '`' + ut.bref_field('inside') + '`', summary)
-            summary = re.sub('\n\n(\n| )*', '\n\n', summary)
-            summary = re.sub(ut.positive_lookbehind('\s') + ut.named_field('inside', '[a-zA-Z]+') + '{}', ut.bref_field('inside'), summary)
-            summary = re.sub( ut.negative_lookbehind('`') + '``' + ut.negative_lookahead('`'), '"', summary)
-            summary = re.sub('\'\'', '"', summary)
+            summary = self.postprocess_for_markdown(summary)
 
         if highlight:
             if self._config['asmarkdown']:
@@ -541,12 +545,15 @@ class _Reformater(object):
                 summary = ut.highlight_text(summary, 'markdown')
             else:
                 summary = ut.highlight_text(summary, 'latex')
-            summary = ut.highlight_regex(summary, r'^[a-z.]+ *\(...\)',
+            summary = ut.highlight_regex(summary, r'^[a-z0-9.]+ *\(...\)',
                                          reflags=re.MULTILINE,
                                          color='darkyellow')
         return summary
 
     def parse_newcommands(self):
+        """
+        Reads all macros defined in this file into a dictionary map
+        """
         # Hack to read all defined commands in this document
         def_list = list(self.find_descendant_types('newcommand'))
         redef_list = list(self.find_descendant_types('renewcommand'))
@@ -590,6 +597,19 @@ class _Reformater(object):
     def read_static_defs():
         """
         Reads global and static newcommand definitions in def and CrallDef
+
+        Returns:
+            tuple: (cmd_map, cmd_map1)
+
+        CommandLine:
+            python -m latex_parser read_static_defs
+
+        Example:
+            >>> # DISABLE_DOCTEST
+            >>> from latex_parser import *  # NOQA
+            >>> (cmd_map, cmd_map1) = read_static_defs()
+            >>> result = ('(cmd_map, cmd_map1) = %s' % (ut.repr2((cmd_map, cmd_map1)),))
+            >>> print(result)
         """
         def_node = LatexDocPart.parse_fpath('def.tex')
         defmap = def_node.parse_newcommands()
@@ -643,9 +663,6 @@ class _Reformater(object):
         #            if changed:
         #                cmd_map[key] = val
         #    return cmd_map, cmd_map1
-
-    def reformat_text(self):
-        return '\n'.join(self.reformat_blocks())
 
     def reformat_blocks(self, debug=False, stripcomments=False):
         """
@@ -742,7 +759,7 @@ def strip_latex_comments(block):
     return block
 
 
-class _LatexConst(object):
+class _LatexConstMixin(object):
     # table of contents heirarchy
     #toc_heirarchy = ['chapter', 'section', 'subsection', 'subsubsection']
     toc_heirarchy = ['document', 'chapter', 'section', 'subsection', 'subsubsection']
@@ -798,9 +815,11 @@ def get_testtext():
         >>> ut.colorprint('--- PRINT RAW LINES ---', 'yellow')
         >>> print(root.tostr())
         >>> ut.colorprint('--- PRINT SUMMARY --', 'yellow')
-        >>> root.print_summary()
+        >>> #root.print_summary()
+        >>> summary = self.summary_str(outline=False, highlight=True, depth=depth)
+        >>> print(summary)
         >>> ut.colorprint('-- REFORMAT BLOCKS ---', 'yellow')
-        >>> output_text = self.reformat_text()
+        >>> output_text = '\n'.join(self.reformat_blocks())
         >>> print(output_text)
     """
     text = ut.codeblock(
@@ -844,7 +863,7 @@ def get_testtext():
     return text
 
 
-class _Parser(object):
+class _ParserMixin(object):
     @classmethod
     def parse_fpath(cls, fpath, **kwargs):
         text = ut.read_from(fpath)
@@ -923,8 +942,8 @@ class _Parser(object):
                         anscestor = node.find_root(key)  # FIXME: should be ancestor?
                         node = anscestor.append_part(key, line_num=count)
                         RECORD_ACTION('BEGIN_KEY(%s)' % key)
-                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.nice()))
-                        #RECORD_ACTION('node(%s)' % (node.nice()))
+                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.__nice__()))
+                        #RECORD_ACTION('node(%s)' % (node.__nice__()))
                         node.lines.append(line)
                         found = True
                         break
@@ -937,14 +956,15 @@ class _Parser(object):
                         anscestor.footer.append(line)
                         parent_node = anscestor.parent
                         #parent_node = anscestor
-                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.nice()))
-                        #RECORD_ACTION('PARENT(%s)' % (parent_node.nice()))
+                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.__nice__()))
+                        #RECORD_ACTION('PARENT(%s)' % (parent_node.__nice__()))
                         try:
                             assert parent_node is not None, str((repr(node), sline, count))
                         except AssertionError:
                             print('Error')
-                            print('-- Outline -----')
-                            root.print_outline()
+                            # print('-- Outline -----')
+                            # summary = self.summary_str(outline=True, highlight=True, depth=depth)
+                            # print(summary)
                             print('-------')
                             print('Error')
                             print('node = %r' % (node,))
@@ -966,8 +986,8 @@ class _Parser(object):
                         anscestor = node.find_root(key)  # FIXME: should be ancestor?
                         node = anscestor.append_part(key, subtype=condition_var, line_num=count)
                         RECORD_ACTION('BEGIN_IF(%s)' % condition_var)
-                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.nice()))
-                        #RECORD_ACTION('node(%s)' % (node.nice()))
+                        #RECORD_ACTION('ANCESTOR(%s)' % (anscestor.__nice__()))
+                        #RECORD_ACTION('node(%s)' % (node.__nice__()))
                         node.lines.append(line)
                         found = True
 
@@ -1004,11 +1024,12 @@ class _Parser(object):
 
             # HACK
             # Check for special hacked commands
-            special_texcmds = ['keywords', 'relatedto', 'outline', 'input', 'include',
-                               'ImageCommand', 'MultiImageCommandII',
-                               'SingleImageCommand', 'newcommand',
-                               'renewcommand', 'devcomment', 'setcounter',
-                               'bibliographystyle', 'bibliography' ]
+            special_texcmds = ['keywords', 'relatedto', 'outline', 'input',
+                               'include', 'ImageCommand',
+                               'MultiImageCommandII', 'SingleImageCommand',
+                               'newcommand', 'renewcommand', 'devcomment',
+                               'setcounter', 'bibliographystyle',
+                               'bibliography' ]
             if not found and not in_comment:
                 texcmd_pat = ut.named_field('texcmd', ut.util_regex.REGEX_VARNAME)
                 regex = r'\s*\\' + texcmd_pat + '{'
@@ -1052,7 +1073,7 @@ class _Parser(object):
                             found = True
                             if node.curlycount == 0:
                                 RECORD_ACTION('END_X(%s)' % texmcd)
-                                #RECORD_ACTION('PARENT(%s)' % (node.parent.nice()))
+                                #RECORD_ACTION('PARENT(%s)' % (node.parent.__nice__()))
                                 node = node.parent
                         else:
                             RECORD_ACTION('BEGIN_X(%s){' % texmcd)
@@ -1096,7 +1117,7 @@ class _Parser(object):
                     found = True
                     if node.curlycount == 0:
                         action.append('}END(%s)' % texmcd)
-                        #RECORD_ACTION('PARENT\'(%s)' % (node.parent.nice()))
+                        #RECORD_ACTION('PARENT\'(%s)' % (node.parent.__nice__()))
                         node = node.parent
 
                 elif node.type_ != 'lines':
@@ -1106,7 +1127,7 @@ class _Parser(object):
                     if node.type_ == 'lines' and node.subtype != subtype:
                         RECORD_ACTION('MAKE %s sub-lines' % (subtype,))
                         node = node.parent.append_part('lines', subtype=subtype, line_num=count)
-                        #RECORD_ACTION('PARENT\'(%s)' % (node.parent.nice()))
+                        #RECORD_ACTION('PARENT\'(%s)' % (node.parent.__nice__()))
                 if node.type_ == 'lines':
                     #if node.type_ not in special_texcmds:
                     #if hack_can_append_lines:
@@ -1129,7 +1150,7 @@ class _Parser(object):
         return root
 
 
-class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
+class LatexDocPart(_ReformatMixin, _ParserMixin, _LatexConstMixin, ut.NiceRepr):
     """
     Class that contains parse-tree-esque heierarchical blocks of latex and can
     reformat them.
@@ -1187,10 +1208,7 @@ class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
         if self.subtype is not None:
             type_str += '.' + self.subtype
         #return '(%s -- %d) L%s' % (type_str, len(self.lines), self.level)
-        return '(%s -- %d)' % (type_str, len(self.lines))
-
-    def nice(self):
-        return self.__nice__()
+        return '%s -- %d' % (type_str, len(self.lines))
 
     def nicerepr(self):
         return repr(self).replace(self.__class__.__name__, '')
@@ -1198,29 +1216,19 @@ class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
     def __str__(self):
         return self.tostr()
 
-    def tolist(self):
-        list_ = [child if len(child.children) == 0 else child.tolist() for child in self.children]
-        return list_
-
-    def tolist2(self):
-        if len(self.children) == 0:
-            return [self]
-        else:
-            return [self.lines[:]] + [child.tolist2() for child in self.children]
-
     def tostr(self):
         lines = self.lines[:]
         lines += [child.tostr() for child in self.children]
         lines += self.footer
         return '\n'.join(lines)
 
-    def print_outline(self, depth=None):
-        summary = self.summary_str(outline=True, highlight=True, depth=depth)
-        print(summary)
+    # def print_outline(self, depth=None):
+    #     summary = self.summary_str(outline=True, highlight=True, depth=depth)
+    #     print(summary)
 
-    def print_summary(self, depth=None):
-        summary = self.summary_str(outline=False, highlight=True, depth=depth)
-        print(summary)
+    # def print_summary(self, depth=None):
+    #     summary = self.summary_str(outline=False, highlight=True, depth=depth)
+    #     print(summary)
 
     def get_debug_tree_blocks(self, indent=''):
         treeblocks = [indent + self.nicerepr()]
@@ -1240,12 +1248,21 @@ class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
         """ returns file path that this node was parsed in """
         return self.find_ancestor_type('root').subtype
 
+    def find_ancestor_type(self, type_):
+        parent = self.parent
+        if parent.type_ == type_:
+            return parent
+        else:
+            anscestor = parent.find_ancestor_type(type_)
+            if anscestor is not None:
+                return anscestor
+        return None
+
     def parsed_location_span(self):
         """ returns file path that this node was parsed in """
         idx = self.parent.children.index(self)
         sibling = None if len(self.parent.children) == idx else self.parent.children[idx + 1]
         return self.fpath_root() + ' between lines %r and %r' % (self.line_num, sibling.line_num)
-        #return self.find_ancestor_type('root').subtype
 
     def title(self):
         if len(self.lines) == 0:
@@ -1292,16 +1309,6 @@ class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
                         yield child
             for descendant in child.find_descendant_types(type_, pat=pat):
                 yield descendant
-
-    def find_ancestor_type(self, type_):
-        parent = self.parent
-        if parent.type_ == type_:
-            return parent
-        else:
-            anscestor = parent.find_ancestor_type(type_)
-            if anscestor is not None:
-                return anscestor
-        return None
 
     def find(self, regexpr_list, findtype=('lines', 'par'), verbose=False):
         r"""
@@ -1374,6 +1381,15 @@ class LatexDocPart(_Reformater, _Parser, _LatexConst, ut.NiceRepr):
             pngquant --quality=65-80
 
         HACK
+        def tolist(self):
+            list_ = [child if len(child.children) == 0 else child.tolist() for child in self.children]
+            return list_
+
+        def tolist2(self):
+            if len(self.children) == 0:
+                return [self]
+            else:
+                return [self.lines[:]] + [child.tolist2() for child in self.children]
         list_ = ut.total_flatten(root.tolist2())
         list_ = root.find(' \\\\cref')
         self = list_[-1]

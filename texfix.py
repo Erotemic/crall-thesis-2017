@@ -884,7 +884,7 @@ def main():
 
             if ut.get_argflag('--summary'):
                 print('---summary---')
-                root.print_summary()
+                print(root.summary_str(outline=False, highlight=True, depth=None))
                 print('---/summary---')
                 # ut.colorprint(root.summary_str(), 'blue')
 
@@ -913,8 +913,8 @@ def main():
             ./texfix.py --fpaths chapter4-application.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
 
             # Write out an outline of the sections including each topic sentence
-            ./texfix.py --fpaths chapter4-application.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w
-            ./texfix.py --fpaths chapter3-matching.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w
+            ./texfix.py --fpaths chapter3-matching.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w --pars_per_section=1 --expand_macros=False
+            ./texfix.py --fpaths chapter4-application.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True  -w --pars_per_section=1 --expand_macros=False
 
 
         Usages:
