@@ -1,0 +1,300 @@
+\newcommand{\HypothAffMat}[0]{\hat{\mat{A}}}
+\newcommand{\HypothSet}[0]{\set{A}}
+\newcommand{\MatchesGroup}[0]{\Matches^{G}}
+\newcommand{\AffMat}[0]{\mat{A}}
+\newcommand{\AffMatij}[0]{\mat{A}_{i, j}}
+
+
+\chapter{Identification using a single query}
+This chapter addresses the core problem of animal identification in a static context.
+
+
+\section{Annotation representation}
+    For each annotation in the database we
+    (1) normalize the image geometry and intensity,
+    (2) compute features,
+    (3) and weight the features.
+    \subsection{Chip extraction}
+        Each annotation has a bounding box and an orientation specified in a previous detection step.
+        
+    \subsection{Keypoint detection and description}
+        Keypoints are detected within each annotation's chip using a modified implementation of the Hessian detector
+          described in~\cite{perdoch_efficient_2009} and reviewed in~\cref{sec:featuredetect}.
+        
+    \subsection{Feature weighting}
+        In animal identification, there will often be many annotations containing the same background.
+        
+    \subsection{Keypoint structure overview}
+        The keypoint of a feature is represented as:
+        $\kp\tighteq(\pt, \vmat, \ori)$, %
+        The vector $\pt\tighteq\ptcolvec$ is the feature's $xy$-location.
+
+        \paragraph{Encoding keypoint parameters in an affine matrix}
+        It will be useful to construct two transformations that encode all keypoint information in a single matrix.
+
+        \paragraph{Extracting keypoint parameters from an affine matrix}
+        During the spatial verification step, described in~\cref{sec:sver}, keypoints are warped from one image into
+          the space of another.
+\section{Matching against a database of individual animals}
+    To identify a query annotation, it is matched against a database of known \names{}.
+    
+    \subsection{Establishing initial feature correspondence}
+        \paragraph{Offline Indexing}
+        Before feature correspondences can be established, an offline algorithm indexes descriptors from all database
+          annotations for fast approximate nearest neighbor search.
+        \paragraph{Approximate Nearest Neighbor Search}
+        Matching begins by establishing multiple feature correspondences between each query feature and several
+          visually similar database features.
+        \paragraph{Normalizer selection}
+        A single descriptor $\descnorm_{i}$ is selected from the $\Knorm{}$ candidate normalizers and used in
+          computing the LNBNN score for all (up to $\K$) of the $i$\th{} query descriptor's correspondences in the
+          database.
+        
+    \subsection{Feature correspondence scoring}
+        Each feature correspondence is given a score representing how likely it is to be a correct match.
+        
+        \paragraph{LNBNN score}
+        Using the normalizing feature, $\descnorm_{i}$, LNBNN compares a query feature's similarity to the match and
+          query feature's similarity to the normalizer.
+        \paragraph{Foregroundness score}
+        To reduce the influence of background matches, each feature correspondence is assigned a score based on the
+          foregroundness of both the query and database features.
+        
+        \paragraph{Final feature correspondence score}
+        The final score of the correspondence $(i, j)$ captures both the distinctiveness of the match as well as the
+          likelihood that the match is part of the foreground.
+        
+    \subsection{Feature score aggregation}
+        So far, each feature in a query annotation has been matched to several features in the database and a score
+          has been assigned to each of these correspondences based on its distinctiveness and foregroundness.
+        
+        \paragraph{The set of all feature correspondences}
+        All scoring mechanisms presented in this subsection are based on aggregating scores from features
+          correspondences.
+        
+        \paragraph{Annotation scoring}
+        An \annotscore{} is a measure of similarity between two annotations.
+        \paragraph{Name scoring (1) --- \csumprefix{}} %
+        The \cscoring{} mechanism aggregates \annotscores{} into \namescores{} by taking as the score highest scoring
+          annotation for each \name{}.
+        
+        \paragraph{Name scoring (2) --- \nsumprefix{}} %
+        The \cscoring{} mechanism accounts for the fact that animals will be seen multiple times, but it does not take
+          advantage of complementary information available when \aan{\name{}} has multiple annotations.
+        
+
+\section{Spatial verification}
+    The basic matching algorithm treats each annotation as an orderless set of feature descriptors (with a small
+      exception in name scoring, which has used a small amount of spatial information).
+    
+    \subsection{Shortlist selection}
+        Standard methods for spatial verification are defined on the feature correspondences between two annotations
+          (images).
+        
+    \subsection{Affine hypothesis estimation}
+        Here, we will compute an affine transformation that will remove a majority of the spatially inconsistent
+          feature correspondences.
+        
+        \subsubsection{Enumeration of affine hypotheses}
+            Let $\Matches_{\annotII}$ be the set of all correspondences between features from query annotation
+              $\annotI$ to database annotation $\annotII$.
+            
+        \subsubsection{Measuring the affine transformation error}
+            The transformation $\AffMatij$ perfectly aligns the corresponding $i$\th{} query feature with the $j$\th{}
+              database feature in the space of the database annotation ($\annotII$).
+            
+        \subsubsection{Selecting affine inliers}
+            Any keypoint match $(\idxI, \idxII) \in \Matches_{\annotII}$  is considered an inlier \wrt{} $\AffMat$ if
+              its absolute differences in position, scale, and orientation are all within a spatial distance threshold
+              $\xythresh$, scale threshold $\scalethresh$, and orientation threshold $\orithresh$.
+    \subsection{Homography refinement}
+        Matches that are inliers to the best hypothesis affine transformation, $\HypothAffMat$, are used in the least
+          squares refinement step.
+        
+        \subsubsection{Estimation of warped shape parameters}
+            Because we cannot warp the shape of an affine keypoint using a projective transformation, we instead
+              estimate the warped scale and orientation for the $\idxI$\th{} query feature using a reference point.
+            
+        \subsubsection{Homography inliers}
+            The rest of homography inlier estimation is no different than affine inlier estimation.
+
+\section{Experiments}
+    This section presents an experimental evaluation of the identification algorithm using annotated images of plains
+      zebras, Grevy's zebras, and Masai giraffes.
+    {\large{\textbf{NEW}}}
+
+    \begin{verbatim}
+        * Evaluate multiple configurations of our algorithms
+        * Compare against state of the art methods in instance retrieval
+        * Test on plains zebras, Grevy's zebras, and Masai giraffes.
+        * Why is this hard?
+        * Photobombs
+    \end{verbatim}
+
+    \subsection{Datasets}
+        All of the images in the datasets used in these experiments were taken by photographers in the field.
+        
+        \begin{itemize}
+            \item \textbf{\pzmasterI{}} is an aggregated dataset of
+                plains zebras.
+                
+            \item \textbf{\gzall{}} is an aggregated dataset of Grevy's
+                zebras.
+                
+            \item \textbf{\girmmasterI{}} is a dataset of Masai giraffes.
+                The images were all taken in Nairobi National Park.
+        \end{itemize}
+
+    \subsection{Evaluation of SMK for animal identification}
+        {\large{\textbf{NEW}}}
+
+        \begin{verbatim}
+            * We first evaluate the performance of the SMK algorithm --- a
+            state of the art approach in instance recognition --- applied to
+            animal identification.
+
+            * We find that our algorithms perform favorably to VLAD
+            representations.  We attribute this to the quantization error
+            induced by VLAD representations.
+
+            * Note that the fisher vector like VLAD-vectors used here could be
+            used as a fixed-length feature vector for evaluating person
+            re-identification techniques. However, this amounts to some form of
+            learning on top of the VLAD representation.  While learning will
+            improve performance, it will have to work to undo the quantization
+            error.  For this reason we opt to pursue a different approach where
+            learning is applied to features derived from the results of our
+            quantization-free algorithms.
+        \end{verbatim}
+        
+    \subsection{Baseline experiment}
+        This first experiment determines the accuracy of the identification algorithm using the baseline pipeline
+          configuration.
+        
+    \subsection{Foregroundness experiment}
+        
+        In this experiment we test the effect of foregroundness --- weighting the score of each features
+          correspondence with a foregroundness weight --- on identification accuracy.
+        
+    \subsection{Invariance experiment}
+        In this experiment we vary the feature invariance configuration.
+        
+        \begin{itemize}
+            \item \NoInvar{} (\pvar{AI=F,QRH=F,RI=F}): % 
+                In this configuration the gravity vector is assumed and the shape of each detected feature is not
+                  adapted.
+                
+            \item \AIAlone{} (\pvar{AI=T,QRH=F,RI=F}): % 
+                This is the baseline setting that assumes the gravity vector and where each feature's shape is skewed
+                  from a circle into an ellipse.
+                
+            \item \RIAlone{} (\pvar{AI=F,QRH=F,RI=T}): % 
+                Here, each feature is assigned one or more dominant gradient orientations (the gravity vector is not
+                  used) and the shape is not adapted.
+                
+            \item Query-side rotation heuristic (\QRHCirc{})
+                (\pvar{AI=F,QRH=T,RI=F}): %
+                This is a novel invariance heuristic where each {database} feature assumes the gravity vector, but
+                  {query} feature is $3$ orientations:
+                the gravity vector and two other orientations at $\pm15\degrees$ from the gravity vector.
+                
+            \item \QRHEll{} (\pvar{AI=T,QRH=T,RI=F}): %
+                This is the combination of \QRHCirc{} and \AIAlone{}.
+                
+            \item \AIRI{} (\pvar{AI=T,QRH=F,RI=T}): %
+                This is the combination of \RIAlone{} and \AIAlone{}.
+                
+        \end{itemize}
+
+    \subsection{Scoring mechanism experiment}
+        The purpose of the scoring mechanism is to aggregate scores of individual feature correspondences across
+          multiple annotations into a single score for each name.
+        
+    \subsection{K experiment}
+        In this experiment we investigate the effect $\K$ (the number of nearest neighbors used in establishing
+          feature correspondences) on identification accuracy.
+        
+    \subsection{Failure cases}
+        In this subsection we investigate the primary causes of identification failure by considering individual
+          failure cases.
+        
+        \begin{itemize}
+            \item Viewpoint:
+                This failure case denotes that there is a viewpoint difference between the query and its \groundtrue{}
+                  match.
+                
+            \item Occlusion:
+                This label denotes that either the query or the \groundtrue{} annotation is occluded.
+                
+            \item Quality:
+                This label denotes that either the query or the \groundtrue{} annotation is blurred or distorted.
+                
+            \item Lighting:
+                This label denotes that either the query or the \groundtrue{} annotation is poorly illumination or
+                  shadowed.
+                
+            \item Scenery Match:
+                This denotes a case where the algorithm produces correspondences between shared background features
+                  between a query annotation and \aan{\groundfalse{}} annotation.
+                
+            \item \Photobomb{}:
+                A case where the \groundtrue{} animal is seen in the foreground or background of \aan{\groundfalse{}}
+                  annotation.
+                
+        \end{itemize}
+        
+    \subsection{Score separability}
+        In this subsection we investigate identification accuracy in terms of the scores returned along with each
+          \name{} in the ranked list.
+        
+        \subsubsection{Why is individual animal identification hard?}
+            Even when ignoring \photobombings{}, the amount missed true positives and the number of manual
+              verifications necessary is still unsatisfactory.
+            
+    \subsection{Experimental conclusions}
+        In this section we have evaluated our baseline algorithm under restrictive conditions to control for the
+          effects of time, quality, and viewpoint.
+        \begin{itemize}
+            \item \textbf{Identification accuracy improves with more exemplars}:
+                The name scoring experiment and the $\K$ experiment show that the number of \exemplars{} per database
+                  \name{} is the most significant factor that impacts identification accuracy.
+                
+            \item \textbf{Foregroundness weighting reduce scenery matches}:
+                Identification accuracy significantly improves by $2-4$ percentage points when using foregroundness
+                  weighting.
+                
+            \item \textbf{Viewpoint and occlusion are the most difficult imaging challenges}:
+                The viewpoint experiment and the failure cases show that there is a significant loss in accuracy when
+                  matching annotations from different viewpoints.
+                
+            \item \textbf{Invariance settings are data dependent}:
+                The invariance experiment shows
+            \item \textbf{The choice of \K{} has a minor impact}: 
+                The $\K$ experiment shows that identification accuracy is not significantly influenced by the choice
+                  of $\K$ for plains zebras, but for Grevy's zebras the most accurate results were obtained with
+                  $\K\tighteq1$.
+            \item \textbf{\Nsumprefix{} is slightly better than \csumprefix{} \namescoring{}}:
+                The scoring mechanism experiment shows that the \nsumprefix{} scoring mechanism is slightly more
+                  accurate than the \csumprefix{} scoring mechanism.
+                
+            \item \textbf{LNBNN scores are not enough for automated decision}:
+                The separability experiment shows that is a reasonable separation between the scores of annotations
+                  seen from the same viewpoint.
+        \end{itemize}
+        
+\section{Single query identification summary}
+    In this section we have introduced an algorithm that ranks known database \names{} by their similarity to a single
+      query annotation.
+    
+    \begin{enumerate}
+        
+        
+        \item \textbf{Exploit information in multiple images}:
+            One of the strongest results in the experiment section was that having more \exemplars{} per name in the
+              database improves identification accuracy.
+        \item \textbf{Make database independent identification decisions}:
+            Another potential avenue is to develop an one-vs-one verification algorithm that can be applied on pairs
+              of annotations (or pairs of annotation sets) independent of the current identification algorithm.
+    \end{enumerate}
+    The next chapter and outlines a proposal for making these improvements and discusses the associated challenges.
+    

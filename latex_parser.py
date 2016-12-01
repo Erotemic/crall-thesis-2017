@@ -530,11 +530,28 @@ class _ReformatMixin(object):
         return summary
 
     def summary_str(self, outline=False, highlight=False, depth=None):
+        """
+        ./texfix.py --fpaths chapter3-matching.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True --showtype --pars_per_section=1 --expand_macros=False
+        ./texfix.py --fpaths sec-3-3-sver.tex --outline --numlines=1 --extra_skip_types=equation --skip_figures=True --showtype --pars_per_section=1 --expand_macros=False
+
+        """
         block_parts = self.summary_str_blocks(outline, depth=depth)
         summary = '\n'.join(block_parts)
 
-        if outline and self._config['expand_macros']:
-            summary = self.postprocess_macros(summary)
+        defmap = self.parse_newcommands()
+        macrostr = self.format_macros(defmap)
+
+        import utool
+        utool.embed()
+        return macrostr
+
+        if outline:
+            if self._config['expand_macros']:
+                summary = self.postprocess_macros(summary)
+            elif not self._config['asmarkdown']:
+                defmap = self.parse_newcommands()
+                macrostr = self.format_macros(defmap)
+                summary = macrostr + '\n' + summary
 
         if self._config['asmarkdown']:
             summary = self.postprocess_for_markdown(summary)
@@ -550,9 +567,36 @@ class _ReformatMixin(object):
                                          color='darkyellow')
         return summary
 
+    def format_macros(self, defmap):
+        latex_macros = []
+        for num, defs in defmap.items():
+            for key, val in defs.items():
+                macro = r'\newcommand{%s}[%d]{%s}' % (key, num, val)
+                latex_macros.append(macro)
+        macrostr = '\n'.join(latex_macros)
+        return macrostr
+
     def parse_newcommands(self):
-        """
+        r"""
         Reads all macros defined in this file into a dictionary map
+
+        CommandLine:
+            python -m latex_parser parse_newcommands
+
+        Example:
+            >>> # DISABLE_DOCTEST
+            >>> from latex_parser import *  # NOQA
+            >>> #text = ut.readfrom('chapter2-related-work.tex')
+            >>> #text = ut.readfrom('main.tex')
+            >>> #text = ut.readfrom('chapter3-matching.tex')
+            >>> text = ut.readfrom('chapter4-application.tex')
+            >>> #text = ut.readfrom('sec-2-1-featdetect.tex')
+            >>> self = LatexDocPart.parse_text(text)
+            >>> defmap = self.parse_newcommands()
+            >>> print('\n'.join([x.tostr() for x in self.find_descendant_types('newcommand')]))
+            >>> print('\n'.join([x.tostr() for x in self.find_descendant_types('renewcommand')]))
+            >>> print('defmap = %r' % (defmap,))
+            >>> print(self.format_macros(defmap))
         """
         # Hack to read all defined commands in this document
         def_list = list(self.find_descendant_types('newcommand'))
@@ -622,47 +666,6 @@ class _ReformatMixin(object):
             cmd_map.update(crall_defmap.get(0, {}))
             cmd_map1.update(crall_defmap.get(1, {}))
         return cmd_map, cmd_map1
-        #else:
-        #    lines = []
-        #    lines += ut.read_from('def.tex').split('\n')
-        #    cmd_map = ut.odict()
-        #    cmd_map1 = ut.odict()
-        #    pat = '\\\\(re)?newcommand{' + ut.named_field('key', '\\\\' + ut.REGEX_VARNAME) + '}{' + ut.named_field('val', '.*') + '}'
-        #    pat1 = '\\\\(re)?newcommand{' + ut.named_field('key', '\\\\' + ut.REGEX_VARNAME) + '}\[1\]{' + ut.named_field('val', '.*') + '}'
-
-        #    for line in lines:
-        #        sline = line.strip()
-        #        if sline.startswith('\\newcommand'):
-        #            match = re.match(pat, sline)
-        #            if match is not None:
-        #                key = match.groupdict()['key']
-        #                val = match.groupdict()['val']
-        #                val = val.replace('\\zspace', '')
-        #                val = val.replace('\\xspace', '')
-        #                cmd_map[key] = val
-        #            match = re.match(pat1, sline)
-        #            if match is not None:
-        #                key = match.groupdict()['key']
-        #                val = match.groupdict()['val']
-        #                val = val.replace('\\zspace', '')
-        #                val = val.replace('\\xspace', '')
-        #                cmd_map1[key] = val
-
-        #    # Expand inside defs
-        #    usage_pat = ut.regex_or(['\\\\' + ut.REGEX_VARNAME + '{}', '\\\\' + ut.REGEX_VARNAME])
-        #    for key in cmd_map.keys():
-        #        val = cmd_map[key]
-        #        changed = None
-        #        while changed or changed is None:
-        #            changed = False
-        #            for match in re.findall(usage_pat, val):
-        #                key2 = match.replace('{}', '')
-        #                if key2 in cmd_map:
-        #                    val = val.replace(match, cmd_map[key2])
-        #                    changed = True
-        #            if changed:
-        #                cmd_map[key] = val
-        #    return cmd_map, cmd_map1
 
     def reformat_blocks(self, debug=False, stripcomments=False):
         """
@@ -1312,6 +1315,8 @@ class LatexDocPart(_ReformatMixin, _ParserMixin, _LatexConstMixin, ut.NiceRepr):
 
     def find(self, regexpr_list, findtype=('lines', 'par'), verbose=False):
         r"""
+        Searches for nodes matching the regex in the text of the node
+
         list_ = ut.total_flatten(root.tolist2())
         list_ = root.find(' \\\\cref')
         self = list_[-1]
