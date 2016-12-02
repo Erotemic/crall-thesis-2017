@@ -11,83 +11,130 @@
 
   \begin{verbatim}
 
-      * (Goal: reformulate workflow tasks under a common graph based framwork)
-      * (Goal: accurately cluster all annotations of the same individual)
-      * (Goal: minimize the number of user reviews)
-      * (Goal: recover from split/merge errors)
-      * (Goal: have some automated method of handling photobombs)
-      * (Goal: expand definition of matching to include non-comparable)
+      Goals
+      ===================================================================
+      * reformulate workflow tasks under a common graph based framwork
+      * accurately cluster all annotations of the same individual
+      * minimize the number of user reviews
+      * recover from split/merge errors
+      * have some automated method of handling photobombs
+      * expand definition of matching to include non-comparable
 
-      * (Procedure: learning 1-v-1 classifier)
-          + Choosing a training set (constructing annotation pairs)
-              + Important to traing with hard negatives
-          + Constructing the 1-v-1 fixed length feature vectors
-              + Choosing an informative subset of features
-          + learning the match and photobomb classifier
-              + Random Forests / Handling Missing Data 
-              + Training on non-comparability without labels
-              + Evaluating classifier performance
-                  + cross validation
-                  + separability 
-                  + multiclass ROC / informedness / markedness
-                  + evaulate photobomb classification in binary case
-                  + evaluate match classification conditioned on photobomb status
+      Sections
+      ===================================================================
+      learning 1-v-1 classifier
+      -------------------------
+      * Choosing a training set (constructing annotation pairs)
+          * Important to traing with hard negatives
+      * Constructing the 1-v-1 fixed length feature vectors
+          * Choosing an informative subset of features
+      * learning the match classifier
+      * learning the photobomb classifier
+      * Training Random Forests with Missing Data (some dimensions of the
+          feature vector are NaN)
+      * Training on non-comparability without labels
+      * choosing automatic accept/reject decision operating points for each
+         classifier
 
-      * (Procedure: choosing automatic accept/reject decision operating points)
-          + this is for both the photobomb and match classifier
+      updating 1-v-1 match probabilities based on graph information
+      --------------------------------------------------------------
+      * multicut - this only produces yes/no decisions so only the
+        automatic decision are influenced, there is no update to posterior
+        probabilities on the edges.
+      * Future work: some algorithm to correctly infer posterior marginal
+        probabilities?  belief propogation on 3-clique-based MRF?
 
-      * (Algorithm: updating 1-v-1 match probabilities based on graph information)
-          + multicut - this only produces yes/no decisions so only the
-            automatic decision are influenced, there is no update to posterior
-            probabilities on the edges.
-            
-          + some algorithm to correctly infer posterior marginal probabilities?
-            belief propogation?
+      prioritizing edges for user-review
+      ----------------------------------
+      * Each edge in the graph is given a score, a reviewed state, and an
+        inferred state.
+      * All edges above the positive operating point are classified as
+          matching.
+      * All edges under the negative operating point are classified as
+          not matching.
+      * All other edges are prioritized for user review. 
+      * Connected compoment inference algorithm review algorithm:
+          * edges within compoments do not need to be reviewed 
+          * edges between compoments with at least one other negative review
+            do not need to be reviewed.
+          * However, it may be necessary to review redudnat edges given
+            that humans and algorithms make mistakes.
+          * Confidence of inference based on distance within the reviewed graph
+              * minimum cost diameter augmentation for choosing redundant edges
+              * ideally this would be a probabilistic algorithm (future work)
+       * Priority is based on matching probability. Non-matching edges are
+           considered next, and not-comparble edges are considered last
+           because they add the least amount of information.  Reviwing
+           positive edges first is strictly better for minimizing the
+           number of reviews (see details for proof).
+       * If the user stops reviewing all other edges are considered not
+           matched because it is much more likely for a random edge to be
+           negative than positive.
 
-      * (Algorithm: prioritizing edges (between the operating points) for user-review)
-          + To achieve perfect-id the minimum number of edges that need review is 
-            `sum(len(c) - 1 for c in cs) + (len(cs) ** 2 - len(cs) / 2)`. A
-            random edge is much more likely to be positive than negative.
-            Therefore it is strictly better to review positive edges before
-            negative edges. 
-          + Connected compoment inference algorithm review algorithm:
-              + edges within compoments do not need to be reviewed 
-              + edges between compoments with at least one other negative review
-                do not need to be reviewed.
-              + However, it may be necessary to review redudnat edges given
-                that humans and algorithms make mistakes.
-              + Confidence of inference based on distance within the reviewed graph
-                  + minimum cost diameter augmentation for choosing redundant edges
-                  + ideally this would be a probabilistic algorithm (future work)
+      bootstrapping the classifiers for new species
+      ----------------------------------
+      * This is the almost the same as if no edge meets the automatic
+        decision thresholds. The only difference is that the scores
+        on the edges are not probabilities.
+      * Can use the same techniques for prioritizing edges for reviews.
+        Reviewing edges creates traning data. Over time a classifier can be
+        trained.
+      * This is an active learning framework with humans in the loop.
 
-      * (Procedure: bootstrapping the classifiers for new species)
-          + This is the almost the same as if no edge meets the automatic
-            decision thresholds. The only difference is that the scores
-            on the edges are not probabilities.
-          + Can use the same techniques for prioritizing edges for reviews.
-            Reviewing edges creates traning data. Over time a classifier can be
-            trained.
-          + This is an active learning framework with humans in the loop.
+      automatic exemplar selection
+      ----------------------------------
+      * Minimum Set Cover on subgraph for each individual
 
-      * (Algorithm: automatic exemplar selection)
-          + Minimum Set Cover on subgraph for each individual
-
-      * (Algorithm: automatic occurrence clustering)
-          + Maybe move the algorithm to an appendix?
-
-      * (Experiments: evaulate separability of 1-v-1 classifier against vsmany
-          in the single case context)
-          + Show that postprocessing with the 1-v-1 classifier improves the ROC
-            AUC using the following datasets:
-              + annotation pairs with ALL correct vsmany results at rank #1.
-              + annotation pairs that at least got some score in vsmany classification
-          + Do ranking experiments (cumulative match characteristics) using
-            vsone probabilities and vsmany scores
-
-      * (Experiments: evaulate 1-v-1 classifier + graph decision algorithm in
-          the multiple images context)
+      automatic occurrence clustering
+      ----------------------------------
+      * Maybe move the algorithm to an appendix?
 
 
+      Experiments 
+      ============
+
+      evaulate separability of 1-v-1 classifier against vsmany in the single
+      case context
+      --------------------------------------------------------
+      * we want to maximize class separability 
+      * multiclass ROC / informedness / markedness
+      * evaulate photobomb classification in binary case
+      * evaluate match classification conditioned on photobomb status
+      * Show that postprocessing with the 1-v-1 classifier improves the ROC
+        AUC using the following datasets:
+          * annotation pairs with ALL correct vsmany results at rank #1.
+          * annotation pairs that at least got some score in vsmany classification
+      * Do ranking experiments (cumulative match characteristics) using
+        vsone probabilities and vsmany scores
+
+      Experiments: evaulate 1-v-1 classifier + graph decision algorithm in the
+      multiple images context
+      --------------------------------------------------------
+      * How to perform cross validation?
+
+
+      ===================
+      Details
+
+      Theorem: Given a set of edges that need review it is always better to
+      review edges that are more likely to be correct first.
+      ---------------------------------------------------------------------
+      Goal: achieve perfect-id by reviewing the minimum number of edges.
+
+      Claim: Assuming a perfect reviewer, it is strictly better to review
+      positive edges before negative edges.
+
+      Proof:
+          Let `cs = { .. { .. a .. } ..}` be the true annotation clusters.
+
+          For each `c in cs` at least `len(c) - 1` reviews will need to be made
+          to connect the annotations.
+
+          At least `(len(cs) ** 2 - len(cs) / 2)` reviews will need to be made
+          to ensure that there are no merge cases. 
+
+          The minimun number of reviews required is: 
+          `sum(len(c) - 1 for c in cs) + (len(cs) ** 2 - len(cs) / 2)`. 
   \end{verbatim}
 
     \begin{itemize}
