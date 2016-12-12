@@ -1,4 +1,46 @@
-Chapter 4 - Graph Based Identification
+----------------------------------
+## Scrap
+----------------------------------
+
+## CC Algorithm Scrap
+------------------
+Input: set of edges with user/automatic reviews 
+Edges labeled as matching form connected components.
+* Unreviewed edges within each CC have priority set to zero.
+* Unreviewed edges between two CCs with at least one negative review have their priority set to zero.
+* This leaves us to prioritize all edges between CCs without any reviews. 
+* For each pair of unreviewed CCs we choose only a single edge to give priority at any given time.  
+* This is the edge with the highest probability of matching. 
+* Edges with a high non-comparable probability have their priority set to Priority-Level-2.
+* Edges likely to be photobombs or scenery matches have priority set to Priority-Level-3.
+
+
+## Diameter Algorithm Scrap
+------------------
+* Within each CC (using only reviewed edges) we want to add edges to ensure the
+  diameter of each CC is no more than D.
+* We want to choose a only a small number of edges that satisfy this
+  constraint. We also want these edges to be comparable.
+* Framed as Diameter Augmentation: 
+  Given target diameter d, graph G=(V, E) and
+  candidate non-edges ~E, find the smallest set of non-edges E' ⊆ ~E such that
+  the diameter of the augmented graph G'=(V, E E') is at most E'. 
+* In general this problem is NP-hard, but in the unit-cost unit-length case there
+  is an approximation algorithm with approximation ratio O(log(comb(|V|, 2)) * log(d)).
+* The basic idea of the approximation algorithm is to:
+    * Reformulate the problem as "Restricted Diameter-d" which adds the constraint that
+      any new path between nodes that violate the diameter constraint in the original graph  
+      must contain either exactly 1 or exactly 2 consecutive edges in ~E. It turns out that 
+      any solution to "Restricted Diameter-d" is a solution to "Diameter-d".
+    * Construct an integer linear program (ILP) that solves "Restricted
+      Diameter-d". For the details of this ILP see [Dodis99].
+    * Solve a relaxed version of the ILP to obtain fractional values.
+    * Either apply a randomized rounding scheme to achieve an integral solution OR 
+      define an instance of hitting set using the fractional values and then 
+      approximiately solve the hitting set problem using a greedy approach.
+
+
+#Chapter 4 - Graph Based Identification
 ======================================
 
 TODO:
@@ -44,41 +86,112 @@ proof of review minimization under diameter assumption
 * We update learned measures
 
 
------------------------------------
-4.1 Automatic occurrence clustering
------------------------------------
-* Distance between space-time features
-* Agglomerative clustering defines occurrences
+### Motivation for Graph Chapter
+
+* Determine pairwise relationships between annotations 
+* Use graph inference algorithms to determine identities
+
 
 
 ----------------------------------
-4.2 Learning the 1-v-1 classifiers
+##4.2 Learning the 1-v-1 classifiers
 ----------------------------------
 Problem: 
-Scores returned by the one-vs-many algorithm are not separable enough to make
-automatic decisions. There is no way to determine if a high score is due to a
-correct match or a photobomb. Additionally when two annotations may have low
-scores because they are not-comparable they should not be marked as different
-animals.
+* The one-vs-many algorithm scores are not separable enough to make automatic
+  decisions.
+* The one-vs-many algorithm cannot determine if a high score is due to a
+  correct match or a photobomb.
+* When two annotations may have low scores because they are not-comparable they
+  should not be marked as different animals.
 
 Solution:
-Train a two classifiers. The first assigns a probability of {match, no-match,
-not-comparable} to any pair of annotations. The second assigns probabilities of
-{photobomb, not-photobomb}.
+* Train a verification mechanism that can be applied to one-vs-many results.
+* The verification mechanism operates on pairs of annotations and classifies
+  them independent of the rest of the database just as a manual verifier would.
+* Train a two classifiers. 
+* The first assigns a probability of {match, no-match, not-comparable} to any
+  pair of annotations.
+* The second assigns probabilities of {photobomb, not-photobomb}.
 
 ### Constructing a training set
-* How do we choose a set of annotation pairs?
-* Important to train with hard negatives
-* Generating not-comparable labels without groundtruth
-
-* TODO: DESCRIBE HOW EDGES ARE CHOSEN FOR TRAINING
+* Input: 
+    * A set of annotation pairs.
+    * Match state labels: {match, no-match, not-comparable}.
+    * Photobomb state labels: {photobomb, not-photobomb}
+* Challenges:
+    * Using all `n * (n - 1) / 2` pairs results in an unbalanced training set
+      with prohibitive training time.
+    * Groundtruth may not be complete especially for photobomb and
+      not-comparable examples.
+* Matching training set:
+    * For each annotation:
+    * Rank the database using the vsmany algorithm score
+    * Partition the result into two ranked lists: one for correct matches and
+      one for incorrect matches.
+    * Select annotations randomly and from the top, middle, bottom of the list.
+    * For positive examples we select
+        * 4 from the top, 2 from the middle, 2 from the bottom, and 2 randomly
+    * For negative examples we select
+        * 3 from the top, 2 from the middle, 1 from the bottom, and 2 randomly
+    * Any duplicate pair is removed.
+    * Random examples help ensure the training set selection is representative.
+    * Positioned examples help ensure the training set contains varying degrees
+      of classification difficulty.
+    * For positive examples this often means selecting all positive pairs. 
+    * The top negative examples are hard negatives (because the vsmany
+      algorithm assigned them high scores).
+    * The bottom, middle, and random negative examples can be seen as easy
+      negative examples.
+* Photobomb training set:
+    * Augment the matching training set with all annotation-pairs marked as
+      photobombs.
+    * This does not guarantee that all other pairs are not-photobombs.
+    * We do some amount of manual cleaning before training, but hope to use the
+      trained classifier iteravely correct the training set.
+* Labeling:
+    * In most cases we can correctly assign {match, no-match} labels using the
+      groundtruth.
+    * Not-comparable is more difficult because that option was not available
+      during most of our turking.
+    * Guessing non-comparable without groundtruth
+        * We use a strategy to guess if a pair is not-comparable by checking if
+          the scores are under a threshold and that the labeled viewpoints are
+          beyond a threshold distance. 
+        * Note, to avoid bias we exclude viewpoint from our feature measures
+          when using this strategy. Iterative relabeling will allow us to add
+          this feature back in as the training set is curated.
 
 ### Constructing feature vectors
-* Features represent a pair of annotations
-* Features must be fixed length
-* Prune uninformative features / choose informative features
+* For each annotation pair we create a fixed-length feature vector
+* Feature vectors contain local and global information.
+
+* A one-vs-one algorithm to creates a rich set of correspondences 
+    * Reciprocal nearest neighbors form feature correspondences
+    * The ratio test and spatial verification are used to refine matches.
+    * Each correspondence is given a score based on distance, local normalizer
+      distance, ratio, spatial verification error, relative xy-positions,
+      keypoint scale, and forgroundness weight.
+* Summary statistics are used to consolidate the unordered correspondences into
+  a fixed length vector ordered by score and summary type. 
+* Summary types are `[sum, mean, std, med]`. 
+* Global attributes such as time, GPS, viewpoint, quality, and their respective
+  deltas are also included in the feature vector.
+* Feature vectors may contain NaN values if it is not possible to compute 
+  one of the dimensions. We use a classifier that can address this problem.
+* We have experimented with using individual properties of selected edges but
+  found simple summary statistics to be superior. 
+* We have experimented with augmenting one-vs-one scores with vsmany LNBNN
+  distinctivness but found this to negatively impact performance. However,
+  because all of our measures are local we do not need to worry about
+  covariance with database size. This gives a desirable property where any
+  trained classifier trivially generalizes to other datasets and re-training is
+  as simple as adding new annotation pairs. 
+* In our experiments we analyze how informative each feature dimension is.  We
+  prune any uninformative features to reduce training / testing time.
 
 ### Constructing the classifier
+* We are given a training set pairwise feature vectors and match/photobomb
+  labelings.
 * Main classifier for {match, no-match, not-comparable}
 * Additional classifier for {photobomb, not-photobomb}
 * Missing information, i.e. feature vectors will contain NaN values
@@ -87,19 +200,10 @@ not-comparable} to any pair of annotations. The second assigns probabilities of
     * Probabilistic multi-class classification
     * Fast to train 
 * Random Forests can make probabilistic classifications
-
-### Choosing operating points 
-* For each classifier choose an operating point for each class.
-* Pairs of annotations above these operating points can be safely 
-  labeled as one of the six states in:
-     {match, no-match, not-comparable} X {photobomb, not-photobomb}.
-* Use ROC evaluation criteria for determining operating points.
-    * Need to take special care in the multiclass-case
-    * See experiments
-
+* See Experiments for details on choosing operating points
 
 --------------------------------------
-4.3 Prioritizing edges for user-review
+##4.3 Prioritizing edges for user-review
 --------------------------------------
 Problem: Even with automatic review user input is still needed. This forms an
 active learning problem.  Humans need to be in the loop in order for the users
@@ -126,7 +230,7 @@ Additional redundant edges are added in order to expose and correct errors.
 * Priority is based on matching probability. Non-matching edges are considered
   next, and not-comparable edges are considered last because they add the least
   amount of information.  Reviewing positive edges first is strictly better for
-  minimizing the number of reviews.
+  minimizing the number of reviews. See [Proof-1].
 * If the user stops reviewing all other edges are considered not matched
   because it is much more likely for a random edge to be negative than
   positive.
@@ -134,8 +238,51 @@ Additional redundant edges are added in order to expose and correct errors.
   algorithms make mistakes.
 
 
+##Proof-1
+---------
+We want to achieve perfect-id by reviewing the minimum number of edges.  Given
+a set of edges that need review it is always better to review edges that are
+more likely to be correct first.
+
+**Claim**: 
+Assuming a perfect reviewer, it is strictly better to review positive edges
+before negative edges.
+
+**Proof**:
+Let `cs = { ... { ... a ... } ...}` be the true annotation clusters.
+
+For each `c in cs` at least `len(c) - 1` reviews will need to be made
+to connect the annotations.
+
+At least `(len(cs) ** 2 - len(cs) / 2)` reviews will need to be made
+to ensure that there are no merge cases. 
+
+The minimum number of reviews required is: 
+`sum(len(c) - 1 for c in cs) + (len(cs) ** 2 - len(cs) / 2)`. 
+
+It would be redundant to review edges between components that already have one
+negative review. Reviewing negative edges before positive edges might cause a
+reviewer to review one of these edges before it could be inferred that it was
+redundant. Therefore it is always better to review edges more likely to be
+positive first. 
+
+
+## Proof-2
+* Proof of minimal reviews with diameter augmentation 
+* Assume that we are confident in the accuracy of a connected component if its
+  diameter is at most D.
+* Under this assumption we want to choose the minimum number of redundant edges
+  to review.
+* This is the minimum cost diameter augmentation problem.
+* However, this problem is NP hard. 
+* There are approximation algorithms. 
+* Without the implementation of one of these approx algos we fallback on a
+  greedy algorithm.
+
+
+
 ----------------------------------------
-4.4 Detecting and Recovering from Errors
+##4.4 Detecting and Recovering from Errors
 ----------------------------------------
 Problem: The connected component algorithm will never generate an inconsistent
 state. There will never be a connected component of matching edges that
@@ -184,25 +331,24 @@ detected and resolved.
   suggest edges to re-review in the event of an error case.
 
 
---------------------------------
-4.5 Automatic exemplar selection
---------------------------------
-* Examine subgraph of probabilities for each individual.
-* Create covering sets based on probabilities for each annotation based on a
-  threshold.
-* Use maximum weight minimum set cover to select a subset of annotations.
-* Adjust threshold to find optimal cover.
-* The optimal cover is the new set of exemplars.
-
-
 ---------------
-4.6 Experiments 
+##4.6 Experiments 
 ---------------
 Three things to evaluate
 
 * Accuracy of rankings.
 * Separability of the scores.
 * Combined accuracy + separability with humans in the loop
+
+### Choosing operating points 
+* See Experiments for details
+* For each classifier choose an operating point for each class.
+* Pairs of annotations above these operating points can be safely 
+  labeled as one of the six states in:
+     {match, no-match, not-comparable} ⨯ {photobomb, not-photobomb}.
+* Use ROC evaluation criteria for determining operating points.
+    * Need to take special care in the multiclass-case
+    * See experiments
 
 ### Accuracy of Rankings
 * Results take the form CMC (cumulative match characteristics) curves
@@ -295,44 +441,17 @@ Three things to evaluate
           to choose appropriate review thresholds.
 
 -------
-Details
+#Details
 =======
 
-Proof-1
----------
-We want to achieve perfect-id by reviewing the minimum number of edges.  Given
-a set of edges that need review it is always better to review edges that are
-more likely to be correct first.
-
-**Claim**: 
-Assuming a perfect reviewer, it is strictly better to review positive edges
-before negative edges.
-
-**Proof**:
-Let `cs = { ... { ... a ... } ...}` be the true annotation clusters.
-
-For each `c in cs` at least `len(c) - 1` reviews will need to be made
-to connect the annotations.
-
-At least `(len(cs) ** 2 - len(cs) / 2)` reviews will need to be made
-to ensure that there are no merge cases. 
-
-The minimum number of reviews required is: 
-`sum(len(c) - 1 for c in cs) + (len(cs) ** 2 - len(cs) / 2)`. 
-
-It would be redundant to review edges between components that already have one
-negative review. Reviewing negative edges before positive edges might cause a
-reviewer to review one of these edges before it could be inferred that it was
-redundant. Therefore it is always better to review edges more likely to be
-positive first. 
 
     
 ------
-Extras
+#Extras
 ======
 
 ---------------------------------------------
-4.6 Bootstrapping classifiers for new species
+##4.6 Bootstrapping classifiers for new species
 ---------------------------------------------
 Problem: Initially classifiers are untrained. To generalize to new species 
 we need a method of bootstrapping the classifiers.
@@ -350,7 +469,7 @@ trained.
     
 
 ------------------------------
-4.3 Exploiting multiple images
+##4.3 Exploiting multiple images
 ------------------------------
 Problem: 
 The predicted probabilities over many sets of annotations forms a graph.
@@ -375,3 +494,21 @@ infer either a posterior assignment or a posterior probability distribution.
 * Some algorithm to correctly infer posterior marginal probabilities on
   each edge.
     * Belief propagation on 3-clique-based MRF?
+
+
+--------------------------------
+##4.5 Automatic exemplar selection
+--------------------------------
+* Examine subgraph of probabilities for each individual.
+* Create covering sets based on probabilities for each annotation based on a
+  threshold.
+* Use maximum weight minimum set cover to select a subset of annotations.
+* Adjust threshold to find optimal cover.
+* The optimal cover is the new set of exemplars.
+
+
+-----------------------------------
+##4.1 Automatic occurrence clustering
+-----------------------------------
+* Distance between space-time features
+* Agglomerative clustering defines occurrences
