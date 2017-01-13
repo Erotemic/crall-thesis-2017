@@ -37,7 +37,7 @@ remain.
 * The decisions under the operating point threshold must be left to manual
   reviewers. Is there a way to minimize the number of user interactions?
     * We develop an algorithm for prioritizing edges to review based on
-      connected compoments.
+      connected components.
 * User reviewers are not always correct. Is there a way to detect and recover
   from user and algorithm error?
     * We assuming a reviewer is less likely to make the same mistake twice.
@@ -128,7 +128,7 @@ In this section we describe:
       photobombs.
     * This does not guarantee that all other pairs are not-photobombs.
     * We do some amount of manual cleaning before training, but hope to use the
-      trained classifier iteravely correct the training set.
+      trained classifier iteratively correct the training set.
 * Labeling:
     * In most cases we can correctly assign {match, no-match} labels using the
       groundtruth.
@@ -350,7 +350,7 @@ reviewed as the same.
       review a positive match for a sufficient amount of time.
 * Using these observations the priority review algorithm is as follows:
     * We want to review all positive matches first. We therefore
-      assign each edge a priority based of (P(match) * P(not-photobomb) * 1 -
+      assign each edge a priority of (P(match) * P(not-photobomb) * 1 -
       P(not-comparable)) using the assumption that photobomb annotations are
       less likely to match.
     * All reviewed edges have their priority set to zero.
@@ -365,6 +365,83 @@ reviewed as the same.
       We store the number of times each edge is reviewed.
     * This is implemented efficiently using a dictionary-heap based priority
       queue. 
+
+
+## On Feedback Addition:
+    * Overview: 
+        * Need to update node name labels.
+        * Need to update the inferred state of the edges (
+          e.g. we can infer that all edges within a connected component are 
+          also positive)
+    * Subroutines:
+        * Define `cc(u)`:  
+            * Description: Returns the connected component attached to node `u`.
+            * Details: Run BFS, yield only nodes with the same name label as u
+              and do not continue down any path where the next node does not
+              have the same name label as u.
+        * Define `neg_ccs(V)`: 
+            * Description: Returns all connected components known to not match
+               a given set of nodes `V`
+            * Details:  Initialize a result set of nodes to the empty set. For
+              each u in V, look at each v in neighbors(u). If any edge (u, v)
+              is marked as not matching then add cc(v) to the result.
+    * Procedure:
+        * Initially the priority queue is initialized with priorities on each edge 
+          based off their probability of matching (see above for exact
+          details).
+        * Given: edge=(u, v) and a new review state
+        * Add edge to the graph (or increment its review count by 1) and 
+          label the edge with its reveiw state.
+        * Update the names.
+            * Get the influenced subgraph w.r.t name labels:
+                * `S0 = union(cc(u), cc(v))`
+            * Find positive connected components in `S0` and give each
+              node in each component a new name label.
+        * Update inferred edge properties
+            * Get the influenced subgraph: 
+                * `S1 = union(S0, neg_ccs(S0))`
+            * Group nodes in `S1` by their name label.
+            * Group edges by `S1` by their review label (match, no-match, not-comp,
+              unreviewed).
+            * Categorize Edges: 
+                * Here we label edges with inferred states. At each point in
+                  the algorithm we ignore edges that already have been assigned
+                  an inferred state. We categorize in the order: inconsistent,
+                  inconsistent-outgoing, negative, positive, non-comparable,
+                  and finally unreviewed.
+                * For each negative edge check and see if the name labels
+                  are the same, if so then give all edges in that name an
+                  inferred inconsistent state.
+                * Iterate over the remaining negative edges again. 
+                  If either side of a negative belongs to an inferred inconsistent 
+                  component, then mark all edges between the two CCs as
+                  inferred `inconsistent-outgoing` to denote the negative edge
+                  is leaving a component (to prevent negative inference using 
+                  inconsistent components). Otherwise all edges between the CCs
+                  as given an inferred negative state.
+                * For each reviewed positive edge that does not belong to an
+                  inconsistent name, assert the names on the endpoints are the same. 
+                  Add all edges within that name are given an inferred positive
+                  state.
+                * For each non-comparable edge not already assigned an inferred state
+                  we assign it an inferred not-comparable state (essentially meaning   
+                  the state of this edge is still unknown, but don't re-review
+                  it).
+                * All other edges remain are inferred to be unreviewed.
+             * Recover from inconsistencies
+                 * For each inconsistent component run the inconsistency
+                   recover algorithm to get a list of suggested fixes. Those edges 
+                   are flagged as `maybe_error`.
+             * Update priorities:
+                 * Remove all inferred positive, negative, and not-comparable
+                   edges from the priority queue. (note this changes if the diameter
+                   augmentation algorithm is being used)
+                 * Remove any inconsistent or inconsistent-outgoing edge that
+                   was not suggested as a fix from the queue.
+                 * Increase the priority of `maybe_error` edges by 2 to ensure 
+                   they are given higher priority than any unreviewed edge.
+                 * Add any unreviewed edges that are not already in the queue 
+                   with the baseline matching priority.
 
 
 ----------------------------------------
@@ -404,7 +481,7 @@ detected and resolved.
     * Solve a relaxed version of the ILP to obtain fractional values.
     * Either apply a randomized rounding scheme to achieve an integral solution OR 
       define an instance of hitting set using the fractional values and then 
-      approximiately solve the hitting set problem using a greedy approach.
+      approximately solve the hitting set problem using a greedy approach.
 * We can use this same idea between consistent CCs with at least one negative
   reviewed edge if we care about detecting false negatives. However, we would
   use a different (larger) diameter parameter and we would also include the no-match edges 
@@ -496,7 +573,7 @@ Experiments will evaluate:
 * Evaluating Semi-Automatic Partitioning
     * Use groundtruth to simulate a reviewer.
         * We can use some model of user error to force a reviewer to make a mistake.
-        * By default we assume error rate is indepenent of the annotation pairs
+        * By default we assume error rate is independent of the annotation pairs
         * Feed edges to the simulated reviewer in priority order until the
           priority queue is empty. Then stop.
     * Automatically classify any edge above its assignment threshold. 
@@ -560,7 +637,7 @@ before negative edges.
 * On the other hand when reviewing a negative edge it is not always possible to 
   determine if it is redundant with some other negative edge that exists. This
   is because redundant negative edges are defined between positive CCs. (all positive 
-  CCs must be determined before you can gaurentee that any two arbitrary pairs of 
+  CCs must be determined before you can guarantee that any two arbitrary pairs of 
   negative edges are not redundant).
 * Reviewing all positive edges first guarantees that all redundant edges
   are never encountered.
