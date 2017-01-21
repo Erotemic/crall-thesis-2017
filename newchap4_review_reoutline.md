@@ -1,5 +1,10 @@
 ----
 
+TODO: 
+    * ensure that the part where one-vs-many is rerun is incorporated
+    * come up with a careful and clear motivation 
+    * come up with a very short and concise process summary
+
 # Review Procedure Outline
 
 To identify individuals in a dynamic context we combine our algorithms with
@@ -38,31 +43,31 @@ detecting errors and recovering from inconsistencies.
         * Consistency: A PCC is consistent iff it contains no negative edges.
         * Completeness: For every pair of PCCs there is at least one negative
           edge between them.
-    * In additional to the minimal criteria we can specify a confidence level.
+    * In additional to the minimal criteria we can specify a redundancy level.
     * K-Confidence:
-        * K-positive-confidence:
-            * A PCC is "k-positive-confident" if it is consistent and it
+        * K-positive-redundancy:
+            * A PCC is "k-positive-redundant" if it is consistent and it
               contains no cut-sets involving fewer than `k` positive edges. 
             * This is the equivalent to "k-edge-connectedness".
-            * Note: A PCC that is k-positive-confident is also
-              (k-1)-positive-confident (for `k ≥ 2`).
+            * Note: A PCC that is k-positive-redundant is also
+              (k-1)-positive-redundant (for `k ≥ 2`).
             * A graph has this property if all PCCs have this property.
-        * K-negative-confidence: 
-            * A pair of PCCs is "k-negative-confident" if there are `k` negative edges
+        * K-negative-redundancy: 
+            * A pair of PCCs is "k-negative-redundant" if there are `k` negative edges
               between them.
             * A graph has this property if all pairs of PCCs have this
               property.
-            * For a graph to be "k-negative-confident", it requires O(k N^2)
+            * For a graph to be "k-negative-redundant", it requires O(k N^2)
               negative decisions (where N is the number of individuals).
-        * K-confidence tied to the number of decision mistakes that must be
+        * K-redundancy is tied to the number of decision mistakes that must be
           made in order for part of the graph to appear consistent or complete.
-          Specifically, for an incorrect PCC or pair of PCCs to be k-confident
+          Specifically, for an incorrect PCC or pair of PCCs to be k-redundant
           then at least k mistakes must be made.
     * D-Confidence:
-        * D-positive-confidence:
-            * A PCC is "d-positive-confident" if its diameter is at most `d`.
-        * D-negative-confidence:
-            * A pair of PCCs is "d-negative-confident" if the diameter of their
+        * D-positive-redundancy:
+            * A PCC is "d-positive-redundant" if its diameter is at most `d`.
+        * D-negative-redundancy:
+            * A pair of PCCs is "d-negative-redundant" if the diameter of their
               union is at most `d`. 
     * Note:
         * It will often be impractical to enforce that a graph must be complete
@@ -71,7 +76,7 @@ detecting errors and recovering from inconsistencies.
           only ensure that the positive PCCs are complete.
         * Only a subset of edges need to be reviewed in order to determine a
           valid identification.
-    * Minimal consistency plus some level of confidence must be satisfied for
+    * Minimal consistency plus some level of redundancy must be satisfied for
       the review procedure to terminate. 
 
      
@@ -85,6 +90,7 @@ identification criteria.
   decision is added to the decision graph. 
 * The remaining candidate edges are prioritized and manually reviewed until
   the identification criteria is satisfied.
+* TODO: add new edges if completeness cannot be satisfied.
 
 ### Discussion Outline
 * We first consider a simplified version of this procedure. We assume that
@@ -148,6 +154,10 @@ identification criteria.
 * Edges to review are stored in a priority queue. 
 * The initial priority of each edge is `P(match)` --- the likelihood that the
   edge is positive.
+* The PCCS in `(V, E_p)` are dynamically maintained.
+    * Dynamic connectivity data structure (Levels of Euler Tour Forests)
+    * Euler Tours are maintained in a binary search tree with fast split and
+      join capabilities. [Sun-2016]
 * We pop edges from the priority queue and present them to the user. 
   In each case the user can make one of three decisions:
     * Reviewing an edge as `no-match` between two existing PCCs, indicates
@@ -171,8 +181,6 @@ Removing the assumptions in the simplified procedure has three consequences:
 2. Users will make errors.
 3. The one-vs-many algorithm might not add all necessary edges to the
    decision graph.
-
-
 
 ### Contrasting inconsistency and mistakes
 * **Inconsistency** - A PCC containing more than zero negative edges.
@@ -292,12 +300,10 @@ Removing the assumptions in the simplified procedure has three consequences:
 * Let `pccs = { ... { ... a ... } ...}` be the true annotation clusters.
 * For each `pcc in pccs` at least `len(pcc) - 1` reviews will need to be made
   to connect the annotations.  Thus the minimum number of positive reviews is: 
-  `sum(len(pcc) - 1 for pcc in pccs)`
+  `sum(len(pcc) - 1 for pcc in pccs)`.
 * To ensure that there are no merge cases there must be at least one negative
   review between each pair of PCCs.  Thus the minimum number of negative reviews
-  needed is
-  `choose(len(pccs), 2)`.
-  (Note: `choose` is the binomial coefficient) 
+  needed is `choose(len(pccs), 2)`. (Note: `choose` is the binomial coefficient)
 * Because positive and negative edges are disjoint the minimum total number of
   reviews required is: 
     `sum(len(pcc) - 1 for pcc in pccs) + choose(len(pccs), 2)`. 
@@ -321,8 +327,8 @@ Removing the assumptions in the simplified procedure has three consequences:
 * Add a minimum number of edges such that a graph is k-connected.
 * Polynomial time for unweighted case.
     * Edge-Connectivity Augmentation Problems  [Watanabe-Nakamura-87]
-    * O(k * min(k, |V|) * |V|^4 * (k|V| + |E|))
-    * O(k^3 * V^5 + k * V^4 * E)
+    * `O(k * min(k, |V|) * |V|^4 * (k|V| + |E|))`
+    * `O(k^3 * V^5 + k * V^4 * E)`
 * Weighted case is NP-hard
     * On a Smallest Augmentation to k-Edge-connect a Graph [Watanabe-Nakamura-84]
     * http://www.cs.bme.hu/~dmarx/papers/marx-vegh-conn-icalp2013.pdf
@@ -337,7 +343,7 @@ Removing the assumptions in the simplified procedure has three consequences:
     * Reformulate the problem as "Restricted Diameter-d" which adds the
       constraint that any new path between nodes that violate the diameter
       constraint in the original graph  must contain either exactly 1 or
-      exactly 2 consecutive edges in ~E. It turns out that any solution to
+      exactly 2 consecutive edges in `~E`. It turns out that any solution to
       "Restricted Diameter-d" is a solution to "Diameter-d".
     * Construct an integer linear program (ILP) that solves "Restricted
       Diameter-d". For the details of this ILP see [Dodis99].
@@ -345,3 +351,25 @@ Removing the assumptions in the simplified procedure has three consequences:
     * Either apply a randomized rounding scheme to achieve an integral solution OR 
       define an instance of hitting set using the fractional values and then 
       approximately solve the hitting set problem using a greedy approach.
+
+## Automatic exemplar selection
+* Extract PCC for each individual.
+* Use maximum weight minimum set cover to select a subset of annotations.
+* Create covering sets by thresholding match probabilities on edges in the PCC
+    * Use the one-vs-many algorithm to rank each annotation in the PCC against the PCC
+    * Augment the PCC with the top 5 results from the one-vs-many algorithm.
+    * Predict one-vs-one match probabilities for all edges in the PCC
+    * Cut edges under a threshold
+    * Each annotation's covering set is defined by its neighbors.
+* Adjust threshold to find optimal cover with a specific number of exemplars.
+* The optimal cover is the new set of exemplars.
+
+-------------
+# New Idea Scrap
+
+
+## Exemplars for Confidence Criterion
+* Use exemplars for termination criterion
+* If we enforce that there are only 4-5 exemplars per viewpoint, then we can
+  afford to augment each PCC into a complete graph and force the user to
+  predict on that graph.
