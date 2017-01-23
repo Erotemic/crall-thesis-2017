@@ -5,6 +5,9 @@ TODO:
     * come up with a careful and clear motivation 
     * come up with a very short and concise process summary
 
+* The other intro is fine for a thesis paper, but for a conference paper it has
+  to get to the technical part quicker.
+
 # Review Procedure Outline
 
 To identify individuals in a dynamic context we combine our algorithms with
