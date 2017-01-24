@@ -1,5 +1,3 @@
-----
-
 # TODO:
     * ensure that the part where one-vs-many is rerun is incorporated
     * come up with a careful and clear motivation 
@@ -10,57 +8,21 @@
 
 # Review Procedure Outline
 
-
-### Intro and Motivation Version 1
-
-To identify individuals in a dynamic context we combine our algorithms with
-  human input.
-Manual reviews are an expensive but powerful resource.
-Efficiently utilizing this resource requires a carefully defined procedure
-  that finds the appropriate trade-off between maximizing the information gained
-  from each manual interaction and minimizing the number of interactions.
-Our review procedure attempts to do as much automatic work as possible before
-  falling back on manual reviewers.
-Our procedure chooses the minimum number of reviews that achieves animal
-  identification up to a specified redundancy level to minimize the risk of
-  errors.
-The procedure is robust and has mechanisms for detecting errors and recovering
-  from inconsistencies.
-
-
-### Intro and Motivation Version 2
-
-This chapter defines a procedure to organize a large set of unidentified
-  images into groups of individuals.
-To a human, this process might be done by making piles of photographs
-  (annotations), one for every individual.
-However, as the number of piles become large, the time it takes to find the
-  right pile for a new image becomes prohibitive.
-To a computer, this is a clustering procedure.
-Annotations can be viewed as nodes on a graph, and edges can be drawn to
-  connect matching individuals.
-However, a single misclassified edge can result in many misclassified
-  annotations.
-Therefore, we are motivated to combine the search speed of a computer with the
-  verification accuracy of a human, but this is a challenging task.
-Manual reviews are a powerful but expensive resource, and we should only
-  interact with a manual reviewer when necessary.
-We must also design around the fact that humans will occasionally make
-  mistakes.
-
-
-To identify individuals while addressing these challenges we propose an
-  algorithm with "humans in the loop".
-A computer vision algorithm finds candidate edges that suggest the identify of
-  a new annotation.
-A learned classifier is used to classify any edges above a confidence
-  threshold.
-A human reviewer checks which (if any) of the remaining suggestions are
+In this chapter we define an algorithm with "a human in the loop" to group a
+  large set of unidentified annotations by individual.
+This is done by viewing annotations as nodes in a graph, drawing edges between
+  matching individuals, and then inspecting the resulting connected components.
+Our one-vs-many algorithm searches for candidate edges and a learned
+  classifier predicts the probability that each edge is a match.
+Automatic decisions are made edges with probability above a threshold.
+A human reviewer decides which (if any) of the remaining suggestions are
   correct.
-We ensure that the number of manual reviews is small using a priority
-  mechanism to determine the order in which candidate matches are presented.
-This works in conjunction with an inference mechanism that uses the graph
-  structure to determine which candidate edges need to be reviewed.
+An inference mechanism uses the graph structure to determine which candidate
+  edges need to be reviewed.
+A priority mechanism determines the order in which candidate edges are
+  presented to a user.
+Together the inference and priority mechanism reduce the total number of
+  manual reviews needed.
 Because human reviewers will occasionally make mistakes, the inference
   mechanism includes a redundancy criteria that detects and corrects these
   mistakes.
