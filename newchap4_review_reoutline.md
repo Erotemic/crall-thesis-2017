@@ -1,11 +1,3 @@
-# TODO:
-    * ensure that the part where one-vs-many is rerun is incorporated
-    * come up with a careful and clear motivation 
-    * come up with a very short and concise process summary
-
-* The other intro is fine for a thesis paper, but for a conference paper it has
-  to get to the technical part quicker.
-
 # Review Procedure Outline
 
 In this chapter we define an algorithm with "a human in the loop" to group a
@@ -28,9 +20,7 @@ Because human reviewers will occasionally make mistakes, the inference
   mistakes.
 A termination criteria determines when identification is complete.
 
----------------
 ## Introduction
----------------
 
 ### Definitions and Terms
 * The review procedure is formalized around the notion of a **decision graph**.
@@ -118,7 +108,7 @@ identification criteria.
     * Discuss the implications of early stopping (stopping before all reviews
       are complete).
     * Discuss the implications of when it is not possible satisfy all
-      identification requirements using the candidate edges.
+      identification criteria using the candidate edges.
 
 
 ## Review Procedure in a simplified context
@@ -130,8 +120,7 @@ identification criteria.
    (i.e. candidate edges are computed only once).
 4. Redundancy parameters `kp` and `kn` are set to `0`.
 
-### Initialization:
-* Given a set of annotations use these as nodes. 
+### Candidate edge search:
 * Run the one-vs-many algorithm.
     * Use each annotation as a query and the entire set of annotations as
       the database.
@@ -151,25 +140,27 @@ identification criteria.
     * `P(photobomb) < photobomb-threshold`.
 
 ### Prioritizing edges for user review:
-* To satisfy minimal identification requirements we observe:
+* To satisfy minimal identification criteria we observe:
     * Each PCC needs enough reviews to be connected.
         * Therefore edges within existing PCCs do not need to be reviewed. 
     * Only one negative edge between any two PCCs needs to be reviewed.
         * Therefore edges between PCCs with at least one other negative review
           do not need to be reviewed.
-* Using these observations the minimum number of reviews is achieved by
-  reviewing as many positive edges (between existing PCCs) as possible
-  before reviewing any negative edges. See [Appendix] for the proof.
+* The minimum number of reviews is achieved by reviewing as many positive edges
+  (between existing PCCs) as possible before reviewing any negative edges. See
+  [Appendix] for the proof.
 * This scheme prevents review of redundant edges which would increase the
   amount of work required by the user.
 * Edges to review are stored in a priority queue. 
+    * The data structure is a hybrid of a dict and a max-heap.
 * The initial priority of each edge is `P(match)` --- the likelihood that the
   edge is positive.
 * The PCCS in `(V, E_p)` are dynamically maintained.
     * Dynamic connectivity data structure (Levels of Euler Tour Forests)
+      [Holm-Poly-2001].
     * Euler Tours are maintained in a binary search tree with fast split and
       join capabilities. [Sun-2016]
-* We pop edges from the priority queue and present them to the user. 
+* Edges are popped from the priority queue and presented to the user.
   In each case the user can make one of three decisions:
     * Reviewing an edge as `no-match` between two existing PCCs, indicates
       that the PCCs are different individuals. The priority of other edges
@@ -211,7 +202,7 @@ Removing the assumptions in the simplified procedure has three consequences:
 
 ### Comparison with the simplified context
 * Candidate edge selection is the same, except it is no longer guaranteed that
-  it is possible to satisfy the identification constraints with these edges.
+  it is possible to satisfy the termination criteria with these edges.
     * Some necessary positive and negative edges may be missing. 
     * The likelihood that these missing edges are negative is high. 
     * Therefore, unconnected PCCs can be said to have implicit negative edges. 
@@ -355,6 +346,10 @@ Removing the assumptions in the simplified procedure has three consequences:
     * Edge-Connectivity Augmentation Problems  [Watanabe-Nakamura-87]
     * `O(k * min(k, |V|) * |V|^4 * (k|V| + |E|))`
     * `O(k^3 * V^5 + k * V^4 * E)`
+* For 2-connected unweighted and undirected:
+    * `O(|V| + |E|)`
+* For 2-connected weighted and undirected:
+    * `O(|V|^2)` approximation algorithm
 * Weighted case is NP-hard
     * On a Smallest Augmentation to k-Edge-connect a Graph [Watanabe-Nakamura-84]
     * <http://www.cs.bme.hu/~dmarx/papers/marx-vegh-conn-icalp2013.pdf>
@@ -399,3 +394,12 @@ Removing the assumptions in the simplified procedure has three consequences:
 * If we enforce that there are only 4-5 exemplars per viewpoint, then we can
   afford to augment each PCC into a complete graph and force the user to
   predict on that graph.
+
+# TODO:
+    * ensure that the part where one-vs-many is rerun is incorporated
+    * come up with a careful and clear motivation 
+    * come up with a very short and concise process summary
+
+* The other intro is fine for a thesis paper, but for a conference paper it has
+  to get to the technical part quicker.
+
