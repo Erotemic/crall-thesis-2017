@@ -1,21 +1,67 @@
 ----
 
-TODO: 
+# TODO:
     * ensure that the part where one-vs-many is rerun is incorporated
     * come up with a careful and clear motivation 
     * come up with a very short and concise process summary
 
 # Review Procedure Outline
 
+
+### Intro and Motivation Version 1
+
 To identify individuals in a dynamic context we combine our algorithms with
-human input. Manual reviews are an expensive but powerful resource.
-Efficiently utilizing this resource requires a carefully defined procedure that
-finds the appropriate trade-off between maximizing the information gained from
-each manual interaction and minimizing the number of interactions.  Our review
-procedure attempts to do as much automatic work as possible before falling back
-on manual reviewers. Our procedure chooses the minimum number of reviews that
-achieves animal identification. The procedure is robust and has mechanisms for
-detecting errors and recovering from inconsistencies.
+  human input.
+Manual reviews are an expensive but powerful resource.
+Efficiently utilizing this resource requires a carefully defined procedure
+  that finds the appropriate trade-off between maximizing the information gained
+  from each manual interaction and minimizing the number of interactions.
+Our review procedure attempts to do as much automatic work as possible before
+  falling back on manual reviewers.
+Our procedure chooses the minimum number of reviews that achieves animal
+  identification up to a specified redundancy level to minimize the risk of
+  errors.
+The procedure is robust and has mechanisms for detecting errors and recovering
+  from inconsistencies.
+
+
+### Intro and Motivation Version 2
+
+This chapter defines a procedure to organize a large set of unidentified
+  images into groups of individuals.
+To a human, this process might be done by making piles of photographs
+  (annotations), one for every individual.
+However, as the number of piles become large, the time it takes to find the
+  right pile for a new image becomes prohibitive.
+To a computer, this is a clustering procedure.
+Annotations can be viewed as nodes on a graph, and edges can be drawn to
+  connect matching individuals.
+However, a single misclassified edge can result in many misclassified
+  annotations.
+Therefore, we are motivated to combine the search speed of a computer with the
+  verification accuracy of a human, but this is a challenging task.
+Manual reviews are a powerful but expensive resource, and we should only
+  interact with a manual reviewer when necessary.
+We must also design around the fact that humans will occasionally make
+  mistakes.
+
+
+To identify individuals while addressing these challenges we propose an
+  algorithm with "humans in the loop".
+A computer vision algorithm finds candidate edges that suggest the identify of
+  a new annotation.
+A learned classifier is used to classify any edges above a confidence
+  threshold.
+A human reviewer checks which (if any) of the remaining suggestions are
+  correct.
+We ensure that the number of manual reviews is small using a priority
+  mechanism to determine the order in which candidate matches are presented.
+This works in conjunction with an inference mechanism that uses the graph
+  structure to determine which candidate edges need to be reviewed.
+Because human reviewers will occasionally make mistakes, the inference
+  mechanism includes a redundancy criteria that detects and corrects these
+  mistakes.
+A termination criteria determines when identification is complete.
 
 ---------------
 ## Introduction
@@ -43,8 +89,7 @@ detecting errors and recovering from inconsistencies.
         * Consistency: A PCC is consistent iff it contains no negative edges.
         * Completeness: For every pair of PCCs there is at least one negative
           edge between them.
-    * In additional to the minimal criteria we can specify a redundancy level.
-    * K-Confidence:
+    * Redundancy:
         * K-positive-redundancy:
             * A PCC is "k-positive-redundant" if it is consistent and it
               contains no cut-sets involving fewer than `k` positive edges. 
@@ -59,38 +104,38 @@ detecting errors and recovering from inconsistencies.
               property.
             * For a graph to be "k-negative-redundant", it requires O(k N^2)
               negative decisions (where N is the number of individuals).
+            * `1`-negative-redundancy is equivalent to completeness.
         * K-redundancy is tied to the number of decision mistakes that must be
           made in order for part of the graph to appear consistent or complete.
-          Specifically, for an incorrect PCC or pair of PCCs to be k-redundant
-          then at least k mistakes must be made.
-    * D-Confidence:
-        * D-positive-redundancy:
-            * A PCC is "d-positive-redundant" if its diameter is at most `d`.
-        * D-negative-redundancy:
-            * A pair of PCCs is "d-negative-redundant" if the diameter of their
-              union is at most `d`. 
+          Specifically, for PCC or pair of PCCs to both contain a mistake and
+          be k-redundant then at least `k` mistakes must be made.
+* Termination Criteria
+    * Given parameters `kp` and `kn`
+    * The review procedure terminates if the graph is consistent, complete,
+      `(kp)`-positive-redundancy, and `(kn)`-negative-redundancy.
     * Note:
-        * It will often be impractical to enforce that a graph must be complete
-          before making identifications. 
         * Negative edges do not contribute to the identification grouping, they
           only ensure that the positive PCCs are complete.
-        * Only a subset of edges need to be reviewed in order to determine a
-          valid identification.
-    * Minimal consistency plus some level of redundancy must be satisfied for
-      the review procedure to terminate. 
+        * It will often be impractical to enforce that a graph must be complete
+          in order to terminate.
+        * At some point it will be necessary to infer that the remaining edges
+          between PCCs are negative. This point must be chosen such that
+          there is a high probability that the unreviewed pairs of PCCS are
+          negative.
 
-     
+
 ### Procedure Overview
 The review procedure is to construct a decision graph that satisfies the
 identification criteria.
 
 * All annotations to be identified are used as nodes.
-* An algorithm initializes a set of candidate edges. 
+* An algorithm initializes a set of candidate edges.
 * An automatic classifier predicts a label for each edges and any confident
-  decision is added to the decision graph. 
-* The remaining candidate edges are prioritized and manually reviewed until
-  the identification criteria is satisfied.
-* TODO: add new edges if completeness cannot be satisfied.
+  decision is added to the decision graph.
+* The remaining candidate edges are prioritized and manually reviewed. 
+* After a certain number of reviews candidate edges are recomputed using
+  updated information.
+* This repeats until the termination criteria is satisfied.
 
 ### Discussion Outline
 * We first consider a simplified version of this procedure. We assume that
@@ -106,7 +151,7 @@ identification criteria.
     * Describe an inconsistency recovery algorithm.
     * Describe a mistake discovery algorithm.
     * Discuss the implications of early stopping (stopping before all reviews
-      are complete). 
+      are complete).
     * Discuss the implications of when it is not possible satisfy all
       identification requirements using the candidate edges.
 
@@ -116,8 +161,9 @@ identification criteria.
 ### Simplifying assumptions: 
 1. Classifier thresholds are set such that no errors are made.
 2. Users do not make errors.
-3. A subset of the candidate edges can satisfy the identification criteria.
-4. We are only concerned with satisfying minimal identification criteria.
+3. A subset of the candidate edges can satisfy the identification criteria
+   (i.e. candidate edges are computed only once).
+4. Redundancy parameters `kp` and `kn` are set to `0`.
 
 ### Initialization:
 * Given a set of annotations use these as nodes. 
@@ -255,13 +301,13 @@ Removing the assumptions in the simplified procedure has three consequences:
 * Specifically we need to augment the minimal set of edges with a small set of
   redundant edges that is likely to expose any errors. 
 * This is an edge-augmentation problem.
-    * Several choices for algorithms to address this problem 
-    * k-edge-connected augmentation 
-    * d-diameter augmentation
-    * We choose this set of edges as the minimum set of unreviewed edges that
-      would reduce the diameter of the PCC to less than a threshold. These set
-      of edges can be found using an algorithm that solves the "Weighted Diameter
-      Augmentation" problem. See [Appendix] for details.
+    * We use k-edge-connected augmentation because it has an intuitive
+      interpretation.
+    * For a PCC to be contain an undetected error, it must contain at least `k`
+      internal errors.
+    * Therefore as `k` increases the probability that there are undetected
+      errors decreases.
+    * See [Appendix] for details.
 * The review priority algorithm is modified such that on the modification
   of a PCC the all internal edges have their priority set to 0 except those
   that are the solution of the diameter augmentation instance.
@@ -285,10 +331,17 @@ Removing the assumptions in the simplified procedure has three consequences:
 * The reasoning is similar to why we don't review all negative edges, the
   probability that any particular edge not in the decision graph is actually
   between correct individuals is low.
-* In the case where perfect information is desired it is possible to simply review all 
-  edges in the priority queue and then add edges between annotations in
-  pairs of unreviewed PCCs until all pairs of PCCs have a negative edge
+* In the case where perfect information is desired it is possible to simply
+  review all edges in the priority queue and then add edges between annotations
+  in pairs of unreviewed PCCs until all pairs of PCCs have a negative edge
   between them.
+
+
+### Recomputing candidate edges
+ * The one-vs-many algorithm is re-invoked with new name labels. (Note the
+   nearest neighbor matching returns the `K` nearest neighbors not belonging to
+   the same individual.) (Note this requires a bit of reworking in the actual
+   pipeline and requires certain caches to be disabled).
 
 --------------
 
@@ -323,6 +376,14 @@ Removing the assumptions in the simplified procedure has three consequences:
 * Therefore it is always better to review edges more likely to be positive
   first. 
 
+
+## Edge Augmentation
+* There are many types of edges augmentation
+    * d-diameter augmentation 
+    * k-vertex-connected augmentation 
+    * k-edge-connected augmentation 
+
+
 ## Augmentation K-edge-connected:
 * Add a minimum number of edges such that a graph is k-connected.
 * Polynomial time for unweighted case.
@@ -331,7 +392,7 @@ Removing the assumptions in the simplified procedure has three consequences:
     * `O(k^3 * V^5 + k * V^4 * E)`
 * Weighted case is NP-hard
     * On a Smallest Augmentation to k-Edge-connect a Graph [Watanabe-Nakamura-84]
-    * http://www.cs.bme.hu/~dmarx/papers/marx-vegh-conn-icalp2013.pdf
+    * <http://www.cs.bme.hu/~dmarx/papers/marx-vegh-conn-icalp2013.pdf>
 
 ## Augmentation Diameter-D:
 * Given target diameter d, graph `G=(V, E)` and
@@ -346,7 +407,7 @@ Removing the assumptions in the simplified procedure has three consequences:
       exactly 2 consecutive edges in `~E`. It turns out that any solution to
       "Restricted Diameter-d" is a solution to "Diameter-d".
     * Construct an integer linear program (ILP) that solves "Restricted
-      Diameter-d". For the details of this ILP see [Dodis99].
+      Diameter-d". For the details of this ILP see [Dodis-99].
     * Solve a relaxed version of the ILP to obtain fractional values.
     * Either apply a randomized rounding scheme to achieve an integral solution OR 
       define an instance of hitting set using the fractional values and then 
@@ -368,7 +429,7 @@ Removing the assumptions in the simplified procedure has three consequences:
 # New Idea Scrap
 
 
-## Exemplars for Confidence Criterion
+## Exemplars for Redundancy Criterion
 * Use exemplars for termination criterion
 * If we enforce that there are only 4-5 exemplars per viewpoint, then we can
   afford to augment each PCC into a complete graph and force the user to
