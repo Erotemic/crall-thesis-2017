@@ -298,6 +298,23 @@ Removing the assumptions in the simplified procedure has three consequences:
    nearest neighbor matching returns the `K` nearest neighbors not belonging to
    the same individual.) (Note this requires a bit of reworking in the actual
    pipeline and requires certain caches to be disabled).
+ * A candidate match from one-vs-many that appears after rank (5) has a low probability of being correct.
+ * After a "re-match" criteria has been met, the one-vs-many algorithm is run
+   again to generate new candidate edges.
+     * Nearest neighbors are not allowed to come from individuals in the same
+       PCC (or potentially edges between negative PCCs)
+     * If no positive matches are found in an annot's ranked list then one of the following cases has occurred:
+         * There are no more matches to be found (i.e. all remaining comparable edges are negative)
+         * A correct match exists further down in the ranked list.
+             * A re-query would find this edge (due to improved LNBNN scores)
+             * The matching algorithm simply fails for this pair
+     * New merge edges may be found
+     * New merge edges may be found
+
+ * Details of "re-match" criteria.
+     * After a `threshold` number of reviews, 
+     * After a `threshold` number of negative reviews, 
+     * Remaining review probability falls bellow `threshold` 
 
 --------------
 
