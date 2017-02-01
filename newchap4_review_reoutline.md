@@ -62,7 +62,7 @@ A termination criteria determines when identification is complete.
             * `1`-negative-redundancy is equivalent to completeness.
         * K-redundancy is tied to the number of decision mistakes that must be
           made in order for part of the graph to appear consistent or complete.
-          Specifically, for PCC or pair of PCCs to both contain a mistake and
+          Specifically, for a PCC or pair of PCCs to both contain a mistake and
           be k-redundant then at least `k` mistakes must be made.
 * Termination Criteria
     * Given parameters `kp` and `kn`

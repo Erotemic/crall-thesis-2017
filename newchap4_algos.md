@@ -156,7 +156,7 @@ In this section we describe:
             * ratio of correspondence to local normalizer distance.
             * spatial verification error in location, scale, and orientation
             * keypoint attributes: relative xy-positions, scales, and
-              forgroundness weights.
+              foregroundness weights.
     * Summary statistics consolidate the unordered correspondences into
       a fixed length vector.
     * Order of the vector is determined by score type and summary type. 

@@ -97,8 +97,6 @@ def clean_tags():
         from pyzotero import zotero
         zot = zotero.Zotero(library_id, library_type, api_key)
 
-        bad_tags = tags_df['name']
-
         for chunk in ut.ProgChunks(bad_tags, 50):
             zot.delete_tags(*chunk)
 
