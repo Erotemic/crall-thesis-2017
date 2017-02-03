@@ -5,6 +5,115 @@
 \begin{document}
 
 \section{Foo}
+\begin{comment}
+
+def prob_isect(events):
+    """ computes probability of intersection using the chain rule """
+    assert len(events) != 0
+    elif len(events) == 1:
+        A = events[0]
+        return P(A)
+    elif len(events) == 2:
+        A, B = events
+        return P(A | B) * P(B)
+    else:
+        A = events[0]
+        rest = events[1:]
+        A_given_rest = A.condition(rest)
+        return P(A_given_rest) * probs_isect(rest)
+
+def prob_union(events):
+    """
+    computes P(union_i A_i) for events A_i using inclusion exclusion
+    """
+    import operator as op
+    def prod(items):
+        return reduce(op.mul, items, 1.0)
+    def sign_bit(n):
+        return (2 * (n % 2) - 1)
+    return sum(
+        sign_bit(k) * sum(
+            prob_isect(subset)
+            for subset in it.combinations(events, k)
+        )
+        for k in range(1, len(events) + 1)
+    )
+
+
+class Event(ut.NiceRepr):
+    def __init__(a, label):
+        parts = label.split('|')
+        a.name = parts[0]
+        a.given = ','.join(parts[1:])
+
+    def __nice__(a):
+        return a.label()
+
+    def split(a):
+        return Event(a.name), Event(a.given)
+
+    def label(a):
+        if a.given:
+            return a.name + '|' + a.given
+        else:
+            return a.name
+
+    def __repr__(a):
+        return a.__str__()
+
+    def __eq__(a, b):
+        return a.label() == b.label()
+
+    def __hash__(a):
+        return hash(a.__nice__())
+
+    def __or__(a, b):
+        given_parts = a.given.split(',') + [b.name] + b.given.split(',')
+        new_given = ','.join([g for g in given_parts if g])
+        label = a.name + '|' + new_given
+        return Event(label)
+
+        
+import pandas as pd
+import numpy as np
+rand = np.random.rand
+events = list(map(Event, ['A', 'B', 'C']))
+marg = marginals = {A: rand() for A in events}
+
+# Amount of space not taken up by any known event
+complement = rand() * (1 - max(marginals.values()))
+# Amount of space in overlapping regions
+total_overlap = complement + sum(marginals.values()) - 1
+
+cond = conditionals = {}
+
+remain = 1
+
+for A, B in ut.combinations(events, 2):
+    overlap = rand()
+    # what probs are already accounted for
+    # accounted = sum([cond[A|C] * marg[C] for C in events if A|C in cond])
+    cond[A|B] = (1 - accounted) * overlap
+
+# Find the opposite way using bayes rule
+for key, val in conditionals.items():
+    A, B = key.split()
+    cond[B|A] = val * marg[B] / marg[A]
+print('cond = %s' % (ut.repr4(cond),))
+    
+conditional_events = [A, B, C]
+
+a1 = .1
+a2 = .2
+a3 = .3
+a = [float('nan'), .1, .01, .01]
+for n in range(1, len(a)):
+    P_any_out_c = sum(ut.choose(n, k) * a[k] for k in range(1, n + 1))
+    print('n = %r' % (n,))
+    print('P_any_out_c = %r' % (P_any_out_c,))
+
+\end{comment}
+
 Biological Network Reconstruction 
 Causal protein signaling networks derived from multiparamater single-cell data
 Sachs et al. Science 2005
@@ -338,115 +447,6 @@ Conditional ``Lensing'' Property:
     $P(A, B | C) = \sum_{d} P(A, B, | C, D=d) * p(D=d)$
     $P(A, B, D | C) = P(A, B, | C, D) * p(D)$
     $P(A, B | C, D) = P(A, B, | C, D) $
-
-\begin{comment}
-
-def prob_isect(events):
-    """ computes probability of intersection using the chain rule """
-    assert len(events) != 0
-    elif len(events) == 1:
-        A = events[0]
-        return P(A)
-    elif len(events) == 2:
-        A, B = events
-        return P(A | B) * P(B)
-    else:
-        A = events[0]
-        rest = events[1:]
-        A_given_rest = A.condition(rest)
-        return P(A_given_rest) * probs_isect(rest)
-
-def prob_union(events):
-    """
-    computes P(union_i A_i) for events A_i using inclusion exclusion
-    """
-    import operator as op
-    def prod(items):
-        return reduce(op.mul, items, 1.0)
-    def sign_bit(n):
-        return (2 * (n % 2) - 1)
-    return sum(
-        sign_bit(k) * sum(
-            prob_isect(subset)
-            for subset in it.combinations(events, k)
-        )
-        for k in range(1, len(events) + 1)
-    )
-
-
-class Event(ut.NiceRepr):
-    def __init__(a, label):
-        parts = label.split('|')
-        a.name = parts[0]
-        a.given = ','.join(parts[1:])
-
-    def __nice__(a):
-        return a.label()
-
-    def split(a):
-        return Event(a.name), Event(a.given)
-
-    def label(a):
-        if a.given:
-            return a.name + '|' + a.given
-        else:
-            return a.name
-
-    def __repr__(a):
-        return a.__str__()
-
-    def __eq__(a, b):
-        return a.label() == b.label()
-
-    def __hash__(a):
-        return hash(a.__nice__())
-
-    def __or__(a, b):
-        given_parts = a.given.split(',') + [b.name] + b.given.split(',')
-        new_given = ','.join([g for g in given_parts if g])
-        label = a.name + '|' + new_given
-        return Event(label)
-
-        
-import pandas as pd
-import numpy as np
-rand = np.random.rand
-events = list(map(Event, ['A', 'B', 'C']))
-marg = marginals = {A: rand() for A in events}
-
-# Amount of space not taken up by any known event
-complement = rand() * (1 - max(marginals.values()))
-# Amount of space in overlapping regions
-total_overlap = complement + sum(marginals.values()) - 1
-
-cond = conditionals = {}
-
-remain = 1
-
-for A, B in ut.combinations(events, 2):
-    overlap = rand()
-    # what probs are already accounted for
-    # accounted = sum([cond[A|C] * marg[C] for C in events if A|C in cond])
-    cond[A|B] = (1 - accounted) * overlap
-
-# Find the opposite way using bayes rule
-for key, val in conditionals.items():
-    A, B = key.split()
-    cond[B|A] = val * marg[B] / marg[A]
-print('cond = %s' % (ut.repr4(cond),))
-    
-conditional_events = [A, B, C]
-
-a1 = .1
-a2 = .2
-a3 = .3
-a = [float('nan'), .1, .01, .01]
-for n in range(1, len(a)):
-    P_any_out_c = sum(ut.choose(n, k) * a[k] for k in range(1, n + 1))
-    print('n = %r' % (n,))
-    print('P_any_out_c = %r' % (P_any_out_c,))
-
-\end{comment}
 
 Special case where $P(\Isect{i=1}^n A_i)$ only depends on n
 
