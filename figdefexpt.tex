@@ -15,10 +15,26 @@ gvim ~/code/ibeis/regen_figdefexpt.sh
 
 \begin{comment}
 python -m ibeis -e rank_cmc --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn    --hargv=expt
+
+python -m ibeis -e rank_cmc --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn \
+    --clipwhite --save=pzcmc.jpg  \
+    --dpi=128 --legendsize=11 --labelsize=14 --titlesize=12 --figtitlesize=12 --ticksize=10 --figsize=9,3 --draw-icon=True --overlay-zoom=.2
+
+
 \end{comment}                                                                                                                                         
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
 python -m ibeis -e rank_cmc --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn    --hargv=expt
+
+python -m ibeis -e rank_cmc --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn \
+    --clipwhite --save=gzcmc.jpg \
+    --dpi=128 --legendsize=11 --labelsize=14 --titlesize=12 --figtitlesize=12 --ticksize=10 --figsize=9,3 --draw-icon=True --overlay-zoom=.2
+
+
+python -m ibeis -e rank_cmc --db PZ_MTEST   -a ctrl   -t baseline --prefix "MTEST" --label MTEST --cmap-hack=autumn \
+    --dpi=128 --clipwhite --save=mtestcmc.jpg \
+    --legendsize=12 --labelsize=12 --titlesize=10 --figtitlesize=10 --ticksize=10 --figsize=6,3 --draw-icon=True --overlay-zoom=.1
+
 \end{comment}                                                                                                                                         
                                                                                                                                                       
 \begin{comment}                                                                                                                                       

@@ -1,0 +1,117 @@
+\chapter{Pairwise classification}\label{chap:pairclf}
+
+\section{Introduction}\label{sec:clf_intro}
+
+In this chapter we consider the problem of verifying whether or not two
+  annotation are the same or different.
+By addressing this problem we improve upon the ranking algorithm from
+  \Cref{chap:matching} --- that ranks the \names{} in a database based on
+  similarity to a query --- by making semi-automatic decisions about results
+  returned in the ranked lists.
+The algorithms introduced in this chapter will assign a confidence to results
+  in the ranked list, and any pair above a confidence threshold will be
+  automatically reviewed.
+We will demonstrate that our decision algorithms can significantly reduce the
+  number of manual interactions required to identify all individuals in an
+  unlabeled set of annotations.
+
+To make semi-automatic decisions up to a specified confidence we develop a
+  \emph{pairwise probabilistic classifier} that predicts a probability
+  distribution over a set of events given two annotations (typically a query
+  annotation and one of its top results in a ranked list).
+Given only the information in two annotations,  there are three possible
+  decisions that can be made.
+A pair of annotations is either:
+\begin{enumerate}
+    \item incomparable --- the annotations are not visually comparable,
+
+    \item positive --- the annotations are visually comparable and the
+      same individual, or
+
+    \item negative --- the annotations are visually comparable and different
+      individuals.
+\end{enumerate}
+%Two annotations are incomparable if no distinguishing parts of the annotations
+%  can be put in correspondence.
+%Otherwise, we can determine if the distinguishing parts are the same or
+%  different.
+Two annotations can be incomparable if the annotations show different parts or
+  sides of an animal, or if the distinguishing information on an animal is
+  obscured or occluded.
+The positive and negative states each require distinguishing information to be
+  present.
+Each of these mutually exclusive ``match-states'' are illustrated in
+  \Cref{fig:MatchStateExample}.
+The multi-label classifier then predicts the probability of each of the three
+  states, with the probabilities necessarily summing to $1$.
+
+To construct a pairwise probabilistic classifier we turn towards supervised
+  machine learning, which requires that we:
+%Probabilistic machine learning problems can be generally stated as
+%  constructing a function using a labeled dataset of of fixed length feature
+%  vectors and corresponding labels indicating the desired output class.
+%The resulting function maps a novel feature vector to a probability
+%  distribution over each possible output class.
+\begin{enumerate*}[label={(\arabic*)}]
+
+    \item determine a set of labeled annotation pairs for training, 
+
+    \item construct a fixed-length feature vector to represent a pair of
+        annotations,  and 
+
+    \item choose a probabilistic learning algorithm.
+\end{enumerate*}
+The first requirement can be satisfied by carefully selecting representative
+  annotations pairs, and the last requirement is satisfied by many pre-existing
+  algorithms (\eg{} random forests and neural networks).
+It is the second requirement --- constructing an appropriate fixed-length
+  feature vector --- that is the most challenging.
+If given enough training data and a technique to align annotations, using
+  image data with a Siamese or triplicate network might appropriate, but without
+  both of these pre-conditions we must turn towards more traditional methods.
+Recall from \Cref{sec:annotrepr} that our annotation representation is an
+  unordered bag-of-features, which cannot be directly fed to most learning
+  algorithms.
+Therefore, we develop a method for constructing a \glossterm{pairwise feature
+  vector} for a pair of annotations.
+This novel feature vector will take into account local matching information as
+  well as more global information such as GPS and timestamp.
+These feature are used to fit a random forest which implements our pairwise
+  classifier.
+
+
+A final concern that is addressed in this chapter is the issue of image
+  challenges that may confound the match-state pairwise classifier.
+Photobombs --- pairs of annotations where matches are caused by a secondary
+  animal --- are the most notable cause of such a challenge.
+Several examples of pairs of annotations with photobombs are illustrated in
+  \cref{fig:photobomb}.
+By most accounts photobombs appear very similar to matches, and it may be
+  reasonable to expand the match-state classifier to learn this subtlety.
+However, because photobombs are inherently a pairwise property between
+  annotations, it should be possible to learn a separate classifier explicitly
+  tasked with the challenge.
+Therefore, we also learn a photobomb classifier using the same sort of
+  pairwise feature vector and random forest classifier.
+This supporting classifier will allow us to increase the accuracy of our
+  identification, by restricting automatic classification to pairs where where
+  the decision is straightforward.
+
+
+This outline of this chapter is as follows.
+\Cref{sec:feature} details the construction of the feature vector that we use
+  as input to the pairwise classifier.
+\Cref{sec:learning} describes the process of collecting training data and
+  learning the match-state pairwise classifier.
+\Cref{sec:photobomb} .
+\Cref{sec:expt} .
+\Cref{sec:summary} .
+
+
+\section{Constructing the pairwise feature vector}
+\section{Learning the match-state classifier}
+\section{Supporting classifiers}
+\section{Pairwise classification experiments}
+\section{Summary of pairwise classification}
+
+%\MatchStateExample{}

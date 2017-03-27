@@ -5,6 +5,35 @@
 
 \chapter{Conclusion}\label{chap:conclusion} %
 
+
+    \paragraph{Open Problems} A list of problems that if solved, have the
+      potential to improve the results of this thesis.
+    \begin{itemize}
+        \item Redundancy with a PCC with ``articulation nodes''.
+        These are nodes that bridge between two viewpoints.
+        Consider the example where there are 5 left side annotations and 5
+          right side annotations.
+        There are also 3 intermediate annotations $A$, $B$ and $C$.
+        $A$ is comparable to all left side annotations as well as $B$.
+        $C$ is comparable to all right side annotations as well as $B$.
+        $B$ is only comparable to $A$ and $C$.
+        Therefore it is impossible to achieve $k$-positive-redundancy within
+          this PCC.
+        The current state of the system handles this case by assuming the
+          pairwise classifier will be able to mark all $25$ edges between the
+          left and right sides as incomparable automatically.
+        However, this is inelegant.
+        A better solution would be able to note that the left component is
+          redundant by itself and the right component is redundant by itself,
+          and not work too hard to match all edges between left and right if
+          most are turning up as incomparable.
+        However, in this case the system should also be extra sure of the
+          matches between $A$, $B$, and $C$.
+
+
+
+    \end{itemize}
+
     In this \thesis{} we have addressed the problem of identifying individual
       animals from images.
     We have considered two main problems.

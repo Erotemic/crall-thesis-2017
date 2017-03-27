@@ -1,5 +1,7 @@
 %References: http://tex.stackexchange.com/questions/58098/what-are-all-the-font-styles-i-can-use-in-math-mode
 \usepackage[hang]{caption} 
+\usepackage[T1]{fontenc}
+
 
 \usepackage{times}
 \ifusegraphics{}
@@ -192,7 +194,7 @@
 \usepackage{lipsum}
 
 \usepackage{enumerate}
-\usepackage{ifplatform} 
+%\usepackage{ifplatform} 
 
 \usepackage[toc,page]{appendix} 
 \usepackage[toc,xindy]{glossaries} 
@@ -220,6 +222,7 @@
 %\setmonofont{Inconsolata}
 
 %\usepackage[newfloat=true]{minted}
+\usepackage{shellesc} 
 \usepackage[chapter]{minted}
 %\usepackage{minted}
 \newenvironment{code}{\captionsetup{type=listing}}{}
