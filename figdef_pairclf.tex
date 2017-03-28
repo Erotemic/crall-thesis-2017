@@ -1,0 +1,90 @@
+\newcommand{\MatchStateExample}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.26\textwidth}
+\centering
+\includegraphics[height=160pt]{figures_pairclf/classesC.png}\caption{positive}\label{sub:classesC}
+\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[height=160pt]{figures_pairclf/classesA.png}\caption{negative}\label{sub:classesA}
+\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[height=160pt]{figures_pairclf/classesB.png}\caption{incomparable}\label{sub:classesB}
+\end{subfigure}
+\caption[\caplbl{MatchStateExample}Match state example]{\caplbl{MatchStateExample}
+% ---
+Examples of positive (\ref{sub:classesC}), negative  (\ref{sub:classesA}), and
+  incomparable (\ref{sub:classesB}) pairs of annotations.
+Local feature correspondences are superimposed over the pairs.
+% ---
+}
+\label{fig:MatchStateExample}
+\end{figure}
+}
+
+
+\newcommand{\WordCloud}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/wc_pz_clipwhite.png}\caption{Plains zebras}\label{sub:wc_pz}
+\end{subfigure}
+~
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/wc_gz_clipwhite.png}\caption{Grévy's zebras}\label{sub:wc_gz}
+\end{subfigure}
+\caption[\caplbl{WordCloud}Word cloud of important features]{\caplbl{WordCloud}
+% ---
+Word cloud of important features.
+% ---
+}
+\label{fig:WordCloud}
+\end{figure}
+}
+
+\newcommand{\ImportantFeat}{
+\begin{table}
+    \centering
+    \begin{subtable}[h]{0.49\textwidth}
+        \centering
+        \begin{tabular}{l c}
+            \toprule
+            dimension key & importance fraction\\
+            \midrule
+            sum(norm\_dist)  & 0.1053 \\
+            sum(match\_dist) & 0.0862 \\
+            len(matches)     & 0.0833 \\
+            sum(ratio)       & 0.0726 \\
+            mean(ratio)      & 0.0648 \\
+            \bottomrule
+        \end{tabular}
+        \caption{Plains zebras}
+    \end{subtable} %
+    \begin{subtable}[h]{0.49\textwidth}
+        \centering
+        \begin{tabular}{l c}
+            \toprule
+            dimension key & importance fraction\\
+            \midrule
+            sum(norm\_dist)  & 0.0917 \\
+            len(matches)    & 0.0790 \\
+            sum(match\_dist) & 0.0634 \\
+            sum(ratio)      & 0.0559 \\
+            mean(ratio)     & 0.0526 \\
+            \bottomrule
+        \end{tabular}
+        \caption{Grévy's zebras}
+    \end{subtable} %
+\caption[\caplbl{ImportantFeat}Important features]{
+% ---
+    \caplbl{ImportantFeat} Top $5$ most important features
+% ---
+}
+\label{tbl:ImportantFeat}
+\end{table}
+}
+
