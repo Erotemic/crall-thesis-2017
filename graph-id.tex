@@ -1,4 +1,28 @@
 \chapter{Graph identification}\label{chap:graphid}
+\newcommand{\nT}{N}
+
+
+We frame the problem in terms of constructing what we refer to as an
+  \emph{identity graph}.
+Each vertex of the graph corresponds to a cropped region surrounding a single
+  animal in a single photo.
+This cropped region, referred to as an \emph{annotation}, is extracted from an
+  image using a detection
+  algorithm~\cite{parham_detecting_2016,redmon_you_2016}.
+Edges are formed when two annotations are determined to show the same animal.
+Each connected component of a correctly constructed graph will be all the
+  annotations from an individual animal.
+Therefore, stated abstractly, the focus of this paper is determine a correct, consistent set of
+  edges in the identity graph.
+We address these problems by prioritizing edges for review based on both their
+  pairwise probability scores and their ability to affect the consistency of the
+  graph, by developing graph measures of redundancy, consistency, and
+  completeness, and by developing deterministic and probabilistic convergence
+  criteria based on the measures.
+These allow us to construct a more accurate identity graph while reducing the
+  amount of human effort.
+  
+
 
 
 The review procedure is formalized around the notion of a %

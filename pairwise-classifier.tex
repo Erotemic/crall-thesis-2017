@@ -43,6 +43,8 @@ Each of these mutually exclusive ``match-states'' are illustrated in
 The multi-label classifier then predicts the probability of each of the three
   states, with the probabilities necessarily summing to $1$.
 
+\MatchStateExample{}
+
 To construct a pairwise probabilistic classifier we turn towards supervised
   machine learning, which requires that we:
 %Probabilistic machine learning problems can be generally stated as
@@ -73,10 +75,15 @@ Recall from \Cref{sec:annotrepr} that our annotation representation is an
 Therefore, we develop a method for constructing a \glossterm{pairwise feature
   vector} for a pair of annotations.
 This novel feature vector will take into account local matching information as
-  well as more global information such as GPS and timestamp.
-These feature are used to fit a random forest which implements our pairwise
-  classifier.
-
+  well as more global information such as GPS and viewpoint.
+These feature are used to fit a random forest~\cite{breiman_random_2001} which
+  implements our pairwise classifier.
+We choose to use a random forest classifier, in part because they are fast to
+  train, robust to overfitting, and naturally output probabilities in a
+  multiclass setting, and in part because they can handle (and potentially take
+  advantage of) missing data using the ``separate class''
+  method~\cite{ding_investigation_2010}.
+  
 
 A final concern that is addressed in this chapter is the issue of image
   challenges that may confound the match-state pairwise classifier.
@@ -107,9 +114,293 @@ This outline of this chapter is as follows.
 
 
 \section{Constructing the pairwise feature vector}
+
+In order to use the random forest learning algorithm to address the problem of
+  pairwise verification, we must construct a fixed-length feature vector that
+  contains information able to differentiate between each class.
+This feature vector will contain both global and local information.
+Global information is higher level and serves to augment visual information.
+The local information aggregates statistics about feature correspondences
+  between the two annotations.
+The local and global vectors are constructed separately and then concatenated
+  to form the final pairwise feature vector.
+The remainder of this section discusses the construction of these vectors.
+
+\subsection{The global feature vector}
+
+The global feature vector contains information to allow the classifier to take
+  advantage of semantic labels and non-visual attributes of our data to solve
+  the matching problem.
+Semantic labels such as quality and viewpoint are derived from visual
+  information and can provide abstract knowledge to help the classifier make a
+  matching decision.
+Non-visual attributes such as GPS and timestamp can be extracted from EXIF
+  metadata and may help determine facts not discernible from visual data alone.
+  %(\eg{} it is impossible to match two animals if they are close in time but far
+  %in space).
+In both cases these base global attributes are fixed-length values that are
+  associated with the annotation as a whole.
+The global feature vector is a concatenation of these original values and a
+  vector of comparisons we make between these values.
+
+\newcommand{\nan}{\text{NaN}}
+
+To construct the global feature vector we use the following annotation attributes:
+\begin{enumerate}[label={(\arabic*)}]
+
+    \item Timestamp, represented in POSIX format as a float.
+
+    \item GPS latitude and longitude, represented in radians as two floats. 
+
+    \item Viewpoint classification label, represented as a categorical integer in $[1,8]$.
+
+    \item Quality classification label, represented as a categorical integer
+      in $[1,5]$.
+\end{enumerate}
+The GPS and timestamp attributes are gathered from image EXIF data, and the
+  viewpoint and quality labels are outputs of the deep classifiers discussed in
+  \cref{subsec:introdataprocess}.
+The GPS and timestamp attribute inform the classifier of when its not possible
+  for two annotations to match (\eg{} when a pair of annotations is close in
+  time but far in space).
+The viewpoint and quality attributes should help the classifier predict when
+  pairs of annotations are not comparable --- forcing there to be stronger
+  evidence to form a match, such as strong correspondences on a face turned
+  toward the camera in both a left and right side view.
+
+
+These four ``unary'' attributes are gathered for each annotation, and stacked
+  at the front of the global vector.
+This will allow a classifier to consider each of the properties of each
+  annotation separately.
+To allow the classifier to take into account the relationship between the
+  global attributes we also include distance measurements between each unary
+  measurements.
+In the case of GPS coordinates we use the haversine distance (as detailed in
+  \Cref{sec:occurgroup}), but for all other measures we use the absolute
+  difference of their values.
+Lastly, we include the ``speed'' of the annotations, which is the GPS-distance
+  divided by the time-delta.
+
+In the event that an attribute is not provided or not known we replace the
+  measurement with a \nan{} value.
+If data is not missing completely at random, then a random forest will be able
+  to take advantage of \nan{} values by treating them as a separate
+  class~\cite{ding_investigation_2010}.
+
+
+\subsection{The local feature vector}
+The local feature vector distills two orderless bag-of-features
+  representations into a fixed length vector indicating the nature of a pairwise
+  match.
+There are three steps needed to construct the local feature vector.
+First we determine feature correspondences between the two annotations.
+Then for each correspondence we make several measurements (\eg{} descriptor
+  distance and spatial position).
+Then we aggregate these measurements over all correspondences using summary
+  statistics (\eg{} mean, sum, std).
+Thus the total length of the feature vector is the number of measurements
+  times the number of summary statistics used.
+
+To determine feature correspondences between two annotations, $\qaid$ and $\daid$, we
+  use a one-vs-one matching algorithm.
+Each annotation's descriptors are indexed for fast nearest neighbor
+  search~\cite{muja_fast_2009}.
+Keypoint correspondences are formed by searching for the reciprocal nearest
+  neighbors between annotation descriptors~\cite{qin_hello_2011}.
+For each correspondence the next nearest neighbor from annotation $\qaid$ to
+  annotation $\daid$ is used as a normalizer for a ratio
+  test~\cite{lowe_distinctive_2004} (note this introduces slight asymmetry).
+If the descriptor distance between correspondences is divided by the distance
+  to the normalizer is above a threshold ($.625$), the correspondence is
+  regarded as non-distinct and removed.
+Spatial verification~\cite{philbin_object_2007} is applied to further refine
+  the correspondences.
+This results in a richer set of correspondences between annotations $\qaid$ and
+  $\daid$ that would be found using the ranking algorithm.
+
+After the one-vs-one matching stage, measurements are made at each feature
+  correspondence.
+For a feature correspondence between two features $i$ and $j$ with descriptors
+  $\desc_i$ and $\desc_j$, normalizing descriptor $\descnorm$, the measurements
+  we consider are:
+\begin{itemize}
+
+    \item Correspondence distance:
+        This is the Euclidean distance between the feature correspondence,
+        $\elltwo{\desc_i - \desc_j} / Z$. This serves as a measure of visual
+        similarity between the features. (Recall $Z\tighteq\sqrt{2}$ for SIFT
+        descriptors).
+
+    \item Normalizer distance:
+        This distance between the first descriptor and the normalizing descriptor,
+        $\elltwo{\desc_i - \descnorm} / Z$.
+        This serves as a measure of visual distinctivness of the features.
+
+    \item Ratio score:
+        This is the ratio between the distance between the correspondence, and 
+        the distance to the normalizer, %
+        $\elltwo{\desc_i - \desc_j} / \elltwo{\desc_i - \descnorm}$. This is the
+        same measure used in the ratio test and weights the similarity against
+        the distinctivness.
+
+    \item Foregroundness score, the geometric product of the
+        features' foregroundness measures, $\sqrt{w_i w_j}$ along with the
+        individual foregroundness weights $w_i$ and $w_j$.
+        
+    \item Spatial verification error in location, scale, and orientation,
+        $( %
+        \Delta \pt_{i, j}, %
+        \Delta \scale_{i, j}, %
+        \Delta \ori_{i, j})$, as measured using~\cref{eqn:inlierdelta}.
+
+    \item Keypoint scales, indicating the size of each keypoint in its
+        annotation $\sigma_i$ and $\sigma_j$.
+
+    \item Keypoint relative locations, the xy-locations of the keypoints
+        divided by the width and height of the annotation 
+         $x_i / w_{\qaid}, y_i / h_{\qaid}$ and
+         $x_i / w_{\daid}, y_j / h_{\daid}$.
+\end{itemize}
+
+Once these measurements have been made for each keypoint correspondence we
+  summarize them using summary statistics.
+We consider the sum, mean, and standard deviation over all correspondences.
+We also consider taking values from individual correspondences based on
+  rankings and percentiles with respect to a particular attribute (\eg{} ratio
+  score), however in practice these provided little information.
+The resulting measurements are stacked to form the local feature vector.
+A final step we have found useful is to append an extra dimension simply
+  indicating the total number of feature correspondences.
+
+
+\subsection{The final pairwise feature vector}
+
+\begin{figure}
+\begin{minted}[gobble=4]{python}
+    OrderedDict([('global(qual_1)',      nan),
+                 ('global(qual_2)',      nan),
+                 ('global(qual_delta)',  nan),
+                 ('global(gps_1[0])',    -1.37),
+                 ('global(gps_2[0])',    -1.41),
+                 ('global(gps_1[1])',    36.81),
+                 ('global(gps_2[1])',    36.77),
+                 ('global(gps_delta)',   5.79),
+                 ('len(matches)',        20),
+                 ('sum(ratio)',          10.05),
+                 ('mean(ratio)',         0.50),
+                 ('std(ratio)',          0.09)])
+\end{minted}
+\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec}
+Example of a small pairwise feature vector containing local and global
+information. In practice the pairwise feature vectors include many more
+dimensions.
+}
+\label{fig:PairFeatVec}
+\end{figure}
+
+The pairwise feature vector is constructed by concatenating the local and the
+  global vector.
+This results in a final descriptor vector that can be quite large (thousands
+  of dimensions) and some of the dimensions might not be useful.
+To this end we prune only the feature vector using only the most useful of the
+  proposed dimensions.
+This is done by considering the importance of each feature dimension as
+  reported by the random forest classifier.
+More details on this will be given in the experiment section.
+An example of what a final feature vector is illustrated
+  in~\Cref{fig:PairFeatVec}.
+
+
 \section{Learning the match-state classifier}
+\label{sec:learnclf}
+
+Having defined the pairwise feature vector the only remaining steps to
+  constructing the pairwise classifier are to select a sample of labeled
+  training data and choose a probabilistic learning algorithm.
+We have previously stated that we will use the random forest learning
+  algorithm, so the last remaining step to explain is the selection of training
+  data and generation of labels.
+
+Recall that our the purpose of our classifier is to output a probability
+  distribution over three labels:
+positive, negative and incomparable.
+Given a pair of annotations we need to assign one of these three labels using
+  ground-truth data.
+In the most recent version of our system, this ground-truth label is stored
+  along with each unordered pair of annotations that has been manually reviewed,
+  but because this is a new feature there does not exist many pairs with the
+  explicit three state label.
+Therefore we must make use of data contained in previous versions of the
+  system that simply assign a name label to each annotation.
+This allows us to determine if a pair of annotation is the same or different,
+  but it does not provide information about whether or not two annotations are
+  comparable.
+To account for this we approximate the incomparable label using the assigned
+  viewpoints, and if either annotation is not assigned a viewpoint it is assumed
+  that they are comparable.
+Thus, training labels are assigned to a pair as follows:
+use the explicit labels if they exist, otherwise guess if the pair is
+  comparable based on viewpoint information, if not then return incomparable,
+  otherwise return positive if the annotations share a name label and negative
+  if they do not.
+
+We sample representative pairs of annotations guided by the principal of
+  selecting examples that exhibit a range of
+  difficulties~\cite{shi_embedding_2016} (\eg hard-negatives and moderate
+  positives).
+We use the ranking algorithm to estimate how easy or difficult it might be to
+  predict the match-state of a pair.
+Pairs with higher scores will be easier to classify for positive examples and
+  will be more difficult for negative examples, and lower scores will have the
+  reverse effect.
+We included all pairs explicitly labeled as incomparable because there is only
+  a small number of such examples.
+
+The training data for the pairwise classifier is a set of annotation pairs and
+  a set of corresponding labels.
+To train the classifier we follow the methodology of selecting hard negatives
+  and moderate positives~\cite{shi_embedding_2016}.
+
+Specifically, to sample a dataset for learning, we first rank the database for
+  each query image using the ranking algorithm.
+We partition the ranked lists into two parts:
+a list of correct result matches and a list of incorrect matches.
+We select annotations randomly and from the top, middle, bottom of each list.
+For positive examples we select $4$ from the top, $2$ from the middle, $2$
+  from the bottom, and $2$ randomly.
+For negative examples we select $3$ from the top, $2$ from the middle, $1$
+  from the bottom, and $2$ randomly.
+Because only a small number of annotation pairs are labeled as incomparable,
+  we include all such pairs.
+%The same is true for pairs labeled as photobombs.
+
 \section{Supporting classifiers}
+
+    We also construct a secondary classifier to determine the likelihood that
+      of a pair contains a photobomb --- a secondary animal in one annotation
+      matches an animal in another annotation (\eg see
+      Figure~\ref{fig:PhotobombExample}).
+    Only the primary animal in each annotation should be used to determine
+      identity, but photobombs provide strong evidence of matching that can
+      confuse a matching algorithm.
+
+
+
 \section{Pairwise classification experiments}
+
+To evaluate the pairwise classifier we choose a sample dataset as detailed in
+  \Cref{sec:learnclf}, except we use k-fold cross validation to split the
+  dataset into several training and testing sets.
+To train a classifier to be applied to new data, all collected data becomes
+  the training set.
+
+
+
+\WordCloud{}
+\ImportantFeat{}
+
+The most important features for the zebra datasets are illustrated in \Cref{fig:WordCloud} and the top $5$ are given in \cref{tbl:ImportantFeat}.
+
 \section{Summary of pairwise classification}
 
-%\MatchStateExample{}
