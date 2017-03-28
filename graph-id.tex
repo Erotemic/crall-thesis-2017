@@ -460,3 +460,31 @@ We can learn this probability offline by measuring the frequency that correct
 %  of exemplars in a query.
 %\begin{comment}
 
+
+\subsection{Exemplar selection}\label{sec:exempselect}
+    To scale one-vs-many matching to larger databases and to allow the LNBNN
+    mechanism to find appropriate normalizers we restrict the number of
+    examples of each individual in the database to a set of exemplars.
+
+    Exemplars that represent a wide range of viewpoints and poses are
+      automatically chosen using a modified version of the technique presented
+      in~\cite{oddone_mobile_2016}.
+    The idea is to treat exemplar selection as a maximum weight set cover
+      problem.
+    For each individual, the input is a set of annotations.
+    A similarity score is computed between pairs of annotations.
+    To compute covering sets we first choose a threshold, each annotation is
+      assigned a covering set as itself and the other annotations it matches
+      with a similarity score above that threshold.
+    The maximum number of exemplars is restricted by setting a maximum weight.
+    Searching for the optimal set cover is NP-hard, therefore we use the
+      greedy %
+    $(1 - \frac{1}{e})$-approximation algorithm~\cite{michael_guide_1979}.
+    The algorithm is run for several iterations in order to find a good
+      threshold that minimizes the difference between the weight of the set
+      cover and the maximum weight limit.
+
+    The similarity score can be computed using the one-vs-many algorithm, but
+      in our work we develop a probabilistic one-vs-one algorithm that better
+      suits this purpose.
+ 
