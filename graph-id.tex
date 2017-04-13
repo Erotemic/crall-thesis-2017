@@ -1,19 +1,17 @@
 \chapter{Graph identification}\label{chap:graphid}
 \newcommand{\nT}{N}
 
-
-We frame the problem in terms of constructing what we refer to as an
-  \emph{identity graph}.
-Each vertex of the graph corresponds to a cropped region surrounding a single
-  animal in a single photo.
-This cropped region, referred to as an \emph{annotation}, is extracted from an
-  image using a detection
-  algorithm~\cite{parham_detecting_2016,redmon_you_2016}.
-Edges are formed when two annotations are determined to show the same animal.
+In this chapter we frame the problem of individual animal identification in
+  terms of constructing what we refer to as an \emph{identity graph}.
+Each vertex of the graph is an annotation.
+Edges represent relationships between annotations, namely if two annotations
+  show the same animal.
 Each connected component of a correctly constructed graph will be all the
-  annotations from an individual animal.
-Therefore, stated abstractly, the focus of this paper is determine a correct, consistent set of
-  edges in the identity graph.
+  annotations from an individual.
+Therefore, stated abstractly, goal of graph identification is to determine a
+  correct, consistent set of edges in the identity graph.
+
+
 We address these problems by prioritizing edges for review based on both their
   pairwise probability scores and their ability to affect the consistency of the
   graph, by developing graph measures of redundancy, consistency, and
@@ -21,8 +19,6 @@ We address these problems by prioritizing edges for review based on both their
   criteria based on the measures.
 These allow us to construct a more accurate identity graph while reducing the
   amount of human effort.
-  
-
 
 
 The review procedure is formalized around the notion of a %
@@ -428,6 +424,37 @@ we can show that the probability $\Pr(\nT_C \given E_C)$ of observing the
 We can learn this probability offline by measuring the frequency that correct
   results are at a given rank in a PCC's ranked list (constructed by aggregating
   the ranked lists of all annotations in the PCC).
+
+
+\subsection{Convergence as a Poisson process}
+
+To determine when to stop we consider the question:
+``How many unreviewed edges in the graph are likely to be positive?''.
+We can obtain an upper bound on this number by modeling the probability that a
+  new edge will be positive as a Poisson processes.
+
+We consider a window of previous reviews between annotations where (at the
+  time) the annotations belonged to different names.
+A fraction of these reviews will be labeled as positive, resulting in a merge.
+This fraction $\mu$ is the mean of a Poisson distribution.
+Multiplying $\mu$ by a positive integer $k$ estimates the expected number of
+  positive matches we will observe in next $k$ reviews between different PCCs.
+If the current number of PCCs is $N$, and we know $M$ pairs of PCCs are
+  negative-redundant, then the number of edges to complete the negative labeling
+  is $k=\binom{N}{2} - M$.
+Thus, at any point we can estimate the number of undiscovered positive reviews
+  as $k\mu$.
+
+In practice, this number will be much greater than the actual number of
+  remaining merges because our event is not a strict Poisson process.
+This is because the probability of observing a positive edge is not constant
+  over time, it depends on the previously observed positive edges.
+However, because each positive review removes other positive reviews remaining
+  in the graph, and because we prioritize by positive probability, the
+  probability of observing a positive edge will decrease with each new review.
+This is what allows us to use the Poisson process as an upper bound.
+%Re-estimating the $k\mu$ at each time-step should
+
 
 
 %\begin{comment}
