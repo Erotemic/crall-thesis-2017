@@ -1,35 +1,97 @@
 \chapter{Graph identification}\label{chap:graphid}
 \newcommand{\nT}{N}
 
+%\paragraph{Introduction}
 In this chapter we frame the problem of individual animal identification in
-  terms of constructing what we refer to as an \emph{identity graph}.
-Each vertex of the graph is an annotation.
-Edges represent relationships between annotations, namely if two annotations
-  show the same animal.
-Each connected component of a correctly constructed graph will be all the
-  annotations from an individual.
+  terms of constructing what we refer to as an \emph{decision graph}.
+In this graph, each vertex is an annotation, and each edge represents a
+  decision made between two annotations.
+Edges determine if two annotations are the same (positive) or different
+  (negative) individuals or if they cannot be compared (incomparable).
+Thus, a correctly constructed decision graph naturally addresses the problem
+  of identifying individual animals because each connected component of positive
+  edges will be all the annotations from an individual.
 Therefore, stated abstractly, goal of graph identification is to determine a
-  correct, consistent set of edges in the identity graph.
+  correct, consistent set of edges in the decision graph.
+
+%\paragraph{Motivation}
+To construct the decision graph, we develop a semi-automatic review procedure
+  that combines the ranking and verification algorithms presented in
+  Chapters~\ref{chap:matching} and \ref{chap:pairclf}.
+The ranking algorithm will be used to suggest candidate edges to be placed in
+  the graph, and the verification algorithm will be used to automatically review
+  as many edges as possible.
+%Edges that cannot be automatically reviewed are manual verified.
+The key reason for combining these algorithms with a decision graph is to take
+  advantage of its connectivity information.
+Connectivity not only identifies the individuals, but it can also be used to
+  develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and \emph{convergence}.
+By combining these graph measures with the ranking and verification algorithms
+  we can prioritize edges for review based on both their pairwise probabilities
+  and their ability to affect the consistency of the graph, which in turn allows
+  us to:
+  %
+  \begin{enumin}
+    \item increase confidence that the identifications are correct, %
+    \item reduce the number of manual reviews,  % 
+    \item detect and recover from review errors, and %
+    \item determine when identification is complete. %
+  \end{enumin}
+%\footnote{There are many more properties beyond the ones considered in this
+%  these that a graph-based framework can exploit, and we discusses these as
+%  challenges for future research at the end of this chapter}
+
+Another nice and important property of the graph identification framework is
+  that it is agnostic to the underlying computer vision procedures, which are
+  abstracted into into three optional components:
+\begin{enumin}
+    \item a ranking algorithm used to search for candidate positive edges, %
+    \item a verification algorithm used to automatically review edges, and %
+    \item a probability algorithm used assign probabilities to edges (note
+      this is typically a by-product of the ranking or verification algorithm).
+\end{enumin}
+In this thesis we ranking algorithm from \Cref{chap:matching}, and the
+  verification algorithm from \Cref{chap:pairclf} to define these components
+  because these are suitable for identifying textured species.
+However, while the review procedure benefits from accurate computer vision
+  subroutines it does not depend on them.
+This means that existing identification algorithms that only define a subset
+  of these procedures (\eg{} contour-based rank-only identification of humpback
+  whales and bottlenose dolphins) could be seamlessly incorporated into our
+  framework and realize the benefits of graph identification (\eg{} a reduced
+  number of manual reviews and error recovery mechanisms).
+Furthermore, because pairwise decisions are gathered and maintained by this
+  framework, verification algorithms can be retrained and improved, moving
+  closer to a fully-automatic algorithm.
+
+This outline of this chapter is as follows:
+\Cref{sec:decisiongraph} formalizes the decision graph and summarizes the
+  priority based review procedure used to construct it.
+\Cref{sec:cand} describes candidate edge generation.
+\Cref{sec:decision} discuss how the verification algorithm is used to
+  automatically review candidate edges.
+\Cref{sec:redun} introduces the redundancy criteria used to eliminate
+  candidate edges \Cref{sec:incon} describes the built-in mechanisms for error
+  recovery.
+\Cref{sec:coverge} discusses the convergence criteria that determines when
+  identification is complete.
+\Cref{sec:graphexpt} experimentally demonstrates that ability of the graph
+  identification algorithm to reduce the number of manual reviews and recover
+  from errors.
+\Cref{sec:graphconclusion} concludes and summarizes the chapter.
 
 
-We address these problems by prioritizing edges for review based on both their
-  pairwise probability scores and their ability to affect the consistency of the
-  graph, by developing graph measures of redundancy, consistency, and
-  completeness, and by developing deterministic and probabilistic convergence
-  criteria based on the measures.
-These allow us to construct a more accurate identity graph while reducing the
-  amount of human effort.
+\section{The decision graph}\label{sec:decisiongraph}
 
+\decisiongraph{}
 
-The review procedure is formalized around the notion of a %
-\glossterm{decision graph} $G = (V, E)$ whose nodes are annotations and whose
-  edges are suggested by the LNBNN ranking algorithm and decided upon by a
-  combination of the probabilities output by the pairwise algorithm and by
-  manual reviewing.
-It is important to note that alternative ranking and pairwise probability
-  algorithms could be used in place of the two algorithms proposed here.
-
-
+The graph identification algorithm is a review procedure formalized around the
+  notion of a \glossterm{decision graph} $G = (V, E)$ whose nodes are
+  annotations and whose edges are suggested by a ranking algorithm (LNBNN in our
+  case) and decided upon by a combination of the probabilities output by a
+  verification algorithm and by manual review.
+%It is important to note that alternative ranking and pairwise probability
+%  algorithms could be used in place of the two algorithms proposed here.
 The edge set $E = E_p \cup E_n \cup E_i$ is composed of three disjoint sets.
 Each edge in $E_p$ is \emph{positive}, meaning that it connects two
   annotations determined to be from the same individual.
@@ -40,101 +102,144 @@ Finally, each edge in $E_i$ is \emph{incomparable}, meaning that it connects
   information to tell to tell if they are from the same individual (\eg{} when
   one annotation shows the left side of an animal and another other shows the
   right side).
+An example of a decision graph with all three edge types is illustrated in
+  \Cref{fig:decisiongraph}.
 The goal of graph identification is to construct these edges.
-  
 
-Constructing this decision graph naturally addresses the problem of
-  identifying individual animals.
-Each connected component of the subgraph $G_p = (V, E_p)$ corresponds to a
-  unique individual.
+The most important task is to determine the positive edges $E_p$.
+This is because each connected component in the subgraph $G_p = (V, E_p)$
+  corresponds to a unique individual.
 Producing an accurate set of these \glossterm{positive connected components}
-  (PCCs) is the ultimate goal of the algorithm.
-To ensure that PCCs are correct we make use of the negative edges, which
-  provide direct evidence that two annotations are different individual.
-An important case is when a negative edge is contained within a PCC.
-This is an inconsistency and implies that a mistake has been made.
-All such inconsistencies must be resolved.
-Finally, we add a measure of redundancy to both the positive and negative
-  subgraphs to allow the algorithm to detect and recover from mistakes, either
-  in the automatic or manual decision making.
-Incomparable edges play a minor but important role by preventing uninformed
-  decisions in scenarios where positive or negative decisions cannot be made.
+  (PCCs) addresses solves the larger problem of animal identification.
+However, an algorithm that only determines positive edges is not enough.
+This is because the algorithm may have failed to find all positive edges,
+  resulting in two unconnected PCCs that should be \emph{merged} into one.
 
+We can gain confidence that all positive edges have been found by using
+  negative edges $E_n$, which provide direct evidence that two annotations are
+  different individual.
+A negative edge between two PCCs means that no other unreviewed edge between
+  those PCCs can be positive.
+Another important case is when a negative edge is contained within a PCC.
+When this happens, the PCC is \emph{inconsistent}, and it implies that it
+  contains at least one mistake.
+Whenever an inconsistencies is detected, we resolve it using an algorithm we
+  will define in \Cref{sec:incon} that restores consistency.
+
+Lastly, incomparable edges, $E_i$, play a minor but necessary role by simply
+  signifying that a positive or negative decision cannot be made.
+Incomparable edges can exist internally in a PCCs without causing
+  inconsistencies or between two PCCS without precluding them from being matched
+  at a later point.
+
+%We use the connectivity of these edges to develop graph measures of
+%  \emph{redundancy}, \emph{completeness}, \emph{consistency}, and
+%  \emph{convergence}.
+%We have already introduces the consistency measure, where negative edges
+%  internal to PCCs are used to detect inconsistencies.
+
+To reduce the number of potential reviews, notice, that once a group of nodes
+  is connected by (a tree of) positive edges, all those nodes in that PCC can be
+  inferred to belong to the same individual, and it is not necessary to consider
+  any other edge internal to the PCC for review.
+Likewise once, a negative edges has been placed between two PCCs, all edges
+  between those PCCs can be ignored.
+By ignoring these redundant edges we can reduce the number of reviews.
+Furthermore, if a negative edge is placed between every pair of PCCs, then all
+  individuals must have been discovered and identification has converged.
+
+Unfortunately, there are several issues with these previous observations.
+These observations depend on the condition that each edge was correctly
+  reviewed.
+A small amount of redundant decisions is desirable because it reduces the
+  probability that errors have been made and signifies when errors have occurred
+  by introducing inconsistencies.
+Therefore we will define a redundancy criteria in \Cref{sec:redun} which
+  ignores edges within and between PCCs, but only after they meet a minimum
+  level of redundancy.
+Additionally this deterministic convergence criteria would requires that
+  $O(|V|^2)$ edges are reviewed as negative.
+We address this concern in \Cref{sec:coverge} using a probabilistic
+  convergence criteria.
+
+%Finally, we add a measure of redundancy to both the positive and negative
+%  subgraphs to allow the algorithm to detect and recover from mistakes, either
+%  in the automatic or manual decision making.
+
+\subsection{The review algorithm}
+
+
+% Algorithm overview
+The review algorithm that produces the edges of a decision graph is outlined
+  in Algorithm~\ref{alg:AlgoOverview}.
+Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with
+  an over-segmentation of an image, the identification graph starts with an
+  empty set of edges, $G = (V, \{ \})$, so in essence each annotation starts by
+  itself as an individual animal.
+Throughout the main algorithm, the graph is maintained in a \emph{consistent}
+  state, which means that each PCC has no internal negative edges.
 
 \begin{algorithm}
-    \begin{enumerate}[noitemsep,nolistsep]
+    \begin{enumln}
     \item Generate and prioritize candidate edges 
     \item Insert candidate edges into a priority queue 
     \item Repeat until the priority queue is empty
-    \begin{enumerate}[noitemsep,nolistsep]
+    \begin{enumln}
         \item Pop an edge from the priority queue
         \item Make a decision and add the edge to the graph
         \item If the edge causes an inconsistency drop into inconsistency recovery mode
         \item Update the priority queue based on the new edge
         \item If candidate edges require refresh, goto step 1
-    \end{enumerate}
-    % What happens when the graph is not complete, but the top candidate
-    % generation yields no new edges, but the graph is not redundant/complete?
-    \end{enumerate}
+    \end{enumln}
+    \end{enumln}
 \caption[Algorithm Overview]{Overview of graph identification}
 \label{alg:AlgoOverview}
 \end{algorithm}
-
-
-% Algorithm overview
-The process is outlined in Algorithm~\ref{alg:AlgoOverview}.
-Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with
-  an over-segmentation of an image, the identification graph starts with an
-  empty set of edges, %
-$G = (V, \{ \})$, so in essence each annotation starts by itself as an
-  individual animal.
-Throughout the algorithm, the graph is maintained in a \emph{consistent}
-  state, which means that each positive connected components has no internal
-  negative edges.
  
-Candidate edges are generated by the LNBNN algorithm, and probability measures
-  (positive, negative, or incomparable) are predicted for each edge.
-Each edge is then entered into a priority queue (\Cref{sec:cand}).
+The first step of the algorithm is to generate candidate edges predict
+  probability measures (positive, negative, or incomparable) for each candidate
+  edge.
+In the next step each edge is then entered into a priority queue.
 Next, the algorithm enters a loop where the next candidate edge is selected, a
   decision is made about this edges --- either automatically (as much as
-  possible) or by the user --- and it is added to the graph
-  (\Cref{sec:decision}).
+  possible) or by the user --- and it is added to the graph.
 The algorithm proceeds toward convergence by removing candidate edges from the
   priority queue, either directly from the top of the queue or indirectly by
-  eliminating candidate edges that are no longer needed (\cref{sec:redun}).
+  eliminating candidate edges that are no longer needed.
 A candidate edge is no longer needed when there are sufficient redundancies in
   the edge set within or between its PCCs.
-A PCC is \emph{complete} when there is a negative edge between it an all other
-  PCCs.
+A pair of PCCs is \emph{complete} when there are enough negative edges between
+  them.
+%A PCC is \emph{complete} when there is a negative edge between it an all other
+%  PCCs.
 
 Each new edge addition could trigger two important events:
-\begin{enumerate}[label={(\arabic*)}]
-
+\begin{enumin}
     \item a \emph{merge} --- addition of a positive edge between different
       PCCs combines them into one PCC, and
 
     \item an \emph{inconsistency} --- addition of either a negative edge
       within a PCC or a positive edge between PCCs that already have a negative
       edge between them creates an inconsistent PCC.
-
-\end{enumerate}
+\end{enumin}
 Handling a merge is largely a matter of bookkeeping.
 Finding an inconsistency, however, drops the user into inconsistency recovery
   mode where a cycle of hypothesizing one or more edges to fix and manually
   verifying these with the user until consistency is restored.
 
-Finally, the outer loop of the overall algorithm allows the LNBNN procedure to
-  generate additional candidate edges --- since as it starts it tends to pull
-  out the most likely candidates first and more subtle matches as the PCCs begin
-  to form (\Cref{sec:refresh}).
+Finally, the outer loop of the overall algorithm allows the ranking algorithm
+  to generate additional candidate edges --- this allows the ranking algorithm
+  to take advantage of more subtle matches as the PCCs begin to form
+  (\Cref{sec:refresh}).
 The priority queue will gradually be emptied as each PCC obtains a
   sufficiently redundant set of positive edges and enough negative edges to be
   complete.
-Ensuring completeness requires examining $O(|V|^2)$ edges, however, so in
-  practice we develop a learned probabilistic completeness measure.
+%Ensuring completeness requires examining $O(|V|^2)$ edges, so in practice we
+%  develop a learned probabilistic completeness measure.
 %If sufficient training data is not available simple heuristics can be used to
 %  terminate.
-Details are described in the following sections.
+Details of each component in the review algorithm are described in the
+  following sections.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
@@ -193,14 +298,24 @@ redundancy that is the basis for both of these.
 We define both a positive and a negative redundancy criteria:
 \begin{enumerate}[label={(\arabic*)},noitemsep,nolistsep]
 
-    \item %$k$-positive-redundancy --- % 
-    A PCC is $k$-positive-redundant if it contains no cut-sets involving fewer
-      than $k$ positive edges % (this is edge-connectedness).
+    \item $k$-positive-redundancy --- % 
+        A PCC is strictly-positive-redundant if its positive subgraph is
+          $k$-edge-connected (contains no cut-sets involving fewer than $k$
+          positive edges\cite{Tarjan}).
+        If the PCC has $k$ or fewer nodes it can be considered
+          loosely-positive-redundant if its positive subgraph is complete (all
+          possible edges are reviewed).
+        Unless otherwise specified, we use positive-redundancy to refer to
+          loose-positive-redundancy.
 
-    \item %$k$-negative-redundancy --- % 
-    A pair of PCCs $C$ and $D$ is $k$-negative-redundant if there are $k$
-      negative edges between $C$ and $D$.
-
+    \item $k$-negative-redundancy --- % 
+        A pair of PCCs $C$ and $D$ is strictly-negative-redundant if there are
+          $k$ negative edges between $C$ and $D$.
+        If either PCC has fewer than $k$ nodes, we consider the pair to be
+          loosely-negative-redundant if there are at least $\mathop{max}(|C|,
+          |D|)$ negative edges between them.
+        Unless otherwise specified, we use negative-redundancy to refer to the
+          loose version.
     %which can be determined in $O(n_1 n_2)$ time.
     %(by looping over adjacency sets of nodes
     %in $C$ and performing set intersection with nodes in $D$ to get the edges
@@ -220,7 +335,9 @@ This may be plausible if $C$ were identical twins, but these tend not to occur
   for species where the distinguishing markings (\eg{} hip and shoulder of
   zebras) are mostly random.
   %\footnote{The exception to this is near identical images --- taken at most a few seconds apart --- and we implement a simple heuristic to eliminate these redundancies.}
-In our current implementation we use $k=2$.
+Note that $k$ can be different for positive and negative redundancy, but in
+  our current implementation we use $k=2$ for both positive and negative
+  redundancy.
 
 For positive-redundancy, determining that the minimal size cut-set in a PCC is
   at least $k$ can be done in linear time (in the number of component vertices)
@@ -228,6 +345,8 @@ For positive-redundancy, determining that the minimal size cut-set in a PCC is
 Determining if two components are $k$-negative-redundant is a simple matter of
   bookkeeping.
 
+
+  \kredun{}
 % -positive-redundant 
 % can be done in linear time in the size of the PCC 
 % The $k$-positive-redundancy-update procedure procedure finds all
@@ -241,23 +360,22 @@ Determining if two components are $k$-negative-redundant is a simple matter of
 % If $C$ and $D$ have enough negative edges between them, all other edges
 %  between $C$ and $D$ are removed from the priority queue.
 
-Note, that some PCCs (or pairs) do not have sufficient positive edges that
-  would make them redundant.
-This could be because the PCCs are too small or because other edges are marked
-  as incomparable.
-For the purposes of convergence such cases are marked as redundant.
+%Note, that some PCCs (or pairs) do not have sufficient positive edges that
+%  would make them redundant.
+%This could be because the PCCs are too small or because other edges are marked
+%  as incomparable.
+%For the purposes of convergence such cases are marked as redundant.
 
 When a positive edge is added within a single PCC, we check for
-  $k$-positive-redundancy.
+  positive-redundancy.
 If this passes, all remaining internal edges for that PCC may be  removed from
   the priority queue.
 When a negative edge is added between a pair of PCCs, we run the
-  $k$-negative-redundancy check on the pair, and if this passes, all remaining
-  edges between the PCCs may be removed from the priority queue.
+  negative-redundancy check on the pair, and if this passes, all remaining edges
+  between the PCCs may be removed from the priority queue.
 When a positive edge is added between a pair of PCCs, the two PCCs are merged
-  into a single new PCC $C'$, and the above $k$-negative-redundancy check must
-  be run between $C'$ and all other PCCs having a negative edge connecting to
-  $C'$.
+  into a single new PCC $C'$, and the above negative-redundancy check must be
+  run between $C'$ and all other PCCs having a negative edge connecting to $C'$.
 It can be shown that if the graph is in a consistent state, that these are the
   only updates required.
 
@@ -267,6 +385,8 @@ Whenever a decision is made that either adds a negative edge within a PCC or
   the graph becomes inconsistent.
 In both of these cases we add the edge and create the result that there is a
   single PCC $C$ with internal negative edges.
+An example of an inconsistent PCC is illustrated in \cref{fig:inconpcc}.
+
 The goal of inconsistency recovery mode is to change the labels of edges in
   order to make $C$ consistent.
 An inconsistency implies that a mistake was made, but does not necessarily
@@ -276,6 +396,8 @@ Therefore, we develop an algorithm to hypothesize the edge(s) most likely to
 We describe the case where $C$ only contains one negative edge, but the
   general case replaces min-cut with
   multicut~\cite{vazirani_approximation_2013}.
+
+\inconpcc{}
 
 The procedure alternates between steps of generating ``mistake hypothesis''
   edges, and presenting these to the user for review.
@@ -307,7 +429,7 @@ When this happens, the weights of the newly reviewed edges are increased by
   $1$ in order to force the algorithm to look elsewhere for a cut.
 This repeats until all inconsistencies are eliminated.
 If this results in splitting one PCC into two or more, then the
-  $k$-positive-redundancy and $k$-negative-redundancy tests must be repeated,
+  positive-redundancy and negative-redundancy tests must be repeated,
   potentially re-adding edges to the priority queue.
 
 %As a final note, in order to ensure that this algorithm detects errors, the
@@ -383,7 +505,10 @@ If this results in splitting one PCC into two or more, then the
 As the review process executes we want to continue to review positive matches
   as long as we are discovering them.
 However, at some point the candidate edges may no longer contain positive
-  results, but undiscovered positive matches may still exist.  This is because LNBNN, working initially with each annotation having a separate label, can miss more subtle but correct matches, especially when there are several annotations for an animal and subtle viewpoints.
+  results, but undiscovered positive matches may still exist.
+This is because LNBNN, working initially with each annotation having a
+  separate label, can miss more subtle but correct matches, especially when
+  there are several annotations for an animal and subtle viewpoints.
 As the labeling improves, so does the reliability of the LNBNN.
 Therefore, we define a refresh criteria to determine when we should recompute
   candidate edges.
@@ -401,8 +526,8 @@ Thus the candidate edges are refreshed whenever the number of positive reviews
 As the last outer iteration of the overall algorithm before convergence,
   triggered when the LNBNN ranking algorithm fails to produce positive edges,
   candidate edges between untested pairs of annotations are added within PCCs
-  that are not $k$-positive-redundant and between PCCs that are not
-  $k$-negative-redundant.
+  that are not positive-redundant and between PCCs that are not
+  negative-redundant.
 This is because the ranking algorithm itself is imperfect and the missed
   matches tend to affect small PCCs disproportionately, which are the last to
   satisfy redundancy tests.
@@ -514,4 +639,48 @@ This is what allows us to use the Poisson process as an upper bound.
     The similarity score can be computed using the one-vs-many algorithm, but
       in our work we develop a probabilistic one-vs-one algorithm that better
       suits this purpose.
+
+\section{Experiments}\label{sec:graphexpt}
  
+\section{Conclusion and summary of graph identification}\label{sec:graphconclusion}
+
+A nice and important property of the graph identification framework is
+  that it is agnostic to the underlying procedures used to generate and review
+  candidate edges to be placed in the decision graph.
+Throughout this chapter we will have used the ranking algorithm from
+  \Cref{chap:matching}, and the semi-automatic verification algorithm from
+  \Cref{chap:pairclf}, which work well for distinctively textured species like
+  zebras, giraffes, jaguars, and lionfish.
+However, the benefits of graph identification algorithm could be realized for
+  less textured species such as humpbacks whales or bottlenose dolphins by
+  simply using existing contour-based ranking algorithms and a manual reviewer.
+
+%The framework requires two external components:
+%\begin{enumin}
+%    \item a ranking algorithm to search for candidate edges, and
+%    \item a verification algorithm (either manual or automatic) that can
+%      decide if a pair of annotation is positive, negative, or incomparable.
+%  \end{enumin}
+The verification algorithm (which can be a manual reviewer) is what determines
+  if the graph identification algorithm is manual, semi-automatic, or
+  fully-automatic.
+In our experiments we use the ranking algorithm from \Cref{chap:matching}, and
+  the verification algorithm from \Cref{chap:pairclf} to construct these
+  components, which work well for
+  
+%These algorithms could easily be swapped out for other algorithms tuned
+%  towards specific species (\eg{} contour-based ranking algorithms for marine
+%  species).
+%(or any object that can be visually identified).
+Furthermore, as more pairwise training data is gathered and maintained using
+  this framework, more sophisticated pairwise classifiers trained using deep
+  learning could be applied, perhaps removing the manual component completely
+  and resulting in a fully automatic identification algorithm.
+
+Because of this flexibility the graph identification framework generalizes
+  beyond animal identification and could be applied to any instance recognition
+  problem using algorithms tuned for those tasks under the condition that one
+  annotation corresponds to one individual object (note the photobomb classifier
+  can be used to relax this constraint).
+
+

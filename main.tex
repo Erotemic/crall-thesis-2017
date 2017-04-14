@@ -32,7 +32,18 @@
 
 \input{CrallPramb}
 \usepackage[inline]{enumitem}
+%\usepackage{enumitem}
 \input{CrallDef}
+
+
+\newlist{itemln}{itemize}{2}
+\setlist[itemln]{label=\textbullet,noitemsep,nolistsep}
+\newlist{enumln}{enumerate}{2}
+\setlist[enumln]{label=(\arabic*),noitemsep,nolistsep}
+%\setlist[enumln]{label=(\arabic*)}
+\newlist{enumin}{enumerate*}{2}
+\setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
+
 
 \begin{comment}
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-candidacy-2015/ ~/latex/crall-candidacy-2015
@@ -90,6 +101,7 @@
 \input{figdefindiv.tex}
 \input{figdefdbinfo.tex}
 \input{figdef_pairclf.tex}
+\input{figdef_graphid.tex}
 
 %\setcounter{chapter}{3}
 %\include{newchap3_outline}
@@ -97,13 +109,13 @@
 
 %\include{chapter1-intro}
 %\include{chapter2-related-work}
-%\include{chapter3-matching}
 
-%\setcounter{chapter}{3}
-%\include{chapter4-application}
+\setcounter{chapter}{2}
+\include{chapter3-matching}
 \include{pairwise-classifier}
 \include{graph-id}
 
+%\include{chapter4-application}
 %\include{new-work}
 %\include{rf_train_outline}
 

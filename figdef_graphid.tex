@@ -1,0 +1,78 @@
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw draw_graph_id \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/decisiongraph.jpg" \
+    --figsize=12,8 --clipwhite --dpi=280 --diskshow
+\end{comment}
+\ImageCommand{figures_graph/decisiongraph.jpg}{\textwidth}{
+    An example of a consistent synthetic decision graph with positive,
+      negative, and incomparable edges.
+    The color of each node represents the positive connected compoment (PCC)
+      it belongs to.
+}{decisiongraph}
+
+
+
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw draw_inconsistent_pcc --show
+python -m ibeis.scripts.specialdraw draw_inconsistent_pcc \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/inconpcc.jpg" \
+    --figsize=10,5 --clipwhite --dpi=180 --diskshow
+\end{comment}
+\ImageCommand{figures_graph/inconpcc.jpg}{\textwidth}{
+    Any PCC containing at least one negative edge is inconsistent.
+}{inconpcc}
+
+
+  
+
+
+\begin{comment}
+python -m ibeis.scripts.specialdraw redun_demo2 --show
+python -m ibeis.scripts.specialdraw redun_demo2 \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/kredun.jpg" \
+    --figsize=10,5 --clipwhite --dpi=180 --saveparts
+\end{comment}
+\newcommand{\kredun}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunA.jpg}\caption{}\label{sub:kredunA}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunB.jpg}\caption{}\label{sub:kredunB}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunC.jpg}\caption{}\label{sub:kredunC}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunD.jpg}\caption{}\label{sub:kredunD}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunE.jpg}\caption{}\label{sub:kredunE}
+\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.31\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}
+\end{subfigure}
+\caption[kredun]{\caplbl{kredun}
+Examples of positive (top) and negative (bottom) redundancy.
+Choosing the level of redundancy is a tradeoff between the number of required
+  reviews and the confidence that the reviews are correct. In our current
+  implementation we use $2$-redundancy.
+}
+\label{fig:kredun}
+\end{figure}
+}
+
