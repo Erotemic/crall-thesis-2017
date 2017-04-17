@@ -25,7 +25,8 @@ The ranking algorithm will be used to suggest candidate edges to be placed in
 The key reason for combining these algorithms with a decision graph is to take
   advantage of its connectivity information.
 Connectivity not only identifies the individuals, but it can also be used to
-  develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and \emph{convergence}.
+  develop graph measures of \emph{redundancy}, \emph{completeness},
+  \emph{consistency}, and \emph{convergence}.
 By combining these graph measures with the ranking and verification algorithms
   we can prioritize edges for review based on both their pairwise probabilities
   and their ability to affect the consistency of the graph, which in turn allows
@@ -251,10 +252,12 @@ Details of each component in the review algorithm are described in the
 
 
 \section{Candidate edge generation and priorities}\label{sec:cand}
-To generate candidate edges the we issue each annotation as an LNBNN query
-  (see Section~\ref{sec:s3}), forming edges from the resulting ranked lists.
+
+To generate candidate positive edges the we issue each annotation query to the
+  ranking algorithm (the LNBNN from \Cref{chap:matching}), forming edges from
+  the resulting ranked lists.
 For each candidate edge we use the pairwise algorithm (see
-  Section~\ref{sec:s4}) to estimate the positive, negative, and incomparable
+  \Cref{chap:pairclf}) to estimate the positive, negative, and incomparable
   probabilities.
 Any edge whose maximum probability is above the threshold for automatic
   decision making is ranked according to this probability.
@@ -641,6 +644,76 @@ This is what allows us to use the Poisson process as an upper bound.
       suits this purpose.
 
 \section{Experiments}\label{sec:graphexpt}
+    In this section we design an experiment to measure the impact of graph
+      identification on the number of manual reviews required to complete
+      identification as well as the accuracy of those identifications.
+    Our experiments simulates the semi-automatic identification process from a
+      user's perspective.
+    We consider three algorithms:
+    (1) our graph identification algorithm,
+    (2) a baseline ranking-based protocol, and
+    (3) an intermediate ranking protocol that combines the ranking algorithm
+      with pairwise classifier.
+    To simulate our algorithms, we model noisy user response using
+      ground-truth data.
+    The simulated user returns the ground-truth classification 98\% of the
+    time, making errors 2\% of the time uniformly at random.
+
+    The protocol for the graph identification algorithm is defined in
+      \Cref{sec:s5}.
+    The pairwise classifier, corresponding thresholds, and termination
+      criteria are learned on a disjoint training set.
+    Because our algorithm is able to handle errors, we set our automatic
+      classification thresholds to achieve a false positive rate of $.1\%$ 
+    on a validation set.
+    We disable automatic review for incomparable cases due to the small number
+      of labeled training examples.
+
+    The baseline algorithm captures the effect of using a purely rank-based
+      approach for animal identification.
+    We first run the ranking algorithm and add the top $5$ results from each
+      query to a list sorted by the LNBNN score.
+    The user reviews each result in the list sequentially, without regard to
+      the underlying graph structure.
+    Once, new matches are consistently negative (using the approach from
+      ~\cref{sub:refresh}), we regenerate a new ranked list and iterate.
+    We terminate after two rounds of ranking and review.
+
+    The intermediate protocol will demonstrate the effect of augmenting the
+      baseline algorithm with our pairwise classifier.
+    The procedure is the exactly the same as the baseline algorithm, except
+      that any item with a predicted probability above a threshold is
+      automatically reviewed.
+    Because this approach has no mechanism for error recovery, we choose
+      conservative classification thresholds that achieve a $0\%$ false 
+    positive rate on a validation dataset.
+
+    In all tests we record two measurements after each review pertaining to
+      accuracy and error.
+    (1) The accuracy measurement is the number of merges remaining before all
+      individuals have been identified.
+    This is the number of edges in a spanning forest of the ground-truth
+      positive subgraph minus same measurement but applied to the subgraph of
+      all correctly predicted positive edges.
+    (2) The error measurement is the total number of edges with a predicted
+      state that differs from its ground-truth state.
+
+    Results of this test for the graph, intermediate and baseline algorithms
+      are illustrated in \cref{fig:ETE} for each dataset.
+    These results demonstrate that the algorithms using the pairwise
+      classifier significantly improves the rate at which annotations from the
+      same individual are merged.
+    However, the graph algorithm better suited to take advantage of the
+      pairwise classifier because it can afford to a make initial mistakes and
+      expect to recover from them later.
+    The baseline and intermediate algorithm have no mechanism for error
+      recovery, and thus their error steadily increases over time.
+    In these cases a significant number of individuals will be misidentified.
+    These results also demonstrate that the graph algorithm is able to recover
+      from many of these errors.
+    We note that the remaining errors might be resolved if more images of
+      individuals involved in those errors are added to the system.
+
  
 \section{Conclusion and summary of graph identification}\label{sec:graphconclusion}
 
