@@ -169,13 +169,30 @@ The viewpoint and quality attributes should help the classifier predict when
   toward the camera in both a left and right side view.
 
 
-These four ``unary'' attributes are gathered for each annotation, and stacked
-  at the front of the global vector.
+%Of these four ``unary'' attributes only the qualities are used directly.
+%By themselves the other unary attributes like time should not influence an
+%  annotations ability to match, so to prevent potential overfitting they are not
+%  included in the global vector.
+%Instead we
+
+These four ``unary'' attributes are gathered for each annotation, and can be
+  stacked at the front of the global vector.
 This will allow a classifier to consider each of the properties of each
   annotation separately.
-To allow the classifier to take into account the relationship between the
-  global attributes we also include distance measurements between each unary
-  measurements.
+However, we note that some unary attributes like GPS and time should be
+  independent of an annotations ability to match.
+To prevent biases in data collection from causing overfitting we typically do
+  not include unary feature by themselves, but instead encode their
+  relationships.
+The exceptions are quality and viewpoint which might be meaningful
+  independantly.
+In these cases, because the ordering of the annotations is arbitrary we record
+  the minium of the two values in a feature dimension and the maximum in
+  another.
+
+To allow the classifier to account for relationships between the unary
+  attributes that could influence a pair of annotation's ability to match we
+  encode distance measurements between the unary attributes.
 In the case of GPS coordinates we use the haversine distance (as detailed in
   \Cref{sec:occurgroup}), but for all other measures we use the absolute
   difference of their values.
@@ -188,6 +205,9 @@ If data is not missing completely at random, then a random forest will be able
   to take advantage of \nan{} values by treating them as a separate
   class~\cite{ding_investigation_2010}.
 
+%New:
+%We no longer include the unary attributes except for quality, but we remove
+%  the asymetry by recording the dimensions as minqual and maxqual.
 
 \subsection{The local feature vector}
 The local feature vector distills two orderless bag-of-features
@@ -273,6 +293,11 @@ The resulting measurements are stacked to form the local feature vector.
 A final step we have found useful is to append an extra dimension simply
   indicating the total number of feature correspondences.
 
+Because setting the threshold for the ratio test produces a binary decision as
+  to whether or not a correspondence is used in generating local statistics, we
+  generate these statitics for multiple values of the ratio test threshold.
+This helps account for viewpoint and pose variations that may cause
+  correspondences to appear slightly less distinctive.
 
 \subsection{The final pairwise feature vector}
 
@@ -406,8 +431,8 @@ Because only a small number of annotation pairs are labeled as incomparable,
 \section{Pairwise classification experiments}
 
 To evaluate the pairwise classifier we choose a sample dataset as detailed in
-  \Cref{sec:learnclf}, except we use k-fold cross validation to split the
-  dataset into several training and testing sets.
+  \Cref{sec:learnclf}, except we use stratified k-fold cross validation to split
+  the dataset into several training and testing sets.
 In our cross validation we add the constraint that edges within the same name
   and edges between the same names must be grouped in the same set.
 This will ensure that our results generalize to new individuals.
@@ -421,5 +446,22 @@ To train a classifier to be applied to new data, all collected data becomes
 The most important features for the zebra datasets are illustrated in
 \Cref{fig:WordCloud} and the top $5$ are given in \cref{tbl:ImportantFeat}.
 
-\section{Summary of pairwise classification}
+We measure binary classification performance in a one-vs-rest manner focusing
+  on positive-vs-rest.
+Results for binary classification experiments are reported as ROC curves.
 
+
+TODO: SHOW:
+For match state:
+    * ROC Curves for one-vs-rest positive pairwise classifier
+    * Match State Confusion Matrices for 3 cases
+    * Match State Failure Cases
+    * Word cloud of feature importnace
+    * top 5 feature importance 
+
+For photobomb state:
+    * Photobomb ROC curves
+    * Word cloud of feature importnace
+
+
+\section{Summary of pairwise classification}
