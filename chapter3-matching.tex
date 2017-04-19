@@ -8,7 +8,7 @@
 
 
 
-\chapter{Identification using a ranking algorithm}\label{chap:matching}
+\chapter{Identification using a ranking algorithm}\label{chap:ranking}
 
     This chapter addresses the problem of computer-assisted animal
       identification, where an algorithm suggests likely possibilities, but a
@@ -74,10 +74,11 @@
     \Cref{sec:annotrepr} discusses the initial processing of an annotation
       which involves image normalization, feature extraction, and feature
       weighting.
-    \Cref{sec:baselineranking,sec:sver} describes the baseline matching and
+    \Cref{sec:baselineranking,sec:sver} describes the baseline ranking and
       scoring algorithm.
     The first of these sections focuses on establishing feature
       correspondences, and the second focuses on verifying the correspondences.
+    \Cref{sec:exempselect} describes the process for selecting \exemplars{}.
     \Cref{sec:experiments} provides an experimental evaluation of the ranking
       algorithm.
     %These experiments inform the direction we take in our proposal to extend
@@ -89,6 +90,35 @@
     %\input{sec-3-1-annotrepr.tex}
     %\input{sec-3-2-dbsearch.tex}
     %\input{sec-3-3-sver.tex}
+
+
+\subsection{Exemplar selection}\label{sec:exempselect}
+    To scale one-vs-many matching to larger databases and to allow the LNBNN
+    mechanism to find appropriate normalizers we restrict the number of
+    examples of each individual in the database to a set of exemplars.
+
+    Exemplars that represent a wide range of viewpoints and poses are
+      automatically chosen using a modified version of the technique presented
+      in~\cite{oddone_mobile_2016}.
+    The idea is to treat exemplar selection as a maximum weight set cover
+      problem.
+    For each individual, the input is a set of annotations.
+    A similarity score is computed between pairs of annotations.
+    To compute covering sets we first choose a threshold, each annotation is
+      assigned a covering set as itself and the other annotations it matches
+      with a similarity score above that threshold.
+    The maximum number of exemplars is restricted by setting a maximum weight.
+    Searching for the optimal set cover is NP-hard, therefore we use the
+      greedy %
+    $(1 - \frac{1}{e})$-approximation algorithm~\cite{michael_guide_1979}.
+    The algorithm is run for several iterations in order to find a good
+      threshold that minimizes the difference between the weight of the set
+      cover and the maximum weight limit.
+    The similarity score between annotations can be computed using the LNBNN
+      scores, but a better choice is the of the algorithm we will later describe
+      in \Cref{chap:pairclf} to produce the probability that a pair of
+      annotation correctly matches.
+
     %\input{sec-3-4-expt.tex}
 
 
@@ -131,7 +161,7 @@
     While we have demonstrated that the ranking algorithm accurately ranks
       correct matches when they exist, there are several limitations to this
       approach.
-    \begin{itemize}
+    \begin{itemln}
         \item All results must be manually verified, which can be a time
           consuming process for large datasets.
             %We introduced a mechanism for ranking the individuals in a database
@@ -141,7 +171,7 @@
           occur.
         \item There is no mechanism to determine when identification is
           complete.
-    \end{itemize}
+    \end{itemln}
     In the following chapters we seek to address these issues.
     In \Cref{chap:pairclf} we introduce an algorithm to make automatic
       decisions based on results from this algorithm, and in \cref{chap:graphid}

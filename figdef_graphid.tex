@@ -18,11 +18,14 @@ python -m ibeis.scripts.specialdraw draw_graph_id \
 python -m ibeis.scripts.specialdraw draw_inconsistent_pcc --show
 python -m ibeis.scripts.specialdraw draw_inconsistent_pcc \
     --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/inconpcc.jpg" \
-    --figsize=10,5 --clipwhite --dpi=180 --diskshow
+    --figsize=15,10 --clipwhite --dpi=180 --diskshow --saveparts
 \end{comment}
-\ImageCommand{figures_graph/inconpcc.jpg}{\textwidth}{
+\MultiImageCommandII{inconpcc}{.4}{inconpcc}{
     Any PCC containing at least one negative edge is inconsistent.
-}{inconpcc}
+    Subfigure \Cref{sub:inconpccA} shows an inconsistent PCC, and
+    \Cref{sub:inconpccA} shows the same PCC where the edges hypothesized to be
+    errors are highlighted.
+}{figures_graph/inconpccA.jpg}{figures_graph/inconpccB.jpg}
 
 
   
@@ -67,12 +70,56 @@ python -m ibeis.scripts.specialdraw redun_demo2 \
 \includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}
 \end{subfigure}
 \caption[kredun]{\caplbl{kredun}
+%--%
 Examples of positive (top) and negative (bottom) redundancy.
+The positive edges are colored blue and the negative edges are colored red.
 Choosing the level of redundancy is a tradeoff between the number of required
-  reviews and the confidence that the reviews are correct. In our current
-  implementation we use $2$-redundancy.
+  reviews and the confidence that the reviews are correct.
+In our current implementation we use $2$-redundancy.
+  %
+} \label{fig:kredun}
+\end{figure}
 }
-\label{fig:kredun}
+
+
+
+\begin{comment}
+python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 --match \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/PhotobombExampleC.jpg" \
+    --figsize=9,4 --clipwhite --dpi=180 --save
+
+python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/PhotobombExample.jpg" \
+    --figsize=9,4 --clipwhite --dpi=180 --saveparts
+
+python -m ibeis.core_annots --test-compute_one_vs_one --show
+    
+\end{comment}
+
+\newcommand{\PhotobombExample}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[height=100pt]{figures_graph/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA}
+\end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth}
+\centering
+\includegraphics[height=100pt]{figures_graph/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB}
+\end{subfigure}
+%\begin{subfigure}[h]{0.5\textwidth}
+%\centering
+%\includegraphics[height=60pt]{figures/PhotobombExampleC.jpg}\caption{}\label{sub:PhotobombExampleC}
+%\end{subfigure}
+\caption[\caplbl{PhotobombExample}Photobomb example]{\caplbl{PhotobombExample}
+% ---
+A secondary animal in an annotation can cause a ``photobomb''.  Notice the
+primary animal in~\cref{sub:PhotobombExampleA} appears in the background
+of~\cref{sub:PhotobombExampleB}. 
+%The matching regions are displayed in~\cref{sub:PhotobombExampleC}.
+% ---
+}
+\label{fig:PhotobombExample}
 \end{figure}
 }
 

@@ -3,11 +3,11 @@
 In this chapter we consider the problem of verifying whether or not two
   annotation are the same or different.
 By addressing this problem we improve upon the ranking algorithm from
-  \Cref{chap:matching} --- that ranks the \names{} in a database based on
+  \Cref{chap:ranking} --- that ranks the \names{} in a database based on
   similarity to a query --- by making semi-automatic decisions about results
   returned in the ranked lists.
 The algorithms introduced in this chapter will assign a confidence to results
-  in the ranked list, and any pair above a confidence threshold will be
+  in the ranked list, and any pair above a confidence threshold can be
   automatically reviewed.
 We will demonstrate that our decision algorithms can significantly reduce the
   number of manual interactions required to identify all individuals in an
@@ -20,7 +20,7 @@ To make semi-automatic decisions up to a specified confidence we develop a
 Given only the information in two annotations,  there are three possible
   decisions that can be made.
 A pair of annotations is either:
-\begin{enumerate}
+\begin{enumln}
     \item incomparable --- the annotations are not visually comparable,
 
     \item positive --- the annotations are visually comparable and the
@@ -28,7 +28,7 @@ A pair of annotations is either:
 
     \item negative --- the annotations are visually comparable and different
       individuals.
-\end{enumerate}
+\end{enumln}
 %Two annotations are incomparable if no distinguishing parts of the annotations
 %  can be put in correspondence.
 %Otherwise, we can determine if the distinguishing parts are the same or
@@ -52,7 +52,7 @@ To construct a pairwise probabilistic classifier we turn towards supervised
 %  vectors and corresponding labels indicating the desired output class.
 %The resulting function maps a novel feature vector to a probability
 %  distribution over each possible output class.
-\begin{enumerate*}[label={(\arabic*)}]
+\begin{enumin}
 
     \item determine a set of labeled annotation pairs for training, 
 
@@ -60,7 +60,7 @@ To construct a pairwise probabilistic classifier we turn towards supervised
         annotations,  and 
 
     \item choose a probabilistic learning algorithm.
-\end{enumerate*}
+\end{enumin}
 The first requirement can be satisfied by carefully selecting representative
   annotations pairs, and the last requirement is satisfied by many pre-existing
   algorithms (\eg{} random forests and neural networks).
@@ -146,7 +146,7 @@ The global feature vector is a concatenation of these original values and a
 \newcommand{\nan}{\text{NaN}}
 
 To construct the global feature vector we use the following annotation attributes:
-\begin{enumerate}[label={(\arabic*)}]
+\begin{enumln}
 
     \item Timestamp, represented in POSIX format as a float.
 
@@ -156,7 +156,7 @@ To construct the global feature vector we use the following annotation attribute
 
     \item Quality classification label, represented as a categorical integer
       in $[1,5]$.
-\end{enumerate}
+\end{enumln}
 The GPS and timestamp attributes are gathered from image EXIF data, and the
   viewpoint and quality labels are outputs of the deep classifiers discussed in
   \cref{subsec:introdataprocess}.
@@ -224,7 +224,7 @@ After the one-vs-one matching stage, measurements are made at each feature
 For a feature correspondence between two features $i$ and $j$ with descriptors
   $\desc_i$ and $\desc_j$, normalizing descriptor $\descnorm$, the measurements
   we consider are:
-\begin{itemize}
+\begin{itemln}
 
     \item Correspondence distance:
         This is the Euclidean distance between the feature correspondence,
@@ -261,7 +261,7 @@ For a feature correspondence between two features $i$ and $j$ with descriptors
         divided by the width and height of the annotation 
          $x_i / w_{\qaid}, y_i / h_{\qaid}$ and
          $x_i / w_{\daid}, y_j / h_{\daid}$.
-\end{itemize}
+\end{itemln}
 
 Once these measurements have been made for each keypoint correspondence we
   summarize them using summary statistics.
@@ -375,28 +375,45 @@ Because only a small number of annotation pairs are labeled as incomparable,
   we include all such pairs.
 %The same is true for pairs labeled as photobombs.
 
-\section{Supporting classifiers}
-
-    We also construct a secondary classifier to determine the likelihood that
-      of a pair contains a photobomb --- a secondary animal in one annotation
-      matches an animal in another annotation (\eg see
+\section{Secondary classifier to address photobombs}
+    It is useful to augment the primary match-state pairwise classifier with a
+      secondary classifier able to determine if a pair of annotations contains
+      information that might confuse the main classifier.
+    These confusing annotation pairs should not be considered for automatic
+      review.
+    In annotation one of the most challenging of these secondary states is one
+      that we refer to as a \glossterm{photobomb}.
+    A pair of annotations is a photobomb if a secondary animal in one
+      annotation matches an animal in another annotation (\eg see
       Figure~\ref{fig:PhotobombExample}).
     Only the primary animal in each annotation should be used to determine
       identity, but photobombs provide strong evidence of matching that can
       confuse a matching algorithm.
 
+    \PhotobombExample{}
 
+    During events like the \GZC{} we labeled any pair of annotations where
+      matching information was between secondary annotations as photobombs.
+    Using these labels we are able to construct a classifier similarly to the
+      method used to construct the primary match-state classifier.
+    Here we can select all pairs of annotations labeled as photobombs for
+      positive training data.
+    For negative training data we must be careful only to choose pairs that
+      have been explicitly reviewed as not a photobomb.
+    We attempt to balance positive, negative, and incomparable state in the
+      remainder of the negative training data.
 
 \section{Pairwise classification experiments}
 
 To evaluate the pairwise classifier we choose a sample dataset as detailed in
   \Cref{sec:learnclf}, except we use k-fold cross validation to split the
   dataset into several training and testing sets.
+In our cross validation we add the constraint that edges within the same name
+  and edges between the same names must be grouped in the same set.
+This will ensure that our results generalize to new individuals.
   
 To train a classifier to be applied to new data, all collected data becomes
   the training set.
-
-
 
 \WordCloud{}
 \ImportantFeat{}

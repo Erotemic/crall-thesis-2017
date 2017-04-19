@@ -9,131 +9,78 @@
 \chapter{Introduction}\label{chap:intro}
 
 \section{Image based identification applied to population ecology}
-    Population ecology relies on estimating the number of individual
-      animals that inhabit an area~\cite{krebs_ecological_1999}.
-    Estimating a population size is done in two phases:
-    data collection and analysis.
-    Data are collected as a set of \glossterm{sighting} and
-      \glossterm{resighting} observations.
-    A sighting is the first observation of an individual, and a
-      resighting is a subsequent observation of a previously sighted
-      individual.
-    The observed data are then analyzed using software such as program
-      MARK~\cite{white_program_1999, schwarz_jollyseber_2006} or Wildbook
-      that applies statistical models such as the Lincoln-Petersen
-      index~\cite{seber_estimation_1982}, Jolly-Seber
-      model,~\cite{jolly_explicit_1965, seber_note_1965}, or other
-      related models~\cite{cormack_estimates_1964, chao_estimating_1987,kenneth._h._pollock_statistical_1990}.
-    For an ecologist recording that an individual has been observed is
-      simple, but determining if that observation is a sighting or a
-      resighting can be challenging.
-    This requires the ecologist to identify the individual against all
-      other observations in the data set.
 
-    Current methods to estimate a population size are limited by the
-      data collection phase~\cite{sundaresan_network_2007,
-      rubenstein_ecology_2010}.
-    The statistical population models require an observation sample
-      size that grows with the size of the population being
-      studied~\cite{seber_estimation_1982}.
-    As the number of observations increases so does the difficulty of
-      determining identity.
-    Thus the scope of a population study is limited by the number of
-      raw observations that can be made, and by the rate of determining
-      the individual identity within a set of observations.
-    Overcoming these limitations is of particular importance to
-      wildlife preservation because population statistics are necessary
-      to guide conservation decisions~\cite{rubenstein_behavioral_1998}.
+    Population ecology relies on estimating the number of individual animals that inhabit an
+    area~\cite{krebs_ecological_1999}. Estimating a population size is done in two phases: data collection and analysis.
+    Data are collected as a set of \glossterm{sighting} and \glossterm{resighting} observations. A sighting is the first
+    observation of an individual, and a resighting is a subsequent observation of a previously sighted individual. The
+    observed data are then analyzed using software such as program MARK~\cite{white_program_1999,
+    schwarz_jollyseber_2006} or Wildbook that applies statistical models such as the Lincoln-Petersen
+    index~\cite{seber_estimation_1982}, Jolly-Seber model,~\cite{jolly_explicit_1965, seber_note_1965}, or other related
+    models~\cite{cormack_estimates_1964, chao_estimating_1987,kenneth._h._pollock_statistical_1990}. For an ecologist
+    recording that an individual has been observed is simple, but determining if that observation is a sighting or a
+    resighting can be challenging. This requires the ecologist to identify the individual against all other observations
+    in the data set.
 
-    Consider images as a source of sight-resight observations.
-    There are numerous advantages.
-    Many observations can be made rapidly and simultaneously, due to
-      the simplicity and availability of cameras.
-    Recording an observation is as cheap and simple as taking a
-      picture.
-    Camera traps can be employed for autonomous data collection.
-    In a wildlife conservancy or national park, observations can be
-      crowd-sourced by gathering images from safari tourists and citizen
-      scientists.
-    Images can be accumulated and stored in a large dynamic dataset of
-      observations that grows by thousands of images each day.
-    However, the challenge of identifying the individuals in the images
-      remains.
-    Manual methods are infeasible due to the rapid rate at which images
-      can be collected.
-    Therefore, we must turn towards computer vision based methods.
+    Current methods to estimate a population size are limited by the data collection
+    phase~\cite{sundaresan_network_2007, rubenstein_ecology_2010}. The statistical population models require an
+    observation sample size that grows with the size of the population being studied~\cite{seber_estimation_1982}. As
+    the number of observations increases so does the difficulty of determining identity. Thus the scope of a population
+    study is limited by the number of raw observations that can be made, and by the rate of determining the individual
+    identity within a set of observations. Overcoming these limitations is of particular importance to wildlife
+    preservation because population statistics are necessary to guide conservation
+    decisions~\cite{rubenstein_behavioral_1998}.
 
-    This \thesis{} develops the foundation of the image analysis
-      component of \IBEIS{} --- the Image Based Ecological Information
-      System.
-    The purpose of this system is to gain ecological insight from
-      images using computer vision.
-    We focus on estimating the size of a population of animals as just
-      on example of ecological insight that might be gained from images.
-    Thus we come to the core problem addressed in this \thesis{}:
-    image based identification of individual animals.
+    Consider images as a source of sight-resight observations. There are numerous advantages. Many observations can be
+    made rapidly and simultaneously, due to the simplicity and availability of cameras. Recording an observation is as
+    cheap and simple as taking a picture. Camera traps can be employed for autonomous data collection. In a wildlife
+    conservancy or national park, observations can be crowd-sourced by gathering images from safari tourists and citizen
+    scientists. Images can be accumulated and stored in a large dynamic dataset of observations that grows by thousands
+    of images each day. However, the challenge of identifying the individuals in the images remains. Manual methods are
+    infeasible due to the rapid rate at which images can be collected. Therefore, we must turn towards computer vision
+    based methods.
+
+    This \thesis{} develops the foundation of the image analysis component of \IBEIS{} --- the Image Based Ecological
+    Information System. The purpose of this system is to gain ecological insight from images using computer vision. We
+    focus on estimating the size of a population of animals as just on example of ecological insight that might be
+    gained from images. Thus we come to the core problem addressed in this \thesis{}: image based identification of
+    individual animals.
 
 \section{Challenges of animal identification}\label{sec:challenges}
 
-    In animal identification we are given a database of images.
-    This database may initially be empty.
-    Each image is cropped to a bounding box around an animal of
-      interest and labeled with that animal's identity.
-    For a new query image, the goal is to determine whether or not any
-      other images of the individual are in the database.
-    If the query is matched, it is added to the database as a
-      resighting of that individual.
-    If the query is not matched, then it is added as a new individual.
+    In animal identification we are given a database of images. This database may initially be empty. Each image is
+    cropped to a bounding box around an animal of interest and labeled with that animal's identity. For a new query
+    image, the goal is to determine whether or not any other images of the individual are in the database. If the query
+    is matched, it is added to the database as a resighting of that individual. If the query is not matched, then it is
+    added as a new individual.
 
-    In this work we focus on identifying individuals of species with
-      distinguishing textures, such as zebras, giraffes, lionfish,
-      nautiluses, hyenas, whale sharks, wildebeest, wild dogs, jaguars,
-      cheetahs, leopards, frogs, toads, snails, and seals.
-    The three species this \thesis{} will focus on are plains zebras,
-      Grevy's zebras, and Masai giraffes.
-    The difficulty of animal identification depends on the
-      distinctiveness of the visual patterns that distinguish an
-      individual from others of its species.
-    In addition, the images we identify are collected ``in the wild''
-      and therefore contain occlusion, distracting features, variations
-      in viewpoint and quality.
+    In this work we focus on identifying individuals of species with distinguishing textures, such as zebras, giraffes,
+    lionfish, nautiluses, hyenas, whale sharks, wildebeest, wild dogs, jaguars, cheetahs, leopards, frogs, toads,
+    snails, and seals. The three species this \thesis{} will focus on are plains zebras, Grevy's zebras, and Masai
+    giraffes. The difficulty of animal identification depends on the distinctiveness of the visual patterns that
+    distinguish an individual from others of its species. In addition, the images we identify are collected ``in the
+    wild'' and therefore contain occlusion, distracting features, variations in viewpoint and quality.
 
-    This section will present several examples to illustrate the
-      challenges faced in animal identification.
-    The discussion will begin with the challenges posed by the three
-      primary species.
-    Then the problems common to all species will be described.
-    These will be illustrated using plains zebras because they are the
-      most challenging species considered in this \thesis{}.
+    This section will present several examples to illustrate the challenges faced in animal identification. The
+    discussion will begin with the challenges posed by the three primary species. Then the problems common to all
+    species will be described. These will be illustrated using plains zebras because they are the most challenging
+    species considered in this \thesis{}.
 
     \subsection{Distinguishing features of each species}
-        The plains zebra --- shown in~\cref{fig:PlainsFigure} --- is
-          challenging to visually identify because individuals have
-          relatively few distinguishing features.
-        For most plains zebras, the majority of distinctive information
-          lies in a small area on the front shoulder.
-        \Cref{fig:HardCaseFigure} illustrates that the patterns that
-          distinguish two individuals can be subtle, even when the
-          features are clearly visible.
-        The matching difficulty greatly increases when features are
-          partially occluded, the viewpoint changes, or the image quality
-          is poor.
+        The plains zebra --- shown in~\cref{fig:PlainsFigure} --- is challenging to visually identify because
+        individuals have relatively few distinguishing features. For most plains zebras, the majority of distinctive
+        information lies in a small area on the front shoulder. \Cref{fig:HardCaseFigure} illustrates that the patterns
+        that distinguish two individuals can be subtle, even when the features are clearly visible. The matching
+        difficulty greatly increases when features are partially occluded, the viewpoint changes, or the image quality
+        is poor.
 
-        In contrast, Masai giraffes and Grevy's zebras, shown
-          in~\cref{fig:GirMasaiFigure} and~\cref{fig:GrevysFigure}
-          respectively, have an abundance of distinctive features.
-        Distinctive textures that are unique to each individual are
-          spread across the entire body of a Masai giraffe.
-        For a Grevy's zebra there is a high density of distinguishing
-          information above both front and back legs, as well as a
-          moderate density of distinctive textures along the side of the
-          body.
-        The high density of distinctive textures in Masai giraffes and
-          Grevy's zebras make it possible to distinguish them from one
-          another even in the presence of occlusion and viewpoint
-          changes.
-        However, these factors still increase the difficulty of the
-          problem.
+        In contrast, Masai giraffes and Grevy's zebras, shown in~\cref{fig:GirMasaiFigure} and~\cref{fig:GrevysFigure}
+        respectively, have an abundance of distinctive features. Distinctive textures that are unique to each individual
+        are spread across the entire body of a Masai giraffe. For a Grevy's zebra there is a high density of
+        distinguishing information above both front and back legs, as well as a moderate density of distinctive textures
+        along the side of the body. The high density of distinctive textures in Masai giraffes and Grevy's zebras make
+        it possible to distinguish them from one another even in the presence of occlusion and viewpoint changes.
+        However, these factors still increase the difficulty of the problem.
 
         \PlainsFigure{}
 
@@ -144,18 +91,12 @@
         \GrevysFigure{}
 
     \subsection{Viewpoint and pose}
-        One of the most difficult challenges faced in the animal
-          identification problem is viewpoint.
-        Animals are seen in a variety of poses and viewpoints, which
-          can cause distinctive features to appear distorted.
-        The patterns on the left and right sides of animals are almost
-          always asymmetric.
-        Therefore, matches can only be established using overlapping
-          viewpoints and only if the viewpoints are distinctive.
-        Some viewpoints, such as the backs of plains zebras, lack
-          distinguishing information as shown in~\cref{fig:BacksFigure}.
-        The effect of pose and viewpoint variation can be seen
-          in~\cref{fig:ThreeSixtyFigure} and~\cref{fig:PoseFigure}.
+        One of the most difficult challenges faced in the animal identification problem is viewpoint. Animals are seen
+        in a variety of poses and viewpoints, which can cause distinctive features to appear distorted. The patterns on
+        the left and right sides of animals are almost always asymmetric. Therefore, matches can only be established
+        using overlapping viewpoints and only if the viewpoints are distinctive. Some viewpoints, such as the backs of
+        plains zebras, lack distinguishing information as shown in~\cref{fig:BacksFigure}. The effect of pose and
+        viewpoint variation can be seen in~\cref{fig:ThreeSixtyFigure} and~\cref{fig:PoseFigure}.
 
         \BacksFigure{}
 
@@ -164,49 +105,32 @@
         \PoseFigure{}
 
     \subsection{Occluders and distractors}
-        Because images of animals are often taken ``in the wild'',
-          other objects in the image can act as \glossterm{occluders} or
-          \glossterm{distractors}.
-        Objects such as grass, bushes, trees or other animals, can act
-          as occluders by partially obscuring the features that
-          distinguish one individual from another.
-        The appearance of the other animals nearby can be distracting
-          because features from these animals will match different
-          animals in the database.
-        These \glossterm{distractors} may also be from non-animal
-          features when multiple pictures are taken against the same
-          background as animals move through the same field of view.
-        Several examples of occlusions and distractors are illustrated
-          in~\cref{fig:OccludeFigure}
+        Because images of animals are often taken ``in the wild'', other objects in the image can act as
+        \glossterm{occluders} or \glossterm{distractors}. Objects such as grass, bushes, trees or other animals, can act
+        as occluders by partially obscuring the features that distinguish one individual from another. The appearance of
+        the other animals nearby can be distracting because features from these animals will match different animals in
+        the database. These \glossterm{distractors} may also be from non-animal features when multiple pictures are
+        taken against the same background as animals move through the same field of view. Several examples of occlusions
+        and distractors are illustrated in~\cref{fig:OccludeFigure}
 
         \OccludeFigure{}
 
     \subsection{Image quality}
-        Image quality is influenced by lighting, shadows, the camera
-          used, image resolution, and the size of the animal in the
-          image.
-        Outdoor images will naturally have large variations in
-          illumination.
-        Different cameras can produce visual differences between images
-          of an object.
-        Images taken out of focus, from far away, or with a non-steady
-          camera can cause animals to appear blurred.
-        The effects of outdoor shadow and illumination are illustrated
-          in~\cref{fig:IlluminationFigure}.
-        \Cref{fig:QualityFigure} illustrates five categories of image
-          quality that will be described later in~\cref{sub:viewqual}.
+        Image quality is influenced by lighting, shadows, the camera used, image resolution, and the size of the animal
+        in the image. Outdoor images will naturally have large variations in illumination. Different cameras can produce
+        visual differences between images of an object. Images taken out of focus, from far away, or with a non-steady
+        camera can cause animals to appear blurred. The effects of outdoor shadow and illumination are illustrated
+        in~\cref{fig:IlluminationFigure}. \Cref{fig:QualityFigure} illustrates five categories of image quality that
+        will be described later in~\cref{sub:viewqual}.
 
         \IlluminationFigure{}
 
         \QualityFigure{}
 
     \subsection{Aging and injuries}
-        The appearance of an individual changes over time due to aging
-          and other factors including injuries.
-        An example of the difference between a juvenile and adult zebra
-          is shown in~\cref{fig:AgeFigure}.
-        An example of how injuries can both remove distinctive features
-          and add new ones is shown in~\cref{fig:GashFigure}.
+        The appearance of an individual changes over time due to aging and other factors including injuries. An example
+        of the difference between a juvenile and adult zebra is shown in~\cref{fig:AgeFigure}. An example of how
+        injuries can both remove distinctive features and add new ones is shown in~\cref{fig:GashFigure}.
 
         \AgeFigure{}
 
@@ -214,431 +138,315 @@
 
 \section{The \GZCFull{}}\label{sec:introgzc}
 
-    To further illustrate the problems addressed in this \thesis{}, we
-      consider the \GZCFull{} (\GZC{}), held at Nairobi National Park on
-      March 1\st{} and 2\nd{}, 2015.
-    This event was designed with two purposes in mind:
-    (1) to involve citizens in the scientific data collection effort,
-      thereby increasing their interest in conservation, and
-    (2) to determine the number of plains zebras and Masai giraffes in
-      the park.
+    To further illustrate the problems addressed in this \thesis{}, we consider the \GZCFull{} (\GZC{}), held at Nairobi
+    National Park on March 1\st{} and 2\nd{}, 2015. This event was designed with two purposes in mind: (1) to involve
+    citizens in the scientific data collection effort, thereby increasing their interest in conservation, and (2) to
+    determine the number of plains zebras and Masai giraffes in the park.
 
     \subsection{Data collection}
-        Volunteer participants --- each with his or her own camera ---
-          arrived by car at the park.
-        Some cars had more than one photographer.
-        Each car was assigned a route to drive through the park.
-        We attached a GPS dongle to each car to record time and
-          location throughout the drive.
-        Correlating this with the time stamp on each image (after
-          adding a correction offset for each camera) allowed us to
-          determine the geolocation of each image.
-        Each photographer was given instructions guiding them toward
-          taking quality images of the left sides of the animals they
-          saw.
-        When the cars returned --- some after just an hour or two,
-          others after the whole day --- the images were copied from the
-          cameras, a small sample of each photographer's images was
-          immediately processed to illustrate what we would do with the
-          data, and the entire set of images was stored for further
-          processing.
-        The result of this crowd-sourced collection event was a 48GB
-          dataset consisting of $9406$ images.
+        Volunteer participants --- each with his or her own camera --- arrived by car at the park. Some cars had more
+        than one photographer. Each car was assigned a route to drive through the park. We attached a GPS dongle to each
+        car to record time and location throughout the drive. Correlating this with the time stamp on each image (after
+        adding a correction offset for each camera) allowed us to determine the geolocation of each image. Each
+        photographer was given instructions guiding them toward taking quality images of the left sides of the animals
+        they saw. When the cars returned --- some after just an hour or two, others after the whole day --- the images
+        were copied from the cameras, a small sample of each photographer's images was immediately processed to
+        illustrate what we would do with the data, and the entire set of images was stored for further processing. The
+        result of this crowd-sourced collection event was a 48GB dataset consisting of $9406$ images.
 
     \subsection{Data processing}\label{subsec:introdataprocess}
 
-        After the event, the entire collection of images was processed
-          using a preliminary version of the system in order to generate
-          the final count.
-        The preliminary system uses the following workflow:
-        ingest images \rpipe{} %
-        \occurrence{} grouping \rpipe{} %
-        animal detection \rpipe{} %
-        viewpoint and quality labeling \rpipe{} %
-        \intraoccurrence{} matching \rpipe{} %
-        \vsexemplar{} identification \rpipe{} %
-        consistency checks \rpipe{} %
-        population estimation.
-        \Cref{chap:application} discusses this workflow in greater
-          detail.
-        For now, we provide a brief overview of each step involved in
-          the processing of the \GZC{} image data, and then we will
-          describe the challenges that arose.
+        After the event, the entire collection of images was processed using a preliminary version of the system in
+        order to generate the final count. The preliminary system followed the workflow of: %
+        \begin{enumin}
+            \item ingest images  %
+            \item \occurrence{} grouping  %
+            \item animal detection %
+            \item viewpoint and quality labeling  %
+            \item \intraoccurrence{} matching %
+            \item \vsexemplar{} identification %
+            \item consistency checks  %
+            \item population estimation.  %
+        \end{enumin}
+        %\Cref{chap:application} discusses this workflow
+        %in greater detail. 
+        Here, we provide a brief overview of each step involved in the processing of the \GZC{} image data, and then we
+        will describe the challenges that arose.
 
         \subsubsection{Occurrence grouping}
-            The images were first divided into
-              \glossterm{\occurrences{}} --- a standard term defined by
-              the Darwin Core~\cite{wieczorek_darwin_2012} to denote a
-              collection of evidence (\eg{} images) that an organism
-              exists within defined location and time-frame.
-            In the scope of this application, an \occurrence{} is a
-              cluster of images taken within a small window of time and
-              space.
-            Images are grouped into \occurrences{} using the GPS and
-              time data.
-            Details are provided in~\cref{sec:occurgroup}.
+            The images were first divided into \glossterm{\occurrences{}} --- a standard term defined by the Darwin
+            Core~\cite{wieczorek_darwin_2012} to denote a collection of evidence (\eg{} images) that an organism exists
+            within defined location and time-frame. In the scope of this application, an \occurrence{} is a cluster of
+            images taken within a small window of time and space. Images are grouped into \occurrences{} using the GPS
+            and time data. Details are provided in~\cref{sec:occurgroup}.
 
-            There are several benefits to first grouping images into an
-              \occurrence{}.
-            One benefit is that an \occurrence{} can be used as a
-              semantic processing unit to distribute manageable chunks of
-              work to users of the system.
-            Another is that \occurrences{} can be used to improve the
-              results of identification.
-            Typically there will be only a small number of individuals
-              within an \occurrence{}, and it is not uncommon for each
-              individual to photographed multiple times and from multiple
-              viewpoints.
-            We plan to develop algorithms to exploit this property when
-              matching.
+            There are several benefits to first grouping images into an \occurrence{}. One benefit is that an
+            \occurrence{} can be used as a semantic processing unit to distribute manageable chunks of work to users of
+            the system. Another is that \occurrences{} can be used to improve the results of identification. Typically
+            there will be only a small number of individuals within an \occurrence{}, and it is not uncommon for each
+            individual to photographed multiple times and from multiple viewpoints. This redundancy in images will be
+            exploited in \Cref{chap:graphid}.
 
         \subsubsection{Animal Detection}
-            Before matching begins each image is cropped to focus on a
-              particular animal and remove background distractors.
-            A detection algorithm localizes animals within the images.
-            Each verified detection generates an \glossterm{\annot{}}
-              --- a bounding box around a single animal in an image.
-            An example illustrating detection of plains zebras is shown
-              in~\cref{fig:DetectFigure}.
-            In the \GZC{} each detection was manually verified before
-              becoming an \annot{}, but recent work introduces an
-              automatic verification mechanism and reduces the need for
-              complete manual review.
-            The details of the detection algorithm are beyond the scope
-              of this \thesis{}, and will be described in the work of
-              Jason Parham~\cite{parham_photographic_2015}.
+            Before matching begins each image is cropped to focus on a particular animal and remove background
+            distractors. A detection algorithm localizes animals within the images. Each verified detection generates an
+            \glossterm{\annot{}} --- a bounding box around a single animal in an image. An example illustrating
+            detection of plains zebras is shown in~\cref{fig:DetectFigure}. In the \GZC{} each detection was manually
+            verified before becoming an \annot{}, but recent work introduces an automatic verification mechanism and
+            reduces the need for complete manual review. The details of the detection algorithm are beyond the scope of
+            this \thesis{}, and will be described in the work of Jason Parham~\cite{parham_photographic_2015}.
 
             \DetectFigure{}
 
         \subsubsection{Viewpoint and quality labeling}\label{sub:viewqual}
-            When determining the number of animals in a population it
-              is important to account for factors that can lead to
-              over-counting.
-            If two \annots{} of the same individual are not matched,
-              then that individual will be counted twice.
-            This could happen due to factors such as viewpoint and
-              quality.
-            For example, one \annot{} showing the left side of zebra
-              $A$ and another \annot{} showing the right side of zebra
-              $A$ cannot be matched because they are not
-              \glossterm{comparable}.
-            The two \annots{} are comparable when they share regions
-              with distinguishing patterns that can be put in
-              correspondence.
-            Viewpoint is the primary reason that two \annots{} are
-              not comparable.
-            However, other factors like image quality and heavy
-              occlusion can corrupt distinguishing patterns rendering the
-              \annot{} unidentifiable --- not comparable with any other
-              \annot{}.
-            We must define what it means for two \annots{} to be
-              comparable before we can estimate a population size.
+            When determining the number of animals in a population it is important to account for factors that can lead
+            to over-counting. If two \annots{} of the same individual are not matched, then that individual will be
+            counted twice. This could happen due to factors such as viewpoint and quality. For example, one \annot{}
+            showing the only left side of an animal and another \annot{} showing only the right side the same animal
+            cannot be matched because they are \glossterm{incomparable}. The two \annots{} are comparable when they
+            share regions with distinguishing patterns that can be put in correspondence. Viewpoint is the primary
+            reason that two \annots{} are not comparable. However, other factors like image quality and heavy occlusion
+            can corrupt distinguishing patterns rendering the \annot{} unidentifiable --- not comparable with any other
+            \annot{}. We must define what it means for two \annots{} to be comparable before we can estimate a
+            population size.
 
-            Determining if an individual can be identified is analogous
-              to the notion of a
-              marked-individual~\cite{seber_estimation_1982}.
-            For an \annot{} to be identifiable it must be matchable
-              to another \annot{} of that individual, if it exists.
-            An \annot{} can only be marked as a new individual if
-              patterns that can distinguish it from the rest of the
-              population are visible.
-            This means that an \annot{} is only identifiable if
-            (1) the image quality is high enough, and
-            (2) it has a viewpoint that is comparable to any potential
-              match.
+            Determining if an individual can be identified is analogous to the
+            notion of a marked-individual~\cite{seber_estimation_1982}. For an
+            \annot{} to be identifiable the patterns that can distinguish it
+            from the rest of the population must be clear and visible, otherwise
+            the \annot{} may not be able find or be compared to potential
+            matches. This means an \annot{} is only identifiable if
+            \begin{enumin}
+                \item the image quality is high enough, and %
+                \item it has a viewpoint that is comparable to all potential
+                matches. %
+            \end{enumin}
+            
+            To address this challenge we label each \annot{} with $5$ discrete quality labels and $8$ discrete viewpoint
+            labels. The quality labels we define are: \qualJunk{}, \qualPoor{}, \qualOk{}, \qualGood{}, and
+            \qualExcellent{}. The \qualJunk{} label is given to \annots{} that almost certainly will not be able to be
+            identified, and \qualPoor{} labels are given to \annots{} that will likely be unidentifiable for a computer
+            vision algorithm. The $\qualGood{}$ and \qualExcellent{} labels are given to clear well illuminated
+            \annots{} with little to no occlusion with \qualExcellent{} being reserved for the best of the best. All
+            other \annots{} are labeled as $\qualOk$. The viewpoint labels we define are: \vpFront{}, \vpFrontLeft{},
+            \vpLeft{}, \vpBackLeft{}, \vpBack{}, \vpBackRight{}, \vpBack{}, and \vpFrontRight{}. Note, that additional
+            viewpoint labels like $\vpUp{}$ and $\vpDown{}$ may be necessary for animals such as lionfish or turtles.
+            However, the $8$ labels we use are sufficient for animals like zebras and giraffes because they are most
+            commonly seen in upright positions.
 
-            To address this challenge we label each \annot{} with $5$ discrete
-              quality labels and $8$ discrete viewpoint labels.
-            The quality labels we define are:
-            \qualJunk{}, \qualPoor{}, \qualOk{}, \qualGood{}, and
-              \qualExcellent{}.
-            The \qualJunk{} and \qualPoor{} labels are given to \annots{} that
-              will likely be unidentifiable for a computer vision algorithm.
-            We distinguish between poor and junk because we expect that
-              improved algorithms may be able to work with poor images in the
-              future.
-            The $\qualGood{}$ and \qualExcellent{} labels are given to clear
-              well illuminated \annots{} with little to no occlusion.
-            All other \annots{} are labeled as $\qualOk$.
-            The viewpoint labels we define are:
-            \vpFront{}, \vpFrontLeft{}, \vpLeft{}, \vpBackLeft{}, \vpBack{},
-              \vpBackRight{}, \vpBack{}, and \vpFrontRight{}.
-            Note, that additional viewpoint labels like $\vpUp{}$ and
-              $\vpDown{}$ may be necessary for animals such as lionfish or
-              turtles.
-            However, the $8$ labels we use are sufficient for animals like
-              zebras and giraffes because they are most commonly seen in upright
-              positions.
-
-            During the \GZC{} we did not include any \annot{} that had junk or
-              poor qualities.
-            We also did not include \annots{} not labeled with a left or
-              frontleft viewpoint to account for limitations in the initial
-              matching algorithm.
-            All labelings of viewpoint and quality were generated manually.
-            Since then we have trained viewpoint and quality classifiers using
-              this manual data.
-            Automatic detection of quality and viewpoint is discussed in Jason
-              Parham's work~\cite{parham_photographic_2015}.
+            In an effort to ensure that all \annots{} used in the \GZC{} were comparable, we did not include any
+            \annot{} that had junk or poor qualities. We also did not include \annots{} not labeled with a left or
+            frontleft viewpoint to account for limitations in the initial ranking algorithm. All labelings of viewpoint
+            and quality were generated manually. Since then we have trained viewpoint and quality classifiers using this
+            manual data. Automatic detection of quality and viewpoint is discussed in Jason Parham's
+            work~\cite{parham_photographic_2015}.
 
         \subsubsection{Matching within each \occurrence{}} %
-            Animals often have multiple redundant views within an
-              \occurrence{}, which can be the same, better, or
-              complementary to other views.
-            The images in~\cref{fig:OccurrenceComplementFigure}
-              illustrate redundant and complementary views of an
-              individual in an \occurrence{}.
-            Merging all of an individual's views is a challenge, but
-              also potentially an advantage as we can exploit redundancy
-              to better handle missing features, subtle viewpoint
-              changes, and occlusions.
+            Animals often have multiple redundant views within an \occurrence{}, which can be the same, better, or
+            complementary to other views. The images in~\cref{fig:OccurrenceComplementFigure} illustrate redundant and
+            complementary views of an individual in an \occurrence{}. Merging all of an individual's views is a
+            challenge, but also potentially an advantage as we can exploit redundancy to better handle missing features,
+            subtle viewpoint changes, and occlusions.
 
-            We exploit this redundancy to gain the benefit of
-              complimentary views by matching all \annots{} within an
-              \occurrence{} in a process called
-              \glossterm{\intraoccurrence{} matching}.
-            In the \GZC{}, each \annot{} was queried against all
-              other \annots{} in its \occurrence{}, returning a ranked
-              list of candidate matches.
-            The person running the software made the final decisions
-              about which \annots{} match.
-            Details about the matching algorithm are given
-              in~\cref{chap:matching}.
+            We exploit this redundancy to gain the benefit of complimentary views by matching all \annots{} within an
+            \occurrence{} in a process called \glossterm{\intraoccurrence{} matching}. In the \GZC{}, each \annot{} was
+            queried against all other \annots{} in its \occurrence{}, returning a ranked list of candidate matches. The
+            person running the software made the final decisions about which \annots{} match. Details about the ranking
+            algorithm are given in~\cref{chap:ranking}.
 
-            The result of \intraoccurrence{} matching is a set of
-              \glossterm{\encounters{}}.
-            \Aan{\encounter{}} is a group of \annots{} that were
-              matched within an \occurrence{}.
-            Each \encounter{} is either
-            (1) the first sighting an individual or a
-            (2) resighting.
-            The task now becomes to determine which of these is the
-              case by identifying each \encounter{} against a
-              \masterdatabase{}.
+            The result of \intraoccurrence{} matching is a set of \glossterm{\encounters{}}. \Aan{\encounter{}} is a
+            group of \annots{} that were matched within an \occurrence{}. Each \encounter{} is either (1) the first
+            sighting an individual or a (2) resighting. The task now becomes to determine which of these is the case by
+            identifying each \encounter{} against a \masterdatabase{}.
 
             \OccurrenceComplementFigure{}
  
         \subsubsection{Matching against the \masterdatabase{}} %
-            To determine if \aan{\encounter{}} is a new sighting or a
-              resighting of an individual, it is matched against the
-              \masterdatabase{} in a process called
-              \glossterm{\vsexemplar{} matching}.
-            Before matching begins the \masterdatabase{} is prepared
-              for search.
-            The \masterdatabase{} contains \glossterm{\masternames{}}
-              --- the set of all \annots{} from all known individuals.
-            For each \mastername{} a subset of \annots{} is chosen as
-              \glossterm{\exemplars{}} to represent the appearance of an
-              individual.
-            The \exemplars{} are indexed using a search data structure.
+            To determine if \aan{\encounter{}} is a new sighting or a resighting of an individual, it is matched against
+            the \masterdatabase{} in a process called \glossterm{\vsexemplar{} matching}. Before matching begins the
+            \masterdatabase{} is prepared for search. For each \name{} in the \masterdatabase{} a subset of
+            \glossterm{\exemplar{}} \annots{} are chosen to represent the appearance of that individual. The
+            \exemplars{} are indexed using a search data structure.
 
-            After the master database has been prepared, the matching
-              algorithm is able to issue a subset of the \encounter{}'s
-              \annots{} as a query.
-            The result is a ranked list of \exemplars{} that are
-              visually similar to the \encounter{}.
-            The top \exemplars{} in the ranked list are used as
-              candidate matches.
-            The candidate matches are reviewed, and the \encounter{} is
-              either merged into an existing \mastername{} or added to
-              the \masterdatabase{} as a new \mastername{}.
+            After the \masterdatabase{} has been prepared, the ranking algorithm is able to issue a subset of the
+            \encounter{}'s \annots{} as a query. The result is a ranked list of \exemplars{} that are visually similar
+            to the \encounter{}. The top \exemplars{} in the ranked list are used as candidate matches. The candidate
+            matches are reviewed, and the \encounter{} is either merged into an existing \mastername{} or added to the
+            \masterdatabase{} as a new \mastername{}.
 
         \subsubsection{Consistency checks}
-            When merging \encounters{} into the \masterdatabase{} it is
-              possible that mistakes were made.
-            There are two error cases that commonly occur.
-            (1) A \glossterm{split case} occurs when a set of
-              \annots{} (from two or more different animals) is
-              incorrectly labeled with the same \name{}.
-            The main cause of this error is when distracting features
-              are matched causing the \annots{} to appear visually
-              similar.
-            (2) A \glossterm{merge case} occurs when two sets of
-              \annots{} (from the same animal) are incorrectly labeled
-              with different \names{}.
-            This is caused by an algorithm or human error where a query
-              \encounter{} was not correctly matched to the database
-              \exemplars{}.
-            This is usually because the query and database \annots{}
-              have a low degree of \emph{comparability} (\eg{}
-              differences in viewpoint or low quality).
-            Of course, if no visual overlap exists between the two sets
-              --- such as one set exclusively from the left side and
-              another exclusively from the right --- nothing can be done.
-            This is why the animal must be seen from a predetermined
-              view in order to be counted.
-            In the \GZC{} this is the left side.
+            When merging \encounters{} into the \masterdatabase{} it is possible that mistakes were made.  There are two
+            error cases that commonly occur.
+            %%%
+            \begin{enumln}
+            \item  A \glossterm{split case} occurs when a set of \annots{} (from two or more different animals) is
+            incorrectly labeled with the same \name{}.  The main cause of this error is when distracting features are
+            matched causing the \annots{} to appear visually similar.
+            %%%
+            \item A \glossterm{merge case} occurs when two sets of \annots{} (from the same animal) are incorrectly
+            labeled with different \names{}.  This is caused by an algorithm or human error where a query \encounter{}
+            was not correctly matched to the database \exemplars{}.
+            \end{enumln}
+            %%%
+            This is usually because the query and database \annots{} have a low degree of \emph{comparability} (\eg{}
+            differences in viewpoint or low quality).  Of course, if no visual overlap exists between the two sets ---
+            such as one set exclusively from the left side and another exclusively from the right --- nothing can be
+            done.  This is why the animal must be seen from a predetermined view in order to be counted.  In the \GZC{}
+            this is the left side.
 
-            It is important to quickly detect and correct these issues
-              because the matching algorithm relies on having accurate
-              labelings in the \masterdatabase{}.
-            Suspect individuals are flagged for split checks using
-              various heuristics that will be described later
-              in~\cref{sec:errors}.
-            To check a flagged individual the matching algorithm is
-              used to search for pairs of \annots{} with low matching
-              scores that belong to the flagged \name{}.
-            Low similarity between two \annots{} within a \name{}
-              could indicate that an error has occurred.
-              %such as the number of \annots{} per
-              %individuals and the maximum speed an individual.
-            %A flagged individual is manually reviewed
-            These low scoring results are then manually reviewed.
-            %A flagged individual has all of its \annots{} match all
-            %  other \annots{} and low scoring results are reviewed for
-            %  errors.
-            When breaking apart split cases, care is taken to account
-              for the fact that right and left images should not match.
-            Likewise, care is taken to ensure that an intermediate
-              \annot{} linking two disjoint \annots{} has enough
-              information to establish the link.
-            Merge checks issue the all \exemplars{} as queries against
-              all other \exemplars{}.
-            High similarity between two different \names{} might
-              indicate a match that was previously missed.
-            These high scoring results are manually reviewed.
+            In the \GZC{} suspect individuals were flagged for split checks using various heuristics such as the number
+            of \annots{} in the \name{} or speed of the animal estimated using GPS and time data. To check a flagged
+            individual we used the ranking algorithm to search for pairs of \annots{} with low matching scores that
+            belong to the flagged \name{}. Low similarity between two \annots{} within a \name{} suggested that an error
+            had occurred. These low scoring results were then manually reviewed. When breaking apart split cases, care
+            was taken to account for the fact that right and left images should not match. Likewise, care was taken to
+            ensure that an intermediate \annot{} linking two disjoint \annots{} has enough information to establish the
+            link. Merge checks issue the all \exemplars{} as queries against all other \exemplars{}. High similarity
+            between two different \names{} suggested that a match that was missed. These high scoring results were
+            manually reviewed. More sophisticated error detection and recovery will be discussed in \Cref{sec:incon}.
 
         \subsubsection{Population estimation}
-            The final step for the \GZC{} workflow was to estimate the
-              number of animals in the park.
-            Using the identification algorithm we defined which
-              \annots{} were sightings and which were resightings.
-            Because we were using a preliminary version of the system
-              we were conservative in our definitions.
-            It must be possible to match any animal that is said to be
-              sighted.
-            Therefore, we only used the left and frontleft \annots{}
-              with quality labels of ok, good, or excellent.
-            Each individual that met this criteria was counted as a
-              sighting.
-            If a sighted individual had an \annot{} from both days,
-              then we counted that individual as resighted.
-            %Further details and results of this population estimation
-            %  are discussed in~\cref{sec:popest}.
+            The final step for the \GZC{} workflow was to estimate the number of animals in the park.  Using the
+            identification algorithm we defined which \annots{} were sightings and which were resightings. Because we
+            were using a preliminary version of the system we were conservative in defining when an animal was sighted
+            by only using the left and frontleft \annots{} with quality labels of ok, good, or excellent.  Each
+            individual that met this criteria was counted as a sighting.  If a sighted individual had an \annot{} from
+            both days, then we counted that individual as resighted.
 
     \subsection{Processing challenges}
-        Our experience with the \GZCFull{} has highlighted a number of
-          challenges that must be addressed if this system is to be applied in
-          future events.
-        We will use these challenges to motivate the development a system that
-          is able to dynamically detect and identify individual animals in large
-          volumes of images.
+        Our experience with the \GZCFull{} has highlighted a number of challenges that must be addressed if this system
+        is to be applied in future events. These challenges include the number of manual reviews required, the detection
+        of and recovery from manual errors, and the overall lack of a systematic identification framework.
 
-        Perhaps the greatest challenge faced during the \GZC{} was the
-          considerable amount time that was required to manually verify
-          identification results.
-        It can take several seconds to manually verify if a pair of \annots{}
-          is a correct match even if the results are presented in a ranked list.
-        This task is illustrated in~\cref{fig:RankFigure}.
-        Furthermore, as new \exemplars{} are added to the system the search
-          data structure must be updated before additional queries can be made.
-        Rebuilding this data structure is another source of delays.
-        Such a time consuming review process is untenable for a system that
-          accepts thousands of new images a day.
-        We consider addressing this problem as two separate challenges.
-        The first challenge is algorithmic, and the second challenge is system
-          based.
+        Perhaps the greatest challenge faced during the \GZC{} was the considerable amount time that was required to
+        manually verify identification results. It can take several seconds to manually verify if a pair of \annots{} is
+        a correct match even if the results are presented in a ranked list. This task is illustrated
+        in~\cref{fig:RankFigure}. Requiring the manual verification of each result is untenable for a system that
+        accepts thousands of new images a day. The lack of a systematic approach for identification meant that whenever
+        two \annots{} were matched, the name labels of all annotations of those names were changed. This made it
+        difficult to tease apart errors when they occurred. Furthermore, manual errors (likely caused by fatigue from
+        the large number of manual reviews) resulted in numerous split cases that were not able to be detected and
+        resolved until the end of the process. Reviews of results were also done in order of matching scores regardless
+        of previous decisions, causing the manual reviewer to inefficiently review redundant results between the same
+        individual. Additionally no stopping criteria for reviews was defined resulting in an ad-hoc approach to
+        determining when all matches were found.
 
-        The algorithmic challenge is to develop a confidence based decision
-          mechanism.
-        Only a subset of the most difficult identification results should be
-          manually reviewed, the rest should be handled automatically.
-        This motivates developing a decision mechanism that automatically
-          accepts or dismisses candidate matches.
+        Motivated by these observations we seek to develop a semi-automatic approach to animal identification. This
+        approach will should be governed by a system that reduces the number of manual reviews and is able to detect and
+        recover from errors, and determine when to stop searching for new matches.
 
-        On the system side, the challenge is to dynamically update the search
-          data structure.
-        This involves intelligent bookkeeping because the image analysis
-          system is designed as a stateless API{}.
-        Statelessness is essential if multiple users are to access the same
-          instance of image analysis and makes the system compatible with web
-          technologies.
-        A stateless API is allowed to cache results, but it cannot maintain a
-          single canonical object such as an indexer.
-        Instead the API{} works by accepting and responding to requests.
-        This has the effect of enforcing that objects are immutable, but also
-          eliminates bugs due to race conditions, gives the program a large
-          degree of thread safety, and encourages extensible and testable coding
-          practices.
-        Updating search structures dynamically is a challenging problem in a
-          stateless framework, but it can be addressed with careful system
-          design.
+        %Furthermore, as new \exemplars{} are added to the system the search
+        %  data structure must be updated before additional queries can be made.
+        %Rebuilding this data structure is another source of delays.
+        %We consider addressing this problem as two separate challenges.
+        %The first challenge is algorithmic, and the second challenge is system
+        %  based.
+        %We will use these challenges to motivate the development a system that
+        %is able to dynamically detect and identify individual animals in large
+        %volumes of images.
+        %The algorithmic challenge is to develop a confidence based decision
+        %  mechanism.
+
+        %We will use these challenges to motivate a verification mechanism that
+        %automatically accepts or dismisses candidate matches. 
+        %Only a subset of the most difficult identification results should be
+        %  manually reviewed, the rest should be handled automatically.
+        %This motivates developing a 
+
+        %On the system side, the challenge is to dynamically update the search
+        %  data structure.
+        %This involves intelligent bookkeeping because the image analysis
+        %  system is designed as a stateless API{}.
+        %Statelessness is essential if multiple users are to access the same
+        %  instance of image analysis and makes the system compatible with web
+        %  technologies.
+        %A stateless API is allowed to cache results, but it cannot maintain a
+        %  single canonical object such as an indexer.
+        %Instead the API{} works by accepting and responding to requests.
+        %This has the effect of enforcing that objects are immutable, but also
+        %  eliminates bugs due to race conditions, gives the program a large
+        %  degree of thread safety, and encourages extensible and testable coding
+        %  practices.
+        %Updating search structures dynamically is a challenging problem in a
+        %  stateless framework, but it can be addressed with careful system
+        %  design.
               
         \RankFigure{}
 
 \section{Approach}
     The problem addressed in this \thesis{} is to identify individual animals
-      ``in the wild'' and to count the individuals in a population.
-    To do this we develop both a suite of algorithms and a software system.
-    The algorithms will allow us to infer properties about images and
-      \annots{}.
-    The system will allow us to maintain the images, \annots{}, algorithms,
-      and inferred properties in a controlled and reproducible manner.
+    ``in the wild'' and to count the individuals in a population. To do this we
+    develop both a suite of algorithms and a software system. The algorithms
+    will allow us to infer properties about images and \annots{}. The system
+    will allow us to maintain the images, \annots{}, algorithms, and inferred
+    properties in a controlled and reproducible manner.
 
-    We are given a set images containing \annots{} of the same species.
-    The images are collected in an uncontrolled environment and likely contain
-      imaging challenges such as occlusion, distracting features, viewpoint
-      variations, pose variations, and quality variations.
-    Furthermore, the images may be collected either over many years or over
-      just a few days as in the \GZC{}.
-    Each \annot{} is labeled with time, GPS, quality, and viewpoint.
-    We may also be given an initial \masterdatabase{} --- \ie{} some \annots{}
-      may labeled as \exemplars{} --- but this need not be the case.
-    Our task is label each \annot{} with a \glossterm{\name{}} that uniquely
-      identifies the individual.
-    Once this is complete it forms the data needed to estimate the size of the
-      population using techniques from sight-resight statistics.
+    We are given a set images containing \annots{} of the same species. The
+    images are collected in an uncontrolled environment and likely contain
+    imaging challenges such as occlusion, distracting features, viewpoint
+    variations, pose variations, and quality variations. Furthermore, the images
+    may be collected either over many years or over just a few days as in the
+    \GZC{}. Each \annot{} is labeled with time, GPS, quality, and viewpoint. We
+    may also be given an initial \masterdatabase{} --- \ie{} some \annots{} may
+    labeled as \exemplars{} --- but this need not be the case. Our task is label
+    each \annot{} with a \glossterm{\name{}} that uniquely identifies the
+    individual. Once this is complete it forms the data needed to estimate the
+    size of the population using techniques from sight-resight statistics.
 
-    The core of the identification process is a matching algorithm.
-    The inputs to the algorithm are a single query \annot{} and a set of
-      database \annots{}.
-    Sparse patch-based features are localized in all \annots{}, and a
-      descriptor vector is extracted for each feature.
-    The descriptors of the database \annots{} are indexed for fast nearest
-      neighbor search.
-    We then find a set of matches in the database for each descriptor in the
-      query \annot{}.
-    The matches are scored based on visual similarity, distinctiveness within
-      the database, and likelihood of belonging to the foreground.
-    Matches are combined across multiple \exemplar{} \annots{} to produce a
-      matching score for each \mastername{} in the database.
+    The first step of the identification process is a ranking algorithm. The
+    inputs to the algorithm are a single query \annot{} and a set of database
+    \annots{}. Sparse patch-based features are localized in all \annots{}, and a
+    descriptor vector is extracted for each feature. The descriptors of the
+    database \annots{} are indexed for fast nearest neighbor search. We then
+    find a set of matches in the database for each descriptor in the query
+    \annot{}. The matches are scored based on visual similarity, distinctiveness
+    within the database, and likelihood of belonging to the foreground. Matches
+    are combined across multiple \exemplar{} \annots{} to produce a matching
+    score for each \name{} in the database, resulting in a ranked list of
+    results for each query.
 
-    We evaluate the matching algorithm by performing experiments on databases
-      of three species:
-    plains zebras, Grevy's zebras, and Masai giraffes.
-    The experiments test the algorithm's ability to identify an individual
-      animal over large periods of time, different viewpoints, different sized
-      databases, and different numbers of \exemplars{}.
-    We determine the configuration of the algorithm pipeline that works best
-      for identifying each species.
+    We evaluate the ranking algorithm by performing experiments on databases of
+    three species: plains zebras, Grevy's zebras, and Masai giraffes. The
+    experiments test the algorithm's ability to find potential matches of an
+    individual animal over large periods of time, different viewpoints,
+    different sized databases, and different numbers of \exemplars{}. We
+    determine the configuration of the algorithm pipeline that works best for
+    identifying each species.
 
-    We build a workflow on top of the matching algorithm.
-    This workflow accepts new \annots{} in groups defined by \occurrences{}.
-    The matching algorithm groups \annots{} within the \occurrence{}, and
-      then leverages redundant and multiple viewpoints to perform identification
-      against the database.
-    As the database grows we handle multiple views of each \exemplar{} by
-      maintaining a set of \exemplars{} for each \mastername{}.
-    We develop methods for recovering from any errors in identification when
-      multiple individuals are grouped into the same \exemplar{} as well as when
-      multiple \exemplars{} actually represent the same individual.
+    We then extend ranking algorithm by developing a classifier able to
+      automatically review its results.
+    Then, we place the problem of animal identification in a graph framework
+      able to systematically guide the identification process.
+    The graph framework will be able to detect and recover from errors by
+      taking advantage of multiple images seen of each individual.
+    
+    %We build a workflow on top of the matching algorithm.
+    %This workflow accepts new \annots{} in groups defined by \occurrences{}.
+    %The matching algorithm groups \annots{} within the \occurrence{}, and
+    %  then leverages redundant and multiple viewpoints to perform identification
+    %  against the database.
+    %As the database grows we handle multiple views of each \exemplar{} by
+    %  maintaining a set of \exemplars{} for each \name{}.
+    %We develop methods for recovering from any errors in identification when
+    %  multiple individuals are grouped into the same \exemplar{} as well as when
+    %  multiple \exemplars{} actually represent the same individual.
 
-    To address the challenges introduced by this workflow we extend the core
-      matching algorithm using a probabilistic graph based inference algorithm.
-    We will learn the probability of matching given two \annots{} as well as a
-      confidence in that estimate.
-    We will use this information build a weighted graph of potential matches.
-    To perform inference on this graph we propose to to develop a decision
-      mechanism that will make probabilistic decisions about \intraoccurrence{}
-      matching, \vsexemplar{} matching, and consistency checks.
+    %To address the challenges introduced by this workflow we extend the core
+    %  matching algorithm using a probabilistic graph based inference algorithm.
+    %We will learn the probability of matching given two \annots{} as well as a
+    %  confidence in that estimate.
+    %We will use this information build a weighted graph of potential matches.
+    %To perform inference on this graph we propose to to develop a decision
+    %  mechanism that will make probabilistic decisions about \intraoccurrence{}
+    %  matching, \vsexemplar{} matching, and consistency checks.
 
-    To support continuous and dynamic use of the system we develop a caching
-      scheme that supports seamless invalidation of outdated data, computes
-      requested data on the fly, and disallows duplicate data.
-    We use this scheme to dynamically update the underlying data structures as
-      more data is added to the system.
-    This is all accomplished in a stateless framework which allows for the
-      image analysis software to be used concurrently by web-based frameworks.
+    %To support continuous and dynamic use of the system we develop a caching
+    %scheme that supports seamless invalidation of outdated data, computes
+    %requested data on the fly, and disallows duplicate data. We use this scheme
+    %to dynamically update the underlying data structures as more data is added
+    %to the system. This is all accomplished in a stateless framework which
+    %allows for the image analysis software to be used concurrently by web-based
+    %frameworks.
 
 \section{\Thesis{} organization} %
     This \thesis{} is organized as follows:
@@ -647,22 +455,16 @@
       techniques used in the system as well as an overview of those which are
       indirectly related.
     %
-    \Cref{chap:matching} describes a matching algorithm for identifying
-      individual animals, one \annot{} at a time, against a static database of
+    \Cref{chap:ranking} describes a ranking algorithm for identifying
+      individual animals, one \annot{} at a time, against a database of
       \exemplars{}.
-    It includes an experimental evaluation of the matching algorithm.
-    This chapter describes work that has been completed.
-    The next two chapters focus on the work that will be done to complete this
-      thesis.
-    %
-    \Cref{chap:application} discusses the challenges of the identification
-      workflow in the context of the \GZC{} and related data collection efforts,
-      describes preliminary solutions and outlines the steps that will be taken
-      to complete the solutions.
-    %
-    \Cref{chap:system} describes the system architecture used to efficiently
-      accomplish the on-line computer vision tasks.
-    %
-    \Cref{chap:conclusion} summarizes the current and intended contributions
-      of this work as well as outlining the steps that will
-      be taken to complete this thesis.
+    It includes an experimental evaluation of the ranking algorithm.
+    This is the algorithm that was used in the \GZC{}.
+    \Cref{chap:pairclf} addresses the problem of semi-automatic verification
+      of results from the ranking algorithm.
+    \Cref{chap:graphid} combines the ranking and verification algorithm into a
+      semi-automatic framework that detects and corrects errors while reducing
+      the number of manual reviews .
+    \Cref{chap:system} describes the system architecture used throughout this
+    \thesis{} to efficiently accomplish the on-line computer vision tasks.
+      \Cref{chap:conclusion} concludes this \thesis{} and summarizes its contributions.

@@ -135,7 +135,7 @@
         The name and a short description of each dataset is given in
           the following list.
 
-        \begin{itemize}
+        \begin{itemln}
             \item \textbf{\pzmasterI{}} is an aggregated dataset of
               plains zebras.
             There is variation in how the data was collected and
@@ -185,7 +185,7 @@
               2015 and March 2, 2015.
             The distribution of collection times is shown
               in~\cref{sub:timedistC}.
-        \end{itemize}
+        \end{itemln}
 
     \subsection{Baseline experiment}\label{sub:exptbase}
 
@@ -323,7 +323,7 @@
         The following is a list describing the invariance settings that
           we investigate in each experiment.
 
-        \begin{itemize}
+        \begin{itemln}
 
             \item \NoInvar{} (\pvar{AI=F,QRH=F,RI=F}): % 
             In this configuration the gravity vector is assumed and the
@@ -356,7 +356,7 @@
             \item \AIRI{} (\pvar{AI=T,QRH=F,RI=T}): %
                 This is the combination of \RIAlone{} and \AIAlone{}.
 
-        \end{itemize}
+        \end{itemln}
 
         % Invar Conclusions
         The identification accuracy of the viewpoint and time
@@ -623,7 +623,7 @@
           (false positive) where the \groundfalse{} match produces a
           score that is too high.
 
-        \begin{itemize}
+        \begin{itemln}
 
             \item Viewpoint:
             This failure case denotes that there is a viewpoint
@@ -765,7 +765,7 @@
             %    the animal that encode the shape of the animal's position.
             %    \FailPose
             %    A pose failure case is shown in~\cref{fig:FailPose}.
-        \end{itemize}
+        \end{itemln}
 
 
         The above failure cases show that the main causes of algorithm
@@ -985,7 +985,7 @@
           quality, and viewpoint.
         Based on the results of these experiments we are able to make
           the following observations and conclusions.
-        \begin{itemize}
+        \begin{itemln}
             %% DATASET SAMPLING MATTERS
             %\item The baseline experiment shows that it is important to
             %  control for time, because near-duplicate images 
@@ -1057,7 +1057,7 @@
                 However, note that most tests were run on different
                   sizes of large databases, and the choice of $\K$ using
                   small databases was not investigated.
-                %\end{itemize}
+                %\end{itemln}
 
               \item \textbf{\Nsumprefix{} is slightly better than \csumprefix{} \namescoring{}}:
                 % NSUM > CSUM
@@ -1085,4 +1085,4 @@
                   identification algorithm.
                 %More experimentation is needed before threshold levels can
                 %  be confidently set for databases of arbitrary sizes.
-        \end{itemize}
+        \end{itemln}

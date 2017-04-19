@@ -156,7 +156,7 @@
 
         \item \textbf{Identification verification}:
             While the single image single-\annot{} identification algorithm
-              --- described in~\cref{chap:matching} --- is useful for searching
+              --- described in~\cref{chap:ranking} --- is useful for searching
               the database for a ranked list of potential matches, it does not
               include a decision/verification mechanism.
             In fact, we argued based on experimental evidence
@@ -653,7 +653,7 @@
         When the \masterdatabase{} is empty, then \intraoccurrence{} matching
           can be solved using this algorithm.
         When there is a single unlabeled \annot{} --- the problem addressed
-          in~\cref{chap:matching} --- then \vsexemplar{} matching can be solved
+          in~\cref{chap:ranking} --- then \vsexemplar{} matching can be solved
           using this algorithm.
         Other sets of \annots{} can be chosen to facilitate merge and split
           checks.
@@ -1325,7 +1325,7 @@
 
 \section{Summary of the identification workflow}\label{sec:summary4}
     In this chapter we have described how the single image identification
-      algorithm from~\cref{chap:matching} can be adapted into a dynamic setting.
+      algorithm from~\cref{chap:ranking} can be adapted into a dynamic setting.
     We have introduced a graph-based identification technique that exploits
       multiple images in an \encounter{} and handles the case where an
       individual is observed for the first time.
