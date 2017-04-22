@@ -7,7 +7,7 @@
 \newif\ifrpilayout{}
 %\onecolumntrue{}
 \usegraphicstrue{}
-%\publishversiontrue{}
+\publishversiontrue{}
 \rpilayouttrue{}
 
 % --- Document Settings ---
@@ -46,8 +46,7 @@
 
 
 \begin{comment}
-    rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-candidacy-2015/ ~/latex/crall-candidacy-2015
-
+    rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/ ~/latex/crall-thesis-2017
     ./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
     ./texfix.py --fpaths main.tex --outline --numlines=0 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
     ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
@@ -108,7 +107,7 @@
 %\include{newchap3_outline}
 %\include{newchap4_outline}
 
-%\include{chapter1-intro}
+\include{chapter1-intro}
 %\include{chapter2-related-work}
 %\include{chapter3-matching}
 \include{pairwise-classifier}
