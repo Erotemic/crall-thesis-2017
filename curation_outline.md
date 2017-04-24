@@ -24,3 +24,9 @@
 * The user then starts to correct errors and the resulting inconsistencies. 
 * Whenever a user makes a review the confidence on the edge is updated, which
   prevents it from being shown again.
+
+
+* GZMaster had no labeled incomparable cases and nothing can be inferred from
+  viewpoint
+* PZ_PB_RF_TRAIN has no labeled incomparable cases and a few can be inferred
+  from viewpoint.

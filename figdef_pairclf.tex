@@ -83,42 +83,27 @@ Positive match state ROC.
 \end{figure}
 }
 
-\newcommand{\MatchConfusion}{
+
+\begin{comment}
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=match_state
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=match_state
+\end{comment}
+\newcommand{\ConfusionMatch}{
 \begin{table}
     \centering
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \begin{tabular}{|l|rrr|l|}
-        \toprule
-        {} &  p(Negative) &  p(Positive) &  p(Incomparable) &   $\sum$ real \\
-            \hline
-            r(Negative)     &         1715 &           19 &               20 & 1754 \\
-            r(Positive)     &           67 &          312 &                3 &  382 \\
-            r(Incomparable) &           44 &            5 &              314 &  363 \\
-            \hline
-            $\sum$ predicted              &         1826 &          336 &              337 &      \\
-        \bottomrule
-        \end{tabular}
+        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/confusion_match_state.tex}
         \caption{Plains zebras match state confusion}
     \end{subtable} %
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \begin{tabular}{|l|rrr|l|}
-        \toprule
-        {} &  p(Negative) &  p(Positive) &  p(Incomparable) &   $\sum$ real \\
-        \hline
-        r(Negative)     &        12612 &          228 &               13 & 12853 \\
-        r(Positive)     &         1002 &         4383 &               89 &  5474 \\
-        r(Incomparable) &            9 &          182 &             1067 &  1258 \\
-        \hline
-        $\sum$ predicted              &        13623 &         4793 &             1169 &       \\
-        \bottomrule
-        \end{tabular}
+        \input{figures_pairclf/GZ_Master1_20590/confusion_match_state.tex}
         \caption{Grévy zebras match state confusion}
     \end{subtable} %
-\caption[\caplbl{MatchConfusion}Match state confusion]{\caplbl{MatchConfusion}
+\caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
 % ---
 Multiclass match state confusion for plains and Grévy's zebras. The rows are
 the real (groundtruth) state and the columns are the predicted states.  The
@@ -126,8 +111,33 @@ final column indicates the number of examples for each class in the testing
 dataset. 
 % ---
 }
+\label{tbl:ConfusionMatch}
+\end{table}
+}
 
-\label{tbl:MatchConfusion}
+
+\newcommand{\EvalMetricsMatch}{
+\begin{table}
+    \centering
+    \begin{subtable}[h]{\textwidth}
+        \centering
+        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/eval_metrics_match_state.tex}
+        \caption{Plains zebras match state metrics}
+    \end{subtable} %
+
+    \begin{subtable}[h]{\textwidth}
+        \centering
+        \input{figures_pairclf/GZ_Master1_20590/eval_metrics_match_state.tex}
+        \caption{Grévy zebras match state metrics}
+    \end{subtable} %
+\caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
+% ---
+Multiclass match state evaluation metrics for plains and Grévy's zebras
+computed from the confusion matrix.
+% ---
+}
+
+\label{tbl:EvalMetricsMatch}
 \end{table}
 }
 
@@ -139,8 +149,8 @@ dataset.
     python -m ibeis.scripts.script_vsone report_classifier_importance --db GZ_Master1 \
     --dpath ~/latex/crall-thesis-2017/ --save "figures_pairclf/wc_gz_clipwhite2.png" \
     --clipwhite --diskshow
-
 \end{comment}
+
 \newcommand{\MatchWordCloud}{
 \begin{figure}[ht!]
 \centering
@@ -212,7 +222,11 @@ role in distinguishing incomparable cases.
 
 
 
-\newcommand{\PhotobombConfusion}{
+\begin{comment}
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=photobomb_state
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=photobomb_state
+\end{comment}
+\newcommand{\ConfusionPhotobomb}{
 
 \begin{table}[ht!]
     \begin{subtable}[h]{0.49\textwidth}
@@ -244,7 +258,7 @@ role in distinguishing incomparable cases.
         \caption{Grévy's zebra photobomb confusion}
     \end{subtable} %
 
-\caption[\caplbl{PhotobombConfusion}Photobomb state confusion]{\caplbl{PhotobombConfusion}
+\caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
 % ---
 Photobomb state confusion for plains and Grévy's zebras.
 The classes pb and notpb respectively indicate if a pair is or is not a
@@ -255,7 +269,32 @@ dataset.
 % ---
 }
 
-\label{tbl:PhotobombConfusion}
+\label{tbl:ConfusionPhotobomb}
+\end{table}
+}
+
+\newcommand{\EvalMetricsPhotobomb}{
+\begin{table}
+    \centering
+    \begin{subtable}[h]{\textwidth}
+        \centering
+        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/eval_metrics_photobomb_state.tex}
+        \caption{Plains zebras photobomb metrics}
+    \end{subtable} %
+
+    \begin{subtable}[h]{\textwidth}
+        \centering
+        \input{figures_pairclf/GZ_Master1_20590/eval_metrics_photobomb_state.tex}
+        \caption{Grévy zebras photobomb metrics}
+    \end{subtable} %
+\caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
+% ---
+Photobomb state evaluation metrics for plains and Grévy's zebras computed from
+the confusion matrix.
+% ---
+}
+
+\label{tbl:EvalMetricsPhotobomb}
 \end{table}
 }
 

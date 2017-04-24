@@ -504,25 +504,24 @@ Because our current datasets only contain a small number of explicitly labeled
           negative, incomparable) of a pair of annotations.
         To demonstrate the effectiveness of our multiclass classifier we
           report the confusion matrix of class predictions for plains and
-          Grévy's zebras in \Cref{fig:MatchConfusion}.
+          Grévy's zebras in \Cref{fig:ConfusionMatch}.
 
-        \MatchConfusion{}
+        \ConfusionMatch{}
 
-        Using this confusion matrix we compute the average precision, recall
-          of $0.92$, $0.92$, and for Grévy's zebras and $0.94$, $0.94$, and for
-          plains zebras.
-        However, because precision and recall scores are best suited for
-          binary classification and are also biased by an unbalanced class
-          distribution.
-        Therefore, we also measure the MCC (Matthews correlation coefficient)
-          which can be generalized to the multiclass case and provides an
-          unbiased overall measure of performance with values of $+1$ indicating
-          perfect predictions, $0$ indicating random predictions, and $-1$
-          indicating pathological inverse predictions
-          \cite{powers_evaluation_2011}.
+        \EvalMetricsMatch{}
+
+        Using this confusion matrix we compute the average precision, recall,
+          and Matthews correlation coefficient (MCC) for each class.
+        These number are reported in \cref{EvalMetricsMatch}.
+        The MCC provides a measurement of overall multiclass classification
+          performance unbiased by class distribution.
+        An MCC ranges from $+1$, indicating perfect predictions, to $-1$,
+          indicates pathological inverse predictions, with $0$ being random
+          uninformed predictions \cite{powers_evaluation_2011}.
         %The performance of a classifier can be interpreted as strong if its
         %  MCC is above $0.7$, and as extremely strong if above $0.9$.
-        The MCC is $0.85$ for Grévy's zebras and $0.86$ for plains zebras,
+        % FIXME: ensure these numbers match the tables
+        The MCC of $0.85$ for Grévy's zebras and $0.86$ for plains zebras,
           indicating that our classifiers have strong predictive power.
         
 
@@ -589,9 +588,11 @@ Because our current datasets only contain a small number of explicitly labeled
         We perform a subset of similar experiments to demonstrate the effectiveness of
         our photobomb classifier.
         The overall performance is given in the classification confusion matrix
-        illustrated in \cref{tbl:PhotobombConfusion}.
+        illustrated in \cref{tbl:ConfusionPhotobomb}.
 
-        \PhotobombConfusion
+        \ConfusionPhotobomb{}
+
+        \EvalMetricsPhotobomb{}
 
 
         \paragraph{Classification Accuracy}
