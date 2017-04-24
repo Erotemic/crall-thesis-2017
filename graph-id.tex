@@ -1,22 +1,23 @@
 \chapter{Graph identification}\label{chap:graphid}
 \newcommand{\nT}{N}
 
-In this chapter we frame the problem of individual animal identification in terms of constructing what we refer to as an
-\emph{decision graph}. In this graph, each vertex is an annotation, and each edge represents a decision made between
-two annotations.  Edges determine if two annotations are the same (positive) or different (negative) individuals or if
-they cannot be compared (incomparable). Thus, a correctly constructed decision graph naturally addresses the problem of
-identifying individual animals because each connected component of positive edges will be all the annotations from an
-individual. Therefore, stated abstractly, goal of graph identification is to determine a correct, consistent set of
-edges in the decision graph.
+In this chapter we frame the problem of individual animal identification in terms of constructing what we refer to
+as an \emph{decision graph}. In this graph, each vertex is an annotation, and each edge represents a decision made
+between two annotations.  Edges determine if two annotations are the same (positive) or different (negative)
+individuals or if they cannot be compared (incomparable). Thus, a correctly constructed decision graph naturally
+addresses the problem of identifying individual animals because each connected component of positive edges will be
+all the annotations from an individual. Therefore, stated abstractly, goal of graph identification is to determine
+a correct, consistent set of edges in the decision graph.
 
-To construct the decision graph, we develop a semi-automatic review procedure that combines the ranking and verification
-algorithms presented in Chapters~\ref{chap:ranking} and \ref{chap:pairclf}. The ranking algorithm will be used to
-suggest candidate edges to be placed in the graph, and the verification algorithm will be used to automatically review
-as many edges as possible.  The key reason for combining these algorithms with a decision graph is to take advantage of
-its connectivity information.  Connectivity not only identifies the individuals, but it can also be used to develop
-graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and \emph{convergence}.  By combining
-these graph measures with the ranking and verification algorithms we can prioritize edges for review based on both their
-pairwise probabilities and their ability to affect the consistency of the graph, which in turn allows us to:
+To construct the decision graph, we develop a semi-automatic review procedure that combines the ranking and
+verification algorithms presented in Chapters~\ref{chap:ranking} and \ref{chap:pairclf}. The ranking algorithm will
+be used to suggest candidate edges to be placed in the graph, and the verification algorithm will be used to
+automatically review as many edges as possible.  The key reason for combining these algorithms with a decision
+graph is to take advantage of its connectivity information.  Connectivity not only identifies the individuals, but
+it can also be used to develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and
+\emph{convergence}.  By combining these graph measures with the ranking and verification algorithms we can
+prioritize edges for review based on both their pairwise probabilities and their ability to affect the consistency
+of the graph, which in turn allows us to:
 \begin{enumin}
 \item increase confidence that the identifications are correct, %
 \item reduce the number of manual reviews,  % 
@@ -29,17 +30,17 @@ vision procedures, which are abstracted into into three components:
 \begin{enumin}
 \item a ranking algorithm used to search for candidate positive edges, %
 \item a verification algorithm used to automatically review edges, and %
-\item a probability algorithm used assign probabilities to edges (note this is typically a by-product of the ranking or
-verification algorithm).
+\item a probability algorithm used assign probabilities to edges (note this is typically a by-product of the
+ranking or verification algorithm).
 \end{enumin}
 In this thesis we use ranking algorithm from \Cref{chap:ranking}, and the verification algorithm from
-\Cref{chap:pairclf} to define these components because these are suitable for identifying textured species.  However,
-while graph identification benefits from accurate computer vision subroutines, it can stand alone without them.  This
-means that existing identification algorithms that only define a subset of these procedures (\eg{} contour-based
-rank-only identification of humpback whales and bottlenose dolphins) could be seamlessly incorporated into our framework
-and realize the benefits of graph identification (\eg{} a reduced number of manual reviews and error recovery
-mechanisms).  Furthermore, because pairwise decisions are gathered and maintained by this framework, verification
-algorithms can be retrained and improved, moving closer to a fully-automatic algorithm.
+\Cref{chap:pairclf} to define these components because these are suitable for identifying textured species.
+However, while graph identification benefits from accurate computer vision subroutines, it can stand alone without
+them.  This means that existing identification algorithms that only define a subset of these procedures (\eg{}
+contour-based rank-only identification of humpback whales and bottlenose dolphins) could be seamlessly incorporated
+into our framework and realize the benefits of graph identification (\eg{} a reduced number of manual reviews and
+error recovery mechanisms).  Furthermore, because pairwise decisions are gathered and maintained by this framework,
+verification algorithms can be retrained and improved, moving closer to a fully-automatic algorithm.
 
 
 The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the
@@ -67,48 +68,49 @@ Then, \Cref{sec:rename} describes how existing database can be ported into
 
 \decisiongraph{}
 
-The graph identification algorithm is a review procedure formalized around the notion of a \glossterm{decision graph} $G
-= (V, E)$ whose nodes are annotations and whose edges are suggested by a ranking algorithm (LNBNN in our case) and
-decided upon by a combination of the probabilities output by a verification algorithm and by manual review.  The edge
-set $E = E_p \cup E_n \cup E_i$ is composed of three disjoint sets. Each edge in $E_p$ is \emph{positive}, meaning that
-it connects two annotations determined to be from the same individual. Each edge in $E_n$ is \emph{negative}, meaning
-that it connects annotations determined to be from different individuals. Finally, each edge in $E_i$ is
-\emph{incomparable}, meaning that it connects two annotations where it has been determined that there is not enough
-information to tell to tell if they are from the same individual (\eg{} when one annotation shows the left side of an
-animal and another other shows the right side).  An example of a decision graph with all three edge types is illustrated
-in \Cref{fig:decisiongraph}. The goal of graph identification is to construct these edges.
+The graph identification algorithm is a review procedure formalized around the notion of a \glossterm{decision
+graph} $G = (V, E)$ whose nodes are annotations and whose edges are suggested by a ranking algorithm (LNBNN in our
+case) and decided upon by a combination of the probabilities output by a verification algorithm and by manual
+review.  The edge set $E = E_p \cup E_n \cup E_i$ is composed of three disjoint sets. Each edge in $E_p$ is
+\emph{positive}, meaning that it connects two annotations determined to be from the same individual. Each edge in
+$E_n$ is \emph{negative}, meaning that it connects annotations determined to be from different individuals.
+Finally, each edge in $E_i$ is \emph{incomparable}, meaning that it connects two annotations where it has been
+determined that there is not enough information to tell to tell if they are from the same individual (\eg{} when
+one annotation shows the left side of an animal and another other shows the right side).  An example of a decision
+graph with all three edge types is illustrated in \Cref{fig:decisiongraph}. The goal of graph identification is to
+construct these edges.
 
 The most important task is to determine the positive edges $E_p$.  This is because each connected component in the
-subgraph $G_p = (V, E_p)$ corresponds to a unique individual.  Producing an accurate set of these \glossterm{positive
-connected components} (PCCs) addresses solves the larger problem of animal identification. However, an algorithm that
-only determines positive edges is not enough.  This is because the algorithm may have failed to find all positive edges,
-resulting in two unconnected PCCs that should be \emph{merged} into one.
+subgraph $G_p = (V, E_p)$ corresponds to a unique individual.  Producing an accurate set of these
+\glossterm{positive connected components} (PCCs) addresses solves the larger problem of animal identification.
+However, an algorithm that only determines positive edges is not enough.  This is because the algorithm may have
+failed to find all positive edges, resulting in two unconnected PCCs that should be \emph{merged} into one.
 
 We can gain confidence that all positive edges have been found by using negative edges $E_n$, which provide direct
-evidence that two annotations are different individual.  A negative edge between two PCCs means that no other unreviewed
-edge between those PCCs can be positive.  Another important case is when a negative edge is contained within a PCC.
-When this happens, the PCC is \emph{inconsistent}, and it implies that it contains at least one mistake. Whenever an
-inconsistencies is detected, we resolve it using an algorithm we will define in \Cref{sec:incon} that restores
-consistency.
+evidence that two annotations are different individual.  A negative edge between two PCCs means that no other
+unreviewed edge between those PCCs can be positive.  Another important case is when a negative edge is contained
+within a PCC. When this happens, the PCC is \emph{inconsistent}, and it implies that it contains at least one
+mistake. Whenever an inconsistencies is detected, we resolve it using an algorithm we will define in
+\Cref{sec:incon} that restores consistency.
 
 Lastly, incomparable edges, $E_i$, play a minor but necessary role by simply signifying that a positive or negative
-decision cannot be made.  Incomparable edges can exist internally in a PCCs without causing inconsistencies or between
-two PCCS without precluding them from being matched at a later point.
+decision cannot be made.  Incomparable edges can exist internally in a PCCs without causing inconsistencies or
+between two PCCS without precluding them from being matched at a later point.
 
 To reduce the number of potential reviews, notice, that once a group of nodes is connected by (a tree of) positive
-edges, all those nodes in that PCC can be inferred to belong to the same individual, and it is not necessary to consider
-any other edge internal to the PCC for review. Likewise once, a negative edges has been placed between two PCCs, all
-edges between those PCCs can be ignored. By ignoring these redundant edges we can reduce the number of reviews.
-Furthermore, if a negative edge is placed between every pair of PCCs, then all individuals must have been discovered and
-identification has converged.
+edges, all those nodes in that PCC can be inferred to belong to the same individual, and it is not necessary to
+consider any other edge internal to the PCC for review. Likewise once, a negative edges has been placed between two
+PCCs, all edges between those PCCs can be ignored. By ignoring these redundant edges we can reduce the number of
+reviews. Furthermore, if a negative edge is placed between every pair of PCCs, then all individuals must have been
+discovered and identification has converged.
 
-Unfortunately, there are several issues with these previous observations. These observations depend on the condition
-that each edge was correctly reviewed. A small amount of redundant decisions is desirable because it reduces the
-probability that errors have been made and signifies when errors have occurred by introducing inconsistencies. Therefore
-we will define a redundancy criteria in \Cref{sec:redun} which ignores edges within and between PCCs, but only after
-they meet a minimum level of redundancy. Additionally this deterministic convergence criteria would requires that
-$O(|V|^2)$ edges are reviewed as negative. We address this concern in \Cref{sec:coverge} using a probabilistic
-convergence criteria.
+Unfortunately, there are several issues with these previous observations. These observations depend on the
+condition that each edge was correctly reviewed. A small amount of redundant decisions is desirable because it
+reduces the probability that errors have been made and signifies when errors have occurred by introducing
+inconsistencies. Therefore we will define a redundancy criteria in \Cref{sec:redun} which ignores edges within and
+between PCCs, but only after they meet a minimum level of redundancy. Additionally this deterministic convergence
+criteria would requires that $O(|V|^2)$ edges are reviewed as negative. We address this concern in
+\Cref{sec:coverge} using a probabilistic convergence criteria.
 
 %Finally, we add a measure of redundancy to both the positive and negative
 %  subgraphs to allow the algorithm to detect and recover from mistakes, either
@@ -118,11 +120,11 @@ convergence criteria.
 
 
 % Algorithm overview
-The review algorithm that produces the edges of a decision graph is outlined in Algorithm~\ref{alg:AlgoOverview}. Akin
-to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with an over-segmentation of an image, the
-identification graph starts with an empty set of edges, $G = (V, \{ \})$, so in essence each annotation starts by itself
-as an individual animal. Throughout the main algorithm, the graph is maintained in a \emph{consistent} state, which
-means that each PCC has no internal negative edges.
+The review algorithm that produces the edges of a decision graph is outlined in Algorithm~\ref{alg:AlgoOverview}.
+Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with an over-segmentation of an image, the
+identification graph starts with an empty set of edges, $G = (V, \{ \})$, so in essence each annotation starts by
+itself as an individual animal. Throughout the main algorithm, the graph is maintained in a \emph{consistent}
+state, which means that each PCC has no internal negative edges.
 
 \begin{algorithm}
     \begin{enumln}
@@ -145,38 +147,36 @@ The first step of the algorithm is to generate candidate edges predict probabili
 incomparable) for each candidate edge. In the next step each edge is then entered into a priority queue. Next, the
 algorithm enters a loop where the next candidate edge is selected, a decision is made about this edges --- either
 automatically (as much as possible) or by the user --- and it is added to the graph. The algorithm proceeds toward
-convergence by removing candidate edges from the priority queue, either directly from the top of the queue or indirectly
-by eliminating candidate edges that are no longer needed. A candidate edge is no longer needed when there are sufficient
-redundancies in the edge set within or between its PCCs. A pair of PCCs is \emph{complete} when there are enough
-negative edges between them.
+convergence by removing candidate edges from the priority queue, either directly from the top of the queue or
+indirectly by eliminating candidate edges that are no longer needed. A candidate edge is no longer needed when
+there are sufficient redundancies in the edge set within or between its PCCs. A pair of PCCs is \emph{complete}
+when there are enough negative edges between them.
 
 Each new edge addition could trigger two important events:
 \begin{enumin}
     \item a \emph{merge} --- addition of a positive edge between different
       PCCs combines them into one PCC, and
 
-    \item an \emph{inconsistency} --- addition of either a negative edge within a PCC or a positive edge between PCCs
-    that already have a negative edge between them creates an inconsistent PCC.
+    \item an \emph{inconsistency} --- addition of either a negative edge within a PCC or a positive edge between
+    PCCs that already have a negative edge between them creates an inconsistent PCC.
 \end{enumin}
 Handling a merge is largely a matter of bookkeeping. Finding an inconsistency, however, drops the user into
-inconsistency recovery mode where a cycle of hypothesizing one or more edges to fix and manually verifying these with
-the user until consistency is restored.
+inconsistency recovery mode where a cycle of hypothesizing one or more edges to fix and manually verifying these
+with the user until consistency is restored.
 
-Finally, the outer loop of the overall algorithm allows the ranking algorithm to generate additional candidate edges ---
-this allows the ranking algorithm to take advantage of more subtle matches as the PCCs begin to form. The priority queue
-will gradually be emptied as each PCC obtains a sufficiently redundant set of positive edges and enough negative edges
-to be complete.
+Finally, the outer loop of the overall algorithm allows the ranking algorithm to generate additional candidate
+edges --- this allows the ranking algorithm to take advantage of more subtle matches as the PCCs begin to form. The
+priority queue will gradually be emptied as each PCC obtains a sufficiently redundant set of positive edges and
+enough negative edges to be complete.
 %Ensuring completeness requires examining $O(|V|^2)$ edges, so in practice we
 %  develop a learned probabilistic completeness measure.
 %If sufficient training data is not available simple heuristics can be used to
 %  terminate.
 
-Details of each component in the review algorithm are described in the
-following sections.  First we describe the redundancy criteria in
-\Cref{sec:redun} and inconsistency recovery in \Cref{sec:incon}. These will
-serve to inform the sections that
-define candidate edge generation, \Cref{sec:cand}, decision making
-\Cref{sec:decision},  and convergence \Cref{sec:coverge}.
+Details of each component in the review algorithm are described in the following sections.  First we describe the
+redundancy criteria in \Cref{sec:redun} and inconsistency recovery in \Cref{sec:incon}. These will serve to inform
+the sections that define candidate edge generation, \Cref{sec:cand}, decision making \Cref{sec:decision},  and
+convergence \Cref{sec:coverge}.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
@@ -190,29 +190,24 @@ define candidate edge generation, \Cref{sec:cand}, decision making
 %One paragraph on algorithm.
 %One paragraph on book-keeping and elimination from priority queue.
 
-Before describing the removal of edges from the priority queue and the
-detection and correction of inconsistencies, we formalize the notion of
-redundancy that is the basis for both of these.
+Before describing the removal of edges from the priority queue and the detection and correction of inconsistencies,
+we formalize the notion of redundancy that is the basis for both of these.
 % Before we remove edges from the priority queue, we enforce a minimum level of redundancy.
 %This $k$-redundancy criteria is tied to the number of mistakes that must be
 %  made in order for part of the graph to incorrectly appear consistent or
 %  complete.
 %For a PCC (or pair of PCCs) to simultaneously contain a mistake and be
 %  $k$-redundant then at least $k$ consistent mistakes must be made.
-We define both a positive and a negative redundancy criteria:
-\begin{enumln}
+We define both a positive and a negative redundancy criteria: \begin{enumln}
 
     \item positive-redundancy --- % 
-        A PCC is $k$-positive-redundant if its positive subgraph is
-        $k$-edge-connected (contains no cut-sets involving fewer than $k$
-        positive edges\cite{eswaran_augmentation_1976}), or if the PCC has $k$
-        or fewer nodes and the union of positive and incomparable edges is
-        forms a complete graph.
+        A PCC is $k$-positive-redundant if its positive subgraph is $k$-edge-connected (contains no cut-sets
+        involving fewer than $k$ positive edges\cite{eswaran_augmentation_1976}), or if the PCC has $k$ or fewer
+        nodes and the union of positive and incomparable edges is forms a complete graph.
 
     \item negative-redundancy --- % 
-        A pair of PCCs $C$ and $D$ is $k$-negative-redundant if there are $k$
-        negative edges between $C$ and $D$, or if either PCC has fewer than $k$
-        nodes and there are at least $\mathop{max}(|C|, |D|)$ negative edges
+        A pair of PCCs $C$ and $D$ is $k$-negative-redundant if there are $k$ negative edges between $C$ and $D$,
+        or if either PCC has fewer than $k$ nodes and there are at least $\mathop{max}(|C|, |D|)$ negative edges
         between them.
         
     %which can be determined in $O(n_1 n_2)$ time.
@@ -225,69 +220,64 @@ We define both a positive and a negative redundancy criteria:
 To understand these criteria better, consider what it means for an incorrect PCC that has been determined to be
 $k$-positive-redundant to have an undiscovered error. The error means that the PCC really should be split into (at
 least) two separate PCCs. Suppose these PCCs correspond to animals $C$ and $D$. If the combined PCC is
-$k$-positive-redundant then are $k$ separate undiscovered mistakes connecting $C$ and $D$, and no negative edges. This
-may be plausible if $C$ were identical twins, but these tend not to occur for species where the distinguishing markings
-(\eg{} hip and shoulder of zebras) are mostly random. Note that $k$ can be different for positive and negative
-redundancy, but in our current implementation we use $k=2$ for both positive and negative redundancy.
+$k$-positive-redundant then are $k$ separate undiscovered mistakes connecting $C$ and $D$, and no negative edges.
+This may be plausible if $C$ were identical twins, but these tend not to occur for species where the distinguishing
+markings (\eg{} hip and shoulder of zebras) are mostly random. Note that $k$ can be different for positive and
+negative redundancy, but in our current implementation we use $k=2$ for both positive and negative redundancy.
 
-For positive-redundancy, determining that the minimal size cut-set in a PCC
-  with $n$ nodes and $m$ edges is at least $k$ is can be determined using
-  edge-connectivity in $O(n)$ if $k \leq 3$~\cite{eswaran_augmentation_1976,wang_simple_2015},
-  and $O(mn)$ if $k > 3$ \cite{esfahanian_connectivity_2017}.
-Determining if two components $C$ and $D$ with sizes $n_1$ and $n_2$ are
-  $k$-negative-redundant can be done in $O(n_1 n_2)$ time using adjacency lists
-  and set intersections.
+For positive-redundancy, determining that the minimal size cut-set in a PCC with $n$ nodes and $m$ edges is at
+least $k$ is can be determined using edge-connectivity in $O(n)$ if $k \leq
+3$~\cite{eswaran_augmentation_1976,wang_simple_2015}, and $O(mn)$ if $k > 3$ \cite{esfahanian_connectivity_2017}.
+Determining if two components $C$ and $D$ with sizes $n_1$ and $n_2$ are $k$-negative-redundant can be done in
+$O(n_1 n_2)$ time using adjacency lists and set intersections.
 
   \kredun{}
 
 When a positive edge is added within a single PCC, we check for positive-redundancy. If this passes, all remaining
-internal edges for that PCC may be  removed from the priority queue. When a negative edge is added between a pair of
-PCCs, we run the negative-redundancy check on the pair, and if this passes, all remaining edges between the PCCs may be
-removed from the priority queue. When a positive edge is added between a pair of PCCs, the two PCCs are merged into a
-single new PCC $C'$, and the above negative-redundancy check must be run between $C'$ and all other PCCs having a
-negative edge connecting to $C'$. It can be shown that if the graph is in a consistent state, that these are the only
-updates required.
+internal edges for that PCC may be  removed from the priority queue. When a negative edge is added between a pair
+of PCCs, we run the negative-redundancy check on the pair, and if this passes, all remaining edges between the PCCs
+may be removed from the priority queue. When a positive edge is added between a pair of PCCs, the two PCCs are
+merged into a single new PCC $C'$, and the above negative-redundancy check must be run between $C'$ and all other
+PCCs having a negative edge connecting to $C'$. It can be shown that if the graph is in a consistent state, that
+these are the only updates required.
 
 \section{Recovering from inconsistencies}\label{sec:incon}
-Whenever a decision is made that either adds a negative edge within a PCC or adds a positive between two PCCs with at
-least one negative edge between them, the graph becomes inconsistent. In both of these cases we add the edge and create
-the result that there is a single PCC $C$ with internal negative edges. The goal of inconsistency recovery mode is to
-change the labels of edges in order to make $C$ consistent. An inconsistency implies that a mistake was made, but does
-not necessarily determine which edge contains the mistake. Therefore, we develop an algorithm to hypothesize the edge(s)
-most likely to contain the mistake(s) using a minimum cut. An example of an inconsistent PCC with hypothesis edges is
-illustrated in \cref{fig:inconpcc}.
+Whenever a decision is made that either adds a negative edge within a PCC or adds a positive between two PCCs with
+at least one negative edge between them, the graph becomes inconsistent. In both of these cases we add the edge and
+create the result that there is a single PCC $C$ with internal negative edges. The goal of inconsistency recovery
+mode is to change the labels of edges in order to make $C$ consistent. An inconsistency implies that a mistake was
+made, but does not necessarily determine which edge contains the mistake. Therefore, we develop an algorithm to
+hypothesize the edge(s) most likely to contain the mistake(s) using a minimum cut. An example of an inconsistent
+PCC with hypothesis edges is illustrated in \cref{fig:inconpcc}.
 
 \inconpcc{}
 
-We describe the case where $C$ only contains one negative edge, but the general case replaces minimum $s$-$t$-cut with
-multicut~\cite{vazirani_approximation_2013}. The procedure alternates between steps of generating ``mistake hypothesis''
-edges, and presenting these to the user for review. The ``hypothesis generation algorithm'' returns a set of negative
-edges or a set of positive edges, which if the re-labeled as positive or negative respectively would cause $C$ to become
-consistent. The algorithm starts by creating an instance of the min-cut using the subgraph of $C$ containing only
-positive edges and the endpoints of the negative edge as the terminal nodes. The weight for each edge is its initial
-priority plus the number of times that edge was manually reviewed. The minimum cut returns a set of edges that
-disconnects the terminal nodes. We compare the total weight of cut positive edges with the weight of the terminal
-negative edge (weighted using the same scheme). If the positive weight is smaller the algorithm suggests that the cut
-positive edges should be relabeled as negative. Otherwise, it suggests that the negative edge should become positive.
+We describe the case where $C$ only contains one negative edge, but the general case replaces minimum $s$-$t$-cut
+with multicut~\cite{vazirani_approximation_2013}. The procedure alternates between steps of generating ``mistake
+hypothesis'' edges, and presenting these to the user for review. The ``hypothesis generation algorithm'' returns a
+set of negative edges or a set of positive edges, which if the re-labeled as positive or negative respectively
+would cause $C$ to become consistent. The algorithm starts by creating an instance of the min-cut using the
+subgraph of $C$ containing only positive edges and the endpoints of the negative edge as the terminal nodes. The
+weight for each edge is its initial priority plus the number of times that edge was manually reviewed. The minimum
+cut returns a set of edges that disconnects the terminal nodes. We compare the total weight of cut positive edges
+with the weight of the terminal negative edge (weighted using the same scheme). If the positive weight is smaller
+the algorithm suggests that the cut positive edges should be relabeled as negative. Otherwise, it suggests that the
+negative edge should become positive.
 
 The user reviews each edge and the algorithm changes the label of the edge until the reviewer disagrees with the
-algorithm's suggestion or the review set is empty. If consistency has not been restored, the algorithm must be repeated.
-When this happens, the weights of the newly reviewed edges are increased by $1$ in order to force the algorithm to look
-elsewhere for a cut. This repeats until all inconsistencies are eliminated. 
+algorithm's suggestion or the review set is empty. If consistency has not been restored, the algorithm must be
+repeated. When this happens, the weights of the newly reviewed edges are increased by $1$ in order to force the
+algorithm to look elsewhere for a cut. This repeats until all inconsistencies are eliminated.
 
 %If this results in splitting one PCC into two or more, then the
 %positive-redundancy and negative-redundancy tests must be repeated, potentially
 %re-adding edges to the priority queue.
 
-Fixing inconsistencies can result in splitting $C$ into multiple PCCs and
-  invaliding implicit reviews inferred from redundancy either within or incident
-  to this subgraph.
-Therefore we recompute positive-redundancy within each new PCC, implicitly
-  reviewing edges where the criteria is satisfied and re-adding edges where it
-  is no longer valid.
-A similar process happens for negative-redundancy between each pair of new
-  PCCs as well as between each new PCC and all other PCCs previously
-  negative-redundant with $C$.
+Fixing inconsistencies can result in splitting $C$ into multiple PCCs and invaliding implicit reviews inferred from
+redundancy either within or incident to this subgraph. Therefore we recompute positive-redundancy within each new
+PCC, implicitly reviewing edges where the criteria is satisfied and re-adding edges where it is no longer valid. A
+similar process happens for negative-redundancy between each pair of new PCCs as well as between each new PCC and
+all other PCCs previously negative-redundant with $C$.
 
 
 %The algorithm starts by creating an instance of the
@@ -320,66 +310,46 @@ A similar process happens for negative-redundancy between each pair of new
 
 \section{Candidate edge generation and priorities}\label{sec:cand}
 
-To generate candidate positive edges the we issue each annotation query to the
-ranking algorithm (the LNBNN from \Cref{chap:ranking}), forming edges from the
-resulting ranked lists. For each candidate edge we use the pairwise algorithm
-(see \Cref{chap:pairclf}) to estimate the positive, negative, and incomparable
-probabilities. Any edge whose maximum probability is above the threshold for
-automatic decision making is ranked according to this probability. All other
-edges are ordered by their positive probability. This ensures automatic
-decision making is first, followed by an ordering of the edges needed for
-manual review that are most likely to be positive and therefore add the most to
-the graph.
+To generate candidate positive edges the we issue each annotation query to the ranking algorithm (the LNBNN from
+\Cref{chap:ranking}), forming edges from the resulting ranked lists. For each candidate edge we use the pairwise
+algorithm (see \Cref{chap:pairclf}) to estimate the positive, negative, and incomparable probabilities. Any edge
+whose maximum probability is above the threshold for automatic decision making is ranked according to this
+probability. All other edges are ordered by their positive probability. This ensures automatic decision making is
+first, followed by an ordering of the edges needed for manual review that are most likely to be positive and
+therefore add the most to the graph.
 
-It is desirable to add positive decisions to the graph first because (1) they
-are the most important edges with respect to determining the animal identities,
-and (2) larger PCCs increase the number of edges that can be invalided by
-positive and negative reviews using the redundancy criteria.
+It is desirable to add positive decisions to the graph first because (1) they are the most important edges with
+respect to determining the animal identities, and (2) larger PCCs increase the number of edges that can be
+invalided by positive and negative reviews using the redundancy criteria.
 
-In the case where the positive-redundancy criteria specifies $k=1$, the order
-  positive edges are added in does not matter because all PCCs will be trees and
-  all trees with $n$ vertices have $n-1$ edges.
-Therefore, the optimal priority scheme simply orders manually reviewed edges
-  by positive probability.
-However, if $k>1$ the priority scheme that minimizes the number of reviews is
-  unclear and is an open question.
-This is partially because edge-augmentation where some edges may not be
-  feasible is NP-hard \cite{khuller_approximation_1993}.
-Even so, if the PCCs were known ahead of time approximation algorithms could
-  be used, but the fact that they are not makes this problem difficult and an
-  interesting topic for future research.
-One possible solution might involve prioritizing edges based on a combination
-  of their probability and current positive degree.
-Another might attempt to review edges to achieve $1$-positive-redundancy and
-  establish the PCCs while preferring to add positive edges to existing chains,
-  then once $1$-positive-redundancy was achieved the algorithm could increase
-  $k$ and find candidate edges using augmentation approximation algorithms.
+In the case where the positive-redundancy criteria specifies $k=1$, the order positive edges are added in does not
+matter because all PCCs will be trees and all trees with $n$ vertices have $n-1$ edges. Therefore, the optimal
+priority scheme simply orders manually reviewed edges by positive probability. However, if $k>1$ the priority
+scheme that minimizes the number of reviews is unclear and is an open question. This is partially because
+edge-augmentation where some edges may not be feasible is NP-hard \cite{khuller_approximation_1993}. Even so, if
+the PCCs were known ahead of time approximation algorithms could be used, but the fact that they are not makes this
+problem difficult and an interesting topic for future research. One possible solution might involve prioritizing
+edges based on a combination of their probability and current positive degree. Another might attempt to review
+edges to achieve $1$-positive-redundancy and establish the PCCs while preferring to add positive edges to existing
+chains, then once $1$-positive-redundancy was achieved the algorithm could increase $k$ and find candidate edges
+using augmentation approximation algorithms.
 
 \section{Making decisions}\label{sec:decision}
 
-For each proposed new edge, its positive, negative, and incomparable state
-  probabilities are produced by the pairwise algorithm.
-Each of these three states have an associated hyperparameter threshold, and if
-  a single probability is greater than its threshold that edge is automatically
-  added to the edge set corresponding to the predicted state.
-If the candidate edge is within a consistent PCC, we can also use local edge
-  connectivity to determine if the new edge is within a $k$-connected component.
-In this case adding this edge to the graph would be redundant and we can
-  simply discard it.
-In all other cases, the edge is sent for manual labeling and then added to the
-  appropriate edge set.
-After each decision we determine the effects of the new review and update
-  candidate edge priorities as we will discuss in\cref{sec:redun}.
-However, if the edge causes an inconsistency we drop into inconsistency mode.
-Inconsistency recover will be discussed in \cref{sec:incon}.
+For each proposed new edge, its positive, negative, and incomparable state probabilities are produced by the
+pairwise algorithm. Each of these three states have an associated hyperparameter threshold, and if a single
+probability is greater than its threshold that edge is automatically added to the edge set corresponding to the
+predicted state. If the candidate edge is within a consistent PCC, we can also use local edge connectivity to
+determine if the new edge is within a $k$-connected component. In this case adding this edge to the graph would be
+redundant and we can simply discard it. In all other cases, the edge is sent for manual labeling and then added to
+the appropriate edge set. After each decision we determine the effects of the new review and update candidate edge
+priorities as we will discuss in\cref{sec:redun}. However, if the edge causes an inconsistency we drop into
+inconsistency mode. Inconsistency recover will be discussed in \cref{sec:incon}.
 
-Whenever a decision is made we record a user-id to identify the reviewer or
-  algorithm making the decision.
-We also follow the approach of~\cite{branson_visual_2010} and store a
-  user-specified categorical confidence value of guessing, not-sure,
-  pretty-sure, and absolutely-sure.
-Currently the user-id is unused but the user confidence is used in error
-  detection and recovery.
+Whenever a decision is made we record a user-id to identify the reviewer or algorithm making the decision. We also
+follow the approach of~\cite{branson_visual_2010} and store a user-specified categorical confidence value of
+guessing, not-sure, pretty-sure, and absolutely-sure. Currently the user-id is unused but the user confidence is
+used in error detection and recovery.
 
 
 \section{Refreshing candidate edges}\label{sec:refresh}
