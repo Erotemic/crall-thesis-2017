@@ -318,18 +318,27 @@
         system is to be applied in future events. These challenges include the number of manual reviews required, the
         detection of and recovery from manual errors, and the overall lack of a systematic identification framework.
 
-        Perhaps the greatest challenge faced during the \GZC{} was the considerable amount time that was required to
-        manually verify identification results. It can take several seconds to manually verify if a pair of \annots{} is
-        a correct match even if the results are presented in a ranked list. This task is illustrated
-        in~\cref{fig:RankFigure}. Requiring the manual verification of each result is untenable for a system that
-        accepts thousands of new images a day. The lack of a systematic approach for identification meant that whenever
-        two \annots{} were matched, the name labels of all annotations of those names were changed. This made it
-        difficult to tease apart errors when they occurred. Furthermore, manual errors (likely caused by fatigue from
-        the large number of manual reviews) resulted in numerous split cases that were not able to be detected and
-        resolved until the end of the process. Reviews of results were also done in order of matching scores regardless
-        of previous decisions, causing the manual reviewer to inefficiently review redundant results between the same
-        individual. Additionally no stopping criteria for reviews was defined resulting in an ad-hoc approach to
-        determining when all matches were found.
+        Perhaps the greatest challenge faced during the \GZC{} was the
+          considerable amount time that was required to manually verify
+          identification results.
+        It can take several seconds to manually verify if a pair of \annots{}
+          is a correct match even if the results are presented in a ranked list.
+        This task is illustrated in~\cref{fig:RankFigure}.
+        Requiring the manual verification of each result is untenable for a
+          system that accepts thousands of new images a day.
+        The lack of a systematic approach for identification meant that
+          whenever two \annots{} were matched, the name labels of all
+          annotations of those names were changed.
+        This made it difficult to tease apart errors when they occurred.
+        Furthermore, manual errors (likely caused by fatigue from the large
+          number of manual reviews) resulted in numerous identification errors
+          cases that were not able to be detected and resolved until the end of
+          the process.
+        Reviews of results were also done in order of matching scores
+          regardless of previous decisions, causing the manual reviewer to
+          inefficiently review redundant results between the same individual.
+        Additionally no stopping criteria for reviews was defined resulting in
+          an ad-hoc approach to determining when all matches were found.
 
         Motivated by these observations we seek to develop a semi-automatic approach to animal identification. This
         approach will should be governed by a system that reduces the number of manual reviews and is able to detect and
@@ -374,51 +383,50 @@
         \RankFigure{}
 
 \section{Approach}
-    The problem addressed in this \thesis{} is to identify individual animals
-    ``in the wild'' and to count the individuals in a population. To do this we
-    develop both a suite of algorithms and a software system. The algorithms
-    will allow us to infer properties about images and \annots{}. The system
-    will allow us to maintain the images, \annots{}, algorithms, and inferred
-    properties in a controlled and reproducible manner.
+    The problem addressed in this \thesis{} is to identify individual animals ``in the wild'' and to count the
+    individuals in a population. We are given a set images containing \annots{} of the same species. The images are
+    collected in an uncontrolled environment and likely contain imaging challenges such as occlusion, distracting
+    features, viewpoint variations, pose variations, and quality variations. Furthermore, the images may be collected
+    either over many years or over just a few days as in the \GZC{}. Each \annot{} is labeled with time, GPS, quality,
+    and viewpoint. We may also be given an initial partial \name{} labeling of the annotations --- \eg{} in the case
+    where we identify a new set of annotations against a previously identified set --- but this need not be the case.
+    Our task is label each \annot{} with a \glossterm{\name{}} that uniquely identifies the individual. Once this is
+    complete it forms the data needed to estimate the size of the population using techniques from sight-resight
+    statistics.
 
-    We are given a set images containing \annots{} of the same species. The
-    images are collected in an uncontrolled environment and likely contain
-    imaging challenges such as occlusion, distracting features, viewpoint
-    variations, pose variations, and quality variations. Furthermore, the images
-    may be collected either over many years or over just a few days as in the
-    \GZC{}. Each \annot{} is labeled with time, GPS, quality, and viewpoint. We
-    may also be given an initial \masterdatabase{} --- \ie{} some \annots{} may
-    labeled as \exemplars{} --- but this need not be the case. Our task is label
-    each \annot{} with a \glossterm{\name{}} that uniquely identifies the
-    individual. Once this is complete it forms the data needed to estimate the
-    size of the population using techniques from sight-resight statistics.
+    The first step of the identification process is a ranking algorithm. The inputs to the algorithm are a single query
+    \annot{} and a set of database \annots{}. Sparse patch-based features are localized in all \annots{}, and a
+    descriptor vector is extracted for each feature. The descriptors of the database \annots{} are indexed for fast
+    nearest neighbor search. We then find a set of matches in the database for each descriptor in the query \annot{}.
+    The matches are scored based on visual similarity, distinctiveness within the database, and likelihood of belonging
+    to the foreground. Matches are combined across multiple \exemplar{} \annots{} to produce a matching score for each
+    \name{} in the database, resulting in a ranked list of results for each query.
 
-    The first step of the identification process is a ranking algorithm. The
-    inputs to the algorithm are a single query \annot{} and a set of database
-    \annots{}. Sparse patch-based features are localized in all \annots{}, and a
-    descriptor vector is extracted for each feature. The descriptors of the
-    database \annots{} are indexed for fast nearest neighbor search. We then
-    find a set of matches in the database for each descriptor in the query
-    \annot{}. The matches are scored based on visual similarity, distinctiveness
-    within the database, and likelihood of belonging to the foreground. Matches
-    are combined across multiple \exemplar{} \annots{} to produce a matching
-    score for each \name{} in the database, resulting in a ranked list of
-    results for each query.
+    We then extend ranking algorithm by developing a classifier able to automatically review its results. We construct a
+    pairwise feature that captures relationships between two annotations using local feature correspondence and global
+    properties such as time and GPS. We learn a classifier to predict if a pair of annotations --- \ie{} a result in the
+    ranked list --- is correct or incorrect.
 
-    We evaluate the ranking algorithm by performing experiments on databases of
-    three species: plains zebras, Grevy's zebras, and Masai giraffes. The
-    experiments test the algorithm's ability to find potential matches of an
-    individual animal over large periods of time, different viewpoints,
-    different sized databases, and different numbers of \exemplars{}. We
-    determine the configuration of the algorithm pipeline that works best for
-    identifying each species.
+    In the final part of our approach, we place the problem of animal identification in a graph framework able to
+    systematically guide the identification process. This is done by placing each annotation in a graph as a vertex and
+    placing labeled edges between annotations to represent how they are related. Using the graph framework we will be
+    able to detect and recover from errors by taking advantage of multiple images seen of each individual.
 
-    We then extend ranking algorithm by developing a classifier able to
-      automatically review its results.
-    Then, we place the problem of animal identification in a graph framework
-      able to systematically guide the identification process.
-    The graph framework will be able to detect and recover from errors by
-      taking advantage of multiple images seen of each individual.
+    We evaluate the ranking, verification, and graph identification algorithm by performing experiments two main
+    databases of plains zebras and Grévy's zebras. Some additional experiments are also performed on databases of Masai
+    Giraffes (and maybe others?). First, the ranking experiments test the algorithm's ability to find potential matches
+    of an individual animal over large periods of time, different viewpoints, different sized databases, and different
+    numbers of \exemplars{}. Then, the verification experiments will test the extent to the correct results from the
+    ranking algorithm can be separated from the incorrect results using our learned classifier. Finally, the graph
+    identification experiments will demonstrate the algorithm's ability to reduce the number of required manual reviews
+    and recover from errors. We determine the configuration of each algorithm that works best for identifying each
+    species.
+    
+    %To do this we
+    %develop both a suite of algorithms and a software system. The algorithms
+    %will allow us to infer properties about images and \annots{}. The system
+    %will allow us to maintain the images, \annots{}, algorithms, and inferred
+    %properties in a controlled and reproducible manner.
     
     %We build a workflow on top of the matching algorithm.
     %This workflow accepts new \annots{} in groups defined by \occurrences{}.
