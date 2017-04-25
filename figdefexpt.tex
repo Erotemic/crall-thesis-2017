@@ -65,7 +65,7 @@ python -m ibeis -e rank_cmc --db LF_Bajo_bonito -a ctrl -t baseline --prefix "Ba
     Therefore, the time controlled experiment more accurately reflects
       the accuracy of the identification algorithm.
     % ---
-    Results for plains zebras are shown in~\cref{sub:BaselineExptA}, Grevy's
+    Results for plains zebras are shown in~\cref{sub:BaselineExptA}, Grévy's
       zebras are shown in~\cref{sub:BaselineExptB}, and Masai giraffes are
       shown in~\cref{sub:BaselineExptC}.
     % ---
@@ -98,7 +98,7 @@ The effect of the foregroundness weight on identification accuracy}{
       results in more accurate identifications.
     % ---
     Results for plains zebras are shown in~\cref{sub:ForegroundExptA},
-      Grevy's zebras are shown in~\cref{sub:ForegroundExptB}, and Masai
+      Grévy's zebras are shown in~\cref{sub:ForegroundExptB}, and Masai
       giraffes are excluded from this test.
     % ---
 }{figuresX/expt_PZForeground.png}{figuresX/expt_GZForeground.png}
@@ -147,7 +147,7 @@ Results of the same-viewpoint invariance experiment}{
       invariance setting for plains zebras is circular keypoints with the
       query-side rotation heuristic.
     \Cref{sub:InvarExptB} illustrates that the most accurate feature
-      invariance setting for Grevy's zebras is affine invariance without
+      invariance setting for Grévy's zebras is affine invariance without
       rotation invariance (with the gravity vector).
     \Cref{sub:InvarExptC} illustrates the same result for Masai giraffes.
     %that most accurate feature
@@ -182,7 +182,7 @@ Results of the different-viewpoint invariance experiment}{
     This is different than the most accurate feature invariance setting when
       matching between the same viewpoints.
     \Cref{sub:InvarViewExptB} illustrates that affine invariant keypoints provide
-      the most accurate identifications of Grevy's zebras when viewpoint are
+      the most accurate identifications of Grévy's zebras when viewpoint are
       different.
     This is the same as the most accurate feature invariance setting when
       matching between the same viewpoints.
@@ -221,7 +221,7 @@ python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t Ell_K     --hargv
     If the top two ranked \names{} are considered, then $\K\tighteq4$ provides
       the most accurate results.
     \Cref{sub:KExptB} illustrates that the most accurate setting for the more
-      distinctive Grevy's zebras is $\K\tighteq1$ when considering the \names{}
+      distinctive Grévy's zebras is $\K\tighteq1$ when considering the \names{}
       ranked first, and $\K\tighteq2$ when considering names ranked first or
       second.
     \Cref{sub:KExptC} illustrates that both $\K\tighteq1$ and $\K\tighteq2$
@@ -254,7 +254,7 @@ ibeis -e rank_surface --db GIRM_Master1 -a varysize_td1h:qmin_pername=3,dpername
     While $\K$ does have an impact on matching accuracy, the
       \emph{number of annotations per name} is the more important factor.
     \Cref{sub:DBSizeExptA} shows the results for plains zebras.
-    \Cref{sub:DBSizeExptB} shows the results for Grevy's zebras.
+    \Cref{sub:DBSizeExptB} shows the results for Grévy's zebras.
     \Cref{sub:DBSizeExptC} shows the results for Masai giraffes.
     Note that the overall accuracy of this test is higher than the
       baseline because this test requires multiple annotations per
@@ -294,7 +294,7 @@ python -m ibeis -e rank_cmc --db GIRM_Master1 -a varypername_td1h:qmin_pername=3
     Robust \namescoring{} (\nsum{}) is slightly more accurate than
       baseline \namescoring{} (\csum{}).
     \Cref{sub:NScoreExptA} shows the results for plains zebras.
-    \Cref{sub:NScoreExptB} shows the results for Grevy's zebras.
+    \Cref{sub:NScoreExptB} shows the results for Grévy's zebras.
     \Cref{sub:NScoreExptC} shows the results for Masai giraffes.
     Note that the scores reported here are higher than the baseline for
       the same reasons as explained in~\cref{fig:DBSizeExpt}.
@@ -329,7 +329,7 @@ python -m ibeis -e scores --db GIRM_Master1 -a timectrl1h -t best   --filt : --h
     The score separability for the best time controlled configuration of each
       species.
     \Cref{sub:ScoreSepA} shows the results for plains zebras.
-    \Cref{sub:ScoreSepB} shows the results for Grevy's zebras.
+    \Cref{sub:ScoreSepB} shows the results for Grévy's zebras.
     \Cref{sub:ScoreSepC} shows the results for Masai giraffes.
     % ---
 }{figuresX/expt_PZScoreAll.png}{figuresX/expt_GZScoreAll.png}{figuresX/expt_GIRMScoreAll.png}
@@ -357,7 +357,7 @@ python -m ibeis -e taghist --db GIRM_Master1 -a timectrl1h -t best   --filt :fai
     A histogram indicating the primary causes of identification failures.
     Occlusion and viewpoint seem to be the primary causes of failure.
     \Cref{sub:TagExptA} shows the failure case histogram for plains zebras.
-    \Cref{sub:TagExptB} shows the failure case histogram for Grevy's zebras.
+    \Cref{sub:TagExptB} shows the failure case histogram for Grévy's zebras.
     \Cref{sub:TagExptC} shows the failure case histogram for Masai giraffes.
     % ---
 }{figuresX/expt_PZTags.png}{figuresX/expt_GZTags.png}{figuresX/expt_GIRMTags.png}
