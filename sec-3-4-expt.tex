@@ -978,6 +978,22 @@
 
         \PzVsLiberty{}
 
+
+    \subsection{SMK as an alternative}\label{sub:exptsum}  
+        %Plains zebras:
+        %LNBNN: 75.6% @ rank 1
+        %ASMK: 69.69% @ rank 1
+
+        %Grevy's zebras: 
+        %LNBNN: 84.94% @rank 1
+        %ASMK: 70.87% @rank 1
+        In our ranking experiments we only did extensive testing of the LNBNN algorithm.
+        We have briefly experimented with using the vocabulary based SMK ranking algorithm (using the VLAD variant)
+          and found LNBNN to provide superior results.
+        In our preliminary experiments we found that the SMK algorithm was able to correct rank $69.69\percent$ of
+          plains zebras and $70.87\percent$ of Grevy's zebras correctly at rank $1$.
+        Comparable versions of LNBNN solutions achieved $75.6\percent$ and $69.7\percent$.
+
     \subsection{Experimental conclusions}\label{sub:exptsum}  
 
         In this section we have evaluated our baseline algorithm under
