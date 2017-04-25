@@ -18,7 +18,8 @@ ALL DATABASE INFO
     # Test Command
     python -m ibeis.other.dbinfo --test-latex_dbstats --dblist GIRM_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
 
-    python -m ibeis.other.dbinfo --test-latex_dbstats --dblist PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
+    python -m ibeis.other.dbinfo latex_dbstats --dblist PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
+    ibeis latex_dbstats --dblist PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 
 
     python -m ibeis.other.dbinfo --test-latex_dbstats --dblist GIRM_Master1 
     --write=~/latex/crall-candidacy-2015/figdefdbinfo.tex
@@ -115,15 +116,24 @@ GIRM & 51  & 402  & 68  & 0 & 0  & 0    & 0   & 0 & 0   \\
 %-------------
 % TimeDeltas
 \begin{comment}
-ibeis -e db_time_hist --db PZ_Master1 --save figures3/pzmtime.png --hargv=cand --figsize=10,4  --bottom=.5 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
+ibeis show_image_time_distributions \
+    --db PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
+    --save figures3/pzmtime.png --figsize=10,4 --dpi=256 --clipwhite \
+    --diskshow 
 \end{comment}
 
 \begin{comment}
-python -m ibeis.dev -e db_time_hist --db GIRM_Master1 --save figures3/girmtime.png  --hargv=cand --figsize=10,4 --bottom=.5 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
+ibeis show_image_time_distributions \
+    --db GIRM_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
+    --save figures3/girmtime.png --figsize=10,4 --dpi=256 --clipwhite \
+    --diskshow 
 \end{comment}
 
 \begin{comment}
-python -m ibeis.dev -e db_time_hist --db GZ_Master1 --save figures3/gztime.png  --hargv=cand --figsize=10,4  --bottom=.5 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
+ibeis show_image_time_distributions \
+    --db GZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
+    --save figures3/gztime.png --figsize=10,4 --dpi=256 --clipwhite \
+    --diskshow 
 \end{comment}
 \MultiImageCommandII{timedist}{1}{
     Distribution of image timestamps.

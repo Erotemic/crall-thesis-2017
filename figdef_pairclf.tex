@@ -1,3 +1,11 @@
+
+
+\edef\pzcode{PZ_PB_RF_TRAIN_2567}
+\edef\gzcode{GZ_Master1_20029}
+%\edef\gzcode{GZ_Master1_222}
+
+
+
 \newcommand{\MatchStateExample}{
 \begin{figure}[ht!]
 \centering
@@ -30,22 +38,26 @@ Local feature correspondences are superimposed over the pairs.
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/scorehist_score_lnbnn_1vM_PZ_2499_clipwhite.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_lnbnn.png}
+\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}
 \end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/scorehist_learn(sum,glob)_PZ_2499_clipwhite.png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_pos_learn(sum,glob).png}
+\caption{Plains zebras learned}\label{sub:pos_hist_pz}
 \end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/scorehist_score_lnbnn_1vM_GZ_19585_clipwhite.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_lnbnn.png}
+\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}
 \end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/scorehist_learn(sum,glob)_GZ_19585_clipwhite.png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_pos_learn(sum,glob).png}
+\caption{Grévy's zebras learned}\label{sub:pos_hist_gz}
 \end{subfigure}
 %~
 
@@ -67,12 +79,14 @@ scores the learned probabilities exhibit better separability.
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/roc_positive_PZ_2499_clipwhite.png}\caption{Plains zebra}\label{sub:pos_roc_pz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/roc_match_state.png}
+\caption{Plains zebra}\label{sub:pos_roc_pz}
 \end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/roc_positive_GZ_19585_clipwhite.png}\caption{Grévy's zebra}\label{sub:pos_roc_gz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/roc_match_state.png}
+\caption{Grévy's zebra}\label{sub:pos_roc_gz}
 \end{subfigure}
 \caption[\caplbl{PositiveROC}Positive match state ROC]{\caplbl{PositiveROC}
 % ---
@@ -94,13 +108,13 @@ Positive match state ROC.
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/confusion_match_state.tex}
+        \input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}
         \caption{Plains zebras match state confusion}
     \end{subtable} %
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/GZ_Master1_20590/confusion_match_state.tex}
+        \input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}
         \caption{Grévy zebras match state confusion}
     \end{subtable} %
 \caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
@@ -121,13 +135,13 @@ dataset.
     \centering
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/eval_metrics_match_state.tex}
+        \input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}
         \caption{Plains zebras match state metrics}
     \end{subtable} %
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/GZ_Master1_20590/eval_metrics_match_state.tex}
+        \input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}
         \caption{Grévy zebras match state metrics}
     \end{subtable} %
 \caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
@@ -156,12 +170,14 @@ computed from the confusion matrix.
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/wc_match_state_PZ_2499_clipwhite.png}\caption{Plains zebra}\label{sub:wc_pz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/wc_match_state.png}
+\caption{Plains zebra}\label{sub:wc_pz}
 \end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/wc_match_state_GZ_19585_clipwhite.png}\caption{Grévy's zebra}\label{sub:wc_gz}
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/wc_match_state.png}
+\caption{Grévy's zebra}\label{sub:wc_gz}
 \end{subfigure}
 \caption[\caplbl{MatchWordCloud}Word cloud of important features for matching]{\caplbl{MatchWordCloud}
 % ---
@@ -183,11 +199,7 @@ role in distinguishing incomparable cases.
             \toprule
             dimension & importance\\
             \midrule
-            global(view\_delta)       & 0.2041    \\
-            global(view\_2)           & 0.0571    \\
-            global(view\_1)           & 0.0475    \\
-            std(norm\_x1)            & 0.0442    \\
-            sum(wgt\_norm\_dist)     & 0.0270    \\
+            \input{figures_pairclf/\expandafter\pzcode/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
         \caption{Plains zebra}
@@ -198,11 +210,7 @@ role in distinguishing incomparable cases.
             \toprule
             dimension & importance\\
             \midrule
-            global(view\_delta)     & 0.1205 \\
-            global(max\_view)       & 0.0738 \\
-            std(ratio[ratio<0.8])  & 0.0445 \\
-            std(ratio[ratio<0.7])  & 0.0416 \\
-            mean(ratio[ratio<0.7]) & 0.0342 \\
+            \input{figures_pairclf/\expandafter\gzcode/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
         \caption{Grévy's zebra}
@@ -211,8 +219,8 @@ role in distinguishing incomparable cases.
 % ---
     \caplbl{ImportantMatchFeat} Top $5$ most important features for predicting
     that matching state (positive, negative, incomparable) for a pair of
-    annotations. The sum of the importance for all $205$ feature dimensions is
-    $1$.
+    annotations. 
+    %The sum of the importance for all $205$ feature dimensions is $1$.
 % ---
 }
 \label{tbl:ImportantMatchFeat}
@@ -229,35 +237,17 @@ role in distinguishing incomparable cases.
 \newcommand{\ConfusionPhotobomb}{
 
 \begin{table}[ht!]
-    \begin{subtable}[h]{0.49\textwidth}
+    \begin{subtable}[h]{\textwidth}
         \centering
-        \begin{tabular}{|l|rr|l|}
-        \hline
-        {} &  p(notpb) &  p(pb) &   $\sum$ real \\
-        \hline
-        r(notpb) &      2204 &     11 & 2215 \\
-        r(pb)    &       149 &    135 &  284 \\
-        \hline
-        $\sum$ pred &      2353 &    146 &      \\
-        \hline
-        \end{tabular}
+        \input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}
         \caption{Plains zebra photobomb confusion}
-    \end{subtable}~~~~~~~%
-    \begin{subtable}[h]{0.49\textwidth}
-        \centering
-        \begin{tabular}{|l|rr|l|}
-        \hline
-        {} &  p(notpb) &  p(pb) &    $\sum$ real \\
-        \hline
-        r(notpb) &     19563 &      0 & 19563 \\
-        r(pb)    &        22 &      0 &    22 \\
-        \hline
-        $\sum$ pred&     19585 &      0 &       \\
-        \hline
-        \end{tabular}
-        \caption{Grévy's zebra photobomb confusion}
     \end{subtable} %
 
+    \begin{subtable}[h]{\textwidth}
+        \centering
+        \input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}
+        \caption{Grévy's zebra photobomb confusion}
+    \end{subtable} %
 \caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
 % ---
 Photobomb state confusion for plains and Grévy's zebras.
@@ -278,13 +268,13 @@ dataset.
     \centering
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/PZ_PB_RF_TRAIN_2589/eval_metrics_photobomb_state.tex}
+        \input{figures_pairclf/\expandafter\pzcode/eval_metrics_photobomb_state.tex}
         \caption{Plains zebras photobomb metrics}
     \end{subtable} %
 
     \begin{subtable}[h]{\textwidth}
         \centering
-        \input{figures_pairclf/GZ_Master1_20590/eval_metrics_photobomb_state.tex}
+        \input{figures_pairclf/\expandafter\gzcode/eval_metrics_photobomb_state.tex}
         \caption{Grévy zebras photobomb metrics}
     \end{subtable} %
 \caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
@@ -307,11 +297,7 @@ the confusion matrix.
             \begin{tabular}{l c}
                 \toprule dimension & importance\\
                 \midrule
-                global(time\_delta) & 0.0540 \\
-                global(gps\_delta)  & 0.0363 \\
-                std(x2[ratio<0.8])  & 0.0215 \\
-                std(x2[ratio<0.7])  & 0.0181 \\
-                mean(x1[ratio<0.5]) & 0.0169 \\
+                \input{figures_pairclf/\expandafter\pzcode/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
             \caption{Plains zebra phototomb importance}
@@ -323,11 +309,7 @@ the confusion matrix.
                 \toprule
                 dimension & importance\\ 
                 \midrule
-                med(x2[ratio<0.6])  & 0.0399 \\
-                mean(x2[ratio<0.6]) & 0.0359 \\ 
-                mean(x2[ratio<0.5]) & 0.0312 \\
-                global(time\_delta) & 0.0293 \\ 
-                global(speed)       & 0.0293 \\
+                \input{figures_pairclf/\expandafter\gzcode/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
             \caption{Grévy's zebra phototomb importance}
