@@ -30,3 +30,8 @@
   viewpoint
 * PZ_PB_RF_TRAIN has no labeled incomparable cases and a few can be inferred
   from viewpoint.
+
+
+* When marking an existing positive edge as negative (and the other positive
+  cases exist) you should predict edges within and between the new PCCs C and D
+to make sure that the guessed edges don't have more of the same error.
