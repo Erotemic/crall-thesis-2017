@@ -15,23 +15,28 @@
     We will vary these pipeline parameters in order to measure their effect on the accuracy of the ranking
       algorithm.
 
-    For each query annotation, the identification algorithm returns a ranked list of \names{} with a score for each
-    name. The accuracy of identification is measured in two ways: (1) database ranking and (2) score separability.
+    For each query annotation, the identification algorithm returns a ranked list of \names{} with a score for
+      each name.
+    The accuracy of identification is measured in two ways:
+    (1) database ranking and
+    (2) score separability.
     % ALGORITHM ACCURACY PRIMARY MEASURE 
-    The first and primary measure of identification accuracy is the percentage of queries in the returned list with
-    the \groundtrue{} name ranked $1\st$.
+    The first and primary measure of identification accuracy is the percentage of queries in the returned list
+      with the \groundtrue{} name ranked $1\st$.
     % ALGORITHM ACCURACY SECONDARY MEASURE 
     In some experiments the percentage of queries with their \groundtrue{} result ranked $2\nd$, $3\rd$, $4\th$,
-    and $5\th$ is also presented. These auxiliary ranking measures are also valuable because users will often
-    review more than just the top ranked results, but a user will rarely review past the $5\th$ rank. The second
-    measure of identification accuracy is the returned score's separability --- \ie{} how well separated the scores
-    of \groundtrue{} and \groundfalse{} matches are. This will help to determine when it is possible to choose
-    correct matches without a manual decision, further automating the identification process.
+      and $5\th$ is also presented.
+    These auxiliary ranking measures are also valuable because users will often review more than just the top
+      ranked results, but a user will rarely review past the $5\th$ rank.
+    The second measure of identification accuracy is the returned score's separability --- \ie{} how well
+      separated the scores of \groundtrue{} and \groundfalse{} matches are.
+    This will help to determine when it is possible to choose correct matches without a manual decision, further
+      automating the identification process.
     %apply a binary classifier to results to
     %  further automate the identification process.
     The separability of scores is measured by first recording the score of the \groundtrue{} \name{} and the
-    highest scoring \groundfalse{} \name{} for each query and then plotting the receiver operator characteristic
-    (ROC) curve and measuring the area under the curve (AUC).
+      highest scoring \groundfalse{} \name{} for each query and then plotting the receiver operator characteristic
+      (ROC) curve and measuring the area under the curve (AUC).
     %Other measures that are reported include the percentage of true positive
     %  and false positive results that fall within certain categories (\eg
     %  temporal windows).
@@ -153,8 +158,6 @@
           the user.
         The $x$-axis indicates the ranks considered for review.
         The $y$-axis shows the percentage of queries with a \groundtrue{} match ranked $x$ or less.
-        %, where $x$
-        %is a coordinate on the $x$-axis indicating a ranking.
         The most important part of this graph is the percentage of queries with a correct match at rank
           $x\tighteq1$.
         Each colored bar represents a different parameter configuration and is labeled in the legend.
@@ -183,7 +186,7 @@
 
     \subsection{Foregroundness experiment}\label{sub:exptfeatmatchscore}
 
-    \ForegroundExpt{}
+        \ForegroundExpt{}
 
         In this experiment we test the effect of foregroundness --- weighting the score of each features
           correspondence with a foregroundness weight --- on identification accuracy.
@@ -200,10 +203,10 @@
         For Grévy's zebras there is also a significant  $3.3\percent$ increase.
         This experiment clearly shows the importance of eliminating background feature correspondences.
      
-    \subsection{Invariance experiment}\label{sub:exptinvar}  
+    \subsection{Invariance experiment}\label{sub:exptinvar} 
         In this experiment we vary the feature invariance configuration.
-        Because adding feature invariance is meant to detect and describe the same features across multiple
-          viewing positions, we also evaluate the different invariance settings both
+        Because adding feature invariance is meant to detect and describe the same features across multiple viewing
+          positions, we also evaluate the different invariance settings both
         (1) when the viewpoint between each query and its \groundtrue{} exemplar are the same as well as
         (2) when the viewpoint is varied.
         In the first case we use the same \timectrl{} configuration as the baseline experiment.
@@ -213,8 +216,7 @@
           viewpoint.
         Unfortunately, there are not many \names{} in our databases that contain both a primary and non-primary
           viewpoint annotations.
-        Therefore, to increase the size of the dataset we do not control for time in the viewpoint varied
-          experiment.
+        Therefore, to increase the size of the dataset we do not control for time in the viewpoint varied experiment.
         The following is a list describing the invariance settings that we investigate in each experiment.
 
         \begin{itemln}
@@ -321,7 +323,6 @@
           dataset we only vary the number of \exemplars{} between $1$ and $2$ (due to dataset size constraints).
         The accuracy of the scoring mechanism experiment is shown in~\cref{fig:NScoreExpt}
 
-        %\GIRMNscore
         \NScoreExpt{}
 
         % Describe results
@@ -332,12 +333,8 @@
           from a single most visually similar exemplar in the database.
         This would cause a majority of the feature correspondences in \nsum{} to cast their vote for a single
           exemplar, giving results similar to \csum{}.
-        %It is unlikely that some part of another exemplar would appear
-        %  more similar to the query annotation than the most similar
-        %  exemplar.
         The small gain seen by \nsum{} is likely from cases where part of the most similar exemplar is occluded
           or obscured, thus allowing some query features to be matched with features from different \exemplars{}.
-        % Conclusions about scoring mechanism
         We continue to use \nsum{} as the scoring mechanism for the remainder of the experiments.
         
 
@@ -383,7 +380,7 @@
         This may be because many plains zebra features are not globally distinctive in a large database and a
           feature's correct correspondence may not be the nearest neighbor.
         For smaller database sizes lower values of $\K$ produce more accurate results.
-        % grevys
+        % Grevy's
         For Grévy's zebras lower values of $\K$ seem better for all database sizes.
         It also seems that the best values of $\K$ should be set to the number of \exemplars{} per \name{}, which
           is expected when there is little confusion between features.
@@ -396,9 +393,6 @@
         However, it appears that $\K$ only has a small influence on identification accuracy.
         This section does shows that the number of exemplars per annotation has a significant impact on
           identification accuracy.
-        %For the remainder of our experiments we will use $\K\tighteq3$
-        %  for plains zebras, $\K\tighteq1$ for Grévy's zebras, and
-        %  $\K\tighteq3$ for Masai giraffes.
 
     \subsection{Failure cases}\label{sub:exptfail}  
         
@@ -500,12 +494,6 @@
             An example illustrating a failure case due to \photobombing{} is shown in~\cref{fig:FailPhotobomb}
 
               \FailPhotobomb{}
-
-            %\item SimilarPose - The query and the \groundfalse{} annotation are in the
-            %    same pose. This causes incorrect but matches along the edge of
-            %    the animal that encode the shape of the animal's position.
-            %    \FailPose
-            %    A pose failure case is shown in~\cref{fig:FailPose}.
         \end{itemln}
 
 
@@ -523,23 +511,7 @@
           annotations, and the spatial distribution of feature correspondences within the annotations.
         This would also help to further reduce failures due to scenery matches.
         
-        %To further reduce scenery mathces and \photobombings these cases could be flagged 
-        %Scenery matches and \photobombings{} also cause a significant number
-        %  of false positives, but these cases should be able to be flagged using
-        %  a background detector, the timestamps between images, and the location
-        %  of the feature correspondences.
-
-        %A big failure case for the Grévy's may actually be size of the image. 
-        %The features are not getting detected properly on many chips.
-        %This may not be the issue.
-        %Hmmm.
-
     \subsection{Score separability}\label{sub:exptsep}  
-        %Show separability of scores under the best algorithm settings for only
-        %  success cases and then with both success and failures.
-        %Show only this histogram of scores and the ROC curve.
-        %Report results for all species.
-
         In this subsection we investigate identification accuracy in terms of the scores returned along with each
           \name{} in the ranked list.
         This is in contrast to the results presented in previous experiments where accuracy is evaluated only in
@@ -552,9 +524,6 @@
         However, if the scores are to be used in a decision mechanism, they must have a high degree of
           separability.
 
-        %This requires the raw scores between \groundtrue{} and \groundfalse{}
-        %  cases will be separable.
-        %In this experiment investigate the 
         We run experiments to test the degree to which \groundtrue{} and \groundfalse{} scores can be separated
           by a binary classifier.
         We consider two types of scores:
@@ -654,7 +623,6 @@
           dataset.
         This is likely because are the most difficult incorrect matches in the dataset and are likely to be
           correspondences between non-distinctive descriptors.
-        % Rexecuting this experiment with random false keypoint pairs would be interesting.
         The histogram of correct scores appears to be bimodal.
         This is evidence of two things:
         (1) there are significantly more non-distinctive correct matches than distinctive ones, and
@@ -741,13 +709,10 @@
                 This is likely because the features from plains zebras are less distinguishing than features from
                   Grévy's zebras.
                 Therefore, the correct match of a plains zebra feature is less likely to be its closest neighbor.
-                    %\item 
-                        % CHOISE OF K DOES NOT MATTER TOO MUCH FOR LARGE DBS
                 Furthermore, the size of the database does not seem to strongly influence the optimal choice of
                   $\K$.
                 However, note that most tests were run on different sizes of large databases, and the choice of
                   $\K$ using small databases was not investigated.
-                %\end{itemln}
 
               \item \textbf{\Nsumprefix{} is slightly better than \csumprefix{} \namescoring{}}:
                 % NSUM > CSUM
