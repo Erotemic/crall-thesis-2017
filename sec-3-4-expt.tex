@@ -282,8 +282,13 @@
         (1) \cscoring{} (\csum{}) and
         (2) \nscoring{} (\nsum{}).
         Because the scoring mechanism is meant to take advantage of multiple \exemplars{} per \name{} we vary the
-          number of \exemplars{} per query between $1$, $2$, and $3$, except in the case of the \girmmasterI{}
-          dataset we only vary the number of \exemplars{} between $1$ and $2$ (due to dataset size constraints).
+          number of \exemplars{} per database \name{} between $1$, $2$, and $3$, except in the case of the
+          \girmmasterI{} dataset we only vary the number of \exemplars{} between $1$ and $2$ (due to dataset size
+          constraints).
+        Varying the number of \exemplars{} will cause each database to contain a different number of annotations.
+        To normalize for this we include additional confuser annotations (annotations that do not match any
+          query) in the smaller databases to maintain a constant database size across experiments.
+        Each \exemplar{} is chosen from a separate encounter.
         The accuracy of the scoring mechanism experiment is shown in~\cref{fig:NScoreExpt}
 
         \NScoreExpt{}
@@ -312,6 +317,11 @@
         This subsection will present two experiments:
         (1) an experiment to test the accuracy at different values of $\K$ on a large database, and
         (2) an experiment to test the accuracy at different values of $\K$ for many database sizes.
+
+        We use a protocol similar to the one used in the invariance experiment to sample databases.
+        The difference is that we use the extra confusers annotations to vary the total number of annotations in
+          the database.
+
         Database size depends on both the number of \names{} in the database and the number of \exemplars{} per
           \name{}.
         Therefore, we vary both of these variables.
@@ -618,6 +628,14 @@
         In our preliminary experiments we found that the SMK algorithm was able to correct rank $69.69\percent$ of
           plains zebras and $70.87\percent$ of Grevy's zebras correctly at rank $1$.
         Comparable versions of LNBNN solutions achieved $75.6\percent$ and $69.7\percent$.
+
+        We trained an $8000$ word vocabulary using mini-batch k-means on the database annotations.
+        Typically an external dataset is used to train the vocabulary, but we \naively{} use the database
+          annotations to be indexed.
+        Note, that using the database annotations to train the vocabulary will result in overfitting biasing the
+          SMK algorithm towards better results.
+        However, even with this overfitting, our LNBNN ranking yields superior results.
+
 
     \subsection{Experimental conclusions}\label{sub:exptsum}  
 
