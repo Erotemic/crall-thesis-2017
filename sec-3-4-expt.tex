@@ -17,23 +17,14 @@
 
     For each query annotation, the identification algorithm returns a ranked list of \names{} with a score for
       each name.
-    The accuracy of identification is measured in two ways:
-    (1) database ranking and
-    (2) score separability.
-    % ALGORITHM ACCURACY PRIMARY MEASURE 
-    The first and primary measure of identification accuracy is the percentage of queries in the returned list
-      with the \groundtrue{} name ranked $1\st$.
-    % ALGORITHM ACCURACY SECONDARY MEASURE 
-    In some experiments the percentage of queries with their \groundtrue{} result ranked $2\nd$, $3\rd$, $4\th$,
-      and $5\th$ is also presented.
-    These auxiliary ranking measures are also valuable because users will often review more than just the top
-      ranked results, but a user will rarely review past the $5\th$ rank.
-    The second measure of identification accuracy is the returned score's separability --- \ie{} how well
-      separated the scores of \groundtrue{} and \groundfalse{} matches are.
-    This will help to determine when it is possible to choose correct matches without a manual decision, further
-      automating the identification process.
-    %apply a binary classifier to results to
-    %  further automate the identification process.
+    The accuracy of identification is measured using the cumulative match
+      characteristic~\cite{decann_relating_2013} which can be understood as the probability that a query correctly
+      finds a match at a specified rank under the assumption that a correct match exists in the database.
+    We are primarily returned with only the first point in this curve --- the fraction of queries with a correct
+      result at rank $1$ --- because often a user of the system will only review the first result of a query.
+
+    Additionally, we like to automatically review results returned by the ranking algorithm, so we will measure
+      the separability of correct and incorrect results using the scores returned by the ranking algorithm.
     The separability of scores is measured by first recording the score of the \groundtrue{} \name{} and the
       highest scoring \groundfalse{} \name{} for each query and then plotting the receiver operator characteristic
       (ROC) curve and measuring the area under the curve (AUC).
@@ -145,62 +136,34 @@
           constrain our data selection such that there is only one \groundtrue{} \exemplar{} in the database for
           each query annotation.
 
-        We test two configurations of databases.
-        The first is denoted as \ctrl{} and uses only the aforementioned constraints.
-        The second is denoted as \timectrl{} and we further restrict the annotation selection by enforcing that
-          each query and its corresponding \groundtrue{} \exemplar{} are separated in time by at least $6$ hours.
-        This allows us control for correct results that may be due to incidentally identifying a near duplicate
-          image.
-        For the smaller Masai giraffes database we relax this constraint to $1$ hour.
-
-        The results are presented in the form of a cumulative rank histogram in~\cref{fig:BaselineExpt}.
-        This plot indicates the accuracy of the algorithm when the top $1-5$ ranks of each query are returned to
-          the user.
-        The $x$-axis indicates the ranks considered for review.
-        The $y$-axis shows the percentage of queries with a \groundtrue{} match ranked $x$ or less.
-        The most important part of this graph is the percentage of queries with a correct match at rank
-          $x\tighteq1$.
-        Each colored bar represents a different parameter configuration and is labeled in the legend.
+        Of these annotations, we group them into encounters.
+        Then we randomly sample one annotation for each encounter.
+        \Names{} with only one encounter are added to the database as distractors.
+        For the other \names{}, we randomly sample two encounters one for the database and one to use as a query.
+        This defines a set of query and database annotations that are separated by time, testing the ability of
+          our system to match animals across gaps of time using only a single image per individual.
+        The CMC curves for this baseline test are illustrated in~\cref{fig:BaselineExpt}.
 
         \BaselineExpt{}
 
-        %In all experiments the accuracy of the algorithm decreased when time
-        %  was controlled for.
-        % PERCENT DIFFERENCE THAT TIME MAKES
-        \begin{comment}
-        python -m ibeis -e print --db PZ_Master1 -a ctrl timectrl -t baseline  
-        python -m ibeis -e print --db GZ_Master1 -a ctrl timectrl -t baseline  
-        python -m ibeis -e print --db GIRM_Master1 -a ctrl timectrl1h -t baseline  
-        \end{comment}
-        The effect of time is most notable for plains zebras where there is a $~10\percent$ decrease in accuracy
-          between \ctrl{} and \timectrl{}.
-        This is because a significant number of the correct matches in \ctrl{} were between near-duplicate
-          images.
-        The drop for Grévy's zebras and Masai giraffes is less pronounced.
-        This is likely due to the higher density of distinctive patterns on Grévy's zebras and Masai giraffes as
-          well as a lack of near duplicate images in those datasets.
-        The difference in accuracy for plains zebras shows that near-duplicate matching has a significant impact
-          on identification accuracy.
-        Therefore, to avoid this issue, the remainder of our experiments use \timectrl{} as the baseline for
-          selecting query and database annotations.
+        The results of this baseline experiment demonstrates that our algorithm is able to reliably find matching
+          annotations in a database with many other images.
+        We measure all other experiments relative to this baseline.
 
     \subsection{Foregroundness experiment}\label{sub:exptfeatmatchscore}
 
         \ForegroundExpt{}
 
-        In this experiment we test the effect of foregroundness --- weighting the score of each features
-          correspondence with a foregroundness weight --- on identification accuracy.
-        Two pipeline configurations are tested in this experiment.
-        In the first we score each feature correspondences using only the LNBNN~\cite{mccann_local_2012} score.
-        In the second we weight the LNBNN score using a foregroundness measure learned using a deep convolutional
-          neural network~\cite{parham_photographic_2015}.
-        Currently, we have only trained a foregroundness measure for plains zebras and Grévy's zebras.
-        Therefore Masai giraffes are excluded from this test.
-        The accuracy of the foregroundness is shown in~\cref{fig:ForegroundExpt}
-
-        For plains zebras, using the foregroundness measure results in a significant $3.79\percent$ increase in
-          identification accuracy.
-        For Grévy's zebras there is also a significant  $3.3\percent$ increase.
+        In this experiment we test the effect of our foregroundness weights --- weighting the score of each
+          features correspondence with a foregroundness weight --- on identification accuracy.
+        In the baseline experiment each feature correspondence is weighted using a foregroundness measure learned
+          using a deep convolutional neural network~\cite{parham_photographic_2015}.
+        In this experiment we disable this weighting to measure its effect.
+        Currently, only our plains and Grévy's datasets are large enough to train the foregroundness measure,
+          thus we exclude Masai giraffes from this test.
+        The accuracy of the foregroundness is illustrated in~\cref{fig:ForegroundExpt} For plains zebras, using
+          the foregroundness measure results in a significant $3.79\percent$ increase in identification accuracy.
+        For Grévy's zebras there is also a significant $3.3\percent$ increase.
         This experiment clearly shows the importance of eliminating background feature correspondences.
      
     \subsection{Invariance experiment}\label{sub:exptinvar} 
@@ -641,7 +604,7 @@
         \PzVsLiberty{}
 
 
-    \subsection{SMK as an alternative}\label{sub:exptsum}  
+    \subsection{SMK as an alternative}\label{sub:smkalt}  
         %Plains zebras:
         %LNBNN: 75.6% @ rank 1
         %ASMK: 69.69% @ rank 1
