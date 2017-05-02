@@ -33,16 +33,18 @@
     %  temporal windows).
 
     The outline of this section is as follows.
-    First, \Cref{sub:datasets} describes the datasets and how they were generated.
-    Then, \Cref{sub:exptbase} establishes the baseline performance of the algorithm using the default pipeline
-      configuration and a subset of the data that controls for time, viewpoint, number of exemplars, and quality.
-    \Cref{sub:exptfeatmatchscore} tests the effect of the foregroundness weight on identification accuracy.
+    First, \Cref{sub:datasets} introduces and describes each dataset.
+    Our first experiment in \Cref{sub:exptbase} establishes the accuracy of our ranking algorithm on several
+      datasets using a default pipeline configuration.
+    We then compare our approach to an alternative \Cref{sub:exptsmk} SMK approach.
+    The next subsections perform in depth experiments on the parameter settings of our algorithm.
+    \Cref{sub:exptfg} tests the effect of the foregroundness weight on identification accuracy.
     \Cref{sub:exptinvar} investigates the effect of the level of feature invariance and viewpoint.
     \Cref{sub:exptscoremech} compares the \csumprefix{} and the \nsumprefix{} \namescoring{} mechanism.
     \Cref{sub:exptk} varies the $\K$ parameter (the number of nearest neighbors used in establishing feature
       correspondences) and investigates the relationship between $\K$ and database size in terms of both the number
       of annotations and the number of exemplars per name.
-    \Cref{sub:exptfail} discusses the failure cases of the algorithm.
+    \Cref{sub:exptfail} discusses the failure cases of our ranking algorithm.
     \Cref{sub:exptsep} presents an evaluation of the score separability for the pipeline configuration with the
       highest accuracy determined for each species.
     Finally,~\cref{sub:exptsum} summarizes this section.
@@ -70,23 +72,31 @@
 
         The number of names, annotations, and their distribution within each database are summarized in the
           following tables.
-        In these tables the term \glossterm{singleton} refers to \names{} that only contain one annotation, and
-          \glossterm{multiton} refers to \names{} that have more than one annotation.
-        We make this distinction between singletons and multitons because multitons are names that have known
-          groundtruth matches.
-        \Cref{tbl:DatabaseStatistics} summarizes the number of annotations per database.
-        \Cref{tbl:AnnotationsPerNameMultiton} summarizes the number of annotations for multiton \names{}.
+        In these tables we distinguish between \glossterm{singleton} and \glossterm{resighted} names.
+        Singleton names are individuals with only a single encounter, and resighted names contain more than one
+          encounter.
+        We make this distinction because resighted names have known correct matches across a significant time
+          delta.
+        Note, that singleton names may still have more than one annotation, but those annotations are all from
+          the same encounter.
+        We have pre-filtered each database to remove annotations that are unidentified, are missing timestamps,
+          or are labeled as ``junk'' quality.
+
+        \Cref{tbl:DatabaseStatistics} summarizes the number of annotations and individuals in each database as
+          well as the number of times (distinct encounters) each individual was sighted.
         \Cref{tbl:AnnotationsPerQuality} summarizes the quality labels of the annotations.
         \Cref{tbl:AnnotationsPerViewpoint} summarizes the viewpoint labels of the annotations.
+        Distributions of when images in each dataset were taken are illustrated in \Cref{fig:timedist}.
         The name and a short description of each dataset is given in the following list.
 
         \begin{itemln}
-            \item \textbf{\pzmasterI{}} is an aggregated dataset of plains zebras.
+            \item \textbf{Plains zebras}.
+            Our plains zebras dataset is an aggregate of several smaller datasets.
             There is variation in how the data was collected and preprocessed.
             Some of the images are cropped to the flank of the animal, while others are cropped to encompass the
               entire body.
-            The datasets contributing to \pzmasterI{} were collected in Kenya at several locations including
-              Nairobi National Park, Sweetwaters, and Ol Pejeta.
+            The constituent datasets were collected in Kenya at several locations including Nairobi National
+              Park, Sweetwaters, and Ol Pejeta.
             More than $90\percent$ of the groundtruth generated for this dataset was assisted using the matching
               algorithm.
             This dataset contains many imaging challenges including occlusion, viewpoint, pose, quality, and time
@@ -95,30 +105,30 @@
               contain undetected animals.
             This data was collected between 2006 and 2015, but the majority of the data was collected in
               2012--2015.
-            The distribution of collection times is shown in~\cref{sub:timedistA}.
 
-            \item \textbf{\gzall{}} is an aggregated dataset of Grévy's zebras.
+            \item \textbf{Grévy's zebras}.
+            This is another aggregated dataset.
             The original groundtruth for this dataset was generated independently of the matching algorithm,
               however the matching algorithm revealed several groundtruth errors that have since been corrected.
             The Grévy's dataset was collected in Mpala, Kenya.
             Most of the annotations in this database have been cropped to the animal's flank.
             This dataset contains a moderate degree of pose and viewpoint variation as well as occlusion.
             This data was collected between 2003 and 2012, but the majority was collected in 2011 and 2012.
-            The distribution of collection times is shown in~\cref{sub:timedistB}.
 
-            \item \textbf{\girmmasterI{}} is a dataset of Masai giraffes.
-            The images were all taken in Nairobi National Park.
+            \item \textbf{Masai Giraffes}.
+            These images of Masai Giraffes were all taken in Nairobi National Park during the \GZC{} between
+              February 20, 2015 and March 2, 2015.
             All groundtruth was established using the matching algorithm followed by manual verification.
             This dataset contains a high degree of pose and viewpoint variation, as well as occlusion.
-            There are also many \glossterm{photobombs} --- instances where there is more than one giraffe in an
+            Because of their long necks, it is difficult to ensure that only a single giraffe appears in each
               annotation.
-            This data was collected in the \GZC{} between February 20, 2015 and March 2, 2015.
-            The distribution of collection times is shown in~\cref{sub:timedistC}.
+            This results in many photobombs \glossterm{photobombs} --- pairs of annotations where a background
+              animal in one annotation matches the foreground animal in the other --- when matching.
         \end{itemln}
 
     \subsection{Baseline experiment}\label{sub:exptbase}
       
-        % TODO: compute encounters and use a single annotation per encounter instead of the timectrl metric
+        \BaselineExpt{}
 
         This first experiment determines the accuracy of the identification algorithm using the baseline pipeline
           configuration.
@@ -129,28 +139,59 @@
           datasets.
         We only use annotations that
         (1) are known (\ie{} have been assigned a name),
-        (2) are assigned the species primary viewpoint (left for plains zebras and Masai giraffes and right for
-          Grévy's zebras),
-        (3) have not been assigned a quality of ``junk'' or ``poor''.
+        (2) are comparable the species primary viewpoint (\eg{} left, front-left, and back-left for plains
+          zebras),
+        (3) have not been assigned a quality of ``junk''.
         Furthermore, to account for the fact that some \names{} contain more annotations than others, we
-          constrain our data selection such that there is only one \groundtrue{} \exemplar{} in the database for
-          each query annotation.
+          constrain our data selection such that there is only one correct exemplar in the database for each query
+          annotation.
 
         Of these annotations, we group them into encounters.
         Then we randomly sample one annotation for each encounter.
-        \Names{} with only one encounter are added to the database as distractors.
-        For the other \names{}, we randomly sample two encounters one for the database and one to use as a query.
+        Names with only one encounter are added to the database as distractors.
+        For the other names, we randomly sample two encounters one for the database and one to use as a query.
         This defines a set of query and database annotations that are separated by time, testing the ability of
           our system to match animals across gaps of time using only a single image per individual.
         The CMC curves for this baseline test are illustrated in~\cref{fig:BaselineExpt}.
 
-        \BaselineExpt{}
-
         The results of this baseline experiment demonstrates that our algorithm is able to reliably find matching
           annotations in a database with many other images.
-        We measure all other experiments relative to this baseline.
+        Subsequent experiments will restrict our focus to Grévy's plains zebras in order to investigate detailed
+          parameter choices of the ranking algorithm as well as alternative ranking algorithms.
 
-    \subsection{Foregroundness experiment}\label{sub:exptfeatmatchscore}
+    \subsection{SMK as an alternative}\label{sub:exptsmk}  
+
+        Before extensive investigation of LNBNN parameter choices, we compare it to a more traditional vocabulary
+          based ranking algorithm, namely VLAD-flavored SMK.
+        In contrast to the raw descriptors used in LNBNN, SMK assigns each descriptor to a visual word and builds
+          a weighted histogram of visual words (accumulated residual vectors in the case of VLAD) to represent each
+          annotation as a sparse fixed length vector.
+        We have experimented with several configurations of VLAD and report our best results here.
+
+        In our SMK implementation, we pre-trained an $8000$ word vocabulary using mini-batch k-means on the
+          stacked descriptors from all database annotations.
+        Note that typically the vocabulary is trained using a disjoint external dataset in order to prevent
+          overfitting.
+        However, we \naively{} train using the database annotations to be indexed, understanding that this will
+          inflate the accuracy measurements.
+        Each word in the vocabulary is weighted with its inverse document frequency.
+        We use the vocabulary to compute an inverted index that maps each visual word to annotations containing
+          that word in the database.
+        Initial feature correspondences for a descriptor are computed using single assignment to a visual word
+          and then creating a correspondence to every feature in that word's inverted index.
+        We use spatial verification to filter spatially invalid correspondences, and re-score the remaining
+          matches.
+
+        \SMKExpt{}
+
+        The results of the SMK experiment are illustrated in \Cref{fig:SMKExpt}.
+        The query and database annotations are the same in each experiment.
+        Despite the bias in the SMK vocabulary, we measure that LNBNN provides the most accurate rankings.
+        For plains zebra's there is a difference of $10\percent$ in the number of correct matches at rank $1$,
+          and for Grevy's zebras the difference is over $20\percent$.
+
+
+    \subsection{Foregroundness experiment}\label{sub:exptfg}
 
         \ForegroundExpt{}
 
@@ -166,114 +207,81 @@
         For Grévy's zebras there is also a significant $3.3\percent$ increase.
         This experiment clearly shows the importance of eliminating background feature correspondences.
      
-    \subsection{Invariance experiment}\label{sub:exptinvar} 
+    \subsection{Invariance experiment}\label{sub:exptinvar} %
         In this experiment we vary the feature invariance configuration.
-        Because adding feature invariance is meant to detect and describe the same features across multiple viewing
-          positions, we also evaluate the different invariance settings both
-        (1) when the viewpoint between each query and its \groundtrue{} exemplar are the same as well as
-        (2) when the viewpoint is varied.
-        In the first case we use the same \timectrl{} configuration as the baseline experiment.
-        In the second case we constrain each database annotation's viewpoint to be the primary viewpoint of the
-          species and each query annotation's viewpoint to be adjacent to the primary viewpoint.
-        \Eg{} for plains zebras each query has a frontleft viewpoint, and each database annotation has a left
-          viewpoint.
-        Unfortunately, there are not many \names{} in our databases that contain both a primary and non-primary
-          viewpoint annotations.
-        Therefore, to increase the size of the dataset we do not control for time in the viewpoint varied experiment.
-        The following is a list describing the invariance settings that we investigate in each experiment.
+        This influences the location, shape, and orientation of keypoints detected in each annotation, which in
+          turn influences which regions in each annotation are matchable using SIFT descriptors extracted at each
+          keypoint.
+        The best invariance settings will be depend on properties of the data.
+
+        In our experiments we test different settings by enabling (denoted as T) or disabling (denoted as F) the
+          parameters affine invariance (AI), and our query-side rotation heuristic (QRH).
+        Initially we also tested rotation invariance, but found that it provided the poorest results for all
+          datasets by a significant margin, likely because the gravity vector assumption is mostly satisfied in all
+          images.
+        Therefore, we exclude rotation invariance from our experiments.
+
+        In configurations where \pvar{AI=F}, keypoints are circular with a radius defined by the scale at which
+          it was detected.
+        When \pvar{AI=F}, the keypoint shape is adapted into an ellipse to normalize for small viewpoint changes.
+        When \pvar{QRH=F}, each keypoint is assigned its orientation as normal, but when \pvar{QRH=T}, each
+          keypoint in a query annotation is replaced by 3 keypoints, one rotated slightly to the left, another
+          slightly to the right, and the last is the original keypoint.
+        The four specific configuration that we test are outlined in the following list:
 
         \begin{itemln}
 
-            \item \NoInvar{} (\pvar{AI=F,QRH=F,RI=F}): % 
-            In this configuration the gravity vector is assumed and the shape of each detected feature is not
-              adapted.
+            \item \NoInvar{} (\pvar{AI=F,QRH=F}): % 
+                This configuration uses circular keypoints and assumes the gravity vector.
 
-            \item \AIAlone{} (\pvar{AI=T,QRH=F,RI=F}): % 
-            This is the baseline setting that assumes the gravity vector and where each feature's shape is skewed
-              from a circle into an ellipse.
+            \item \AIAlone{} (\pvar{AI=T,QRH=F}): % 
+                This is the baseline setting that assumes the gravity vector and where each feature's shape is skewed
+                  from a circle into an ellipse.
 
-            \item \RIAlone{} (\pvar{AI=F,QRH=F,RI=T}): % 
-            Here, each feature is assigned one or more dominant gradient orientations (the gravity vector is not
-              used) and the shape is not adapted.
+            \item \QRHCirc{} (\pvar{AI=F,QRH=T}): %
+                This is a novel invariance heuristic where each {database} feature assumes the gravity vector, but
+                  {query} feature is $3$ orientations:
+                the gravity vector and two other orientations at $\pm15\degrees$ from the gravity vector.
+                Ideally, this will allow feature correspondences to be established between features seen from
+                  slightly different orientations.
 
-            \item Query-side rotation heuristic (\QRHCirc{}) (\pvar{AI=F,QRH=T,RI=F}): %
-            This is a novel invariance heuristic where each {database} feature assumes the gravity vector, but
-              {query} feature is $3$ orientations:
-            the gravity vector and two other orientations at $\pm15\degrees$ from the gravity vector.
-            Ideally, this will allow feature correspondences to be established between features seen from
-              slightly different orientations.
-
-            \item \QRHEll{} (\pvar{AI=T,QRH=T,RI=F}): %
+            \item \QRHEll{} (\pvar{AI=T,QRH=T}): %
                 This is the combination of \QRHCirc{} and \AIAlone{}.
-
-            \item \AIRI{} (\pvar{AI=T,QRH=F,RI=T}): %
-                This is the combination of \RIAlone{} and \AIAlone{}.
 
         \end{itemln}
 
-        % Invar Conclusions
-        The identification accuracy of the viewpoint and time controlled invariance experiment is shown
-          in~\cref{fig:InvarExpt}.
-        We find that full rotation invariance provides the poorest results for all datasets.
-        % Invar Conclusions (same view)
-        For plains zebras, \QRHCirc{} scores significantly ahead of all other invariance settings.
-        %
-        The results for Gravy's zebras show that \AIAlone{} is the most accurate invariance setting, but
-          \QRHEll{} performs almost as well.
-        %
-        There is not enough data to draw definitive conclusions about Masai giraffes, but the small sample that
-          we experiment with shows that \AIAlone{} and \QRHEll{} perform similarly to Grévy's zebras.
-
         \InvarExpt{}
 
-        % Invar Conclusions (diff view)
-        The identification accuracy of the viewpoint varied invariance is shown in~\cref{fig:InvarViewExpt}.
-        There is only a small amount of data available to run this experiment, specifically there are $53$ query
-          annotations available in \pzmasterI{}, $29$ in \gzall{}, and $14$ in \girmmasterI{}.
-        For plain zebras \QRHCirc{} and \NoInvar{} are tied for the highest accuracy, but \QRHEll{} is the most
-          accurate if ranks greater than $1$ are considered.
-        For Grévy's zebras \AIAlone{} provides the highest accuracy.
-        The \AIAlone{} and \QRHEll{} configurations are tied for highest accuracy in the Masai giraffes
-          experiment.
-        Overall, it seems that configurations with affine invariance perform the best on viewpoint varied cases,
-          which agrees with intuition.
-        However, these results show that the algorithm is overall less accurate when matching across viewpoints
-          and that matching between different viewpoints of an animal is significantly more difficult than matching
-          between the same views.
-        The claim is further supported by the small amount of data available to perform this test.
-        Most of the groundtruth used in these experiments was created with assistance from this identification
-          algorithm, therefore if the identification algorithm does not reliably match between viewpoints then that
-          will be reflected by a lack of viewpoint varied groundtruth.
-        However, in creating this groundtruth the focus was on identifying primary views of the animal, so it is
-          not clear how significant this effect is.
-        The effect of failure cases due to viewpoint is further discussed in~\cref{sub:exptfail}.
-
-        \InvarViewExpt{}
-
-        \kptstype{}
-
-        % MAKE SURE THAT BEST SETTINGS DISCCSSED HERE REFLECTS THE FIGURES
-
-        % General conclusions
-        The results in this experiment support the claim that the best choice of invariance settings is data
-          dependent.
-        The baseline invariance parameter \AIAlone{} produces the most accurate identification of  Grévy's zebras
-          and Masai giraffes.
-        % FIXME: which actually performs better?
-        However, \QRHCirc{} performs better for plains zebras.
-        This is likely because affine keypoints tend to describe only one or two coarse stripes on plains zebras.
-        In contrast, distinctive details on Grévy's zebras and Masai giraffes are finer and well captured by
-          affine keypoints.
+        % Invar Conclusions
+        The example in~\cref{fig:kptstype} illustrates the difference between \AIAlone{} and \QRHCirc{} features
+          for plains and Grévy's zebras.
+        The accuracy of the invariance experiment is shown in~\cref{fig:InvarExpt}.
+        For plains zebras, the \QRHCirc{} scores are significantly better than all other invariance settings.
+        Interesting, affine invariance results in worse performance when QRH is on, but if the QRH is off then
+          affine invariance improves accuracy.
+        This suggests that the QRH better handles matching the coarse patterns seen on the plains zebras across
+          pose and viewpoint variations than using affine invariance, which can tend to adapt itself around
+          non-distinctive diagonal stripes.
         Even though affine keypoints provide more precise localization, the area they describe is often smaller
           than a circular keypoint.
-        It makes sense that affine keypoints would not describe coarse features, like those seen on plains
-          zebras, as well as a circular keypoint covering a larger area.
-        This difference between \AIAlone{} and  \QRHEll{} features for plains and Grévy's zebras is illustrated
-          in~\cref{fig:kptstype}.
-        For the remainder of our experiments we use \QRHCirc{} as the invariance setting for plains zebras and
-          the baseline of \AIAlone{} on Grévy's zebras and Masai giraffes.
+        It makes sense that affine keypoints would not describe coarse features as well as a circular keypoint
+          covering a larger area.
+        %
+        The results for Gravy's zebras demonstrate similar levels of accuracy for \AIAlone{} and \QRHEll{}.
+        Affine invariance seems to be the most important setting for matching Grévy's zebras.
+        The distinctive details on Grévy's zebras are finer then plains zebras and are well captured by affine
+          keypoints.
+        While the QRH does improve accuracy for Grévy's zebras the density of the distinctive keypoints means
+          that it is less important because it is more likely that a two annotations will have at least one
+          distinctive region aligned an in common.
+
+        \kptstype{}
+        %For the remainder of our experiments we use \QRHCirc{} as the invariance setting for plains zebras and
+        %  the baseline of \AIAlone{} on Grévy's zebras and Masai giraffes.
 
     \subsection{Scoring mechanism experiment}\label{sub:exptscoremech}  
+
+        % TODO: change experiment so only one annotation per name is chosen for each confuser
 
         % Database setup for name scoring
         The purpose of the scoring mechanism is to aggregate scores of individual feature correspondences across
@@ -282,9 +290,7 @@
         (1) \cscoring{} (\csum{}) and
         (2) \nscoring{} (\nsum{}).
         Because the scoring mechanism is meant to take advantage of multiple \exemplars{} per \name{} we vary the
-          number of \exemplars{} per database \name{} between $1$, $2$, and $3$, except in the case of the
-          \girmmasterI{} dataset we only vary the number of \exemplars{} between $1$ and $2$ (due to dataset size
-          constraints).
+          number of \exemplars{} per database \name{} between $1$, $2$, and $3$.
         Varying the number of \exemplars{} will cause each database to contain a different number of annotations.
         To normalize for this we include additional confuser annotations (annotations that do not match any
           query) in the smaller databases to maintain a constant database size across experiments.
@@ -341,26 +347,26 @@
 
         \KExpt{}
         
-        Our second test varies the size of the database as well as the value of $\K$.
-        The effect of $\K$ and database size on matching accuracy is shown in~\cref{fig:DBSizeExpt}.
-        The results for all species show that the number of \exemplars{} per \name{} is the most important factor
-          in this experiment.
-        Interestingly, the number of annotations in the database is only a minor factor in identification
-          accuracy.
-        % plains
-        The results for plains zebras show a small positive relationship between the number of annotations in the
-          database and $\K$.
-        This may be because many plains zebra features are not globally distinctive in a large database and a
-          feature's correct correspondence may not be the nearest neighbor.
-        For smaller database sizes lower values of $\K$ produce more accurate results.
-        % Grevy's
-        For Grévy's zebras lower values of $\K$ seem better for all database sizes.
-        It also seems that the best values of $\K$ should be set to the number of \exemplars{} per \name{}, which
-          is expected when there is little confusion between features.
-        % giraffes
-        For Masai giraffes, the amount of data again makes it difficult to draw conclusions.
+        %Our second test varies the size of the database as well as the value of $\K$.
+        %The effect of $\K$ and database size on matching accuracy is shown in~\cref{fig:DBSizeExpt}.
+        %The results for all species show that the number of \exemplars{} per \name{} is the most important factor
+        %  in this experiment.
+        %Interestingly, the number of annotations in the database is only a minor factor in identification
+        %  accuracy.
+        %% plains
+        %The results for plains zebras show a small positive relationship between the number of annotations in the
+        %  database and $\K$.
+        %This may be because many plains zebra features are not globally distinctive in a large database and a
+        %  feature's correct correspondence may not be the nearest neighbor.
+        %For smaller database sizes lower values of $\K$ produce more accurate results.
+        %% Grevy's
+        %For Grévy's zebras lower values of $\K$ seem better for all database sizes.
+        %It also seems that the best values of $\K$ should be set to the number of \exemplars{} per \name{}, which
+        %  is expected when there is little confusion between features.
+        %% giraffes
+        %For Masai giraffes, the amount of data again makes it difficult to draw conclusions.
 
-        \DBSizeExpt{}
+        %\DBSizeExpt{}
 
         Overall the experiments on the setting of $\K$ does not yield definitive choice for this parameter.
         However, it appears that $\K$ only has a small influence on identification accuracy.
@@ -612,29 +618,6 @@
         \PzVsLibertyPatches{}
 
         \PzVsLiberty{}
-
-
-    \subsection{SMK as an alternative}\label{sub:smkalt}  
-        %Plains zebras:
-        %LNBNN: 75.6% @ rank 1
-        %ASMK: 69.69% @ rank 1
-
-        %Grevy's zebras: 
-        %LNBNN: 84.94% @rank 1
-        %ASMK: 70.87% @rank 1
-        In our ranking experiments we only did extensive testing of the LNBNN algorithm.
-        We have briefly experimented with using the vocabulary based SMK ranking algorithm (using the VLAD variant)
-          and found LNBNN to provide superior results.
-        In our preliminary experiments we found that the SMK algorithm was able to correct rank $69.69\percent$ of
-          plains zebras and $70.87\percent$ of Grevy's zebras correctly at rank $1$.
-        Comparable versions of LNBNN solutions achieved $75.6\percent$ and $69.7\percent$.
-
-        We trained an $8000$ word vocabulary using mini-batch k-means on the database annotations.
-        Typically an external dataset is used to train the vocabulary, but we \naively{} use the database
-          annotations to be indexed.
-        Note, that using the database annotations to train the vocabulary will result in overfitting biasing the
-          SMK algorithm towards better results.
-        However, even with this overfitting, our LNBNN ranking yields superior results.
 
 
     \subsection{Experimental conclusions}\label{sub:exptsum}  

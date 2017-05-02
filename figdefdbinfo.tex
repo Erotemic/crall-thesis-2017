@@ -5,27 +5,7 @@
 
 \begin{comment}
 ALL DATABASE INFO
-
-    ~/code/ibeis/ibeis/other/dbinfo.py
-    ~/code/utool/utool/util_latex.py
-
-    ibeis -e latex_dbstats --dblist GIRM_Master1 
-    python -m ibeis.other.dbinfo --exec-latex_dbstats --dblist GIRM_Master1 
-
-    python -m ibeis.other.dbinfo --test-latex_dbstats --dblist PZ_Master0 PZ_FlankHack PZ_MTEST NNP_Master3 GZ_Master1 GIRM_Master1 --show
-    python -m ibeis.other.dbinfo --test-latex_dbstats --dblist PZ_Master1 GZ_Master1 GIRM_Master1 --show
-
-    # Test Command
-    python -m ibeis.other.dbinfo --test-latex_dbstats --dblist GIRM_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
-
-    python -m ibeis.other.dbinfo latex_dbstats --dblist PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 --verbtd
-    ibeis latex_dbstats --dblist PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 
-
-    python -m ibeis.other.dbinfo --test-latex_dbstats --dblist GIRM_Master1 
-    --write=~/latex/crall-candidacy-2015/figdefdbinfo.tex
-
-    # Publish Command
-    python -m ibeis --tf latex_dbstats --dblist PZ_Master1 GZ_Master1 GIRM_Master1 --write=~/latex/crall-candidacy-2015/figdefdbinfo.tex -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1
+python -m ibeis.scripts.thesis Chap3.agg_db_stats
 \end{comment}
 
 % <DBINFO>
@@ -33,80 +13,23 @@ ALL DATABASE INFO
 \newcommand{\DatabaseInfo}{
 \begin{table}[ht!]
 \centering
-\caption[Database statistics]{
-% ---
-Database statistics.
-% ---
-}
+\caption[Database statistics]{Database statistics.}
 \label{tbl:DatabaseStatistics}
-\begin{tabular}{ l ll lll }
-\toprule
-\multirow{2}{*}{} & \multicolumn{2}{c }{\# Names} & \multicolumn{3}{c }{\# Annots}\\
-%\cline{2-6}
-     & multiton & total & multiton & singleton & total\\
-\midrule
-PZ   & 1164     & 5867  & 5811     & 4703      & 10514\\
-\midrule
-GZ   & 505      & 1241  & 2302     & 736       & 3038 \\
-\midrule
-GIRM & 77       & 117   & 481      & 40        & 521  \\
-\bottomrule
-\end{tabular}
-\end{table}
-%--
-\begin{table}[h!]
-\centering
-\caption[Annotations per name (multiton)]{
-% ---
-Annotations per name (multiton)
-% ---
-}
-\label{tbl:AnnotationsPerNameMultiton}
-\begin{tabular}{ r rrrrr }
-\toprule
-     & max & min & mean & std  & med\\
-\midrule
-PZ   & 28  & 2   & 4.99 & 3.94 & 3  \\
-\midrule
-GZ   & 20  & 2   & 4.56 & 2.80 & 4  \\
-\midrule
-GIRM & 54  & 2   & 6.25 & 6.98 & 4  \\
-\bottomrule
-\end{tabular}
+\input{figuresY/agg-enc.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
 \caption[Annotations per quality]{Annotations per quality.}
 \label{tbl:AnnotationsPerQuality}
-\begin{tabular}{ r rrrrrr }
-\toprule
-     & excellent & good & ok   & poor & junk & None\\
-\midrule
-PZ   & 448       & 1700 & 3765 & 0    & 0    & 4601\\
-\midrule
-GZ   & 0         & 1006 & 339  & 0    & 0    & 1693\\
-\midrule
-GIRM & 23        & 174  & 324  & 0    & 0    & 0   \\
-\bottomrule
-\end{tabular}
+\input{figuresY/agg-qual.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
 \caption[Annotations per viewpoint]{Annotations per viewpoint.}
 \label{tbl:AnnotationsPerViewpoint}
-\begin{tabular}{ r rrrrrrrrr }
-\toprule
-     & BL  & L    & FL  & F & FR & R    & BR  & B & None\\
-\midrule
-PZ   & 481 & 9615 & 418 & 0 & 0  & 0    & 0   & 0 & 0   \\
-\midrule
-GZ   & 0   & 0    & 0   & 0 & 77 & 1595 & 206 & 0 & 1160\\
-\midrule
-GIRM & 51  & 402  & 68  & 0 & 0  & 0    & 0   & 0 & 0   \\
-\bottomrule
-\end{tabular}
+\input{figuresY/agg-view.tex}
 \end{table}
 }
 
@@ -116,40 +39,25 @@ GIRM & 51  & 402  & 68  & 0 & 0  & 0    & 0   & 0 & 0   \\
 %-------------
 % TimeDeltas
 \begin{comment}
-ibeis show_image_time_distributions \
-    --db PZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
-    --save figures3/pzmtime.png --figsize=10,4 --dpi=256 --clipwhite \
-    --diskshow 
+python -m ibeis.scripts.thesis Chap3.time_distri --dbs=GIRM_Master1 --diskshow
+python -m ibeis.scripts.thesis Chap3.time_distri --dbs=GZ_Master1 --diskshow
+python -m ibeis.scripts.thesis Chap3.time_distri --dbs=PZ_Master1 --diskshow
 \end{comment}
-
-\begin{comment}
-ibeis show_image_time_distributions \
-    --db GIRM_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
-    --save figures3/girmtime.png --figsize=10,4 --dpi=256 --clipwhite \
-    --diskshow 
-\end{comment}
-
-\begin{comment}
-ibeis show_image_time_distributions \
-    --db GZ_Master1 -a default:species=primary,minqual=ok,is_known=True,view=primary,view_ext1=1,view_ext2=1 \
-    --save figures3/gztime.png --figsize=10,4 --dpi=256 --clipwhite \
-    --diskshow 
-\end{comment}
-\MultiImageCommandII{timedist}{1}{
-    Distribution of image timestamps.
-}{
+\newcommand{\timedist}{
+\begin{figure}[ht!] \centering
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/timedist.png}\caption{plains zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
+\caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
     % ---
     Distribution of image timestamps.
-    The \#nan reported in each subfigure title indicates the number of
-      images in the dataset without timestamps.
-    The distribution of \pzmasterI{}, shown in~\cref{sub:timedistA},
-      was collected over a large temporal range, but the majority of
-      data was collected during the \GZC{}.
-    The distribution of \gzall{}  is shown in~\cref{sub:timedistB}, but
-      most of these images do not have timestamps.
-    The distribution of \girmmasterI{}, shown in~\cref{sub:timedistC},
-      was collected only during the \GZC{}, and thus it spans a temporal
-      range of less than 2 weeks.
+    The y-axis is plotted on a square-root scale to emphasize times when only a
+    few images were taken.
+    For plains zebras and Grévy's zebras images were collected over many years.
+    For Masai giraffes all data was collected immediately before and during the \GZC{}.
     % ---
-  }{figures3/pzmtime.png}{figures3/gztime.png}{figures3/girmtime.png}
+  }
+  \label{fig:timedist}
+  \end{figure}
+}
 

@@ -13,293 +13,178 @@ gvim ~/code/ibeis/regen_figdefexpt.sh
 % --- Baseline Experiments ---
 % -------------------------------
 
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn    --hargv=expt
 
-python -m ibeis -e rank_cmc --db PZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label PZBaseline --cmap-hack=autumn \
-    --clipwhite --save=pzcmc.jpg  \
-    --dpi=128 --legendsize=11 --labelsize=14 --titlesize=12 --figtitlesize=12 --ticksize=10 --figsize=9,3 --draw-icon=True --overlay-zoom=.2
-
-
-\end{comment}                                                                                                                                         
+\begin{comment}                                                                                                                                       
+\end{comment}
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cmc --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn    --hargv=expt
+python -m ibeis.scripts.thesis Chap3.draw_agg_baseline
 
-python -m ibeis -e rank_cmc --db GZ_Master1   -a ctrl timectrl   -t baseline --prefix "Baseline" --label GZBaseline --cmap-hack=autumn \
-    --clipwhite --save=gzcmc.jpg \
-    --dpi=128 --legendsize=11 --labelsize=14 --titlesize=12 --figtitlesize=12 --ticksize=10 --figsize=9,3 --draw-icon=True --overlay-zoom=.2
+python -m ibeis.scripts.thesis Chap3.draw --dbs=GZ_Master1,PZ_Master1,GIRM_Master1
 
-
-python -m ibeis -e rank_cmc --db PZ_MTEST   -a ctrl   -t baseline --prefix "MTEST" --label MTEST --cmap-hack=autumn \
-    --dpi=128 --clipwhite --save=mtestcmc.jpg \
-    --legendsize=12 --labelsize=12 --titlesize=10 --figtitlesize=10 --ticksize=10 --figsize=6,3 --draw-icon=True --overlay-zoom=.1
-
-\end{comment}                                                                                                                                         
-                                                                                                                                                      
-\begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a ctrl timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --hargv=expt
+python -m ibeis.scripts.thesis Chap3.draw --db GZ_Master1
+python -m ibeis.scripts.thesis Chap3.draw --db PZ_Master1
+python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
 \end{comment}
 
-
-\begin{comment}                                                                                                                                       
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
-python -m ibeis -e rank_cmc --db humpbacks_fb -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db Seals -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db snails_drop1 -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db LF_Bajo_bonito -a timectrl1h -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a ctrl -t baseline --prefix "Baseline" --label GIRMBaseline --cmap-hack=autumn  --save "{label}.png"
-python -m ibeis -e rank_cmc --db humpbacks_fb -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db Seals -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db snails_drop1 -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-python -m ibeis -e rank_cmc --db LF_Bajo_bonito -a ctrl -t baseline --prefix "Baseline" --label HBBaseline --cmap-hack=autumn --save "{label}.png"
-\end{comment}
-
-\MultiImageCommandII{BaselineExpt}{1}{Baseline experiment identification accuracy}{
+\newcommand{\BaselineExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/agg-baseline.png}\end{subfigure}
+        \caption[\caplbl{BaselineExpt}Baseline experiment]{\caplbl{BaselineExpt}
     % ---
-    Baseline experiment identification accuracy.
-    The results without controlling for time are deceptively better
-      than the time controlled experiment.
-    This is because the algorithm is able to count near duplicate
-      matches as correct.
-    Therefore, the time controlled experiment more accurately reflects
-      the accuracy of the identification algorithm.
+    The baseline experiment is a high-level indicator of the ranking accuracy of each species.
+    We measure ranking accuracy using a single query and database annotation --- selected from different
+      encounters --- per individual.
+    The number of query annotations and size of the database are given for each species in the legend.
     % ---
-    Results for plains zebras are shown in~\cref{sub:BaselineExptA}, Grévy's
-      zebras are shown in~\cref{sub:BaselineExptB}, and Masai giraffes are
-      shown in~\cref{sub:BaselineExptC}.
+        }
+        \label{fig:BaselineExpt}
+    \end{figure}
+}
+
+
+\newcommand{\SMKExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/smk.png}\caption{plains zebras}\label{sub:SMKExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/smk.png}\caption{Grévy's zebras}\label{sub:SMKExptB}\end{subfigure}
+    \caption[\caplbl{SMKExpt}SMK experiment]{\caplbl{SMKExpt}
     % ---
-}{figuresX/expt_PZBaseline.png}{figuresX/expt_GZBaseline.png}{figuresX/expt_GIRMBaseline.png}
-
-
-% -----------------------------------
-% --- Foregroundness Experiments ----
-% -----------------------------------
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label PZForeground  --cmap-hack=spring
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foregroundness" --label GZForeground --cmap-hack=spring
-
-python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True],fgw_thresh=[None,.8] --show
-\end{comment}
-
-%\begin{comment}
-%python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t baseline:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
-%\end{comment}
-
-\MultiImageCommandII{ForegroundExpt}{1}{
-The effect of the foregroundness weight on identification accuracy}{
+    The (VLAD based) SMK algorithm compared to our LNBNN ranking algorithm.
+    The results demonstrate that LNBNN outperforms the ranking accuracy of SMK.
     % ---
-    The effect of the foregroundness weight on identification accuracy.
-    Weighting the score of the feature correspondences using foregroundness
-      results in more accurate identifications.
-    % ---
-    Results for plains zebras are shown in~\cref{sub:ForegroundExptA},
-      Grévy's zebras are shown in~\cref{sub:ForegroundExptB}, and Masai
-      giraffes are excluded from this test.
-    % ---
-}{figuresX/expt_PZForeground.png}{figuresX/expt_GZForeground.png}
+        }
+        \label{fig:SMKExpt}
+    \end{figure}
+}
 
 
-% -----------------------------------
-% --- Feature Scoring Mechanism Experiments ----
-% -----------------------------------
-
-%\begin{comment}
-%python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t featscoremetch  --hargv=expt --prefix "LNBNN" --label PZLNBNN
-%\end{comment}
-
-%\begin{comment}
-%python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GZForeground
-%\end{comment}
-
-%\begin{comment}
-%python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t best:fg_on=[True,False]  --hargv=expt --prefix "Foreground" --label GIRMForeground
-%\end{comment}
+\newcommand{\ForegroundExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness.png}\caption{plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness.png}\caption{Grévy's zebras}\label{sub:ForegroundExptB}\end{subfigure}
+        \caption[\caplbl{ForegroundExpt}Foregroundness experiment]{\caplbl{ForegroundExpt}
+            % ---
+            Weighting the score of the feature correspondences using foregroundness results in more accurate
+              identifications.
+            Results for plains zebras are shown in~\cref{sub:ForegroundExptA}, Grévy's zebras are shown
+              in~\cref{sub:ForegroundExptB}, and Masai giraffes are excluded from this test.
+            % ---
+        }
+        \label{fig:ForegroundExpt}
+    \end{figure}
+}
 
 % -------------------------------
 % --- Invariance Experiments ----
 % -------------------------------
 
-% --- Same Viewpoint
 
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label PZInvar --cmap-hack=Set1
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t invar  --hargv=expt --prefix "Invariance" --label GZInvar --cmap-hack=Set1
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t invar  --hargv=expt --prefix "Invariance" --label GIRMInvar --cmap-hack=Set1
-\end{comment}
-
-\MultiImageCommandII{InvarExpt}{1}{
-Results of the same-viewpoint invariance experiment}{
-    % ---
-    Results of the invariance experiment when the viewpoints are the
-      same.
-    \Cref{sub:InvarExptA} illustrates that the most accurate feature
-      invariance setting for plains zebras is circular keypoints with the
-      query-side rotation heuristic.
-    \Cref{sub:InvarExptB} illustrates that the most accurate feature
-      invariance setting for Grévy's zebras is affine invariance without
-      rotation invariance (with the gravity vector).
-    \Cref{sub:InvarExptC} illustrates the same result for Masai giraffes.
-    %that most accurate feature
-    %  invariance setting for Masai giraffes is affine invariance with the
-    %  query-side rotation heuristic.
-    % ---
-}{figuresX/expt_PZInvar.png}{figuresX/expt_GZInvar.png}{figuresX/expt_GIRMInvar.png}
-
-
-% --- Across Viewpoints
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label PZInvarView  --cmap-hack=Set2
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GZ_Master1   -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GZInvarView --cmap-hack=Set2
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a viewdiff   -t invar  --hargv=expt --prefix "Invariance+View"  --label GIRMInvarView --cmap-hack=Set2
-\end{comment}
-\MultiImageCommandII{InvarViewExpt}{1}{
-Results of the different-viewpoint invariance experiment}{
-    % ---
-    Results of the invariance experiment when the viewpoints are different.
-    Matching between viewpoints is overall less accurate than matching
-      annotations of the same viewpoint.
-    This test does not control for time.
-    \Cref{sub:InvarViewExptA} illustrates that affine invariant keypoints provide
-      the most accurate identifications of plains zebras when viewpoint are
-      different.
-    This is different than the most accurate feature invariance setting when
-      matching between the same viewpoints.
-    \Cref{sub:InvarViewExptB} illustrates that affine invariant keypoints provide
-      the most accurate identifications of Grévy's zebras when viewpoint are
-      different.
-    This is the same as the most accurate feature invariance setting when
-      matching between the same viewpoints.
-    \Cref{sub:InvarViewExptC} illustrates that all feature settings score equally
-      for Masai giraffes.
-    This is likely due to the small number of query annotations (14) and
-      database annotations (27).
-    % ---
-}{figuresX/expt_PZInvarView.png}{figuresX/expt_GZInvarView.png}{figuresX/expt_GIRMInvarView.png}
+\newcommand{\InvarExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{.8\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{plains zebras}\label{sub:InvarExptA}\end{subfigure}
+        \begin{subfigure}[h]{.8\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
+        \caption[\caplbl{InvarViewExpt}Feature invariance experiment]{\caplbl{InvarExpt}
+            % ---
+            Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the query-side rotation heuristic (QRH).
+            For plains zebras circular keypoints with the QRH are the most accurate. 
+            For Grévy's zebras enabling affine invariance works the best.
+            % ---
+        }
+        \label{fig:InvarExpt}
+    \end{figure}
+}
 
 % -------------------------------
 % --- K Experiments
 % -------------------------------
 
 % --- Explicit K 
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a timectrl   -t CircQRH_K --hargv=expt --prefix "K " --label PZKTime  --cmap-hack=gnuplot
-\end{comment}
-\begin{comment}
-
-python -m ibeis -e rank_cmc --db GZ_Master1   -a timectrl   -t Ell_K     --hargv=expt --prefix "K " --label GZKTime --cmap-hack=gnuplot
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a timectrl1h -t Ell_K     --hargv=expt --prefix "K " --label GIRMKTime --cmap-hack=gnuplot
-\end{comment}
 
 
-\MultiImageCommandII{KExpt}{1}{Results of the $\K$ experiment}{
-    % ---
-    Identification accuracy using different values of $\K$ (the number of
-      nearest neighbors assigned to each query feature).
-    \Cref{sub:KExptA} illustrates that the most accurate setting for the less
-      distinctive plains zebras is $\K\tighteq7$ when considering the \names{}
-      ranked first.
-    If the top two ranked \names{} are considered, then $\K\tighteq4$ provides
-      the most accurate results.
-    \Cref{sub:KExptB} illustrates that the most accurate setting for the more
-      distinctive Grévy's zebras is $\K\tighteq1$ when considering the \names{}
-      ranked first, and $\K\tighteq2$ when considering names ranked first or
-      second.
-    \Cref{sub:KExptC} illustrates that both $\K\tighteq1$ and $\K\tighteq2$
-      provide the most accurate results for Masai giraffes.
-    % ---
-}{figuresX/expt_PZKTime.png}{figuresX/expt_GZKTime.png}{figuresX/expt_GIRMKTime.png}
+%\MultiImageCommandII{KExpt}{1}{Results of the $\K$ experiment}{
+%    % ---
+%    Identification accuracy using different values of $\K$ (the number of
+%      nearest neighbors assigned to each query feature).
+%    \Cref{sub:KExptA} illustrates that the most accurate setting for the less
+%      distinctive plains zebras is $\K\tighteq7$ when considering the \names{}
+%      ranked first.
+%    If the top two ranked \names{} are considered, then $\K\tighteq4$ provides
+%      the most accurate results.
+%    \Cref{sub:KExptB} illustrates that the most accurate setting for the more
+%      distinctive Grévy's zebras is $\K\tighteq1$ when considering the \names{}
+%      ranked first, and $\K\tighteq2$ when considering names ranked first or
+%      second.
+%    \Cref{sub:KExptC} illustrates that both $\K\tighteq1$ and $\K\tighteq2$
+%      provide the most accurate results for Masai giraffes.
+%%    % ---
+%}{figuresX/expt_PZKTime.png}{figuresX/expt_GZKTime.png}{figuresX/expt_GIRMKTime.png}
 
 
 % --- Database Size Experiments (with time)
 
-\begin{comment}
-ibeis -e rank_surface --db PZ_Master1   -a varysize_td   -t CircQRH_K --hargv=surf --prefix "Database Size + Time" --label PZDBSizeTime
-\end{comment}
 
-\begin{comment}
-ibeis -e rank_surface --db GZ_Master1   -a varysize_td   -t Ell_K     --hargv=surf --prefix "Database Size + Time" --label GZDBSizeTime
-\end{comment}
+\newcommand{\KExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}\caption{plains zebras}\label{sub:KExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}\caption{Grévy's zebras}\label{sub:KExptB}\end{subfigure}
+        \caption[\caplbl{KExpt}The $K$ experiment]{\caplbl{KExpt}
+            % ---
+            Identification accuracy using different values of $\K$ (the number of
+              nearest neighbors assigned to each query feature).
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:KExpt}
+    \end{figure}
+}
 
-\begin{comment}
-ibeis -e rank_surface --db GIRM_Master1 -a varysize_td1h:qmin_pername=3,dpername=[1,2] -t Ell_K   --hargv=surf --prefix "Database Size + Time" --label GIRMDBSizeTime
-\end{comment}
-
-\MultiImageCommandII{DBSizeExpt}{1}{Results of the database size experiment}{
-    % ---
-    Accuracy of rank $1$ identifications as a function of $\K$ with
-      different database sizes.
-    The value of $\K$ with the maximum accuracy is denoted in the
-      legend.
-    An asterisk ``*'' denotes that multiple values have this score.
-    While $\K$ does have an impact on matching accuracy, the
-      \emph{number of annotations per name} is the more important factor.
-    \Cref{sub:DBSizeExptA} shows the results for plains zebras.
-    \Cref{sub:DBSizeExptB} shows the results for Grévy's zebras.
-    \Cref{sub:DBSizeExptC} shows the results for Masai giraffes.
-    Note that the overall accuracy of this test is higher than the
-      baseline because this test requires multiple annotations per
-      \name{}.
-    This results in higher scores because of bias due to a smaller test
-      size and the groundtruth bias (\ie{} the identification algorithm
-      has already worked well on these \names{} with multiple
-      annotations).
-    % ---
-}{figuresX/expt_PZDBSizeTime.png}{figuresX/expt_GZDBSizeTime.png}{figuresX/expt_GIRMDBSizeTime.png}
+%\MultiImageCommandII{DBSizeExpt}{1}{Results of the database size experiment}{
+%    % ---
+%    Accuracy of rank $1$ identifications as a function of $\K$ with
+%      different database sizes.
+%    The value of $\K$ with the maximum accuracy is denoted in the
+%      legend.
+%    An asterisk ``*'' denotes that multiple values have this score.
+%    While $\K$ does have an impact on matching accuracy, the
+%      \emph{number of annotations per name} is the more important factor.
+%    \Cref{sub:DBSizeExptA} shows the results for plains zebras.
+%    \Cref{sub:DBSizeExptB} shows the results for Grévy's zebras.
+%    \Cref{sub:DBSizeExptC} shows the results for Masai giraffes.
+%    Note that the overall accuracy of this test is higher than the
+%      baseline because this test requires multiple annotations per
+%      \name{}.
+%    This results in higher scores because of bias due to a smaller test
+%      size and the groundtruth bias (\ie{} the identification algorithm
+%      has already worked well on these \names{} with multiple
+%      annotations).
+%    % ---
+%}{figuresX/expt_PZDBSizeTime.png}{figuresX/expt_GZDBSizeTime.png}{figuresX/expt_GIRMDBSizeTime.png}
 
 
 % -------------------------------
 % --- Namescore Experiments ----
 % -------------------------------
 
-\begin{comment}
-python -m ibeis -e rank_cmc --db PZ_Master1   -a varypername_td   -t CircQRH_ScoreMech:K=3   --hargv=mech --prefix "Score Method" --label PZNscore  --ncolor-hack=6 --cmap-hack=jet
-\end{comment}
 
-\begin{comment}
-python -m ibeis -e rank_cmc --db GZ_Master1   -a varypername_td   -t Ell_ScoreMech:K=1     --hargv=mech --prefix "Score Method" --label GZNscore --ncolor-hack=6 --cmap-hack=jet
-\end{comment}
-
-\begin{comment}
-python -m ibeis -e rank_cmc --db GIRM_Master1 -a varypername_td1h:qmin_pername=3,dpername=[1,2] -t Ell_ScoreMech:K=2     --hargv=mech --prefix "Score Method" --label GIRMNscore --ncolor-hack=6 --cmap-hack=jet
-\end{comment}
-
-
-\MultiImageCommandII{NScoreExpt}{1}{
-    Results of the \namescoring{} experiment
-}{
-    % ---
-    Results of the \namescoring{} mechanism experiment.
-    There is a clear separation between identification accuracy when
-      the number of exemplars per name is $1$ compared to when it is $3$.
-    Robust \namescoring{} (\nsum{}) is slightly more accurate than
-      baseline \namescoring{} (\csum{}).
-    \Cref{sub:NScoreExptA} shows the results for plains zebras.
-    \Cref{sub:NScoreExptB} shows the results for Grévy's zebras.
-    \Cref{sub:NScoreExptC} shows the results for Masai giraffes.
-    Note that the scores reported here are higher than the baseline for
-      the same reasons as explained in~\cref{fig:DBSizeExpt}.
-    % ---
-}{figuresX/expt_PZNscore.png}{figuresX/expt_GZNscore.png}{figuresX/expt_GIRMNscore.png}
+\newcommand{\NScoreExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/nsum.png}\caption{plains zebras}\label{sub:NScoreExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
+        \caption[\caplbl{InvarViewExpt}Name scoring experiment]{\caplbl{NScoreExpt}
+            % ---
+            Results of the name scoring mechanism experiment.
+            There is a clear separation between identification accuracy when the number of exemplars per name is
+              $1$ compared to when it is $3$.
+            Robust name scoring (\nsum{}) is slightly more accurate than scoring using the baseline name scoring
+              (\csum{}).
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:NScoreExpt}
+    \end{figure}
+}
 
 
 % -------------------------------
@@ -330,9 +215,8 @@ python -m ibeis -e scores --db GIRM_Master1 -a timectrl1h -t best   --filt : --h
       species.
     \Cref{sub:ScoreSepA} shows the results for plains zebras.
     \Cref{sub:ScoreSepB} shows the results for Grévy's zebras.
-    \Cref{sub:ScoreSepC} shows the results for Masai giraffes.
     % ---
-}{figuresX/expt_PZScoreAll.png}{figuresX/expt_GZScoreAll.png}{figuresX/expt_GIRMScoreAll.png}
+}{figuresX/expt_PZScoreAll.png}{figuresX/expt_GZScoreAll.png}
 
 % -------------------------------
 % --- Tag Histograms  ---
@@ -358,9 +242,8 @@ python -m ibeis -e taghist --db GIRM_Master1 -a timectrl1h -t best   --filt :fai
     Occlusion and viewpoint seem to be the primary causes of failure.
     \Cref{sub:TagExptA} shows the failure case histogram for plains zebras.
     \Cref{sub:TagExptB} shows the failure case histogram for Grévy's zebras.
-    \Cref{sub:TagExptC} shows the failure case histogram for Masai giraffes.
     % ---
-}{figuresX/expt_PZTags.png}{figuresX/expt_GZTags.png}{figuresX/expt_GIRMTags.png}
+}{figuresX/expt_PZTags.png}{figuresX/expt_GZTags.png}
 
 
 \begin{comment}
