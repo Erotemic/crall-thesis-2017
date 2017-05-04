@@ -18,10 +18,9 @@ gvim ~/code/ibeis/regen_figdefexpt.sh
 \end{comment}
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
-python -m ibeis.scripts.thesis Chap3.draw_agg_baseline
+python -m ibeis.scripts.thesis Chap3.draw_agg_baseline --diskshow
 
 python -m ibeis.scripts.thesis Chap3.draw --dbs=GZ_Master1,PZ_Master1,GIRM_Master1
-
 python -m ibeis.scripts.thesis Chap3.draw --db GZ_Master1
 python -m ibeis.scripts.thesis Chap3.draw --db PZ_Master1
 python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
@@ -41,6 +40,15 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
         \label{fig:BaselineExpt}
     \end{figure}
 }
+
+\begin{comment}                                                                                                                                       
+python -m ibeis.scripts.thesis Chap3.draw --dbs=GZ_Master1,PZ_Master1
+\end{comment}                                                                                                                                       
+
+\begin{comment}
+python -m ibeis.scripts.thesis Chap3.measure_single --expt=foregroundness --dbs=GZ_Master1,PZ_Master1
+python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
 
 
 \newcommand{\SMKExpt}{
@@ -125,8 +133,8 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
 
 \newcommand{\KExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}\caption{plains zebras}\label{sub:KExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}\caption{Grévy's zebras}\label{sub:KExptB}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}\caption{plains zebras}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}\caption{Grévy's zebras}\end{subfigure}
         \caption[\caplbl{KExpt}The $K$ experiment]{\caplbl{KExpt}
             % ---
             Identification accuracy using different values of $\K$ (the number of
@@ -166,6 +174,11 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
 % --- Namescore Experiments ----
 % -------------------------------
 
+\begin{comment}
+python -m ibeis.scripts.thesis Chap3.measure_single --expt=nsum --dbs=GZ_Master1
+python -m ibeis.scripts.thesis Chap3.measure_single --expt=nsum --dbs=GZ_Master1,PZ_Master1
+python -m ibeis.scripts.thesis Chap3.draw_single --expt=nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
 
 \newcommand{\NScoreExpt}{
     \begin{figure}[ht!]\centering
@@ -176,8 +189,8 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
             Results of the name scoring mechanism experiment.
             There is a clear separation between identification accuracy when the number of exemplars per name is
               $1$ compared to when it is $3$.
-            Robust name scoring (\nsum{}) is slightly more accurate than scoring using the baseline name scoring
-              (\csum{}).
+            Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
+              based name scoring (\csum{}).
             %Note that the scores reported here are higher than the baseline for
             %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
             % ---

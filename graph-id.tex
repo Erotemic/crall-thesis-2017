@@ -33,8 +33,8 @@ vision procedures, which are abstracted into into three components:
 \item a probability algorithm used assign probabilities to edges (note this is typically a by-product of the
 ranking or verification algorithm).
 \end{enumin}
-In this thesis we use ranking algorithm from \Cref{chap:ranking}, and the verification algorithm from
-\Cref{chap:pairclf} to define these components because these are suitable for identifying textured species.
+In this thesis we use ranking algorithm from \cref{chap:ranking}, and the verification algorithm from
+\cref{chap:pairclf} to define these components because these are suitable for identifying textured species.
 However, while graph identification benefits from accurate computer vision subroutines, it can stand alone without
 them.  This means that existing identification algorithms that only define a subset of these procedures (\eg{}
 contour-based rank-only identification of humpback whales and bottlenose dolphins) could be seamlessly incorporated
@@ -43,19 +43,19 @@ error recovery mechanisms).  Furthermore, because pairwise decisions are gathere
 verification algorithms can be retrained and improved, moving closer to a fully-automatic algorithm.
 
 
-The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the
+The first section (\cref{sec:decisiongraph}) of this chapter formalizes the
   decision graph and summarizes the priority based review procedure used to
   construct it.
 This provides a brief overview of each component of the processes, and then
   details are described in subsequent sections.
-Then, \Cref{sec:rename} describes how existing database can be ported into
+Then, \cref{sec:rename} describes how existing database can be ported into
   this framework without extensive re-review.
 \Cref{sec:graphexpt} experimentally demonstrates that ability of the graph
   identification algorithm to reduce the number of manual reviews and recover
   from errors.
 \Cref{sec:graphconclusion} concludes and summarizes the chapter.
 
-%This outline of this chapter is as follows: \Cref{sec:decisiongraph} formalizes the decision graph and summarizes the
+%This outline of this chapter is as follows: \cref{sec:decisiongraph} formalizes the decision graph and summarizes the
 %priority based review procedure used to construct it. \Cref{sec:cand} describes candidate edge generation.
 %\Cref{sec:decision} discuss how the verification algorithm is used to automatically review candidate edges.
 %\Cref{sec:redun} introduces the redundancy criteria used to eliminate candidate edges. \Cref{sec:incon} describes the
@@ -77,7 +77,7 @@ $E_n$ is \emph{negative}, meaning that it connects annotations determined to be 
 Finally, each edge in $E_i$ is \emph{incomparable}, meaning that it connects two annotations where it has been
 determined that there is not enough information to tell to tell if they are from the same individual (\eg{} when
 one annotation shows the left side of an animal and another other shows the right side).  An example of a decision
-graph with all three edge types is illustrated in \Cref{fig:decisiongraph}. The goal of graph identification is to
+graph with all three edge types is illustrated in \cref{fig:decisiongraph}. The goal of graph identification is to
 construct these edges.
 
 The most important task is to determine the positive edges $E_p$.  This is because each connected component in the
@@ -91,7 +91,7 @@ evidence that two annotations are different individual.  A negative edge between
 unreviewed edge between those PCCs can be positive.  Another important case is when a negative edge is contained
 within a PCC. When this happens, the PCC is \emph{inconsistent}, and it implies that it contains at least one
 mistake. Whenever an inconsistencies is detected, we resolve it using an algorithm we will define in
-\Cref{sec:incon} that restores consistency.
+\cref{sec:incon} that restores consistency.
 
 Lastly, incomparable edges, $E_i$, play a minor but necessary role by simply signifying that a positive or negative
 decision cannot be made.  Incomparable edges can exist internally in a PCCs without causing inconsistencies or
@@ -107,10 +107,10 @@ discovered and identification has converged.
 Unfortunately, there are several issues with these previous observations. These observations depend on the
 condition that each edge was correctly reviewed. A small amount of redundant decisions is desirable because it
 reduces the probability that errors have been made and signifies when errors have occurred by introducing
-inconsistencies. Therefore we will define a redundancy criteria in \Cref{sec:redun} which ignores edges within and
+inconsistencies. Therefore we will define a redundancy criteria in \cref{sec:redun} which ignores edges within and
 between PCCs, but only after they meet a minimum level of redundancy. Additionally this deterministic convergence
 criteria would requires that $O(|V|^2)$ edges are reviewed as negative. We address this concern in
-\Cref{sec:coverge} using a probabilistic convergence criteria.
+\cref{sec:coverge} using a probabilistic convergence criteria.
 
 %Finally, we add a measure of redundancy to both the positive and negative
 %  subgraphs to allow the algorithm to detect and recover from mistakes, either
@@ -174,14 +174,14 @@ enough negative edges to be complete.
 %  terminate.
 
 Details of each component in the review algorithm are described in the following sections.  First we describe the
-redundancy criteria in \Cref{sec:redun} and inconsistency recovery in \Cref{sec:incon}. These will serve to inform
-the sections that define candidate edge generation, \Cref{sec:cand}, decision making \Cref{sec:decision},  and
-convergence \Cref{sec:coverge}.
+redundancy criteria in \cref{sec:redun} and inconsistency recovery in \cref{sec:incon}. These will serve to inform
+the sections that define candidate edge generation, \cref{sec:cand}, decision making \cref{sec:decision},  and
+convergence \cref{sec:coverge}.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
 % Ensuring all PCCs are complete leads to the need to ,
-%  so to prevent this we develop a probabilistic measure (\Cref{sec:coverge})
+%  so to prevent this we develop a probabilistic measure (\cref{sec:coverge})
 %  that triggers much earlier convergence when positive edges are no longer
 %  likely to be found.
 
@@ -311,8 +311,8 @@ all other PCCs previously negative-redundant with $C$.
 \section{Candidate edge generation and priorities}\label{sec:cand}
 
 To generate candidate positive edges the we issue each annotation query to the ranking algorithm (the LNBNN from
-\Cref{chap:ranking}), forming edges from the resulting ranked lists. For each candidate edge we use the pairwise
-algorithm (see \Cref{chap:pairclf}) to estimate the positive, negative, and incomparable probabilities. Any edge
+\cref{chap:ranking}), forming edges from the resulting ranked lists. For each candidate edge we use the pairwise
+algorithm (see \cref{chap:pairclf}) to estimate the positive, negative, and incomparable probabilities. Any edge
 whose maximum probability is above the threshold for automatic decision making is ranked according to this
 probability. All other edges are ordered by their positive probability. This ensures automatic decision making is
 first, followed by an ordering of the edges needed for manual review that are most likely to be positive and
@@ -472,7 +472,7 @@ in the optimal consistent assignment of PCCs to original name labels.
     using ground-truth data. The simulated user returns the ground-truth classification 98\% of the
     time, making errors 2\% of the time uniformly at random.
 
-    The protocol for the graph identification algorithm is defined in \Cref{sec:s5}. The pairwise classifier,
+    The protocol for the graph identification algorithm is defined in \cref{sec:s5}. The pairwise classifier,
     corresponding thresholds, and termination criteria are learned on a disjoint training set. Because our algorithm is
     able to handle errors, we set our automatic classification thresholds to achieve a false positive rate of $.1\%$ 
     on a validation set. We disable automatic review for incomparable cases due to the small number of labeled training
@@ -510,8 +510,8 @@ in the optimal consistent assignment of PCCs to original name labels.
 
 A nice and important property of the graph identification framework is that it is agnostic to the underlying procedures
 used to generate and review candidate edges to be placed in the decision graph. Throughout this chapter we will have
-used the ranking algorithm from \Cref{chap:ranking}, and the semi-automatic verification algorithm from
-\Cref{chap:pairclf}, which work well for distinctively textured species like zebras, giraffes, jaguars, and lionfish.
+used the ranking algorithm from \cref{chap:ranking}, and the semi-automatic verification algorithm from
+\cref{chap:pairclf}, which work well for distinctively textured species like zebras, giraffes, jaguars, and lionfish.
 However, the benefits of graph identification algorithm could be realized for less textured species such as humpbacks
 whales or bottlenose dolphins by simply using existing contour-based ranking algorithms and a manual reviewer.
 
@@ -524,8 +524,8 @@ whales or bottlenose dolphins by simply using existing contour-based ranking alg
 The verification algorithm (which can be a manual reviewer) is what determines
   if the graph identification algorithm is manual, semi-automatic, or
   fully-automatic.
-In our experiments we use the ranking algorithm from \Cref{chap:ranking}, and
-  the verification algorithm from \Cref{chap:pairclf} to construct these
+In our experiments we use the ranking algorithm from \cref{chap:ranking}, and
+  the verification algorithm from \cref{chap:pairclf} to construct these
   components, which work well for
   
 %These algorithms could easily be swapped out for other algorithms tuned

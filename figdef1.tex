@@ -96,6 +96,21 @@ Image pairs~\cref{sub:GrevysFigureA,sub:GrevysFigureB}
 %}{figures1/GrevysFigure.jpg}
 
 
+\begin{comment}
+python -m ibeis.viz.viz_name show_multiple_chips --aids=7,2,8 --db=humpbacks_fb --dpath ~/latex/crall-thesis-2017/ --save "figures1/HumpbackFig.jpg" --figsize=9,4 --clipwhite --dpi=300 --no-inimage --adjust=.05,.05,.15 --no-figtitle --notitle --diskshow --saveparts 
+\end{comment}
+\MultiImageCommandII{HumpbackFig}{.31}{HumpbackFig}{
+    %
+    A humpback whale can be identified by the texture patterns on the fluke or using the shape of the notches
+      along the edge of the fluke.
+    Note that some humpbacks (like the on seen in \ref{sub:HumpbackFigB}) do not have any texture patterns on
+      their tail.
+    Subfigures \ref{sub:HumpbackFigA} and \ref{sub:HumpbackFigC} are the same individual.
+    %
+}{figures1/HumpbackFigA.jpg}{figures1/HumpbackFigB.jpg}{figures1/HumpbackFigC.jpg}
+
+
+
 
 \begin{comment}
 python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save 'figures1/OccludeFigure.jpg' --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=180 --adjust=.05,.05,.05,.15 --clipwhite --no-inimage --aids=13870,13740,7735,13233,13603,13906,7354,9776 --rc=2,4 --append temp_out_figure.tex --diskshow --saveparts

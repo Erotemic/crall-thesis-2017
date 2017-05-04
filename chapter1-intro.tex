@@ -54,33 +54,44 @@
     is matched, it is added to the database as a resighting of that individual. If the query is not matched, then it is
     added as a new individual.
 
-    In this work we focus on identifying individuals of species with distinguishing textures, such as zebras, giraffes,
-    lionfish, nautiluses, hyenas, whale sharks, wildebeest, wild dogs, jaguars, cheetahs, leopards, frogs, toads,
-    snails, and seals. The three species this \thesis{} will focus on are plains zebras, Grevy's zebras, and Masai
-    giraffes. The difficulty of animal identification depends on the distinctiveness of the visual patterns that
-    distinguish an individual from others of its species. In addition, the images we identify are collected ``in the
-    wild'' and therefore contain occlusion, distracting features, variations in viewpoint and quality.
+    In this work we focus on identifying individuals of species with distinguishing textures, such as zebras,
+    giraffes, humpback whales, lionfish, nautiluses, hyenas, whale sharks, wildebeest, wild dogs, jaguars,
+    cheetahs, leopards, frogs, toads, snails, and seals. The primary species that we will consider in this
+    \thesis{} are plains and Grévy's zebras, but we will maintain a secondary focus on Masai giraffes and humpback
+    whales. The difficulty of animal identification depends on the distinctiveness of the visual patterns that
+    distinguish an individual from others of its species. In addition, the images we identify are collected ``in
+    the wild'' and therefore contain occlusion, distracting features, variations in viewpoint and quality.
 
     This section will present several examples to illustrate the challenges faced in animal identification. The
     discussion will begin with the challenges posed by the three primary species. Then the problems common to all
     species will be described. These will be illustrated using plains zebras because they are the most challenging
     species considered in this \thesis{}.
 
-    \subsection{Distinguishing features of each species}
+    \subsection{Distinguishing textures of each species}
         The plains zebra --- shown in~\cref{fig:PlainsFigure} --- is challenging to visually identify because
-        individuals have relatively few distinguishing features. For most plains zebras, the majority of distinctive
+        individuals have relatively few distinguishing texture features. For most plains zebras, the majority of distinctive
         information lies in a small area on the front shoulder. \Cref{fig:HardCaseFigure} illustrates that the patterns
         that distinguish two individuals can be subtle, even when the features are clearly visible. The matching
         difficulty greatly increases when features are partially occluded, the viewpoint changes, or the image quality
         is poor.
 
-        In contrast, Masai giraffes and Grevy's zebras, shown in~\cref{fig:GirMasaiFigure} and~\cref{fig:GrevysFigure}
-        respectively, have an abundance of distinctive features. Distinctive textures that are unique to each individual
-        are spread across the entire body of a Masai giraffe. For a Grevy's zebra there is a high density of
-        distinguishing information above both front and back legs, as well as a moderate density of distinctive textures
-        along the side of the body. The high density of distinctive textures in Masai giraffes and Grevy's zebras make
-        it possible to distinguish them from one another even in the presence of occlusion and viewpoint changes.
-        However, these factors still increase the difficulty of the problem.
+        In contrast, Masai giraffes and Grévy's zebras, shown in~\cref{fig:GirMasaiFigure}
+        and~\cref{fig:GrevysFigure} respectively, have an abundance of distinctive features. Distinctive textures
+        that are unique to each individual are spread across the entire body of a Masai giraffe. For a Grévy's
+        zebra there is a high density of distinguishing information above both front and back legs, as well as a
+        moderate density of distinctive textures along the side of the body. The high density of distinctive
+        textures in Masai giraffes and Grévy's zebras increases the likelihood that the same distinctive features
+        can be seen from different viewpoints, but these factors still increase the difficulty of the problem.
+
+        There are some species, like Humpback whales, where some individuals may contain distinguishing textures
+          while other may lack them entirely.
+        This means that only a subset of humpback whales will be able to be identified with the texture based
+          techniques that we will consider in this thesis.
+        However, other cues --- like the shape of the notches along the trailing edge of the fluke --- can be
+          used to distinguish between different individuals.
+        The work of Hendrick Weideman~\cite{hendrik} addresses identifying humpback whales using shape features.
+        The example in~\cref{fig:HumpbackFig} illustrates individual humpback whales with and without distinctive
+          textures.
 
         \PlainsFigure{}
 
@@ -89,6 +100,8 @@
         \GirMasaiFigure{}
 
         \GrevysFigure{}
+
+        \HumpbackFig{}
 
     \subsection{Viewpoint and pose}
         One of the most difficult challenges faced in the animal identification problem is viewpoint. Animals are seen
