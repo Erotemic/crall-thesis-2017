@@ -64,9 +64,9 @@
 
     \rankedmatches{}
 
-%\input{sec-3-1-annotrepr.tex}
-%\input{sec-3-2-dbsearch.tex}
-%\input{sec-3-3-sver.tex}
+\input{sec-3-1-annotrepr.tex}
+\input{sec-3-2-dbsearch.tex}
+\input{sec-3-3-sver.tex}
 
 
 \section{Exemplar selection}\label{sec:exempselect}
@@ -92,72 +92,42 @@
 
 \section{Rank-based identification summary}\label{sec:staticsum}
 
-    In this chapter we have addressed the problem of animal identification
-      using a computer-assisted algorithm that ranks a labeled database of
-      \names{} by their similarity to a single query annotation.
-    %In this section we have introduced an algorithm that ranks known
-    %  database \names{} by their similarity to a single query annotation.
-    This algorithm beings by extracting local patch-based features from
-      cropped and normalized chips.
-    Features from database annotations are indexed for fast nearest neighbor
-      search using a kd-tree.
-    An mechanism based on LNBNN is used to compute a matching score for each
-      database annotation.
-    Based on these scores potential matches have their feature correspondences
-      spatially verified and then are re-scored.
-    We have shown how this algorithm can be applied to individual animal
-      identification and demonstrated that in a majority of cases the correct
-      match is ranked first by our algorithm.
+    In this chapter we have addressed the problem of animal identification using a computer-assisted algorithm
+      based on LNBNN that ranks a labeled database of \names{} by their similarity to a single query annotation.
+    This algorithm beings by extracting local patch-based features from cropped and normalized chips.
+    Features from database annotations are indexed for fast nearest neighbor search using a kd-tree.
+    A mechanism based on LNBNN is used to compute a matching score for each database annotation.
+    A shortlist of top scoring results have their feature correspondences spatially verified and then are
+      re-scored.
+    We have shown how this algorithm can be applied to individual animal identification and demonstrated that in
+      a majority of cases the correct match is ranked first by our algorithm for plains zebras, Grévy's zebras,
+      Masai giraffes, and humpback whales.
 
-    %This remainder of this section summarizes the conclusions drawn about the
-    %  static identification algorithm in a broad sense and discusses possible
-    %  directions for future work.
-
-    Because we have used the algorithm to curate the groundtruth we do
-      not claim the reported accuracies in our experiments to be
-      quantitatively absolute.
-    However, the fact that we were able to use the algorithm to
-      identify a significant number of individuals from different species
-      is qualitative evidence for the algorithm's overall success.
-    From our experiments we conclude that the algorithm is effective at
-      identifying medium to high quality images of animals with
-      distinguishing patterns when taken from the same viewpoint.
+    Because we have used the algorithm to curate the groundtruth we do not claim the reported accuracies in our
+      experiments to be quantitatively absolute.
+    However, qualitative evidence for the algorithm's overall success is provided by the facts that
+    (1) we were able to use the algorithm to identify a significant number of individuals from different species
+      and
+    (2) our approach provides more accurate rankings than standard instance recognition techniques.
+    We therefore make the conclusion that the algorithm is effective at identifying medium to high quality images
+      of animals with distinguishing patterns when taken from similar viewpoints.
     %In addition we have comparative evidence that this problem is more
     %  difficult than location recognition.
 
-
-    %Plains zebras:
-    %LNBNN: 75.6% @ rank 1
-    %ASMK: 69.69% @ rank 1
-
-    %Grevy's zebras: 
-    %LNBNN: 84.94% @rank 1
-    %ASMK: 70.87% @rank 1
-    In our ranking experiments we only did extensive testing of the LNBNN algorithm.
-    We have briefly experimented with using the vocabulary based SMK ranking algorithm (using the VLAD variant)
-      and found LNBNN to provide superior results.
-    In our preliminary experiments we found that the SMK algorithm was able to correct rank $69.69\percent$ of
-      plains zebras and $70.87\percent$ of Grevy's zebras correctly at rank $1$.
-    Comparable versions of LNBNN solutions achieved $75.6\percent$ and $69.7\percent$.
-
-    While we have demonstrated that the ranking algorithm accurately ranks
-      correct matches when they exist, there are several limitations to this
-      approach.
-    \begin{itemln}
-        \item All results must be manually verified, which can be a time
-          consuming process for large datasets.
+    While we have demonstrated that the ranking algorithm accurately ranks correct matches when they exist, there
+      are several limitations to this approach.
+    \begin{enumln}
+        \item All results must be manually verified, which can be a time consuming.
+            %process for large datasets.
             %We introduced a mechanism for ranking the individuals in a database
             %based similarity to a single query, but provided no means of verifying
             %which --- if any --- of the top ranked results matched.
-        \item There is no mechanism for recovering from errors once they
-          occur.
-        \item There is no mechanism to determine when identification is
-          complete.
-    \end{itemln}
+        \item There is no mechanism for recovering from errors once they occur.
+        \item There is no mechanism to determine when identification is complete.
+    \end{enumln}
     In the following chapters we seek to address these issues.
-    In \Cref{chap:pairclf} we introduce an algorithm to make automatic
-      decisions based on results from this algorithm, and in \cref{chap:graphid}
-      we introduce a graph-based framework that determines identification
+    In \Cref{chap:pairclf} we introduce an algorithm to make automatic decisions based on results from this
+      algorithm, and in \cref{chap:graphid} we introduce a graph-based framework that determines identification
       confidence and introduces error recovery mechanisms.
 
 

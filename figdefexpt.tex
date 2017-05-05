@@ -18,12 +18,12 @@ gvim ~/code/ibeis/regen_figdefexpt.sh
 \end{comment}
                                                                                                                                                       
 \begin{comment}                                                                                                                                       
-python -m ibeis.scripts.thesis Chap3.draw_agg_baseline --diskshow
+python -m ibeis Chap3.draw_agg_baseline --diskshow
 
-python -m ibeis.scripts.thesis Chap3.draw --dbs=GZ_Master1,PZ_Master1,GIRM_Master1
-python -m ibeis.scripts.thesis Chap3.draw --db GZ_Master1
-python -m ibeis.scripts.thesis Chap3.draw --db PZ_Master1
-python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
+python -m ibeis Chap3.draw_all --dbs=GZ_Master1,PZ_Master1,GIRM_Master1
+python -m ibeis Chap3.draw_all --db GZ_Master1
+python -m ibeis Chap3.draw_all --db PZ_Master1
+python -m ibeis Chap3.draw_all --db GIRM_Master1
 \end{comment}
 
 \newcommand{\BaselineExpt}{
@@ -34,7 +34,8 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
     The baseline experiment is a high-level indicator of the ranking accuracy of each species.
     We measure ranking accuracy using a single query and database annotation --- selected from different
       encounters --- per individual.
-    The number of query annotations and size of the database are given for each species in the legend.
+    The number of query annotations (\pvar{qsize}) and database annotations (\pvar{dsize}) are given for each
+      species in the legend.
     % ---
         }
         \label{fig:BaselineExpt}
@@ -42,15 +43,22 @@ python -m ibeis.scripts.thesis Chap3.draw --db GIRM_Master1
 }
 
 \begin{comment}                                                                                                                                       
-python -m ibeis.scripts.thesis Chap3.draw --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw_all --dbs=GZ_Master1,PZ_Master1
 \end{comment}                                                                                                                                       
 
+
+
 \begin{comment}
-python -m ibeis.scripts.thesis Chap3.measure_single --expt=foregroundness --dbs=GZ_Master1,PZ_Master1
-python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_Master1,PZ_Master1 --diskshow
+
+ibeis Chap3.measure smk --db=GZ_Master1
+ibeis Chap3.draw smk --db=GZ_Master1 --diskshow
+
+ibeis Chap3.measure smk --db=PZ_Master1
+ibeis Chap3.draw smk --db=PZ_Master1 --diskshow
+
+ibeis Chap3.measure smk --dbs=GZ_Master1,PZ_Master1
+ibeis Chap3.draw smk --dbs=GZ_Master1,PZ_Master1 --diskshow
 \end{comment}
-
-
 \newcommand{\SMKExpt}{
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/smk.png}\caption{plains zebras}\label{sub:SMKExptA}\end{subfigure}
@@ -59,6 +67,8 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
     % ---
     The (VLAD based) SMK algorithm compared to our LNBNN ranking algorithm.
     The results demonstrate that LNBNN outperforms the ranking accuracy of SMK.
+    The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are
+    shown in the lower left.
     % ---
         }
         \label{fig:SMKExpt}
@@ -66,6 +76,13 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
 }
 
 
+
+\begin{comment}
+python -m ibeis Chap3.measure foregroundness --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw foregroundness --dbs=GZ_Master1,PZ_Master1 --diskshow
+
+python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --show
+\end{comment}
 \newcommand{\ForegroundExpt}{
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness.png}\caption{plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
@@ -74,11 +91,26 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
             % ---
             Weighting the score of the feature correspondences using foregroundness results in more accurate
               identifications.
-            Results for plains zebras are shown in~\cref{sub:ForegroundExptA}, Grévy's zebras are shown
-              in~\cref{sub:ForegroundExptB}, and Masai giraffes are excluded from this test.
             % ---
         }
         \label{fig:ForegroundExpt}
+    \end{figure}
+}
+
+
+\newcommand{\FGIntraExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness_intra.png}\caption{plains zebras}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness_intra.png}\caption{Grévy's zebras}\end{subfigure}
+        \caption[\caplbl{FGIntraExpt}Foregroundness experiment]{\caplbl{FGIntraExpt}
+            % ---
+            Applying foregroundness weights to feature correspondences improves the identification accuracy at
+              the top rank by filtering matches in scenery.
+            This experiment was performed by matching annotations within serveral occurrences.
+            Thus, in this experiment \pvar{qsize} is a sum and \pvar{dsize} is an average.
+            % ---
+        }
+        \label{fig:FGIntraExpt}
     \end{figure}
 }
 
@@ -89,13 +121,15 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
 
 \newcommand{\InvarExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{.8\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{plains zebras}\label{sub:InvarExptA}\end{subfigure}
-        \begin{subfigure}[h]{.8\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{plains zebras}\label{sub:InvarExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
         \caption[\caplbl{InvarViewExpt}Feature invariance experiment]{\caplbl{InvarExpt}
             % ---
-            Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the query-side rotation heuristic (QRH).
-            For plains zebras circular keypoints with the QRH are the most accurate. 
+            Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the
+              query-side rotation heuristic (QRH).
+            For plains zebras circular keypoints with the QRH are the most accurate.
             For Grévy's zebras enabling affine invariance works the best.
+            The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
             % ---
         }
         \label{fig:InvarExpt}
@@ -131,19 +165,38 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
 % --- Database Size Experiments (with time)
 
 
-\newcommand{\KExpt}{
+\begin{comment}
+python -m ibeis Chap3.measure kexpt --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
+\newcommand{\KExptA}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}\caption{plains zebras}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}\caption{Grévy's zebras}\end{subfigure}
-        \caption[\caplbl{KExpt}The $K$ experiment]{\caplbl{KExpt}
+        \centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}
+        \caption[\caplbl{KExptA}The $K$ experiment for plains zebras]{\caplbl{KExptA}
             % ---
-            Identification accuracy using different values of $\K$ (the number of
-              nearest neighbors assigned to each query feature).
+            Identification accuracy for plains zebras using different values of $\K$ (the number of nearest
+              neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
+              different database sizes (\pvar{dsize}).
             %Note that the scores reported here are higher than the baseline for
             %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
             % ---
         }
-        \label{fig:KExpt}
+        \label{fig:KExptA}
+    \end{figure}
+}
+\newcommand{\KExptB}{
+    \begin{figure}[ht!]\centering
+        \centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}
+        \caption[\caplbl{KExptB}The $K$ experiment for Grévy's zebras]{\caplbl{KExptB}
+            % ---
+            Identification accuracy for Grévy's zebras using different values of $\K$ (the number of nearest
+              neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
+              different database sizes (\pvar{dsize}).
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:KExptB}
     \end{figure}
 }
 
@@ -175,9 +228,9 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=foregroundness --dbs=GZ_
 % -------------------------------
 
 \begin{comment}
-python -m ibeis.scripts.thesis Chap3.measure_single --expt=nsum --dbs=GZ_Master1
-python -m ibeis.scripts.thesis Chap3.measure_single --expt=nsum --dbs=GZ_Master1,PZ_Master1
-python -m ibeis.scripts.thesis Chap3.draw_single --expt=nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
 \end{comment}
 
 \newcommand{\NScoreExpt}{
@@ -191,6 +244,8 @@ python -m ibeis.scripts.thesis Chap3.draw_single --expt=nsum --dbs=GZ_Master1,PZ
               $1$ compared to when it is $3$.
             Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
               based name scoring (\csum{}).
+            The number of query /database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
+            Database size was normalized using confusors.
             %Note that the scores reported here are higher than the baseline for
             %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
             % ---

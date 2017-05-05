@@ -28,13 +28,14 @@ python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag
 %--qaid 2660 \
 \end{comment}
 \SingleImageCommand{FailViewpoint}{1}{
-Viewpoint failure case
+Unaligned failure case
 }{
 % ---
-Failure case due to different viewpoints.
-The shift in the viewpoint between the query and its \groundtrue{} matches
-  causes the visual appearance of the features to change.
-Thus, they are not matched in the nearest neighbor matching step.
+Due to pose and viewpoint variations, the correctly matching pair of annotations (on the right) is returned at
+  rank $2$ while the incorrect pair of annotations (on the left) is returned at rank $1$.
+In the correct pair, the features on the front leg are not aligned and failed to match.
+In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
+  that are distinctive by coincidence.
 % ---
 }{figuresC/case_FailViewpoint.png}
 
@@ -66,9 +67,10 @@ python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag
 Occlusion failure case
 }{
 % ---
-Failure case due to occlusion.
-The plants in the foreground are obscuring features in both the query and
-  \groundtrue{} annotation.
+The plants occluding both the query and database annotations inhibit the creation of feature correspondences,
+  causing the correct pair of annotations (on the right) to be returned at rank $2$.
+This is exacerbated by pose and viewpoint variations.
+The incorrect pair of annotation (on the left) at rank $1$ are relatively distinctive by coincidence.
 % ---
 }{figuresC/case_Occlusion.png}
 
@@ -83,9 +85,10 @@ python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag
 Quality failure case
 }{
 % ---
-Failure case due poor database image quality.
-The database annotation was labeled as ``ok'', when it is closer to a ``poor''
-  or ``junk'' quality.
+The low resolution of the query annotation and the overall viewpoint difference causes the correct pair of
+  annotations (on the right) to be returned at rank $75$.
+The incorrect pair of annotation (on the left) did not recieve a particularly high score, but it was returned at
+  rank $1$ because there were no feature correspondences established to the correct match.
 % ---
 }{figuresC/case_FailQuality.png}
 
@@ -172,12 +175,12 @@ python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag
     Photobomb failure case
 }{
 % ---
-Failure case caused by a \photobomb{} --- two animals depicted within
-  in the annotation.
-\Photobombings{} are a challenging error case because the algorithm is
-  correctly matching distinctive features.
-%Detecting \Photobombs{} is challenging because they appear 
-%Most scenery match cases have small timedeltas between the images.
+A photobombing animal in the background of the query annotation cause LNBNN to return the incorrect result (on
+  the left) at rank $1$.
+The correct match (on the right), has a significant number of matches, but there is a difference of $1$ day
+  between the pair.
+On the other hand, the annotations in the photobomb pair were taken within minutes of each other and therefore
+  have much higher visual similarity.
 % ---
 }{figuresC/case_FailPhotobomb.png}
 
@@ -202,12 +205,13 @@ python -m ibeis.dev -e draw_cases -a timectrl -t best:sv_on=False,AI=False --fil
     Scenery failure case
 }{
 % ---
-Failure case caused by strong matches to the background scenery.
-Scenery match cases often have small timedeltas between the images.
-All of these cases are have been eliminated from our experiments using
-  the foregroundness measure.
-Therefore, the foregroundness measure was not applied in order to
-  generate this particular example.
+The incorrect pair of annotations (on the left) was returned at rank $1$ because of strong matches in the
+  background scenery.
+The correct pair was returned at rank $2$ and did not produce matches in the front leg due to pose variations.
+The annotations in the scenery match pair were taken $8$ seconds appart in the same location causing their
+  backgrounds to be near duplicates.
+The foregroundness measure was disabled to produce this example, enabling it addresses nearly all scenery match
+  cases.
 % ---
 }{figuresC/case_FailScenery.png}
 
