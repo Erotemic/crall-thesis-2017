@@ -357,6 +357,8 @@
           overall difference in accuracy is relatively small (about $1-3\percent$).
         Intuitively, the \nsum{} scoring should produce better ranks because it can combine scores from multiple
           correspondences to different correct annotations.
+        Note that when $\pvar{dpername}=1$, the \csum{} and \nsum{} scores might still be different because
+          \nsum{} multiple correspondences to a name which may be generated when $\K > 1$ or when \pvar{QRH=T}.
 
         Perhaps the more interesting result of this experiment is the effect of increasing the number of
           exemplars in the database from $1$ to $2$.
