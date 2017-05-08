@@ -1,22 +1,16 @@
 
 \section{Spatial verification}\label{sec:sver}
 
-    The basic matching algorithm treats each annotation as an orderless
-      set of feature descriptors (with a small exception in name scoring,
-      which has used a small amount of spatial information).
-    This means that many of the initial feature correspondences will be
-      spatially inconsistent.
-    Spatial verification removes these spatially inconsistent feature
-      correspondences.
-    Determining which features are inconsistent is done by first
-      estimating an affine transform between the two annotations.
-    Then a projective transform is estimated using the inliers to the
-      affine transform.
-    Finally any correspondences that do not agree with the projective
-      transform transformation are removed~\cite{fischler_random_1981,
-      philbin_object_2007}.
-    We have reviewed related work in spatial verification
-      in~\cref{subsec:sverreview}.
+    The basic matching algorithm treats each annotation as an orderless set of feature descriptors (with a small
+      exception in name scoring, which has used a small amount of spatial information).
+    This means that many of the initial feature correspondences will be spatially inconsistent.
+    Spatial verification removes these spatially inconsistent feature correspondences.
+    Determining which features are inconsistent is done by first estimating an affine transform between the two
+      annotations.
+    Then a projective transform is estimated using the inliers to the affine transform.
+    Finally any correspondences that do not agree with the projective transform transformation are
+      removed~\cite{fischler_random_1981, philbin_object_2007}.
+    We have reviewed related work in spatial verification in~\cref{subsec:sverreview}.
 
     %In our problem, the animals are seen in a wide variety of poses,
     %  and projective transforms may not always be sufficient to capture
@@ -27,36 +21,26 @@
     %  verification and evaluate if more sophisticated methods are needed.
 
     \subsection{Shortlist selection}
-        Standard methods for spatial verification are defined on the
-          feature correspondences between two annotations (images).
-        Normally, a shortlist of the top ranked annotations are passed
-          onto spatial verification.
-        However, in our application we rank \names{}, which may have
-          multiple annotations.
-        In our baseline approach we simply apply spatial verification
-          to the top $N_{\tt{nameSL}}=50$ \names{} and the top
-          $N_{\tt{annotSL}}=6$ annotations within those \names{}.
+        Standard methods for spatial verification are defined on the feature correspondences between two
+          annotations (images).
+        Normally, a shortlist of the top ranked annotations are passed onto spatial verification.
+        However, in our application we rank \names{}, which may have multiple annotations.
+        In our baseline approach we simply apply spatial verification to the top $N_{\tt{nameSL}}=40$ \names{}
+          and the top $N_{\tt{annotSL}}=3$ annotations within those \names{}.
 
     \subsection{Affine hypothesis estimation}
-        Here, we will compute an affine transformation that will remove
-          a majority of the spatially inconsistent feature
-          correspondences.
-        Instead of using random sampling of the feature correspondences
-          as in the original RANSAC
-          algorithm~\cite{hartley_multiple_2003}, we estimate affine
-          hypotheses using a deterministic method similar
-          to~\cite{philbin_object_2007, chum_homography_2012}.
-        Given a set of matching features between annotation $\annotI$
-          and $\annotII$, the shape, scale, orientation, and position of
-          each pair of matching keypoints are used to estimate a
-          hypothesis affine transformation.
-        Each hypothesis transformation warps keypoints from annotation
-          $\annotI$ into the space of $\annotII$.
-        Inliers are estimated by using the error in position, scale,
-          and orientation between each warped keypoint and its
-          correspondence.
-        The transformation with the most inliers determines the final
-          affine transform.
+        Here, we will compute an affine transformation that will remove a majority of the spatially inconsistent
+          feature correspondences.
+        Instead of using random sampling of the feature correspondences as in the original RANSAC
+          algorithm~\cite{hartley_multiple_2003}, we estimate affine hypotheses using a deterministic method
+          similar to~\cite{philbin_object_2007, chum_homography_2012}.
+        Given a set of matching features between annotation $\annotI$ and $\annotII$, the shape, scale,
+          orientation, and position of each pair of matching keypoints are used to estimate a hypothesis affine
+          transformation.
+        Each hypothesis transformation warps keypoints from annotation $\annotI$ into the space of $\annotII$.
+        Inliers are estimated by using the error in position, scale, and orientation between each warped keypoint
+          and its correspondence.
+        The transformation with the most inliers determines the final affine transform.
 
         % vmat = V here
         % V maps from ellipse to u-circle
@@ -70,75 +54,55 @@
             %  query annotation $\annotI$ to database annotation $\annotII$ is
             %  computed for each feature correspondence in a match from  to an
             %  annotation.
-            Let $\Matches_{\annotII}$ be the set of all correspondences
-              between features from query annotation $\annotI$ to
-              database annotation $\annotII$.
-            For each feature correspondence $(i, j) \in
-              \Matches_{\annotII}$, we construct a hypothesis
-              transformation, $\AffMatij$ using the matrices $\rvmat_{i}$
-              and $\inv{\rvmat_{j}}$, which where defined
-              in~\cref{eqn:RVTConstruct} and~\cref{eqn:invTVRConstruct}.
-            The first transformation $\rvmat_{i}$, warps points from
-              $\annotI$-space into a normalized reference frame.
-            Then the second transformation, $\inv{\rvmat_{j}}$, warps
-              points in the normalized reference frame into
-              $\annotII$-space.
-            Formally, the hypothesis transformation is defined as
-              $\AffMatij \eqv \inv{\rvmat_{j}}\rvmat_{i}$, and the set of
-              hypothesis transformations is:
+            Let $\Matches_{\annotII}$ be the set of all correspondences between features from query annotation
+              $\annotI$ to database annotation $\annotII$.
+            For each feature correspondence $(i, j) \in \Matches_{\annotII}$, we construct a hypothesis
+              transformation, $\AffMatij$ using the matrices $\rvmat_{i}$ and $\inv{\rvmat_{j}}$, which where
+              defined in~\cref{eqn:RVTConstruct} and~\cref{eqn:invTVRConstruct}.
+            The first transformation $\rvmat_{i}$, warps points from $\annotI$-space into a normalized reference
+              frame.
+            Then the second transformation, $\inv{\rvmat_{j}}$, warps points in the normalized reference frame
+              into $\annotII$-space.
+            Formally, the hypothesis transformation is defined as $\AffMatij \eqv \inv{\rvmat_{j}}\rvmat_{i}$,
+              and the set of hypothesis transformations is:
             \begin{equation}
                 \HypothSet \eqv \curly{ \AffMatij \where (i, j) \in \Matches_{\annotII} }
             \end{equation}
 
         \subsubsection{Measuring the affine transformation error}
-            The transformation $\AffMatij$ perfectly aligns the
-              corresponding $i$\th{} query feature with the $j$\th{}
-              database feature in the space of the database annotation
-              ($\annotII$).
-            If the correspondence is indeed correct, then we can expect
-              that other corresponding features will be well aligned by
-              the transformation.
-            The next step is to determine how close the other
-              transformed features from the query annotation ($\annotI$)
-              are to their corresponding features in database annotation
-              ($\annotII$).
-            This can be measured using the error in distance, scale,
-              and orientation for every correspondence.
-            The following procedure is repeated for each hypothesis
-              transform %
+            The transformation $\AffMatij$ perfectly aligns the corresponding $i$\th{} query feature with the
+              $j$\th{} database feature in the space of the database annotation ($\annotII$).
+            If the correspondence is indeed correct, then we can expect that other corresponding features will be
+              well aligned by the transformation.
+            The next step is to determine how close the other transformed features from the query annotation
+              ($\annotI$) are to their corresponding features in database annotation ($\annotII$).
+            This can be measured using the error in distance, scale, and orientation for every correspondence.
+            The following procedure is repeated for each hypothesis transform %
             $\AffMatij \in \HypothSet$.
-            Note that the following description is in the context of
-              the $i$\th{} query feature and the $j$\th{} database
-              feature, and the $i,j$ suffix is omitted for clarity.
-            In this context, the suffixes $\idxI$ and $\idxII$ will be
-              used to index into features correspondences.
+            Note that the following description is in the context of the $i$\th{} query feature and the $j$\th{}
+              database feature, and the $i,j$ suffix is omitted for clarity.
+            In this context, the suffixes $\idxI$ and $\idxII$ will be used to index into features
+              correspondences.
 
-            Let $\set{B}_{\idxI} = \curly{\invvrmatI \where (\idxI,
-              \idxII) \in \Matches_{\annotII}}$ be the set of keypoint
-              matrices in the query annotation with correspondences to
-              database annotation $\annotII$.
-            Given a hypothesis transform $\AffMat$, each query keypoint
-              in the set of matches
+            Let $\set{B}_{\idxI} = \curly{\invvrmatI \where (\idxI, \idxII) \in \Matches_{\annotII}}$ be the set
+              of keypoint matrices in the query annotation with correspondences to database annotation $\annotII$.
+            Given a hypothesis transform $\AffMat$, each query keypoint in the set of matches
             %(mapping from the normalized reference frame to feature space)
-            $\invvrmatI \in \set{B}_{\idxI}$, is warped into
-              $\annotII$-space:
+            $\invvrmatI \in \set{B}_{\idxI}$, is warped into $\annotII$-space:
             \begin{equation}
                 \warp{\invvrmatI} = \AffMat \invvrmatI
             \end{equation}
             %---
-            The warped position $\warp{\ptI}$, scale $\warp{\scaleI}$,
-              and orientation $\warp{\oriI}$, can be extracted from
-              $\warp{\invvrmatI}$ using~\cref{eqn:affinewarp}.
-            The warped query keypoint properties in $\annotII$-space
-              and can now be directly compared to the keypoint properties
-              of their database correspondences.
+            The warped position $\warp{\ptI}$, scale $\warp{\scaleI}$, and orientation $\warp{\oriI}$, can be
+              extracted from $\warp{\invvrmatI}$ using~\cref{eqn:affinewarp}.
+            The warped query keypoint properties in $\annotII$-space and can now be directly compared to the
+              keypoint properties of their database correspondences.
             %Each warped point is checked for consistency with its
             %  correspondence's $\ptII$, scale $\scaleII$, and orientation
             %  $\oriII$, in $\annotII$.
-            The absolute distance in position, scale, and orientation
-              between the $\idxI$\th{} query feature and the
-              $\idxII$\th{} database feature with respect to hypothesis
-              transformation $\AffMat$ is measured as follows:
+            The absolute distance in position, scale, and orientation between the $\idxI$\th{} query feature and
+              the $\idxII$\th{} database feature with respect to hypothesis transformation $\AffMat$ is measured as
+              follows:
             \begin{equation}\label{eqn:inlierdelta}
                 \begin{aligned}
                     \Delta \pt_{\idxI, \idxII}     & \eqv  \elltwo{\warp{\ptI} - \ptII}\\
@@ -157,14 +121,11 @@
             %  threshold $\orithresh$, and scale threshold $\scalethresh$.
             %  %$\xythresh$ is specified as a percentage of the matched chip's
             %  %  diagonal length.
-            Any keypoint match $(\idxI, \idxII) \in
-              \Matches_{\annotII}$  is considered an inlier \wrt{}
-              $\AffMat$ if its absolute differences in position, scale,
-              and orientation are all within a spatial distance threshold
-              $\xythresh$, scale threshold $\scalethresh$, and
-              orientation threshold $\orithresh$.
-            This is expressed using the function $\isinlierop$, which
-              determines if match is an inlier:
+            Any keypoint match $(\idxI, \idxII) \in \Matches_{\annotII}$  is considered an inlier \wrt{}
+              $\AffMat$ if its absolute differences in position, scale, and orientation are all within a spatial
+              distance threshold $\xythresh$, scale threshold $\scalethresh$, and orientation threshold
+              $\orithresh$.
+            This is expressed using the function $\isinlierop$, which determines if match is an inlier:
              %\begin{equation}
               %\label{eqn:inlierchecks}
               %    \begin{gathered}
@@ -191,13 +152,11 @@
                 %\end{aligned}
                 \end{gathered}
             \end{equation}
-        The set of inlier matches for a hypothesis transformation
-          $\AffMat$ can then be written as:
+        The set of inlier matches for a hypothesis transformation $\AffMat$ can then be written as:
         \begin{equation}\label{eqn:affinliers}
             \Matches_{\AffMat} \eqv \curly{m \in \Matches_{\annotII} \where \isinlierop(m, \AffMat)}
         \end{equation}
-        The best affine hypothesis transformation, $\HypothAffMat$,
-          maximizes the weighted sum of inlier scores.
+        The best affine hypothesis transformation, $\HypothAffMat$, maximizes the weighted sum of inlier scores.
         % FIXME
         \begin{equation}
             \HypothAffMat \eqv \argmax{\AffMat \in \HypothSet} 
@@ -205,45 +164,34 @@
         \end{equation}
 
     \subsection{Homography refinement}
-        Matches that are inliers to the best hypothesis affine
-          transformation, $\HypothAffMat$, are used in the least squares
-          refinement step.
-        This step is only executed if there are at least $4$ inliers to
-          $\HypothAffMat$, otherwise all correspondences between features
-          in query annotation $\annotI$ to features in database
-          annotation $\annotII$ are removed.
-        The refinement step estimates a projective transform from
-          $\annotI$ to  $\annotII$.
-        To avoid numerical errors the $xy$-locations of the
-          correspondence are normalized to have a mean of $0$ and a
-          standard deviation of $1$ prior to estimation.
-        A more comprehensive explanation of estimating projective
-          transformations using point correspondences can be found
-          in~\cite[311--320]{szeliski_computer_2010}.
+        Matches that are inliers to the best hypothesis affine transformation, $\HypothAffMat$, are used in the
+          least squares refinement step.
+        This step is only executed if there are at least $4$ inliers to $\HypothAffMat$, otherwise all
+          correspondences between features in query annotation $\annotI$ to features in database annotation
+          $\annotII$ are removed.
+        The refinement step estimates a projective transform from $\annotI$ to  $\annotII$.
+        To avoid numerical errors the $xy$-locations of the correspondence are normalized to have a mean of $0$
+          and a standard deviation of $1$ prior to estimation.
+        A more comprehensive explanation of estimating projective transformations using point correspondences can
+          be found in~\cite[311--320]{szeliski_computer_2010}.
 
-        Unlike in the affine hypothesis estimation where many
-          transformations are generated, only one homography
+        Unlike in the affine hypothesis estimation where many transformations are generated, only one homography
           transformation is computed.
-        Given a set of inliers to the affine hypothesis transform
-          $\Matches_{\HypothAffMat}$, the least square estimation of a
-          projective homography transform is:
+        Given a set of inliers to the affine hypothesis transform $\Matches_{\HypothAffMat}$, the least square
+          estimation of a projective homography transform is:
         \begin{equation}
             \HmgMatBest \eqv \argmin{\HmgMat} \sum_{(i, j) \in
               \Matches_{\HypothAffMat}} \elltwosqrd{\HmgMat \pt_{i} - \pt_{j}}
         \end{equation}
 
-        Similar to affine error estimation, we will identify the subset
-          of inlier features correspondences $\Matches_{\HmgMatBest}
-          \subseteq \Matches_{\annotII}$.
-        A correspondence is an inlier if the query feature is
-          transformed to within a certain spatial distance threshold
-          $\xythresh$, orientation threshold $\orithresh$, and scale
-          threshold $\scalethresh$ of its corresponding database feature.
-        For convenience, let $\tohmg{\cdot}$ transform points into
-          homogeneous coordinates.
-        For each feature correspondence $(\idxI, \idxII) \in
-          \Matches_{\annotII}$, the query feature position, $\ptI$, is
-          warped from $\annotI$-space into $\annotII$-space.
+        Similar to affine error estimation, we will identify the subset of inlier features correspondences
+          $\Matches_{\HmgMatBest} \subseteq \Matches_{\annotII}$.
+        A correspondence is an inlier if the query feature is transformed to within a certain spatial distance
+          threshold $\xythresh$, orientation threshold $\orithresh$, and scale threshold $\scalethresh$ of its
+          corresponding database feature.
+        For convenience, let $\tohmg{\cdot}$ transform points into homogeneous coordinates.
+        For each feature correspondence $(\idxI, \idxII) \in \Matches_{\annotII}$, the query feature position,
+          $\ptI$, is warped from $\annotI$-space into $\annotII$-space.
         \begin{equation}
             \warp{\ptI} = \unhmg{\HmgMatBest \tohmg{\ptI}}
         \end{equation}
@@ -253,17 +201,12 @@
           previously shown in~\cref{eqn:affinewarp}.
 
         \subsubsection{Estimation of warped shape parameters}
-        Because we cannot warp the shape of an affine keypoint using a
-          projective transformation, we instead estimate the warped scale
-          and orientation for the $\idxI$\th{} query feature using a
-          reference point.
-        Given a single feature match $(\idxI, \idxII) \in
-          \Matches_{\annotII}$, we associate a reference point $\refptI$
-          with the query location $\ptI$, scale $\scaleI$ and orientation
-          $\oriI$.
-        The reference point is defined to be $\scaleI$ distance away
-          from the feature center at an angle of $\oriI$ radians in
-          $\annotI$-space.
+        Because we cannot warp the shape of an affine keypoint using a projective transformation, we instead
+          estimate the warped scale and orientation for the $\idxI$\th{} query feature using a reference point.
+        Given a single feature match $(\idxI, \idxII) \in \Matches_{\annotII}$, we associate a reference point
+          $\refptI$ with the query location $\ptI$, scale $\scaleI$ and orientation $\oriI$.
+        The reference point is defined to be $\scaleI$ distance away from the feature center at an angle of
+          $\oriI$ radians in $\annotI$-space.
           \begin{equation}
             \refptI = \ptI + \scale_1 \BVEC{\sin{\oriI} \\ -\cos{\oriII}}
           \end{equation}
@@ -274,17 +217,14 @@
             \warp{\refptI} = \unhmg{\HmgMatBest \tohmg{\refptI}}
         \end{equation}
         %-----------
-        Then we compute the residual vector $\ptres$ between the warped point
-          and the warped reference point:
+        Then we compute the residual vector $\ptres$ between the warped point and the warped reference point:
         \begin{equation}
             %\Delta \warp{\refptI} = \BVEC{\Delta \warp{\inI{x}} \\ \Delta \warp{\inI{y}}} = \warp{\ptI}- \warp{\refptI}.
             \ptres = \BVEC{\xres \\ \yres} = \warp{\ptI}- \warp{\refptI}.
         \end{equation}
-        The warped scale is estimated using the length of the residual
-          vector, and the warped orientation is estimated using the angle
-          of the residual vector.
-        In summary, the warped location, scale, and orientation of the
-          $\idxI$\th{} query feature is:
+        The warped scale is estimated using the length of the residual vector, and the warped orientation is
+          estimated using the angle of the residual vector.
+        In summary, the warped location, scale, and orientation of the $\idxI$\th{} query feature is:
         \begin{equation}\label{eqn:homogwarp}
             \begin{aligned}
                 \warp{\ptI}      &\eqv \unhmg{\HmgMatBest \tohmg{\refptI}} \\
@@ -296,30 +236,25 @@
         \end{equation}
 
         \subsubsection{Homography inliers}
-        The rest of homography inlier estimation is no different than
-          affine inlier estimation.
+        The rest of homography inlier estimation is no different than affine inlier estimation.
         \Cref{eqn:inlierdelta} is used to compute the errors $( %
         \Delta \pt_{\idxI, \idxII}, %
         \Delta \scale_{\idxI, \idxII}, %
         \Delta \ori_{\idxI, \idxII})$
         %
-        between the warped query location, scale, and orientation,
-          $(\warp{\ptI}, \warp{\scaleI}, \warp{\oriI})$, %
-        and the corresponding database location, scale, and
-          orientation, %
+        between the warped query location, scale, and orientation, $(\warp{\ptI}, \warp{\scaleI}, \warp{\oriI})$, %
+        and the corresponding database location, scale, and orientation, %
         $({\ptII}, {\scaleII}, {\oriII})$.
         The final set of homograph inliers is given as:
         \begin{equation}\label{eqn:homoginliers}
             \Matches_{\HmgMatBest} \eqv \curly{m  \in \Matches_{\annotII} \where \isinlierop(m, \HmgMatBest)}
         \end{equation}
 
-        Spatial verification results in a reduced set of inlier feature
-          correspondences from the query annotation to the database
-          annotations.
-        The \namescoring{} mechanism from~\cref{subsec:namescore} is
-          then applied to these inlier feature correspondences.
-        This final per-name score is the output of the identification
-          algorithm and used to form a ranked list that is presented to a
-          user for review.
+        Spatial verification results in a reduced set of inlier feature correspondences from the query annotation
+          to the database annotations.
+        The \namescoring{} mechanism from~\cref{subsec:namescore} is then applied to these inlier feature
+          correspondences.
+        This final per-name score is the output of the identification algorithm and used to form a ranked list
+          that is presented to a user for review.
 
      \sver{}

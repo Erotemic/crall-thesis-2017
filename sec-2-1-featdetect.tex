@@ -23,13 +23,13 @@
     Many detectors have been developed to detect patch based feature keypoints~\cite{mikolajczyk_comparison_2005,
     tuytelaars_local_2007}. Algorithms such as Harris, SUSAN, and FAST detect corners~\cite{harris_combined_1988,
     mikolajczyk_indexing_2001, smith_susannew_1997, rosten_machine_2006}. Blobs and corners can be detected with
-    Hessian~\cite{beaudet_rotationally_1978, lindeberg_shapeadapted_1994} or difference of
+    Hessian~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994} or difference of
     Gaussians~\cite{gaussier_neural_1992, lowe_distinctive_2004} detectors. There are also region based detectors:
     maximally stable extremal regions~\cite{matas_robust_2004}, saliency based
-    methods~\cite{buoncompagni_saliencybased_2015} and superpixel based methods~\cite{ren_learning_2003,
+    methods~\cite{buoncompagni_saliency_based_2015} and superpixel based methods~\cite{ren_learning_2003,
     mori_recovering_2004}. Some applications choose to skip keypoint detection and use a uniform grid of dense
     features~\cite{liu_sift_2008, revaud_deep_2015, iscen_comparison_2015}. Other applications, such as face
-    recognition, use specialized keypoint detectors~\cite{dantone_realtime_2012, berg_tomvspete_2012}. There
+    recognition, use specialized keypoint detectors~\cite{dantone_real_time_2012, berg_tom_vs_pete_2012}. There
     currently exists no principled method for selecting the appropriate feature detector. Different feature
     detectors perform differently given the application~\cite{tuytelaars_local_2007}.
 
@@ -40,7 +40,7 @@
 
    \subsection{Scale-space}
         Scale-space theory describes image features as existing at multiple
-        scales~\cite{lindeberg_scalespace_1993}. The same point on an object seen close up appears quite different
+        scales~\cite{lindeberg_scale_space_1993}. The same point on an object seen close up appears quite different
         compared to when it is at a distance. For example, a zebra in the distance may appear to have two stripes
         that are connected, but when the animal appears closer it becomes clear that the stripes are actually
         disconnected.
@@ -58,7 +58,7 @@
         practice, the continuous Gaussian kernel is replaced with the discrete Gaussian kernel. This can be
         efficiently implemented as a discrete convolution with the $1$-dimensional discrete Gaussian kernel in the
         $x$-direction and then in the $y$-direction, because the discrete Gaussian kernel is separable in
-        orthogonal directions~\cite{lindeberg_scalespace_1993}. Using the definition of an image at a single scale
+        orthogonal directions~\cite{lindeberg_scale_space_1993}. Using the definition of an image at a single scale
         the next step is to represent an image a multiple scales.
 
         %\begin{equation} 
@@ -72,7 +72,7 @@
         %$\rawimg(\pt) = g(1) \conv f(\pt)$.
         %Scales less than $1$ can not be reconstructed, however scales greater
         %  than $1$ can be computed due to the semi-group and cascading smoothing
-        %  property of the Gaussian kernel \cite{lindeberg_scalespace_1993}.
+        %  property of the Gaussian kernel \cite{lindeberg_scale_space_1993}.
         %  (The semi-group property of the Gaussian kernel is not preserved after discretization! (pg 94))
 
         %The scale-space representation of a raw image, $\rawimg$, takes the
@@ -129,7 +129,7 @@
     \subsection{Hessian keypoint detection}
 
         Hessian based keypoint detection searches for extrema of the Hessian operator in both space and
-        scale~\cite{beaudet_rotationally_1978, lindeberg_shapeadapted_1994}. The Hessian detector can qualitatively
+        scale~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994}. The Hessian detector can qualitatively
         be viewed as a blob detector, but it also detects corners which may appear as blobs in
         scale-space~\cite{tuytelaars_local_2007}. The Hessian keypoint detector will compute a response value for
         each point in scale space indicating how blob-like each pixel is. The extrema of this response defines a
@@ -179,7 +179,7 @@
         \paragraph{Sub-pixel and sub-scale localization}
             To compensate for the discrete nature of pixel images, each keypoint detection is localized to
             sub-pixel and sub-scale accuracy. The importance of feature localization is demonstrated
-            in~\cite{ke_pcasift_2004}, where descriptors were computed on the normalized vectors of patch gradients
+            in~\cite{ke_pca_sift_2004}, where descriptors were computed on the normalized vectors of patch gradients
             using only principal component analysis (PCA)~\cite{jolliffe_principal_2014}. Despite the simplicity of
             the descriptors the authors were still able to effectively match two images due to the robust
             localization of the features.
@@ -199,7 +199,7 @@
 
         An affine shape $\vmat=\vMATRIX$ is estimated (as a lower triangular matrix) for each keypoint using an
         iterative technique involving the second moment
-        matrix~\cite{lindeberg_shapeadapted_1997,baumberg_reliable_2000,mikolajczyk_comparison_2005}. The affine
+        matrix~\cite{lindeberg_shape_adapted_1997,baumberg_reliable_2000,mikolajczyk_comparison_2005}. The affine
         shape matrix transforms an ellipse into a unit circle. Note that because the matrix is lower triangular one
         of its eigenvectors points in the downward direction. Thus the shape has no influence on the orientation of
         the keypoint. For each point in scale space the second moment matrix is evaluated as:

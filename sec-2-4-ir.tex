@@ -9,7 +9,7 @@
     person re-identification~\cite{shi_embedding_2016,karanam_person_2015,wu_viewpoint_2015},
       % --
     face
-    verification/recognition~\cite{chopra_learning_2005,huang_labeled_2007,berg_tomvspete_2012,chen_blessing_2013,taigman_deepface_2014,schroff_facenet_2015},
+    verification/recognition~\cite{chopra_learning_2005,huang_labeled_2007,berg_tom_vs_pete_2012,chen_blessing_2013,taigman_deepface_2014,schroff_facenet_2015},
       % --
     category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,mccann_local_2012,boiman_defense_2008},
       % --
@@ -231,7 +231,7 @@
         Min-hashing is the analog of locality sensitive hashing for sets. Min-hashing has been applied as an image
         recognition technique for near-duplicate image detection, rigid object recognition, scene recognition, and
         unsupervised object discovery~\cite{chum_near_2008, zhang_image_2011, romberg_robust_2012,
-        romberg_bundle_2013, chum_geometric_2009, chum_largescale_2010, chum_fast_2012, wang_semisupervised_2012}.
+        romberg_bundle_2013, chum_geometric_2009, chum_large_scale_2010, chum_fast_2012, wang_semi_supervised_2012}.
         The basic idea is to represent an image as a set of hashes based on permutations of a visual vocabulary.
         Recognition is performed performing a lookup for each hash. Any collisions are returned as the recognition
         results. Like LSH, the primary advantage of using min hash for instance recognition is its speed.
@@ -273,9 +273,9 @@
         %\end{equation}
 
     \subsection{Fisher Vector}
-        A Fisher Vector is an alternative to a bag-of-words~\cite{perronnin_largescale_2010-1,
+        A Fisher Vector is an alternative to a bag-of-words~\cite{perronnin_large_scale_2010_1,
         jegou_aggregating_2010}. Like bag-of-words, Fisher Vector representations have been used in both instance
-        and category recognition~\cite{perronnin_fisher_2007, cinbis_image_2012, sun_largescale_2013,
+        and category recognition~\cite{perronnin_fisher_2007, cinbis_image_2012, sun_large_scale_2013,
         sanchez_image_2013, juneja_blocks_2013, douze_combining_2011, ma_local_2012, murray_generalized_2014,
         gosselin_revisiting_2014}. Instead of training discrete visual vocabulary using the cluster centers of
         k-means, a Fisher Vector encoding uses a continuous Gaussian mixture model (GMM). The number of Gaussian
@@ -287,7 +287,7 @@
         Fisher Vectors produce a much richer representation than normal bag-of-words vector because each descriptor
         is assigned to a continuous mixture of words rather than a single word.
 
-        It is noted in~\cite{perronnin_largescale_2010-1} that using Fisher Vectors for instance recognition is
+        It is noted in~\cite{perronnin_large_scale_2010_1} that using Fisher Vectors for instance recognition is
         similar to tf-idf. Normalized Fisher Vectors down-weight frequently occurring GMM components --- \ie{}
         words with low idf weights. Furthermore, Fisher Vector representations are well suited for compression,
         which allows scaling to large image collections.
@@ -318,7 +318,7 @@
         word. The residuals of the affected words are recomputed and re-aggregated into updated VLAD descriptors.
 
         Recently, NetVLAD --- a convolutional variant of the VLAD descriptor --- has been
-        introduced~\cite{arandjelovic_netvlad_2015,radenovic_cnn_2016}. NetVLAD uses deep learning with a triplet
+        introduced~\cite{arandjelovic_netvlad_2016,radenovic_cnn_2016}. NetVLAD uses deep learning with a triplet
         loss function to simultaneously learn both the patch-based descriptors and the vocabulary. This
         convolutional approach shows large improvements (a $19\percent$ improvement on Oxford 5k) over previous
         state-of-the art image retrieval techniques.
@@ -419,7 +419,7 @@
 
         Due to the specific nature of this problem specialized features detectors are often used. Facial feature
         detectors localize facial-landmarks such as the eye, mouth, and nose center and corner
-        locations~\cite{dantone_realtime_2012, berg_tomvspete_2012}. Local texture based descriptors such as Gabor
+        locations~\cite{dantone_real_time_2012, berg_tom_vs_pete_2012}. Local texture based descriptors such as Gabor
         filters~\cite{liu_gabor_2002, zhang_histogram_2007, shen_review_2006} and local binary patterns
         (LBP)~\cite{ahonen_face_2006, chen_blessing_2013} are extracted at detected facial
         regions~\cite{belhumeur_localizing_2011}. Facial recognition researchers have also developed global
@@ -449,11 +449,11 @@
         networks~\cite{turk_eigenfaces_1991, taigman_deepface_2014}, sparse coding~\cite{wright_robust_2009,
         jiang_label_2013}, principal component analysis (PCA)~\cite{craw_face_1992}, Fisher linear Discriminant
         (FLD)~\cite{liu_robust_2000}, linear discriminant analysis (LDA)~\cite{lu_face_2003}, and support vector
-        machines (SVMs)~\cite{phillips_support_1998, levy_svmminus_2013}.
+        machines (SVMs)~\cite{phillips_support_1998, levy_svm_minus_2013}.
 
         %As in category recognition,
         Before the neural network revolution~\cite{krizhevsky_imagenet_2012}, sparse coding was one of the most
-        popular techniques to retrieve faces~\cite{aharon_ksvd_2006, wright_robust_2009, zhang_sparse_2011,
+        popular techniques to retrieve faces~\cite{aharon_k_svd_2006, wright_robust_2009, zhang_sparse_2011,
         jiang_label_2013}. Sparse coding attempts to reconstruct unlabeled test vectors by searching for a linear
         combination of basis vectors from an over-complete labeled training database. Coding based techniques are
         very similar to vocabulary based methods. A codebook, dictionary, and vocabulary all are used to build
@@ -461,7 +461,7 @@
 
         %\subsubsection{Face verification}
 
-        Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tomvspete_2012}. Given a set of $N$
+        Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of $N$
         individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
         each facial landmark, $k$ Tom-vs-Pete classifiers are computed. A single Tom-vs-Pete classifier is a linear
         SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all of the nose
@@ -531,7 +531,7 @@
         %How should feature matches be scored?
         Most instance recognition techniques use an indexing scheme based on a visual
         vocabulary~\cite{tolias_image_2015, jegou_hamming_2008, philbin_object_2007, cao_learning_2012,
-        arandjelovic_all_2013, jegou_negative_2012, chum_fast_2012, gong_multiscale_2014}. However, our baseline
+        arandjelovic_all_2013, jegou_negative_2012, chum_fast_2012, gong_multi_scale_2014}. However, our baseline
         approach for animal identification does not use a visual vocabulary. This is because a visual vocabulary
         quantizes the raw features in the image and thus removes some of their discriminative
         ability~\cite{philbin_lost_2008, boiman_defense_2008}. We have found this quantization to cause a
@@ -545,7 +545,7 @@
         % chktex-file 8
         Even though we would prefer to retain the discriminative information contained in raw descriptors,
         quantized image search has the ability to scale beyond our current suites~\cite{chum_fast_2012,
-        perronnin_largescale_2010-1, tolias_image_2015}.
+        perronnin_large_scale_2010_1, tolias_image_2015}.
         %It is worth investigating vocabulary based techniques, however we
         %  must carefully curate our vocabulary.
         In the future it may be necessary to investigate a VLAD based SMK framework as a quantized alternative to
@@ -567,7 +567,7 @@
         algorithms to generalize to multiple species, so we would like to avoid over-specialized approaches. These
         are some reasons why convolutional neural networks will not make a prominent appearance in this \thesis{}.
         Other reasons involve the size of our datasets. The recent NetVLAD network was trained using training
-        datasets with $10,000$ to $90,000$ images~\cite{arandjelovic_netvlad_2015}. We simply do not have this much
+        datasets with $10,000$ to $90,000$ images~\cite{arandjelovic_netvlad_2016}. We simply do not have this much
         labeled data. However, one goal of this paper is to develop techniques that will help bootstrap labeled
         datasets of this size. Future research should investigate these deep learning techniques so they can be
         used after enough data has been collected for a specific species.

@@ -3,7 +3,7 @@
 In this chapter we consider the problem of verifying whether or not two
   annotation are the same or different.
 By addressing this problem we improve upon the ranking algorithm from
-  \Cref{chap:ranking} --- that ranks the \names{} in a database based on
+  \cref{chap:ranking} --- that ranks the \names{} in a database based on
   similarity to a query --- by making semi-automatic decisions about results
   returned in the ranked lists.
 The algorithms introduced in this chapter will assign a confidence to results
@@ -39,7 +39,7 @@ Two annotations can be incomparable if the annotations show different parts or
 The positive and negative states each require distinguishing information to be
   present.
 Each of these mutually exclusive ``match-states'' are illustrated in
-  \Cref{fig:MatchStateExample}.
+  \cref{fig:MatchStateExample}.
 The multi-label classifier then predicts the probability of each of the three
   states, with the probabilities necessarily summing to $1$.
 
@@ -69,7 +69,7 @@ It is the second requirement --- constructing an appropriate fixed-length
 If given enough training data and a technique to align annotations, using
   image data with a Siamese or triplicate network might appropriate, but without
   both of these pre-conditions we must turn towards more traditional methods.
-Recall from \Cref{sec:annotrepr} that our annotation representation is an
+Recall from \cref{sec:annotrepr} that our annotation representation is an
   unordered bag-of-features, which cannot be directly fed to most learning
   algorithms.
 Therefore, we develop a method for constructing a \glossterm{pairwise feature
@@ -334,7 +334,7 @@ This is done by considering the importance of each feature dimension as
   reported by the random forest classifier.
 More details on this will be given in the experiment section.
 An example of what a final feature vector is illustrated
-  in~\Cref{fig:PairFeatVec}.
+  in~\cref{fig:PairFeatVec}.
 
 
 \section{Learning the match-state classifier}
@@ -400,7 +400,7 @@ Because our current datasets only contain a small number of explicitly labeled
   incomparable cases, we include all such pairs.
 %The same is true for pairs labeled as photobombs.
 
-\section{Secondary classifier to address photobombs}
+\section{Secondary classifier to address photobombs}\label{sec:learnpb}
     It is useful to augment the primary match-state pairwise classifier with a
       secondary classifier able to determine if a pair of annotations contains
       information that might confuse the main classifier.
@@ -433,13 +433,13 @@ Because our current datasets only contain a small number of explicitly labeled
     We evaluate the pairwise classifiers on two datasets, one of plains zebras
       and the other of Grévy's zebras.
     For each dataset we choose a sample of annotation pairs as detailed in
-      \Cref{sec:learnclf}.
+      \cref{sec:learnclf}.
     Each pair is associated with a ground-truth matching state label of either
       positive, negative, or incomparable.
     Additionally each pair is also labeled as either a photobomb or not a
       photobomb.
     For each pair we construct a pairwise feature vector as described in
-      \Cref{sec:pairfeat}.
+      \cref{sec:pairfeat}.
     We have found that, for plains zebras, it is important to use orientation
       augmentation when computing one-vs-one matches.
     In this case we should not use the second nearest neighbor as the
@@ -504,7 +504,7 @@ Because our current datasets only contain a small number of explicitly labeled
           negative, incomparable) of a pair of annotations.
         To demonstrate the effectiveness of our multiclass classifier we
           report the confusion matrix of class predictions for plains and
-          Grévy's zebras in \Cref{fig:ConfusionMatch}.
+          Grévy's zebras in \cref{fig:ConfusionMatch}.
 
         \ConfusionMatch{}
 
@@ -531,7 +531,7 @@ Because our current datasets only contain a small number of explicitly labeled
           when compared to using just the LNBNN scores as done in the previous
           chapter.
         To test this we plot histograms of scores (LNBNN vs positive
-          probability) in \Cref{fig:PositiveHist}.
+          probability) in \cref{fig:PositiveHist}.
         It is immediately noticeable that the pairwise scores seem to have a
           much better separating in addition to being in the interpretable range
           of zero to one.
@@ -549,7 +549,7 @@ Because our current datasets only contain a small number of explicitly labeled
         The separability of each method is indicated by the area under the ROC
           curve.
         The ROC curves for plains and Grévy's zebras are illustrated in
-          \Cref{fig:PositiveROC}.
+          \cref{fig:PositiveROC}.
         For Grévy's zebras the pairwise AUC of $.95$ is convincingly better
           than the LNBNN AUC of $.86$.
         For plains zebras, there is probably a dataset issue, but the pairwise
@@ -566,8 +566,8 @@ Because our current datasets only contain a small number of explicitly labeled
         importance method>. To gain an intuition for which features are most important
         we create a word cloud where the size of the text is proportional to the
         importance of the feature. The word cloud is illustrated in
-        \Cref{fig:MatchWordCloud}. The numeric importance of the top features is
-        recorded in \Cref{tbl:ImportantMatchFeat}.
+        \cref{fig:MatchWordCloud}. The numeric importance of the top features is
+        recorded in \cref{tbl:ImportantMatchFeat}.
 
         \MatchWordCloud{}
         \ImportantMatchFeat{}

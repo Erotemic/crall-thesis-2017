@@ -2,8 +2,8 @@
 
         In computer vision applications it is often necessary to search
           a database of high dimensional
-          vectors~\cite{shakhnarovich_nearestneighbor_2006,
-          datar_localitysensitive_2004, muja_fast_2009,
+          vectors~\cite{shakhnarovich_nearest_neighbor_2006,
+          datar_locality_sensitive_2004, muja_fast_2009,
           kulis_kernelized_2012, weiss_spectral_2009}.
         Patch descriptor vectors like SIFT are constructed such that
           the distance (under some metric) between vectors is small for
@@ -84,7 +84,7 @@
             %  good results.
 
             Search accuracy is improved by using multiple randomized
-              kd-trees~\cite{silpaanan_optimised_2008}.
+              kd-trees~\cite{silpa_anan_optimised_2008}.
             If a single kd-tree has a probability of failure $p$, then
               $m$ independently constructed trees have a $p^m$
               probability of failure.
@@ -103,7 +103,7 @@
             %A popular method for indexing high dimensional vectors is the
             %  kd-tree \cite{bentley_multidimensional_1975, lowe_distinctive_2004}.
             %Typically indexing is performed with multiple randomized kd-trees
-            %  \cite{silpaanan_optimised_2008}.
+            %  \cite{silpa_anan_optimised_2008}.
             %Each level in the kd-tree splits the database vectors randomly along
             %  the top $D\tighteq5$ dimensions with the highest variance.
 
@@ -128,7 +128,7 @@
             This method is able to search a dataset of vectors for
               approximate nearest neighbors in sub-linear
               time~\cite{charikar_similarity_2002,
-              datar_localitysensitive_2004, kulis_fast_2009,
+              datar_locality_sensitive_2004, kulis_fast_2009,
               kulis_kernelized_2012, tao_locality_2013}.
             LSH trades off a small amount of accuracy for a large query
               speed-up.
@@ -198,7 +198,7 @@
             In addition to being fast and accurate, multiple kd-trees
               support efficient addition and removal of points, which is
               needed in a dynamic
-              setting~\cite{silpaanan_optimised_2008}.
+              setting~\cite{silpa_anan_optimised_2008}.
 
             %This is consistent with other research.
 
