@@ -1,13 +1,17 @@
 \chapter{Graph identification}\label{chap:graphid}
 \newcommand{\nT}{N}
 
-In this chapter we frame the problem of individual animal identification in terms of constructing what we refer to
-as an \emph{decision graph}. In this graph, each vertex is an annotation, and each edge represents a decision made
-between two annotations.  Edges determine if two annotations are the same (positive) or different (negative)
-individuals or if they cannot be compared (incomparable). Thus, a correctly constructed decision graph naturally
-addresses the problem of identifying individual animals because each connected component of positive edges will be
-all the annotations from an individual. Therefore, stated abstractly, goal of graph identification is to determine
-a correct, consistent set of edges in the decision graph.
+%In this chapter we combine our ranking and verification algorithms from \Cref{chap:ranking,chap:pairclf} into a
+%  framework that identifies animals by constructing a \glossterm{decision graph}.
+In this chapter we frame the problem of animal identification in terms of constructing a %
+\glossterm{decision graph}.
+In this graph, each vertex is an annotation, and each edge represents a decision made between two annotations.
+Edges determine if two annotations are the same (positive) or different (negative) individuals or if they cannot
+  be compared (incomparable).
+Thus, a correctly constructed decision graph naturally addresses the problem of identifying individual animals
+  because each connected component of positive edges will be all the annotations from an individual.
+Therefore, stated abstractly, goal of graph identification is to determine a correct, consistent set of edges in
+  the decision graph.
 
 To construct the decision graph, we develop a semi-automatic review procedure that combines the ranking and
 verification algorithms presented in Chapters~\ref{chap:ranking} and \ref{chap:pairclf}. The ranking algorithm will
@@ -43,16 +47,14 @@ error recovery mechanisms).  Furthermore, because pairwise decisions are gathere
 verification algorithms can be retrained and improved, moving closer to a fully-automatic algorithm.
 
 
-The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the
-  decision graph and summarizes the priority based review procedure used to
-  construct it.
-This provides a brief overview of each component of the processes, and then
-  details are described in subsequent sections.
-Then, \Cref{sec:rename} describes how existing database can be ported into
-  this framework without extensive re-review.
-\Cref{sec:graphexpt} experimentally demonstrates that ability of the graph
-  identification algorithm to reduce the number of manual reviews and recover
-  from errors.
+The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the decision graph and summarizes the
+  priority based review procedure used to construct it.
+This provides a brief overview of each component of the processes, and then details are described in subsequent
+  sections.
+Then, \Cref{sec:rename} describes how existing database can be ported into this framework without extensive
+  re-review.
+\Cref{sec:graphexpt} experimentally demonstrates that ability of the graph identification algorithm to reduce the
+  number of manual reviews and recover from errors.
 \Cref{sec:graphconclusion} concludes and summarizes the chapter.
 
 %This outline of this chapter is as follows: \Cref{sec:decisiongraph} formalizes the decision graph and summarizes the
@@ -280,31 +282,24 @@ similar process happens for negative-redundancy between each pair of new PCCs as
 all other PCCs previously negative-redundant with $C$.
 
 
-%The algorithm starts by creating an instance of the
-%  multicut~\cite{vazirani_approximation_2013} using the subgraph of $C$
-%  containing only positive edges.
-%Each edge is weighted by its assigned positive pairwise probability plus the
-%  number of times that edge was manually reviewed.
+%The algorithm starts by creating an instance of the multicut~\cite{vazirani_approximation_2013} using the
+  %subgraph of $C$ containing only positive edges.
+%Each edge is weighted by its assigned positive pairwise probability plus the number of times that edge was
+  %manually reviewed.
 %The terminal pairs are the negative edges.
 %A feasible multicut returns a subset of  that disconnects all terminal pairs.
-%Multicut is NP-hard, but it can be approximated by taking the union of
-%  min-cuts between each terminal pair.
-%To transform the multicut into a mistake hypothesis, we compare the total
-%  weight of cut positive edges with the total weight of the terminal negative
-%  edges (weighted using the same scheme).
-%If positive weight is smaller we suggest that the cut positive edges should be
-%  relabeled as negative.
+%Multicut is NP-hard, but it can be approximated by taking the union of min-cuts between each terminal pair.
+%To transform the multicut into a mistake hypothesis, we compare the total weight of cut positive edges with the
+  %total weight of the terminal negative edges (weighted using the same scheme).
+%If positive weight is smaller we suggest that the cut positive edges should be relabeled as negative.
 %Otherwise, we suggest the negative edges should be relabeled as positive.
 
 %Inconsistency recovery proceeds as follows.
 %Generate a mistake hypothesis, and order the edges by positive probability.
 %Present each edge hypothesis to the user in order.
-%If the user agrees with the hypothesis, then change the edge label, increment
-%  its review count, and continue.
-%If the user disagrees, then generate a new hypothesis (using new weights and
-%  labels) and restart.
-%It can be shown that this process is guaranteed to converge on a consistent
-%  graph state.
+%If the user agrees with the hypothesis, then change the edge label, increment its review count, and continue.
+%If the user disagrees, then generate a new hypothesis (using new weights and labels) and restart.
+%It can be shown that this process is guaranteed to converge on a consistent graph state.
 %Once $C$ is consistent, re-add it to $G$ and return to the main loop.
 
 
