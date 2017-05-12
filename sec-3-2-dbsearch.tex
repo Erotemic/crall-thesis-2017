@@ -1,3 +1,9 @@
+%\newcommand{\annotscoreop}{\opname{annot\_score}}
+%\newcommand{\namescoreop}{\opname{name\_score}}
+\newcommand{\annotscoreop}{\opname{K_{\tt annot}}}
+\newcommand{\amechscoreop}{\opname{K_{\csum}}}
+\newcommand{\fmechscoreop}{\opname{K_{\nsum}}}
+
 \section{Matching against a database of individual animals}\label{sec:baselineranking}
 
     To identify a query annotation, it is matched against a database of known \names{}.
@@ -230,7 +236,7 @@
             The \cscore{} between a query annotation and a database \name{} is the maximum over all annotations
               scores in that \name{}:
             \begin{equation}
-                \namescoreop_1(\qaid, \nid) 
+                \amechscoreop(\qaid, \nid) 
                 \eqv
                 \max_{\daid \in \nid}
                 \paren{
@@ -293,7 +299,7 @@
               \name{}.
             The \nscore{} of \aan{\name{}} is:
             \begin{equation}
-                \namescoreop_2(\qaid, \nid) 
+                \fmechscoreop(\qaid, \nid) 
                 \eqv 
                 \sum_{m \in \Matches_{\nid}} \ischosen(m) \; \fs_m
             \end{equation}

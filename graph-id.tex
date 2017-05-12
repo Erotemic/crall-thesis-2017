@@ -118,7 +118,7 @@ criteria would requires that $O(|V|^2)$ edges are reviewed as negative. We addre
 %  subgraphs to allow the algorithm to detect and recover from mistakes, either
 %  in the automatic or manual decision making.
 
-\subsection{The review algorithm}
+\subsection{The review algorithm}\label{sub:graphalgo}
 
 
 % Algorithm overview
@@ -380,19 +380,19 @@ requires $O(|V|^2)$ reviews. Therefore we develop two probabilistic measures
 \subsection{Probabilistic convergence}
 The goal of probabilistic convergence is to determine if a PCC $C$ is negative-redundant with all other components with
 high probability. When all components are positive-redundant and satisfy this, then all edges will be removed from the
-priority queue and the algorithm will converge. We consider the probability $\Pr(E_c \given \nT_C)$ that an undiscovered
+priority queue and the algorithm will converge. We consider the probability $\Pr{E_c \given \nT_C}$ that an undiscovered
 positive edge exists ($E_C$) given $C$'s existing set of outgoing negative edges ($\nT_C$). Under mild conditions (if we
-assume that $\Pr(E_c \given \nT_C) < .5$), we can show that the probability $\Pr(\nT_C \given E_C)$ of observing the
+assume that $\Pr{E_c \given \nT_C} < .5$), we can show that the probability $\Pr{\nT_C \given E_C}$ of observing the
 negative edges bounds this p given that an undiscovered match exists can be used as a surrogate. We can learn this
 probability offline by measuring the frequency that correct results are at a given rank in a PCC's ranked list
 (constructed by aggregating the ranked lists of all annotations in the PCC).
 
-To predict $\Pr(\nT_C \given E_C)$ we issue all queries as a single LNBNN query to obtain a single ranked list for the
+To predict $\Pr{\nT_C \given E_C}$ we issue all queries as a single LNBNN query to obtain a single ranked list for the
 entire PCC. This can be done by treating all query descriptors as if they were the from the same annotation except
 during the spatial verification stage. Let $R_C$ denote the ranks of every PCC marked as negative with $C$. In an
 offline step we learn a probability mass function $\phi$ that predicts the probability that a correct match appears at a
 given rank for the PCC $C$. The predicted probability is %
-$\Pr(\nT_C \given E_C) = 1 - \sum_{r \in R_C} \phi(r)$.
+$\Pr{\nT_C \given E_C} = 1 - \sum_{r \in R_C} \phi(r)$.
 
 To learn $\phi$, we measure the probability that a correct match appears at a given rank, given a correct match exists.
 To do this initialize an histogram. For each $C$ in the training set, divide it into a query $C_q$ and target $C_t$. The
@@ -405,6 +405,11 @@ exemplars in a query.
 
 
 \subsection{Convergence as a Poisson process}
+
+We model both the refresh and convergence criteria by considering the question ``What is the likelihood that
+  there will be a positive match anytime soon''.
+We can obtain an upper bound on this probability using a Poisson process.
+
 
 An alternative approach for determining when to stop is to consider the question: ``How many unreviewed edges in the
 graph are likely to be positive?''. We can obtain an upper bound on this number by modeling the probability that a new
@@ -459,56 +464,73 @@ in the optimal consistent assignment of PCCs to original name labels.
   
   
 \section{Experiments}\label{sec:graphexpt}
+
+    TODO: make figures for PZ and GZ
+
     In this section we design an experiment to measure the impact of graph identification on the number of manual
-    reviews required to complete identification as well as the accuracy of those identifications. Our experiments
-    simulates the semi-automatic identification process from a user's perspective. We consider three algorithms: (1) our
-    graph identification algorithm, (2) a baseline ranking-based protocol, and (3) an intermediate ranking protocol that
-    combines the ranking algorithm with pairwise classifier. To simulate our algorithms, we model noisy user response
-    using ground-truth data. The simulated user returns the ground-truth classification 98\% of the
-    time, making errors 2\% of the time uniformly at random.
+      reviews required to complete identification as well as the accuracy of those identifications.
+    Our experiments simulates the semi-automatic identification process from a user's perspective.
+    We consider three algorithms:
+    (1) our graph identification algorithm,
+    (2) a baseline ranking-based protocol, and
+    (3) an intermediate ranking protocol that combines the ranking algorithm with pairwise classifier.
+    To simulate our algorithms, we model noisy user response using ground-truth data.
+    The simulated user returns the ground-truth classification $98\percent$ of the time, making errors
+      $2\percent$ of the time uniformly at random.
 
-    The protocol for the graph identification algorithm is defined in \cref{sec:s5}. The pairwise classifier,
-    corresponding thresholds, and termination criteria are learned on a disjoint training set. Because our algorithm is
-    able to handle errors, we set our automatic classification thresholds to achieve a false positive rate of $.1\%$ 
-    on a validation set. We disable automatic review for incomparable cases due to the small number of labeled training
-    examples.
+    The protocol for the graph identification algorithm is defined in \cref{sub:graphalgo}.
+    The pairwise classifier, corresponding thresholds, and termination criteria are learned on a disjoint
+      training set.
+    Because our algorithm is able to handle errors, we set our automatic classification thresholds to achieve a
+      false positive rate of $.1\percent$ on a validation set.
+    We disable automatic review for incomparable cases due to the small number of labeled training examples.
 
-    The baseline algorithm captures the effect of using a purely rank-based approach for animal identification. We first
-    run the ranking algorithm and add the top $5$ results from each query to a list sorted by the LNBNN score. The user
-    reviews each result in the list sequentially, without regard to the underlying graph structure. Once, new matches
-    are consistently negative (using the approach from ~\cref{sub:refresh}), we regenerate a new ranked list and
-    iterate. We terminate after two rounds of ranking and review.
+    The baseline algorithm captures the effect of using a purely rank-based approach for animal identification.
+    We first run the ranking algorithm and add the top $5$ results from each query to a list sorted by the LNBNN
+      score.
+    The user reviews each result in the list sequentially, without regard to the underlying graph structure.
+    Once, new matches are consistently negative (using the approach from~\cref{sec:refresh}), we regenerate a new
+      ranked list and iterate.
+    We terminate after two rounds of ranking and review.
 
     The intermediate protocol will demonstrate the effect of augmenting the baseline algorithm with our pairwise
-    classifier. The procedure is the exactly the same as the baseline algorithm, except that any item with a predicted
-    probability above a threshold is automatically reviewed. Because this approach has no mechanism for error recovery,
-    we choose conservative classification thresholds that achieve a $0\%$ false 
-    positive rate on a validation dataset.
+      classifier.
+    The procedure is the exactly the same as the baseline algorithm, except that any item with a predicted
+      probability above a threshold is automatically reviewed.
+    Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
+      that achieve a $0\percent$ false positive rate on a validation dataset.
 
-    In all tests we record two measurements after each review pertaining to accuracy and error. (1) The accuracy
-    measurement is the number of merges remaining before all individuals have been identified. This is the number of
-    edges in a spanning forest of the ground-truth positive subgraph minus same measurement but applied to the subgraph
-    of all correctly predicted positive edges. (2) The error measurement is the total number of edges with a predicted
-    state that differs from its ground-truth state.
+    In all tests we record two measurements after each review pertaining to accuracy and error.
+    (1) The accuracy measurement is the number of merges remaining before all individuals have been identified.
+    This is the number of edges in a spanning forest of the ground-truth positive subgraph minus same measurement
+      but applied to the subgraph of all correctly predicted positive edges.
+    (2) The error measurement is the total number of edges with a predicted state that differs from its
+      ground-truth state.
 
-    Results of this test for the graph, intermediate and baseline algorithms are illustrated in \cref{fig:ETE} for each
-    dataset. These results demonstrate that the algorithms using the pairwise classifier significantly improves the rate
-    at which annotations from the same individual are merged. However, the graph algorithm better suited to take
-    advantage of the pairwise classifier because it can afford to a make initial mistakes and expect to recover from
-    them later. The baseline and intermediate algorithm have no mechanism for error recovery, and thus their error
-    steadily increases over time. In these cases a significant number of individuals will be misidentified. These
-    results also demonstrate that the graph algorithm is able to recover from many of these errors. We note that the
-    remaining errors might be resolved if more images of individuals involved in those errors are added to the system.
+    Results of this test for the graph, intermediate and baseline algorithms are illustrated in \cref{fig:ETE}
+      for each dataset.
+    These results demonstrate that the algorithms using the pairwise classifier significantly improves the rate
+      at which annotations from the same individual are merged.
+    However, the graph algorithm better suited to take advantage of the pairwise classifier because it can afford
+      to a make initial mistakes and expect to recover from them later.
+    The baseline and intermediate algorithm have no mechanism for error recovery, and thus their error steadily
+      increases over time.
+    In these cases a significant number of individuals will be misidentified.
+    These results also demonstrate that the graph algorithm is able to recover from many of these errors.
+    We note that the remaining errors might be resolved if more images of individuals involved in those errors
+      are added to the system.
 
  
 \section{Conclusion and summary of graph identification}\label{sec:graphconclusion}
 
-A nice and important property of the graph identification framework is that it is agnostic to the underlying procedures
-used to generate and review candidate edges to be placed in the decision graph. Throughout this chapter we will have
-used the ranking algorithm from \cref{chap:ranking}, and the semi-automatic verification algorithm from
-\cref{chap:pairclf}, which work well for distinctively textured species like zebras, giraffes, jaguars, and lionfish.
-However, the benefits of graph identification algorithm could be realized for less textured species such as humpbacks
-whales or bottlenose dolphins by simply using existing contour-based ranking algorithms and a manual reviewer.
+TODO
+
+%A nice and important property of the graph identification framework is that it is agnostic to the underlying procedures
+%used to generate and review candidate edges to be placed in the decision graph. Throughout this chapter we will have
+%used the ranking algorithm from \cref{chap:ranking}, and the semi-automatic verification algorithm from
+%\cref{chap:pairclf}, which work well for distinctively textured species like zebras, giraffes, jaguars, and lionfish.
+%However, the benefits of graph identification algorithm could be realized for less textured species such as humpbacks
+%whales or bottlenose dolphins by simply using existing contour-based ranking algorithms and a manual reviewer.
 
 %The framework requires two external components:
 %\begin{enumin}
@@ -516,26 +538,23 @@ whales or bottlenose dolphins by simply using existing contour-based ranking alg
 %    \item a verification algorithm (either manual or automatic) that can
 %      decide if a pair of annotation is positive, negative, or incomparable.
 %  \end{enumin}
-The verification algorithm (which can be a manual reviewer) is what determines
-  if the graph identification algorithm is manual, semi-automatic, or
-  fully-automatic.
-In our experiments we use the ranking algorithm from \cref{chap:ranking}, and
-  the verification algorithm from \cref{chap:pairclf} to construct these
-  components, which work well for
+
+%The verification algorithm (which can be a manual reviewer) is what determines if the graph identification
+%  algorithm is manual, semi-automatic, or fully-automatic.
+%In our experiments we use the ranking algorithm from \cref{chap:ranking}, and the verification algorithm from
+%  \cref{chap:pairclf} to construct these components, which work well for
   
 %These algorithms could easily be swapped out for other algorithms tuned
 %  towards specific species (\eg{} contour-based ranking algorithms for marine
 %  species).
 %(or any object that can be visually identified).
-Furthermore, as more pairwise training data is gathered and maintained using
-  this framework, more sophisticated pairwise classifiers trained using deep
-  learning could be applied, perhaps removing the manual component completely
-  and resulting in a fully automatic identification algorithm.
 
-Because of this flexibility the graph identification framework generalizes
-  beyond animal identification and could be applied to any instance recognition
-  problem using algorithms tuned for those tasks under the condition that one
-  annotation corresponds to one individual object (note the photobomb classifier
-  can be used to relax this constraint).
+Furthermore, as more pairwise training data is gathered and maintained using this framework, more sophisticated
+  pairwise classifiers trained using deep learning could be applied, perhaps removing the manual component
+  completely and resulting in a fully automatic identification algorithm.
 
-
+Because of this flexibility the graph identification framework generalizes beyond animal identification and could
+  be applied to any instance recognition problem using algorithms tuned for those tasks under the condition that
+one annotation corresponds to one individual object (note the photobomb classifier or a segmentation mask can be
+  used to relax this
+  constraint).

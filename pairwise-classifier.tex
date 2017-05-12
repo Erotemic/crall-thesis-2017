@@ -89,8 +89,8 @@ A final concern that is addressed in this chapter is the issue of image
   challenges that may confound the match-state pairwise classifier.
 Photobombs --- pairs of annotations where matches are caused by a secondary
   animal --- are the most notable cause of such a challenge.
-Several examples of pairs of annotations with photobombs are illustrated in
-  \cref{fig:photobomb}.
+%Several examples of pairs of annotations with photobombs are illustrated in
+%  \cref{fig:photobomb}.
 By most accounts photobombs appear very similar to matches, and it may be
   reasonable to expand the match-state classifier to learn this subtlety.
 However, because photobombs are inherently a pairwise property between
@@ -104,13 +104,14 @@ This supporting classifier will allow us to increase the accuracy of our
 
 
 This outline of this chapter is as follows.
-\Cref{sec:feature} details the construction of the feature vector that we use
-  as input to the pairwise classifier.
-\Cref{sec:learning} describes the process of collecting training data and
-  learning the match-state pairwise classifier.
-\Cref{sec:photobomb} .
-\Cref{sec:expt} .
-\Cref{sec:summary} .
+\Cref{sec:pairfeat} details the construction of the feature vector that we use as input to the pairwise
+  classifier.
+\Cref{sec:learnclf} describes the process of collecting training data and learning the match-state pairwise
+  classifier.
+\Cref{sec:learnpb} extends this approach to predict secondary attributes (\eg{} is a pair a photobomb) beyond
+  just the matching state.
+\Cref{sec:pairexpt} presents a set of experiments that evaluate the pairwise classifier.
+\Cref{sec:pairconclusion} summarizes and concludes this chapter.
 
 
 \section{Constructing the pairwise feature vector}\label{sec:pairfeat}
@@ -190,14 +191,11 @@ In these cases, because the ordering of the annotations is arbitrary we record
   the minimum of the two values in a feature dimension and the maximum in
   another.
 
-To allow the classifier to account for relationships between the unary
-  attributes that could influence a pair of annotation's ability to match we
-  encode distance measurements between the unary attributes.
-In the case of GPS coordinates we use the haversine distance (as detailed in
-  \Cref{sec:occurgroup}), but for all other measures we use the absolute
-  difference of their values.
-Lastly, we include the ``speed'' of the annotations, which is the GPS-distance
-  divided by the time-delta.
+To allow the classifier to account for relationships between the unary attributes that could influence a pair of
+  annotation's ability to match we encode distance measurements between the unary attributes.
+In the case of GPS coordinates we use the haversine distance (as detailed in \Cref{app:occurgroup}), but for all
+  other measures we use the absolute difference of their values.
+Lastly, we include the ``speed'' of the annotations, which is the GPS-distance divided by the time-delta.
 
 In the event that an attribute is not provided or not known we replace the
   measurement with a \nan{} value.
@@ -337,8 +335,7 @@ An example of what a final feature vector is illustrated
   in~\cref{fig:PairFeatVec}.
 
 
-\section{Learning the match-state classifier}
-\label{sec:learnclf}
+\section{Learning the match-state classifier}\label{sec:learnclf}
 
 Having defined the pairwise feature vector the only remaining steps to
   constructing the pairwise classifier are to select a sample of labeled
@@ -428,7 +425,7 @@ Because our current datasets only contain a small number of explicitly labeled
     We attempt to balance positive, negative, and incomparable state in the
       remainder of the negative training data.
 
-\section{Pairwise classification experiments}
+\section{Pairwise classification experiments}\label{sec:pairexpt}
 
     We evaluate the pairwise classifiers on two datasets, one of plains zebras
       and the other of Grévy's zebras.
@@ -600,7 +597,7 @@ Because our current datasets only contain a small number of explicitly labeled
         \ImportantPBFeat{}
 
 
-\section{Summary of pairwise classification}
+\section{Summary of pairwise classification}\label{sec:pairconclusion}
 
     In this chapter we have shown how to predict the matching state of a pair of annotations. 
     We have shown that our classifiers produce probabilities that are more

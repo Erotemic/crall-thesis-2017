@@ -192,14 +192,22 @@
             Core~\cite{wieczorek_darwin_2012} to denote a collection of evidence (\eg{} images) that an organism exists
             within defined location and time-frame. In the scope of this application, an \occurrence{} is a cluster of
             images taken within a small window of time and space. Images are grouped into \occurrences{} using the GPS
-            and time data. Details are provided in~\cref{sec:occurgroup}.
+            and time data. Details are provided in~\cref{app:occurgroup}.
 
-            There are several benefits to first grouping images into an \occurrence{}. One benefit is that an
-            \occurrence{} can be used as a semantic processing unit to distribute manageable chunks of work to users of
-            the system. Another is that \occurrences{} can be used to improve the results of identification. Typically
-            there will be only a small number of individuals within an \occurrence{}, and it is not uncommon for each
-            individual to photographed multiple times and from multiple viewpoints. This redundancy in images will be
-            exploited in \Cref{chap:graphid}.
+            These computed occurrences are valuable measurements for multiple components of the IBEIS software.
+            At its core an occurrence describes \wquest{when} a group of animals was seen and \wquest{where} that
+              group was seen.
+            From this starting point other algorithms can address questions like:
+            \wquest{how many} animals there were, \wquest{who} an animal is, \wquest{who else} is an animal with,
+              and \wquest{where else} have these animals been seen?
+            
+            Furthermore, computational and algorithmic benefits to first grouping images into an \occurrence{}.
+            One benefit is that an \occurrence{} can be used as a semantic processing unit to distribute
+              manageable chunks of work to users of the system.
+            Another is that \occurrences{} can be used to improve the results of identification.
+            Typically there will be only a small number of individuals within an \occurrence{}, and it is not
+              uncommon for each individual to photographed multiple times and from multiple viewpoints.
+            This redundancy in images will be exploited in \Cref{chap:graphid}.
 
         \subsubsection{Animal Detection}
             Before matching begins each image is cropped to focus on a particular animal and remove background
