@@ -61,7 +61,7 @@ Then, \Cref{sec:rename} describes how existing database can be ported into this 
 %priority based review procedure used to construct it. \Cref{sec:cand} describes candidate edge generation.
 %\Cref{sec:decision} discuss how the verification algorithm is used to automatically review candidate edges.
 %\Cref{sec:redun} introduces the redundancy criteria used to eliminate candidate edges. \Cref{sec:incon} describes the
-%built-in mechanisms for error recovery. \Cref{sec:coverge} discusses the convergence criteria that determines when
+%built-in mechanisms for error recovery. \Cref{sec:converge} discusses the convergence criteria that determines when
 %identification is complete. 
 
 
@@ -112,7 +112,7 @@ reduces the probability that errors have been made and signifies when errors hav
 inconsistencies. Therefore we will define a redundancy criteria in \cref{sec:redun} which ignores edges within and
 between PCCs, but only after they meet a minimum level of redundancy. Additionally this deterministic convergence
 criteria would requires that $O(|V|^2)$ edges are reviewed as negative. We address this concern in
-\cref{sec:coverge} using a probabilistic convergence criteria.
+\cref{sec:converge} using a probabilistic convergence criteria.
 
 %Finally, we add a measure of redundancy to both the positive and negative
 %  subgraphs to allow the algorithm to detect and recover from mistakes, either
@@ -178,12 +178,12 @@ enough negative edges to be complete.
 Details of each component in the review algorithm are described in the following sections.  First we describe the
 redundancy criteria in \cref{sec:redun} and inconsistency recovery in \cref{sec:incon}. These will serve to inform
 the sections that define candidate edge generation, \cref{sec:cand}, decision making \cref{sec:decision},  and
-convergence \cref{sec:coverge}.
+convergence \cref{sec:converge}.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
 % Ensuring all PCCs are complete leads to the need to ,
-%  so to prevent this we develop a probabilistic measure (\cref{sec:coverge})
+%  so to prevent this we develop a probabilistic measure (\cref{sec:converge})
 %  that triggers much earlier convergence when positive edges are no longer
 %  likely to be found.
 
@@ -347,86 +347,164 @@ guessing, not-sure, pretty-sure, and absolutely-sure. Currently the user-id is u
 used in error detection and recovery.
 
 
-\section{Refreshing candidate edges}\label{sec:refresh}
-
-As the review process executes we want to continue to review positive matches as long as we are discovering them.
-However, at some point the candidate edges may no longer contain positive results, but undiscovered positive matches may
-still exist. This is because LNBNN, working initially with each annotation having a separate label, can miss more subtle
-but correct matches, especially when there are several annotations for an animal and subtle viewpoints. As the labeling
-improves, so does the reliability of the LNBNN. Therefore, we define a refresh criteria to determine when we should
-recompute candidate edges.
-
-The goal is to refresh if there has been a significant number of positive reviews, but new results are consistently
-negative. If we have not found any positive edges then we do not want to refresh. We keep track of the fraction of
-positive review decisions as a moving average of manual decisions. We also maintain the total number of positive reviews
-made since the last candidate edge generation. Thus the candidate edges are refreshed whenever the number of positive
-reviews is above a threshold and the positive review fraction is below a threshold
-
-As the last outer iteration of the overall algorithm before convergence, triggered when the LNBNN ranking algorithm
-fails to produce positive edges, candidate edges between untested pairs of annotations are added within PCCs that are
-not positive-redundant and between PCCs that are not negative-redundant. This is because the ranking algorithm itself is
-imperfect and the missed matches tend to affect small PCCs disproportionately, which are the last to satisfy redundancy
-tests.
+%\section{Refreshing candidate edges}\label{sec:refresh}
 
 
-\section{Convergence}\label{sec:coverge}
+%The goal is to refresh if there has been a significant number of positive reviews, but new results are consistently
+%negative. If we have not found any positive edges then we do not want to refresh. We keep track of the fraction of
+%positive review decisions as a moving average of manual decisions. We also maintain the total number of positive reviews
+%made since the last candidate edge generation. Thus the candidate edges are refreshed whenever the number of positive
+%reviews is above a threshold and the positive review fraction is below a threshold
 
-To be completely certain that the current set of PCCs is optimal, each pair of
-PCCs must contain $k$ negative edges or all edges between them must be labeled
-as incomparable. Achieving this is infeasible for large database because it
-requires $O(|V|^2)$ reviews. Therefore we develop two probabilistic measures 
+%As the last outer iteration of the overall algorithm before convergence, triggered when the LNBNN ranking algorithm
+%fails to produce positive edges, candidate edges between untested pairs of annotations are added within PCCs that are
+%not positive-redundant and between PCCs that are not negative-redundant. This is because the ranking algorithm itself is
+%imperfect and the missed matches tend to affect small PCCs disproportionately, which are the last to satisfy redundancy
+%tests.
 
 
-\subsection{Probabilistic convergence}
-The goal of probabilistic convergence is to determine if a PCC $C$ is negative-redundant with all other components with
-high probability. When all components are positive-redundant and satisfy this, then all edges will be removed from the
-priority queue and the algorithm will converge. We consider the probability $\Pr{E_c \given \nT_C}$ that an undiscovered
-positive edge exists ($E_C$) given $C$'s existing set of outgoing negative edges ($\nT_C$). Under mild conditions (if we
-assume that $\Pr{E_c \given \nT_C} < .5$), we can show that the probability $\Pr{\nT_C \given E_C}$ of observing the
-negative edges bounds this p given that an undiscovered match exists can be used as a surrogate. We can learn this
-probability offline by measuring the frequency that correct results are at a given rank in a PCC's ranked list
-(constructed by aggregating the ranked lists of all annotations in the PCC).
+%\subsection{Probabilistic convergence}
+%The goal of probabilistic convergence is to determine if a PCC $C$ is negative-redundant with all other components with
+%high probability. When all components are positive-redundant and satisfy this, then all edges will be removed from the
+%priority queue and the algorithm will converge. We consider the probability $\Pr{E_c \given \nT_C}$ that an undiscovered
+%positive edge exists ($E_C$) given $C$'s existing set of outgoing negative edges ($\nT_C$). Under mild conditions (if we
+%assume that $\Pr{E_c \given \nT_C} < .5$), we can show that the probability $\Pr{\nT_C \given E_C}$ of observing the
+%negative edges bounds this p given that an undiscovered match exists can be used as a surrogate. We can learn this
+%probability offline by measuring the frequency that correct results are at a given rank in a PCC's ranked list
+%(constructed by aggregating the ranked lists of all annotations in the PCC).
 
-To predict $\Pr{\nT_C \given E_C}$ we issue all queries as a single LNBNN query to obtain a single ranked list for the
-entire PCC. This can be done by treating all query descriptors as if they were the from the same annotation except
-during the spatial verification stage. Let $R_C$ denote the ranks of every PCC marked as negative with $C$. In an
-offline step we learn a probability mass function $\phi$ that predicts the probability that a correct match appears at a
-given rank for the PCC $C$. The predicted probability is %
-$\Pr{\nT_C \given E_C} = 1 - \sum_{r \in R_C} \phi(r)$.
+%To predict $\Pr{\nT_C \given E_C}$ we issue all queries as a single LNBNN query to obtain a single ranked list for the
+%entire PCC. This can be done by treating all query descriptors as if they were the from the same annotation except
+%during the spatial verification stage. Let $R_C$ denote the ranks of every PCC marked as negative with $C$. In an
+%offline step we learn a probability mass function $\phi$ that predicts the probability that a correct match appears at a
+%given rank for the PCC $C$. The predicted probability is %
+%$\Pr{\nT_C \given E_C} = 1 - \sum_{r \in R_C} \phi(r)$.
 
-To learn $\phi$, we measure the probability that a correct match appears at a given rank, given a correct match exists.
-To do this initialize an histogram. For each $C$ in the training set, divide it into a query $C_q$ and target $C_t$. The
-target and the rest of the PCCs in the training set become database PCCs. Use LNBNN to score each annotation in $C_q$
-against the database PCCs. Determine the best rank that $C_t$ appears in each ranked list, and increment the
-corresponding index in the histogram. Repeat this process for all PCCs in the training set and for multiple partitions
-of each PCC. Normalizing the histogram array results in the PMF $\phi$. In order to prevent marginalization across
-important attributes (such as the number of exemplars in a PCC), construct multiple PMFs for different numbers of
-exemplars in a query.
+%To learn $\phi$, we measure the probability that a correct match appears at a given rank, given a correct match exists.
+%To do this initialize an histogram. For each $C$ in the training set, divide it into a query $C_q$ and target $C_t$. The
+%target and the rest of the PCCs in the training set become database PCCs. Use LNBNN to score each annotation in $C_q$
+%against the database PCCs. Determine the best rank that $C_t$ appears in each ranked list, and increment the
+%corresponding index in the histogram. Repeat this process for all PCCs in the training set and for multiple partitions
+%of each PCC. Normalizing the histogram array results in the PMF $\phi$. In order to prevent marginalization across
+%important attributes (such as the number of exemplars in a PCC), construct multiple PMFs for different numbers of
+%exemplars in a query.
 
+
+\section{Refresh and termination criteria}\label{sec:converge}
+
+
+In this section we discuss the criteria we use for both determining when to refresh candidate edges as well as
+  when to stop the algorithm altogether.
+We first consider the need for a refresh criteria.
+As the review algorithm proceeds, we should only continue manually review as long as the algorithm is
+  consistently generating edges that --- once reviewed (typically as positive) --- change the PCCs.
+However, at some point the candidate edges may no longer contain positive results, but undiscovered positive
+  matches may still exist.
+This is because LNBNN, working initially with each annotation having a separate label, can miss more subtle but
+  correct matches, especially when there are several annotations for an animal and subtle viewpoints.
+As the labeling improves, so does the reliability of the LNBNN.
+This issue can be addressed by predicting if none of the remaining edges would change the PCCs, and then
+  recomputing candidate edges when this happens.
+
+Similar to the refresh criteria, we must be able to determine when to terminate the algorithm.
+Ideally, the algorithm would terminate only when it was certain that all PCCs have been correctly identified.
+The graph framework can deterministically achieve this by using all $|V|^2$ edges as candidates and then looping
+  until each PCC is positive redundant and each pair of PCCs is negative redundant.
+Unfortunately, this requires $O(|V|^2)$ reviews, which is only feasible if
+(1) the number of annotations is very small, or
+(2) all edges can be automatically reviewed (even then the cost can be prohibitive).
+Therefore, in practical circumstances, we turn towards probabilistic methods to determine when to stop.
+Like, the refresh criteria, this can be determined --- in part --- by predicting if new reviews will change the
+  PCCs.
 
 \subsection{Convergence as a Poisson process}
 
-We model both the refresh and convergence criteria by considering the question ``What is the likelihood that
-  there will be a positive match anytime soon''.
-We can obtain an upper bound on this probability using a Poisson process.
+Both the review and termination criteria can be addressed by considering the question:
+``Will there be a meaningful review anytime soon?''.
+A meaningful review is one that changes the name labeling of the annotations, \ie{} it either merges two PCCs or
+  splits one.
+During the inner loop of the algorithm, when edges popped from the priority queue no longer consistently result
+  in meaningful reviews, the marginal gains from continuing are outweighed by the cost of manual review.
+In this circumstance it is best to break out of the inner loop.
+Note that if any meaningful reviews were made during that loop, we should refresh candidate edges and start a new
+  loop because a refresh could result in new high priority meaningful edges.
+On the other hand, if no meaningful reviews were made in the loop, then refreshing will have no benefit, and the
+  algorithm should terminate.
+
+Thus the task is construct a criteria that determines when edges on the top of the priority queue are no longer
+  meaningful.
+In this way we directly address the refresh criteria and indirectly address termination criteria.
+This is indirect in the case of the termination criteria because the algorithm simply stops when the cost of
+  manual review is too high.
+Directly addressing the termination criteria would involve estimating the probability that undiscovered merge and
+  split cases exist (which depends on the effectiveness of the algorithm).
+Still, even if we could estimate the latter probability the amount of manual effort required to push it towards
+  zero would be enormous.
+
+Based on these observations we estimate the probability that ``we won't make a meaningful review soon''.
+We parameterize ``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful
+  consecutive reviews that a manual reviewer is willing to do between meaningful reviews.
+Let $M\teq1$ be the event that a review is meaningful and $M\teq0$ otherwise.
+Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and denote the index of the
+  next review as $n$.
+Let $T\teq1 \equiv (M_i\teq0, \forall i \in [n, n + a])$ be the event that none of the next $a$ reviews will be
+  meaningful.
+Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
+  to measure the probability the event $T\teq1$, which answers the aforementioned question.
+We can periodically check if $\Pr{T\teq1}$ is greater than a threshold, and if so, we stop the current loop and
+  either refresh or terminate.
+
+To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
+  $M_i$ must follow a uniform distribution.
+This would be true if the edges were reviewed in a random order.
+However, the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right
+  skewed long tail distribution, and violating Poisson assumptions.
+Even so, the use of a Poisson model can be both justified and shown to be desirable by considering a sliding
+  window along the distribution of $M_i$.
+Recall that we only need to make predictions about the next $a$ reviews in the future, thus we are only concerned
+  with a small window to the right on the distribution.
+Because the long tailed distribution is monotonic decreasing, we can use a small window in the past to estimate a
+  lower bound on probability of $T\eq1$ in the future.
+As the window moves to the right, the interval on the distribution becomes increasingly approximately uniform and
+  the tightness of the bound improves and eventually becomes tight.
+This is because once the prioritization algorithm cannot distinguish positive from negative cases, the order of
+  the remaining reviews becomes random and the Poisson model becomes exactly appropriate.
+Thus, the use of a Poisson model with a sliding window allows us to approximate an lower bound on $\Pr{T\teq1}$,
+  and the higher $\Pr{T\teq1}$ is, the more accurate our estimate will be.
 
 
-An alternative approach for determining when to stop is to consider the question: ``How many unreviewed edges in the
-graph are likely to be positive?''. We can obtain an upper bound on this number by modeling the probability that a new
-edge will be positive as a Poisson processes.
+\subsection{Details of criteria}
 
-We consider a window of previous reviews between annotations where (at the time) the annotations belonged to different
-names. A fraction of these reviews will be labeled as positive, resulting in a merge. This fraction $\mu$ is the mean of
-a Poisson distribution. Multiplying $\mu$ by a positive integer $k$ estimates the expected number of positive matches we
-will observe in next $k$ reviews between different PCCs. If the current number of PCCs is $N$, and we know $M$ pairs of
-PCCs are negative-redundant, then the number of edges to complete the negative labeling is $k=\binom{N}{2} - M$. Thus,
-at any point we can estimate the number of undiscovered positive reviews as $k\mu$.
+Having justified its use, we model $M$ as a Poisson process, which is determined by a single parameter $\mu$.
+We can measure $\mu$ as the fraction of recently observed manual reviews that were meaningful using an
+  exponentially weighted moving window.
+We initialize $\mu=1$ to denote that that it is likely that the first review will be meaningful.
+Then, after each new review we update the parameter as %
+$\mu \leftarrow m \alpha + (1 - \alpha) \mu$, where $m\teq1$ if the review was meaningful and $0$ otherwise.
+The exponential decay $\alpha = 2 / (s + 1)$ is determined by a span parameter $s$, which represents the number
+  of previous reviews that are significant.
+Using this model, the desired probability that none of the next $a$ reviews will be meaningful is %
+$\Pr{T\teq1} = \exp{-\mu  a}$.
+We use a window span of $s=200$, a patience of $a=50$, and a threshold of $.8$.
 
-In practice, this number will be much greater than the actual number of remaining merges because our event is not a
-strict Poisson process. This is because the probability of observing a positive edge is not constant over time, it
-depends on the previously observed positive edges. However, because each positive review removes other positive reviews
-remaining in the graph, and because we prioritize by positive probability, the probability of observing a positive edge
-will decrease with each new review. This is what allows us to use the Poisson process as an upper bound.
+
+Whenever the refresh criteria triggers we perform another loop to complete the positive redundancy of all PCCs.
+This is done to discover split cases before the ranking algorithm is re-executed.
+In this loop the candidate edges are generated by computing an edge-connected augmentation on each PCC.
+If the PCC only contains positive edges, edge augmentation with the fewest edges can be computed in linear time
+  using \cite{eswaran_augmentation_1976}.
+However, if some edges in the complement of the positive PCC edges are incomparable then we must compute a
+  minimum weight edge augmentation (which is NP-hard) using a $2$-approximation algorithm
+  \cite{khuller_approximation_1993}.
+  
+
+%As the last outer iteration of the overall algorithm before convergence, triggered when the LNBNN ranking algorithm
+%fails to produce positive edges, candidate edges between untested pairs of annotations are added within PCCs that are
+%not positive-redundant and between PCCs that are not negative-redundant. This is because the ranking algorithm itself is
+%imperfect and the missed matches tend to affect small PCCs disproportionately, which are the last to satisfy redundancy
+%tests.
+
+
 
 %Re-estimating the $k\mu$ at each time-step should
 
@@ -489,9 +567,11 @@ in the optimal consistent assignment of PCCs to original name labels.
     We first run the ranking algorithm and add the top $5$ results from each query to a list sorted by the LNBNN
       score.
     The user reviews each result in the list sequentially, without regard to the underlying graph structure.
-    Once, new matches are consistently negative (using the approach from~\cref{sec:refresh}), we regenerate a new
+    Once, new reviews determined to no longer be consistently meaningful (using the approach
+      from~\cref{sec:converge}), we first prioritize and review edges that would complete positive redundancy.
+    Then, if any the name labels of any annotation was changed in the previous iteration, we generate a new
       ranked list and iterate.
-    We terminate after two rounds of ranking and review.
+    Otherwise, if an entire iteration completes without a change in name labels, we terminate.
 
     The intermediate protocol will demonstrate the effect of augmenting the baseline algorithm with our pairwise
       classifier.
