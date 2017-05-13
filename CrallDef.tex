@@ -246,7 +246,8 @@ A\IfStrEq{\firstchar}{a}{n}{%
 % Probability
 %\renewcommand{\Pr}[1]{\ensuremath{\txt{Pr} \left(#1\right)}}
 %\renewcommand{\Pr}{\mathbb{P}}
-\renewcommand{\Pr}[1]{\func{\probop}{#1}}
+\renewcommand{\Pr}[1]{\probop(#1)}
+%\renewcommand{\Pr}[1]{\func{\probop}{#1}}
 \newcommand{\Odds}[1]{\func{\oddsop}{#1}}  % this is logit
 \newcommand{\Prs}[2]{\func{\probop_{#1}}{#2}}
 \newcommand{\Ex}[1]{\ensuremath{\expectop \left[#1\right]}}
