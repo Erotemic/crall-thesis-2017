@@ -252,8 +252,8 @@ Note that $k$ can be different for positive and negative redundancy, but in our 
 Determining that a PCC with $n$ nodes and $m$ edges is $k$-positive-redundant is equivalent to determining if it
   is $k$-edge-connected if the PCC contains more than $k$ nodes.
 Otherwise we just check if it is fully connected.
-The special case of $2$-edge-connectivity is also called bridge-connectivity, and this can be determined in
-  $O(m)$~\cite{eswaran_augmentation_1976,wang_simple_2015}.
+The special case of $2$-edge-connectivity is also called bridge-connectivity, and this can be determined in %
+$O(n + m)$~\cite{eswaran_augmentation_1976,wang_simple_2015}.
 For $k>2$, edge connectivity can be generally be determined in $O(mn)$ \cite{esfahanian_connectivity_2017}.
 Determining if two components $C$ and $D$ with sizes $n_1$ and $n_2$ are $k$-negative-redundant can be done in
   $O(n_1 n_2)$ time using adjacency lists and set intersections.
