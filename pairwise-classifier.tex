@@ -515,7 +515,7 @@ If this was not the case, then we would include an additional partition for inco
           weaker than the match-state classifier.
         For plains zebras the MCC of $.64$ demonstrates that the photobomb classifier has moderate predictive
           power.
-        Grévy's zebras the MCC of $.31$ demonstrates weak predictive power.
+        For Grévy's zebras the MCC of $.31$ demonstrates weak but significant predictive power.
 
         As the important features in~\cref{tbl:ImportantPBFeat} illustrate, the photobomb classifier seems to
           rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
@@ -534,7 +534,9 @@ If this was not the case, then we would include an additional partition for inco
 
 \section{Summary of pairwise classification}\label{sec:pairconclusion}
 
-    In this chapter we have shown how to predict the matching state of a pair of annotations. 
+    In this chapter we have constructed a verification mechanism that can predict the matching state of any two
+      annotations using a pairwise probabilistic classifier.
+
     We have shown that our classifiers produce probabilities that are more
     interpretable and better able to separate positive from negative cases than
     LNBNN scores. 
