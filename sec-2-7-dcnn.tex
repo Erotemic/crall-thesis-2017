@@ -2,38 +2,26 @@
 \section{Deep convolutional neural networks}\label{sec:dcnn}
     % VGG-Net shows importance of small convolutions \cite{simonyan_very_2014}
     % Spatial pyramids in CNNs \cite{he_spatial_2014}
-    Convolutional networks have been around for over more than two
-      decades~\cite{lecun_gradient_based_1998,
+    Convolutional networks have been around for over more than two decades~\cite{lecun_gradient_based_1998,
       fukushima_neocognitron_1988}.
-    However, they did not receive major attention from computer vision
-      researchers until 2012 when a deep convolutional neural network
-      (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the best
-      support vector machines (SVMs)~\cite{vapnik_statistical_1998} by
-      over $10\percent$ in the ImageNet category recognition
+    However, they did not receive major attention from computer vision researchers until 2012 when a deep
+      convolutional neural network (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the best support vector
+      machines (SVMs)~\cite{vapnik_statistical_1998} by over $10\percent$ in the ImageNet category recognition
       challenge~\cite{russakovsky_imagenet_2014}.
-    Since then, many successful category recognition techniques based
-      on DCNNs have been published~\cite{simonyan_very_2014,
-      chatfield_efficient_2014, chatfield_return_2014,
-      oquab_learning_2014, szegedy_going_2014, long_convnets_2014,
-      he_spatial_2014, dean_fast_2013}.
-    DCNNs have also been shown excellent results when applied to other
-      computer vision problems such as: %
-    instance recognition~\cite{razavian_cnn_2014,
-      razavian_baseline_2015, liu_learning_2015,
+    Since then, many successful category recognition techniques based on DCNNs have been
+      published~\cite{simonyan_very_2014, chatfield_efficient_2014, chatfield_return_2014, oquab_learning_2014,
+      szegedy_going_2014, long_convnets_2014, he_spatial_2014, dean_fast_2013}.
+    DCNNs have also been shown excellent results when applied to other computer vision problems such as: %
+    instance recognition~\cite{razavian_cnn_2014, razavian_baseline_2015, liu_learning_2015,
       held_deep_2015,arandjelovic_netvlad_2016,radenovic_cnn_2016}, %
-    fine-grained recognition~\cite{branson_bird_2014,
-      donahue_decaf_2013, catherine_wah_similarity_2014}, %
-    detection~\cite{girshick_rich_2014, sermanet_overfeat_2013,
-      li_wan_end_end_2015}, %
-    face verification~\cite{huang_learning_2012, taigman_deepface_2014,
-      sun_deep_2013}, %
-    and learning similarity between feature
-      patches~\cite{osendorfer_convolutional_2013, han_matchnet_2015,
+    fine-grained recognition~\cite{branson_bird_2014, donahue_decaf_2013, catherine_wah_similarity_2014}, %
+    detection~\cite{girshick_rich_2014, sermanet_overfeat_2013, li_wan_end_end_2015}, %
+    face verification~\cite{huang_learning_2012, taigman_deepface_2014, sun_deep_2013}, %
+    and learning similarity between feature patches~\cite{osendorfer_convolutional_2013, han_matchnet_2015,
       ng_exploiting_2015, zagoruyko_learning_2015, han_matchnet_2015}.
     The sudden success of deep nets has been attributed
     (1) a larger volume of available of training data, and
-    (2) implementations using faster
-      GPUs~\cite{krizhevsky_imagenet_2012}.
+    (2) implementations using faster GPUs~\cite{krizhevsky_imagenet_2012}.
 
     %\chuckcomment{This section is a bit terse but we may need to live with this}
     %\chuckcomment{Make it clear that there are many different convolutions at each layer}
