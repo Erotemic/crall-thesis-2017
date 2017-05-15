@@ -23,11 +23,11 @@
     We are primarily returned with only the first point in this curve --- the fraction of queries with a correct
       result at rank $1$ --- because often a user of the system will only review the first result of a query.
 
-    Additionally, we like to automatically review results returned by the ranking algorithm, so we will measure
-      the separability of correct and incorrect results using the scores returned by the ranking algorithm.
-    The separability of scores is measured by first recording the score of the correct \name{} and the
-      highest scoring incorrect \name{} for each query and then plotting the receiver operator characteristic
-      (ROC) curve and measuring the area under the curve (AUC).
+    %Additionally, we like to automatically review results returned by the ranking algorithm, so we will measure
+    %  the separability of correct and incorrect results using the scores returned by the ranking algorithm.
+    %The separability of scores is measured by first recording the score of the correct \name{} and the
+    %  highest scoring incorrect \name{} for each query and then plotting the receiver operator characteristic
+    %  (ROC) curve and measuring the area under the curve (AUC).
     %Other measures that are reported include the percentage of true positive
     %  and false positive results that fall within certain categories (\eg
     %  temporal windows).
@@ -45,8 +45,8 @@
       correspondences) and investigates the relationship between $\K$ and database size in terms of both the number
       of annotations and the number of exemplars per name.
     \Cref{sub:exptfail} discusses the failure cases of our ranking algorithm.
-    \Cref{sub:exptsep} presents an evaluation of the score separability for the pipeline configuration with the
-      highest accuracy determined for each species.
+    %\Cref{sub:exptsep} presents an evaluation of the score separability for the pipeline configuration with the
+    %  highest accuracy determined for each species.
     Finally,~\cref{sub:exptsum} summarizes this section.
 
 
@@ -88,6 +88,8 @@
         \Cref{tbl:AnnotationsPerViewpoint} summarizes the viewpoint labels of the annotations.
         Distributions of when images in each dataset were taken are illustrated in \cref{fig:timedist}.
         The name and a short description of each dataset is given in the following list.
+
+        \FloatBarrier{}
 
         \begin{itemln}
             \item \textbf{Plains zebras}.
@@ -131,13 +133,12 @@
             The original groundtruth was established using both manual and automated methods that are disjoint
               from these techniques considered here, however our software was used to correct mistakes.
             The annotations in this dataset have not been manually reviewed.
-            Some are cropped to the fluke while others encompas the entire image.
+            Some are cropped to the fluke while others encompass the entire image.
             Quality and viewpoint labels do not exist for this dataset.
         \end{itemln}
 
+    \FloatBarrier{}
     \subsection{Baseline experiment}\label{sub:exptbase}
-      
-        \BaselineExpt{}
 
         This first experiment determines the accuracy of the identification algorithm using the baseline pipeline
           configuration.
@@ -169,7 +170,10 @@
         The accuracy is over $60\percent$ for all species considered.
         Subsequent experiments will restrict our focus to Grévy's plains zebras in order to investigate detailed
           parameter choices of the ranking algorithm as well as alternative ranking algorithms.
+      
+        \BaselineExpt{}
 
+    \FloatBarrier{}
     \subsection{SMK as an alternative}\label{sub:exptsmk}  
 
         Before we investigate the parameter choices of the LNBNN ranking algorithm, we briefly evaluate the
@@ -180,8 +184,6 @@
           a weighted histogram of visual words (accumulated residual vectors in the case of VLAD) to represent each
           annotation as a sparse fixed length vector.
         We have experimented with several configurations of VLAD and report our best results here.
-
-        \SMKExpt{}
 
         In our SMK implementation, we pre-trained an $8000$ word vocabulary using mini-batch k-means on the
           stacked descriptors from all database annotations.
@@ -204,11 +206,10 @@
         For plains zebra's there is a difference of $8\percent$ in the number of correct matches at rank $1$, and
           for Grévy's zebras the difference is $6\percent$.
 
+        \SMKExpt{}
 
+    \FloatBarrier{}
     \subsection{Foregroundness experiment}\label{sub:exptfg}
-
-        %\ForegroundExpt{}
-        \FGIntraExpt{}
 
         In this experiment we test the effect of our foregroundness weights --- weighting the score of each
           features correspondence with a foregroundness weight --- on identification accuracy.
@@ -252,6 +253,9 @@
           common.
         Therefore we find it beneficial to always include foregroundness when a trained estimator is available.
 
+        %\ForegroundExpt{}
+        \FGIntraExpt{}
+
         %foreground weights occasionally dips below Occasionally the accuracy of using foreground weights Occasionaly toNote that towards higher ranks 
         %N
         %For plains zebras, using the foregroundness measure results in a significant $3.79\percent$ increase in
@@ -259,6 +263,7 @@
         %For Grévy's zebras there is also a significant $3.3\percent$ increase.
         %This experiment clearly shows the importance of eliminating background feature correspondences.
      
+    \FloatBarrier{}
     \subsection{Invariance experiment}\label{sub:exptinvar} %
         In this experiment we vary the feature invariance configuration.
         This influences the location, shape, and orientation of keypoints detected in each annotation, which in
@@ -281,6 +286,7 @@
           slightly to the right, and the last is the original keypoint.
         The four specific configuration that we test are outlined in the following list:
 
+        \FloatBarrier{}
         \begin{itemln}
 
             \item \NoInvar{} (\pvar{AI=F,QRH=F}): % 
@@ -301,8 +307,7 @@
                 This is the combination of \QRHCirc{} and \AIAlone{}.
 
         \end{itemln}
-
-        \InvarExpt{}
+        \FloatBarrier{}
 
         % Invar Conclusions
         The example in~\cref{fig:kptstype} illustrates the difference between \AIAlone{} and \QRHCirc{} features
@@ -327,8 +332,11 @@
           that it is less important because it is more likely that a two annotations will have at least one
           distinctive region aligned an in common.
 
+        \InvarExpt{}
+
         \kptstype{}
 
+    \FloatBarrier{}
     \subsection{Scoring mechanism experiment}\label{sub:exptscoremech}  
 
         % TODO: change experiment so only one annotation per name is chosen for
@@ -342,8 +350,6 @@
           in~\cref{subsec:namescore}:
         (1) \cscoring{} (denoted as \csum{}) and
         (2) \nscoring{} (denoted as \nsum{}).
-
-        \NScoreExpt{}
 
         Because the scoring mechanism is meant to take advantage of multiple database annotations, we vary the
           number of \exemplars{} per database \name{} (\pvar{dpername}) between $1$, $2$, and $3$.
@@ -374,7 +380,10 @@
         As more annotations of that individual are added the likelihood that the ranking algorithm will make a
           connection between all instances of that individual will increase.
 
+        \NScoreExpt{}
 
+
+    \FloatBarrier{}
     \subsection{K experiment}\label{sub:exptk}  
 
         % Introduce varied parameters
@@ -383,9 +392,6 @@
           accuracy.
         We vary $\K$ between the values $1, 2, 4$, and $6$.
         In all of these experiments we set the number of normalizing neighbors to be $\Knorm=1$.
-
-        \KExptA{}
-        \KExptB{}
 
         Two database factors that may influence the best choice of $\K$ are the number of annotations in the
           database and the number of annotation per name in the database.
@@ -447,6 +453,10 @@
         This section does shows that the number of exemplars per annotation has a significant impact on
           identification accuracy.
 
+        \KExptA{}
+        \KExptB{}
+
+    \FloatBarrier{}
     \subsection{Failure cases}\label{sub:exptfail}  
         
         We no investigate the causes of identification failure and consider example failure cases.
@@ -465,9 +475,8 @@
         %The last three types of failure cases denote type $1$ errors (false positive) where the incorrect match
         %  produces a score that is too high.
 
+        \FloatBarrier{}
         \subsubsection{Alignment}
-
-            \FailViewpoint{}
             
             When two annotations are not aligned (ignoring translation and small scale differences), there can be
               significant differences in appearance that can cause inconsistency in feature localization and
@@ -492,6 +501,9 @@
             Given multiple annotations of an individual we expect that the matching algorithm will be able to
               overcome viewpoint and pose differences by matching annotations with intermediate positions.
 
+            \FailViewpoint{}
+
+        \FloatBarrier{}
         \subsubsection{Quality factors}
             Factors such as low resolution, blurring, poor exposure, lighting (shadows / non-uniform
               illumination), and occlusion can significantly reduce the density of distinctive features on an
@@ -508,14 +520,15 @@
             The example in~\cref{fig:FailOcclusion} illustrates a failure case due to occlusion, and
               \cref{fig:FailQuality} illustrates failure case due to low resolution.
 
-            \FailOcclusion{}
-            \FailQuality{}
-
             In some cases low quality annotations can be still be matched, but in the worst case all distinctive
               features are missing and there is no way to visually identify the individual.
             Therefore, the best way to handle these annotations is either to ignore them entirely, or to first
               attempt to match them, but then discard them if they cannot be matched.
 
+            \FailOcclusion{}
+            \FailQuality{}
+
+        \FloatBarrier{}
           \subsubsection{Non-primary correspondences}
             Sometimes an annotation bounding box cannot be placed tightly around an animal (this happens often
               for some species like giraffes), which means that other objects will appear in the background.
@@ -523,9 +536,6 @@
             Ideally, the primary animal in each annotation would be segmented, but when simply matching raw
               annotations non-primary correspondences may be formed.
             This results in the photobomb and scenery-match failure cases.
-
-            \FailScenery{}
-            \FailPhotobomb{}
 
             Photobombs are caused by correct correspondences a non-primary animal (seen either in the foreground
               or background) in an annotation.
@@ -542,6 +552,10 @@
             However, there are some patterns that photobomb matches present that we seek to take advantage of
               later in \cref{sec:learnpb}.
 
+            \FailScenery{}
+            \FailPhotobomb{}
+
+    \FloatBarrier{}
     \subsection{Experimental conclusions}\label{sub:exptsum}  
 
         In this section we have evaluated our ranking algorithm on multiple species, compared it to an

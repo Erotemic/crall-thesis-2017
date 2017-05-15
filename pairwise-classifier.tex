@@ -138,10 +138,9 @@ The viewpoint and quality attributes should help the classifier predict when pai
   comparable --- forcing there to be stronger evidence to form a match, such as strong correspondences on a face
   turned toward the camera in both a left and right side view.
 An example illustrating such a case where two annotations with different viewpoints are a positive match is
-  illustrated in \cref{fig:leftright}.
+  illustrated in \cref{fig:LeftRightFace}.
 
-
-TODO: Figure of the face match between different sides.
+\LeftRightFace{}
 
 
 %Of these four ``unary'' attributes only the qualities are used directly.
@@ -202,6 +201,7 @@ This results in a richer set of correspondences between annotations $\qaid$ and 
 After the one-vs-one matching stage, measurements are made at each feature correspondence.
 For a feature correspondence between two features $i$ and $j$ with descriptors $\desc_i$ and $\desc_j$,
   normalizing descriptor $\descnorm$, the measurements we consider are:
+
 \begin{itemln}
 
     \item Correspondence distance:
@@ -246,6 +246,7 @@ As previously noted this process is repeated for multiple values of the ratio te
 This softens the impact of its binary threshold and adds robustness to viewpoint and pose variations that may
   cause correspondences to appear slightly less distinctive.
 
+\FloatBarrier{}
 \subsection{The final pairwise feature vector}
 
 \begin{figure}
@@ -490,8 +491,8 @@ If this was not the case, then we would include an additional partition for inco
           are inherently challenging and also cause the pairwise classifier to fail as illustrated
           by~\cref{fig:PairFailPN}.
         Lastly, sometimes the pairwise classifier is simply unable to key in on cues that a set of one-vs-one
-          correspondences is not distinctive like when it predicts that the pair in ~\cref{PairFailNP} is positive
-          instead of negative.
+          correspondences is not distinctive like when it predicts that the pair in ~\cref{fig:PairFailNP} is
+          positive instead of negative.
         However, note that in all of these examples that the non-extreme probabilities assigned to each state
           demonstrate that the classifier is not confident in these predictions.
         We will take advantage of this in the next chapter.
@@ -503,6 +504,8 @@ If this was not the case, then we would include an additional partition for inco
         \PairFailPN{}
 
         \PairFailNP{}
+
+        \FloatBarrier{}
 
 
     %---------
@@ -520,8 +523,8 @@ If this was not the case, then we would include an additional partition for inco
         As the important features in~\cref{tbl:ImportantPBFeat} illustrate, the photobomb classifier seems to
           rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
           when taking images of several animals in a small time period.
-        The classifier also makes use of the spatial position of the feature correspondences, which is indicative
-          of a photobomb when all of the matches are to the left corner of the annotation.
+        The classifier also makes use of the spatial position of the feature correspondences, which can be
+          indicative of a photobomb (\eg{} when all of the matches are in the top left corner of an annotation).
         This suggests that that with more training data the classifier could be trained reliably used to predict
           when a match is a photobomb.
 
@@ -531,12 +534,76 @@ If this was not the case, then we would include an additional partition for inco
 
         \ImportantPBFeat{}
 
+    \FloatBarrier{}
+    \subsection{Classifier experiment conclusions}
+        In these experiments we have demonstrated that our pairwise match state classifier is able to reliably
+          separate positive from negative and incomparable cases.
+        When compared to the LNBNN scores from~\cref{chap:ranking}, not only do these probabilities have more
+          predictive power, they are interpretable, always ranging between $0$ and $1$.
+        In practice, we have found these probabilities to be well calibrated, meaning that a validation dataset
+          can be used to select a threshold --- to automatically classify pairs --- where the false positive rate
+          is sufficiently low.
+        Because the positive cases are well separated from the negative and incomparable cases, a significant
+          number of automatic reviews is possible.
+        Furthermore, because the classifier was trained using hard, moderate, and easy training examples, it is
+          able to correctly re-rank results of the ranking algorithm, where the correct match was ranked in highly
+          but not rank $1$.
+        Lastly, because the classifier predicts probabilities independent of their position in the ranked list,
+          it can used to determine when a query individual is new --- \ie{} does not have a correct match in the
+          database.
+
+        The performance of secondary photobomb classifier is weaker, but this is likely due to a small amount of
+          training data.
+        Even in its weak state, it can be used to prevent automatic review of some photobomb cases.
+        Because the photobomb classifier can only prevent automatic decision and does not make them, the cost of
+          including it in our algorithms is small, and by doing so we will increase the amount of labeled training
+          data from which a stronger photobomb classifier can be bootstrapped.
+        %Therefore, the pairwise algorithm can be used to re-rank the of the ranking algorithm.
+
 
 \section{Summary of pairwise classification}\label{sec:pairconclusion}
 
-    In this chapter we have constructed a verification mechanism that can predict the matching state of any two
-      annotations using a pairwise probabilistic classifier.
+    In this chapter we have constructed a verification mechanism that can predict the probability that a pair of
+      annotations is positive, negative, or incomparable.
+    We have also constructed a secondary classifier that can predict when --- namely in the case of photobombs
+      --- a pair of annotations might confuse the primary match-state classifier.
+    This was done by constructing a feature vector that contains matching information about a pair of
+      annotations.
+    We have shown how to construct a representative training set by selecting hard, moderate, and easy training
+      examples.
+    Our classifiers were learned using the random forest learning algorithm.
+    Our experiments demonstrate that the match-state classifier is able to strongly separate positive and
+      negative cases.
+    The performance of the photobomb classifier was weaker, but could likely be improved with more training data.
 
-    We have shown that our classifiers produce probabilities that are more
-    interpretable and better able to separate positive from negative cases than
-    LNBNN scores. 
+    Based on our experiments, it is clear that the ranking algorithm is improved by a verifier, but by themselves
+      ranking verification is not enough to robustly address animal identification.
+    There is no mechanism for error recovery, nor is there a mechanism for determining when identification is
+      complete.
+    This means the automatic review threshold must still be set quite high, and the amount of time a manual
+      review spends checking results under this threshold can be quite large.
+    These issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification
+      process.
+    This framework will detect when errors have occurred, recover from the errors, and stop the identification
+      process in a timely manner.
+
+
+    %\begin{itemln}
+
+    %\item The probabilities from the match-state classifier can be used to re-rank results of the ranking
+    %  algorithm.
+    %Because the classifier was trained using difficult training examples, it is able to correctly re-rank the
+    %  case where the correct match was ranked highly, but not in rank $1$.
+
+    %\item The probabilities can be used to make automatic decisions about the highest confidence results.
+    %This is possible because the output from the pairwise algorithm is interpretable, ranging between $0$ and
+    %  $1$.
+    %We have found that these probabilities are well calibrated.
+    %A validation dataset can be used to select a threshold where the false positive rate is sufficiently low
+    %  (even $0$).
+    %Because the positive cases are well separated from the negative and incomparable cases, a significant number
+    %  of automatic reviews is possible.
+
+    %\item Because the classifier outputs probabilities about pairs independent of their rank, we can address the
+    %  case where a correct positive match does not exist, and automatically reject negative results at rank $1$.
+    %\end{itemln}

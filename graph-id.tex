@@ -1,8 +1,6 @@
 \chapter{Graph identification}\label{chap:graphid}
 \newcommand{\nT}{N}
 
-%In this chapter we combine our ranking and verification algorithms from \Cref{chap:ranking,chap:pairclf} into a
-%  framework that identifies animals by constructing a \glossterm{decision graph}.
 In this chapter we frame the problem of animal identification in terms of constructing a %
 \glossterm{decision graph}.
 In this graph, each vertex is an annotation, and each edge represents a decision made between two annotations.
@@ -57,13 +55,6 @@ Then, \Cref{sec:rename} describes how existing database can be ported into this 
   number of manual reviews and recover from errors.
 \Cref{sec:graphconclusion} concludes and summarizes the chapter.
 
-%This outline of this chapter is as follows: \cref{sec:decisiongraph} formalizes the decision graph and summarizes the
-%priority based review procedure used to construct it. \Cref{sec:cand} describes candidate edge generation.
-%\Cref{sec:decision} discuss how the verification algorithm is used to automatically review candidate edges.
-%\Cref{sec:redun} introduces the redundancy criteria used to eliminate candidate edges. \Cref{sec:incon} describes the
-%built-in mechanisms for error recovery. \Cref{sec:converge} discusses the convergence criteria that determines when
-%identification is complete. 
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The decision graph}\label{sec:decisiongraph}
@@ -116,10 +107,6 @@ Additionally this deterministic convergence criteria would requires that $O(|V|^
   negative.
 We address this concern in~\cref{sec:converge} using a probabilistic termination criteria.
 
-%Finally, we add a measure of redundancy to both the positive and negative
-%  subgraphs to allow the algorithm to detect and recover from mistakes, either
-%  in the automatic or manual decision making.
-
 \subsection{The review algorithm}\label{sub:graphalgo}
 
 
@@ -169,7 +156,7 @@ Each new edge addition could trigger two important events:
       PCCs that already have a negative edge between them creates an inconsistent PCC.
 \end{enumin}
 Handling a merge is largely a matter of bookkeeping and can be done efficiently using a data structure that can
-  dynamically maintain connected components~\cite{TODO}.
+  dynamically maintain connected components~\cite{jacob_holm_poly_logarithmic_1998}.
 Finding an inconsistency, however, drops the user into inconsistency recovery mode which alternates between
   hypothesizing one or more edges to fix and manually verifying these edges with the user until consistency is
   restored.

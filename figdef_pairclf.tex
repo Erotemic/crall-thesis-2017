@@ -1,5 +1,3 @@
-
-
 \edef\pzcode{PZ_PB_RF_TRAIN_2567}
 \edef\gzcode{GZ_Master1_21589}
 %\edef\gzcode{GZ_Master1_222}
@@ -7,7 +5,7 @@
 
 
 \newcommand{\MatchStateExample}{
-\begin{figure}[ht!] \centering
+\begin{figure}[h] \centering
 \begin{subfigure}[h]{0.26\textwidth} \centering
 \includegraphics[height=160pt]{figures_pairclf/classesC.png}\caption{positive}\label{sub:classesC}
 \end{subfigure}
@@ -30,7 +28,7 @@ Local feature correspondences are superimposed over the pairs.
 
 
 \newcommand{\PositiveHist}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
@@ -71,7 +69,7 @@ scores the learned probabilities exhibit better separability.
 
 
 \newcommand{\PositiveROC}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
@@ -115,10 +113,9 @@ Positive match state ROC.
     \end{subtable} %
 \caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
 % ---
-Multiclass match state confusion for plains and Grévy's zebras. The rows are
-the real (groundtruth) state and the columns are the predicted states.  The
-final column indicates the number of examples for each class in the testing
-dataset. 
+Multiclass match state confusion for plains and Grévy's zebras.
+The rows are the real (groundtruth) state, and the columns are the predicted states.
+The final column indicates the number of examples for each class.
 % ---
 }
 \label{tbl:ConfusionMatch}
@@ -162,7 +159,7 @@ computed from the confusion matrix.
 \end{comment}
 
 \newcommand{\MatchWordCloud}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
 \begin{subfigure}[h]{0.47\textwidth}
 \centering
@@ -212,12 +209,11 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
         \end{tabular}
         \caption{Grévy's zebra}
     \end{subtable} %
-\caption[\caplbl{ImportantMatchFeat}Important features for match prediction]{
+\caption[\caplbl{ImportantMatchFeat}Important features for match prediction]{\caplbl{ImportantMatchFeat} 
 % ---
-    \caplbl{ImportantMatchFeat} Top $5$ most important features for predicting
-    that matching state (positive, negative, incomparable) for a pair of
-    annotations. 
-    %The sum of the importance for all $205$ feature dimensions is $1$.
+Top $5$ most important features for predicting that matching state (positive, negative, incomparable) for a pair of
+annotations.
+%The sum of the importance for all $205$ feature dimensions is $1$.
 % ---
 }
 \label{tbl:ImportantMatchFeat}
@@ -232,33 +228,20 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
     python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=photobomb_state
 \end{comment}
 \newcommand{\ConfusionPhotobomb}{
-
-\begin{table}[ht!]
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}
-        \caption{Plains zebra photobomb confusion}
-    \end{subtable} %
-
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}
-        \caption{Grévy's zebra photobomb confusion}
-    \end{subtable} %
+\begin{table}[h]
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
 \caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
 % ---
-Photobomb state confusion for plains and Grévy's zebras.
-The classes pb and notpb respectively indicate if a pair is or is not a
-photobomb.
-The columns indicate predicted classes and the rows rows indicate real (groundtruth) classes.
-The final column indicates the number of examples of each class in the testing
-dataset.
+Photobomb state confusion for plains and Grévy's zebras. The columns indicate
+predicted classes, and the rows indicate real (groundtruth) classes.  The final
+column indicates the number of examples of each class.
 % ---
 }
-
 \label{tbl:ConfusionPhotobomb}
 \end{table}
 }
+
 
 \newcommand{\EvalMetricsPhotobomb}{
 \begin{table}
@@ -280,7 +263,6 @@ Photobomb state evaluation metrics for plains and Grévy's zebras computed from
 the confusion matrix.
 % ---
 }
-
 \label{tbl:EvalMetricsPhotobomb}
 \end{table}
 }
@@ -288,7 +270,7 @@ the confusion matrix.
 
 \newcommand{\ImportantPBFeat}{
     \begin{table}
-        \centering 
+        \centering
         \begin{subtable}[h]{0.44\textwidth} 
             \centering
             \begin{tabular}{l c}
@@ -299,7 +281,7 @@ the confusion matrix.
             \end{tabular}
             \caption{Plains zebra phototomb importance}
         \end{subtable} %
-        ~~~~ 
+        ~~~~
         \begin{subtable}[h]{0.44\textwidth}
             \centering 
             \begin{tabular}{l c}
@@ -311,15 +293,107 @@ the confusion matrix.
             \end{tabular}
             \caption{Grévy's zebra phototomb importance}
         \end{subtable} %
-        \caption[\caplbl{ImportantPBFeat}Important features for photobomb prediction]{
+        \caption[\caplbl{ImportantPBFeat}Important features for photobomb prediction]{\caplbl{ImportantPBFeat} 
 % ---
-            \caplbl{ImportantPBFeat} Top $5$ most important features for predicting if
-            a pair of annotations has a photobomb.  Notice that these features are
-            related to the spatial location of the matches and to global information
-            like speed that might preclude a match from occuring. Annotations taken at
-            the same time and place are more likely to contain photobombs.
+Top $5$ most important features for predicting if a pair of annotations has a photobomb.  Notice that these
+features are related to the spatial location of the matches and to global information like speed that might
+preclude a match from occuring. Annotations taken at the same time and place are more likely to contain photobombs.
 % ---
         }
         \label{tbl:ImportantPBFeat}
     \end{table}
+}
+
+
+
+
+
+\newcommand{\PairFailIN}{
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Incomparable_Negative_383_503.jpg}
+\caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
+% ---
+The pair is incomparable, but the classifier predicts negative due to the small amount of incomparable training
+  data available.
+% ---
+}
+\label{fig:PairFailIN}
+\end{figure}
+}
+
+\newcommand{\PairFailNP}{
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Negative_Positive_424_465.jpg}
+\caption[\caplbl{PairFailNP}Negative pairwise failure case]{\caplbl{PairFailNP}
+% ---
+This pair is negative, but the classifier predicts positive because of
+similarity in pose and coarse patterns. The classifier is unable to recognize
+that the shoulder is the same region on both animals and contains distinctive
+patterns that do not match.
+% ---
+}
+\label{fig:PairFailNP}
+\end{figure}
+}
+
+\newcommand{\PairFailPN}{
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Positive_Negative_63_72.jpg}
+\caption[\caplbl{PairFailPN}Positive pairwise failure case]{\caplbl{PairFailPN}
+% ---
+The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.
+% ---
+}
+\label{fig:PairFailPN}
+\end{figure}
+}
+
+
+
+%\SingleImageCommand{PairFailIN}{.7}{
+%Incomparable Pairwise failure case
+%}{
+%% ---
+%The pair is incomparable, but the classifier predicts negative due to the small
+%amount of incomparable training data available.
+%% ---
+%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Incomparable_Negative_383_503_custom.jpg}
+
+
+%\SingleImageCommand{PairFailNP}{.9}{
+%Negative pairwise failure case
+%}{
+%% ---
+%This pair is negative, but the classifier predicts positive because of
+%similarity in pose and coarse patterns. The classifier is unable to recognize
+%that the shoulder is the same region on both animals and contains distinctive
+%patterns that do not match.
+%% ---
+%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Negative_Positive_424_465}
+
+
+%\SingleImageCommand{PairFailPN}{.9}{
+%Positive pairwise failure case
+%}{
+%% ---
+%The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.
+%% ---
+%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Positive_Negative_63_72.jpg}
+
+
+\newcommand{\LeftRightFace}{
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/custom_match_leftrightface_5245_5161.jpg}
+\caption[\caplbl{LeftRightFace}Face match]{\caplbl{LeftRightFace}
+% ---
+Even though this pair has different viewpoints, it is positive and comparable
+because we can establish a distinctive correspondence in the face. 
+% ---
+}
+\label{fig:LeftRightFace}
+\end{figure}
 }

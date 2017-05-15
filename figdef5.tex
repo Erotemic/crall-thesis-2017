@@ -255,24 +255,3 @@ This property can be accessed using the \depcache{} as shown in the
 \end{figure}
 %\end{listing}
 }
-
-
-\begin{comment}
-python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --patience=20 --window=20 --dpi=300 --figsize=7.4375,3.0 '--dpath=~/latex/crall-thesis-2017' --save=figures5/poisson.png --diskshow
-\end{comment}
-\newcommand{\poisson}{
-\begin{figure}[H]
-    %
-    \centering
-    \includegraphics[width=\textwidth]{figures5/poisson.png}
-    \caption[Convergence criteria]{\caplbl{poisson}
-    %--
-    The convergence criteria applied to a synthetic dataset with $40$ names and $2$ annotations per name.
-    The red line indicates the fraction of meaningful reviews that remain undiscovered.
-    The blue line is the probability that at least one of the next $20$ reviews will be meaningful.
-    Notice that the blue line dips when the red line flattens.
-    The process terminates once this probability drops below $0.1$.
-    %--
-} \label{fig:poisson}
-\end{figure}
-}

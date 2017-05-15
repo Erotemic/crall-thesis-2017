@@ -548,7 +548,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 
 
 \newcommand{\ImageFigureDraft}[4]{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
     \centering 
     \fboxII{\includegraphics[draft,width=#2]{#1}}
     \caption{\caplbl{#4}#3}\label{fig:#4} 
@@ -565,7 +565,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 
 
 \newcommand{\ImageFigure}[4]{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
     \centering 
     \fboxII{\includegraphics[width=#2]{#1}}
     \caption{\caplbl{#4}#3}\label{fig:#4} 
@@ -580,7 +580,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 
 
 \newcommand{\CaptionedImageFigure}[5]{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
     \centering 
     \fboxII{\includegraphics[width=#2]{#5}}
     \caption[\caplbl{#1}#3]{\caplbl{#1}#4}\label{fig:#1} 
@@ -610,7 +610,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 % Not sure how to fix this robustly. Adding \vspace{-1\baselineskip} in the last else seems to help some.
 % chktex-file 39
 \NewDocumentCommand\MultiImageFigure{mmmgggg}{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
         \centering 
         \IfValueTF{#4}{
             \begin{subfigure}[h]{#2\textwidth}
@@ -688,7 +688,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 
 
 \NewDocumentCommand\MultiImageFigureII{mmmmgggg}{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
         \centering 
         \IfValueTF{#5}{
             \begin{subfigure}[h]{#2\textwidth}
@@ -719,7 +719,7 @@ A\IfStrEq{\firstchar}{a}{n}{%
 
 
 \NewDocumentCommand\MultiImageFigureDraft{mmmgggg}{ 
-    \begin{figure}[ht!]
+    \begin{figure}[h]
         \centering 
         \IfValueTF{#4}{
             \begin{subfigure}[h]{#2\textwidth}
