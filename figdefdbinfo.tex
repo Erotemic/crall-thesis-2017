@@ -5,7 +5,8 @@
 
 \begin{comment}
 ALL DATABASE INFO
-python -m ibeis.scripts.thesis Chap3.agg_db_stats
+python -m ibeis Chap3.measure dbstats --dbs=PZ_Master1,GZ_Master1,GIRM_Master1,humpbacks_fb
+python -m ibeis Chap3.agg_dbstats
 \end{comment}
 
 % <DBINFO>
@@ -39,17 +40,15 @@ python -m ibeis.scripts.thesis Chap3.agg_db_stats
 %-------------
 % TimeDeltas
 \begin{comment}
-python -m ibeis.scripts.thesis Chap3.draw_time_distri --dbs=GIRM_Master1 --diskshow
-python -m ibeis.scripts.thesis Chap3.draw_time_distri --dbs=GZ_Master1 --diskshow
-python -m ibeis.scripts.thesis Chap3.draw_time_distri --dbs=PZ_Master1 --diskshow
-python -m ibeis.scripts.thesis Chap3.draw_time_distri --dbs=humpbacks_fb --diskshow
+python -m ibeis Chap3.measure time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,humpbacks_fb --diskshow
+python -m ibeis Chap3.draw time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,humpbacks_fb --diskshow
 \end{comment}
 \newcommand{\timedist}{
 \begin{figure}[ht!] \centering
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/PZ_Master1/timedist.png}\caption{plains zebras}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/humpbacks_fb/timedist.png}\caption{Humpback whales}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
 \caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
     % ---
     Distribution of image timestamps.

@@ -509,11 +509,11 @@ This issue can be addressed by predicting if none of the remaining edges would c
 
 Similar to the refresh criteria, we must be able to determine when to terminate the algorithm.
 Ideally, the algorithm would terminate only when it was certain that all PCCs have been correctly identified.
-The graph framework can deterministically achieve this by using all $|V|^2$ edges as candidates and then looping
-  until each PCC is positive redundant and each pair of PCCs is negative redundant.
+The graph framework can deterministically achieve this by using all $\binom{|V|}{2}$ edges as candidates and then
+  looping until each PCC is positive redundant and each pair of PCCs is negative redundant.
 Unfortunately, this requires $O(|V|^2)$ reviews, which is only feasible if
 (1) the number of annotations is very small, or
-(2) all edges can be automatically reviewed (even then the cost can be prohibitive).
+(2) all edges can be automatically reviewed (but even then the cost can be prohibitive).
 Therefore, in practical circumstances, we turn towards probabilistic methods to determine when to stop.
 Like, the refresh criteria, this can be determined --- in part --- by predicting if new reviews will change the
   PCCs.
@@ -654,18 +654,24 @@ in the optimal consistent assignment of PCCs to original name labels.
   
 \section{Experiments}\label{sec:graphexpt}
 
-    TODO: make figures for PZ and GZ
-
-    In this section we design an experiment to measure the impact of graph identification on the number of manual
+    In this section we design an end-to-end experiment that simulates an identification event like the \GZC{}.
+    
+    to measure the impact of graph identification on the number of manual
       reviews required to complete identification as well as the accuracy of those identifications.
-    Our experiments simulates the semi-automatic identification process from a user's perspective.
+    We will use the plains and Grévy's zebras datasets previously described in \cref{sub:datasets}.
+    Our experiment simulates the semi-automatic identification process from a user's perspective.
     We consider three algorithms:
-    (1) our graph identification algorithm,
-    (2) a baseline ranking-based protocol, and
-    (3) an intermediate ranking protocol that combines the ranking algorithm with pairwise classifier.
-    To simulate our algorithms, we model noisy user response using ground-truth data.
+    (1) a baseline ranking-based protocol from \cref{chap:ranking},
+    (2) the same ranking algorithm but augmented with the verification algorithm from \cref{chap:pairclf}, and
+      finally
+    (3) the graph identification algorithm introduced in this chapter.
+
+    Because our algorithms are semi-automatic we simulate a noisy user response using ground-truth data.
     The simulated user returns the ground-truth classification $98\percent$ of the time, making errors
       $2\percent$ of the time uniformly at random.
+    This accuracy assumption is simplistic and may be too low for an expert reviewer, but for this experiment it
+      will serve to demonstrate our graph algorithm's ability to recover from errors.
+
 
     The protocol for the graph identification algorithm is defined in \cref{sub:graphalgo}.
     The pairwise classifier, corresponding thresholds, and termination criteria are learned on a disjoint
@@ -690,6 +696,14 @@ in the optimal consistent assignment of PCCs to original name labels.
       probability above a threshold is automatically reviewed.
     Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
       that achieve a $0\percent$ false positive rate on a validation dataset.
+
+    \begin{comment}
+    python -m ibeis Chap5.print_measures --db GZ_Master1 --diskshow
+    \end{comment}
+
+    \Simulation{}
+
+    \Refresh{}
 
     In all tests we record two measurements after each review pertaining to accuracy and error.
     (1) The accuracy measurement is the number of merges remaining before all individuals have been identified.
