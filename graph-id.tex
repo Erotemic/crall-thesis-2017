@@ -596,6 +596,14 @@ $\Pr{T\teq1} = 1 - \exp{-\mu  a}$.
 The example in \cref{fig:poisson} illustrates the behavior of the criteria using a synthetic dataset.
 In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $.1$.
 
+%To achieve a certain threshold with a specified span the number of iterations required is: 
+%$\lceil{\frac{\log{\left (t \right )}}{\log{\left (\frac{s - 1}{s + 1} \right )}}}\rceil$
+
+%If we set the threshold to $\exp{-2}\approx0.135$, then the window span parameter also roughly represents how
+%  many successive consecutive non-meaningful decisions are necessary before reaching the threshold if starting from
+%  initial state.
+
+
 \poisson{}
   
 
@@ -654,11 +662,15 @@ in the optimal consistent assignment of PCCs to original name labels.
   
 \section{Experiments}\label{sec:graphexpt}
 
-    In this section we design an end-to-end experiment that simulates an identification event like the \GZC{}.
-    
-    to measure the impact of graph identification on the number of manual
-      reviews required to complete identification as well as the accuracy of those identifications.
+    In this section we design an end-to-end experiment where we start with a set of annotations without any name
+      labels, and then we proceed to construct all of the names.
+    This design simulates identification events like the \GZC{} and provides insight into how the user will
+      experience the algorithm.
+    Because our algorithms are semi-automatic we simulate a noisy user response using ground-truth data.
     We will use the plains and Grévy's zebras datasets previously described in \cref{sub:datasets}.
+    
+    to measure the impact of graph identification on the number of manual reviews required to complete
+      identification as well as the accuracy of those identifications.
     Our experiment simulates the semi-automatic identification process from a user's perspective.
     We consider three algorithms:
     (1) a baseline ranking-based protocol from \cref{chap:ranking},
@@ -671,7 +683,6 @@ in the optimal consistent assignment of PCCs to original name labels.
       $2\percent$ of the time uniformly at random.
     This accuracy assumption is simplistic and may be too low for an expert reviewer, but for this experiment it
       will serve to demonstrate our graph algorithm's ability to recover from errors.
-
 
     The protocol for the graph identification algorithm is defined in \cref{sub:graphalgo}.
     The pairwise classifier, corresponding thresholds, and termination criteria are learned on a disjoint
