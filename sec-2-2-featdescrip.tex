@@ -6,23 +6,25 @@
     visually similar patches produce vectors with a small metric distance and (2) visually dissimilar patches have
     vectors with large distances between them.
 
-    Constructing such a descriptor vector has been a core problem throughout the history of computer vision. The
-    first texture descriptor robust to small image transformations was the SIFT descriptor first published in
-    1999~\cite{lowe_object_1999, lowe_distinctive_2004}. Since then, other hand-crafted algorithms have been
-    proposed. However, results have always been at least comparable to the SIFT descriptor, and SIFT is still an
-    effective and widely used hand-designed descriptors~\cite{mikolajczyk_performance_2005, calonder_brief_2010,
-    bay_surf_2006, leutenegger_brisk_2011, alahi_freak_2012, jegou_triangulation_2014}. A promising direction for
-    outperforming the SIFT descriptor is descriptor learning~\cite{simonyan_descriptor_2012,
-    simonyan_learning_2014, winder_picking_2009}; specifically descriptor learning using deep neural
-    networks~\cite{razavian_cnn_2014, bengio_representation_2013, russakovsky_imagenet_2014}. This section first
-    describes the basic SIFT algorithm and then provides an overview of alternatives that have been proposed to
-    SIFT{}. Work related to learning descriptor vectors using deep neural networks is discussed later
-    in~\cref{sec:dcnn}.
+    Constructing such a descriptor vector has been a core problem throughout the history of computer vision.
+    The first texture descriptor robust to small image transformations was the scale invariant feature
+      transform (SIFT) descriptor first published in 1999~\cite{lowe_object_1999, lowe_distinctive_2004}.
+    Since then, other hand-crafted algorithms have been proposed.
+    However, results have always been at least comparable to the SIFT descriptor, and SIFT is still an effective
+      and widely used hand-designed descriptors~\cite{mikolajczyk_performance_2005, calonder_brief_2010,
+      bay_surf_2006, leutenegger_brisk_2011, alahi_freak_2012, jegou_triangulation_2014}.
+    A promising direction for outperforming the SIFT descriptor is descriptor
+      learning~\cite{simonyan_descriptor_2012, simonyan_learning_2014, winder_picking_2009}; specifically
+      descriptor learning using deep neural networks~\cite{razavian_cnn_2014, bengio_representation_2013,
+      russakovsky_imagenet_2014}.
+    This section first describes the basic SIFT algorithm and then provides an overview of alternatives that have
+      been proposed to SIFT{}.
+    Work related to learning descriptor vectors using deep neural networks is discussed later in~\cref{sec:dcnn}.
       
     \subsection{SIFT}
-        The \glossterm{SIFT descriptor} is a $128$ dimensional vector that summarizes the spatial distribution of
-        the gradient orientations in an image patch~\cite{lowe_distinctive_2004}. To describe a keypoint with a
-        SIFT descriptor, the keypoint's image data is warped using the affine transform of the scale space gradient
+        The {SIFT descriptor} is a $128$ dimensional vector that summarizes the spatial distribution of the
+        gradient orientations in an image patch~\cite{lowe_distinctive_2004}. To describe a keypoint with a SIFT
+        descriptor, the keypoint's image data is warped using the affine transform of the scale space gradient
         image into a normalized reference frame (typically $41 \times 41$ pixels). For a descriptor to be useful in
         matching it is important that the keypoint is properly localized before a descriptor is
         computed~\cite{ke_pca_sift_2004}. Because it is not always possible to perfectly localize a keypoint, the
@@ -62,16 +64,13 @@
 
     \subsection{Other descriptors and SIFT extensions}
         Even more than a decade after its original publication, SIFT remains a popular descriptor for patch-based
-          matching because it is versatile, unsupervised, widely available, and easy to use.
-        The principles used to guide the construction of the SIFT descriptor --- particularly the use of
-          aggregated gradients --- have inspired many variants, extensions, and new
-          techniques~\cite{mikolajczyk_performance_2005, dalal_histograms_2005, bay_surf_2006}.
-        Hand crafted alternatives to SIFT have been developed that are faster to compute and more efficient to
-          store, but these alternatives do not significantly outperform SIFT's matching accuracy on general
-          data~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005, alahi_freak_2012}.
-        %However, if training data is provided, machine learning can be used to
-        %  compute descriptors that can achieve higher matching accuracy.
-        This subsection provides a brief overview of these alternatives.
+        matching because it is versatile, unsupervised, widely available, and easy to use. The principles used to
+        guide the construction of the SIFT descriptor --- particularly the use of aggregated gradients --- have
+        inspired many variants, extensions, and new techniques~\cite{mikolajczyk_performance_2005,
+        dalal_histograms_2005, bay_surf_2006}. Hand crafted alternatives to SIFT have been developed that are
+        faster to compute and more efficient to store, but these alternatives do not significantly outperform
+        SIFT's matching accuracy on general data~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005,
+        alahi_freak_2012}. This subsection provides a brief overview of these alternatives.
 
         % ALTERNATIVES FOR DETECTION
         The use of aggregated gradient information in SIFT has been adapted for use in other computer vision
@@ -88,41 +87,42 @@
         As a general single-scale patch-based descriptor, the matching accuracy of SIFT has not been significantly
         outperformed on general datasets.
         % GLOH
-        One attempt at an improved general descriptor is the Gradient Location-Orientation Histogram (GLOH)
+        One attempt at an improved general descriptor is the gradient location-orientation histogram (GLOH)
         descriptor~\cite{mikolajczyk_performance_2005}. GLOH uses a similar structure to SIFT but replaces the
         rectangular-bins with log-polar bins. GLOH did achieve higher matching accuracy on some datasets, but it
         was not by a significant margin.
-        %Despite However, domain specific modifications have shown promising results.
-        %The Rotation Invariant Feature Transform (RIFT) descriptor \cite{lazebnik_sparse_2005} uses concentric
-        %  circles to make a similar modification.
-        %The RIFT descriptor are used in texture classification \cite{lazebnik_sparse_2005}.
         Despite the lack of generic success, hand-crafted SIFT variants have been successful when applied to
         specific tasks.
         % COLORED SIFT
         Colored SIFT variants such as opponent-SIFT are valuable in category recognition tasks, where a color
         difference could be the distinguishing factor between categories~\cite{van_de_sande_evaluating_2010}
         % SCALE-LESS SIFT
-        % FIXME: this does not flow well. Just said SIFT was not outperformed
-        % THen I say that SLS outperforms it.
         Combining multiple SIFT descriptors over different scales has also shown moderate improvements. The
         scale-less SIFT descriptor combines SIFT descriptors computed at multiple scales into a single descriptor.
         It has been shown to produce more accurate dense correspondences than representing each scale with an
         individual descriptor~\cite{hassner_sifts_2012}.
 
+        %Despite However, domain specific modifications have shown promising results.
+        %The Rotation Invariant Feature Transform (RIFT) descriptor \cite{lazebnik_sparse_2005} uses concentric
+        %  circles to make a similar modification.
+        %The RIFT descriptor are used in texture classification \cite{lazebnik_sparse_2005}.
+
         % SURF
-        Efficiency is one area where SIFT has been significantly outperformed. ``Speeded Up Robust Features''
-        (SURF) is a fast approximation to SIFT based on integral images that achieves similar accuracy using a
-        smaller $64$ dimensional descriptor~\cite{bay_surf_2006}.
+        Efficiency is one area where SIFT has been significantly outperformed.
+        An approximation to SIFT called speeded up robust features (SURF) is a fast approximation to SIFT
+          based on integral images that achieves similar accuracy using a smaller $64$ dimensional
+          descriptor~\cite{bay_surf_2006}.
         % DAISY
-        The DAISY descriptor uses a similar binning structure to GLOH, but uses convolutions with Gaussian kernels
-        to quickly aggregate gradient histograms~\cite{tola_fast_2008}.
+        The DAISY descriptor uses a similar binning structure to GLOH, but uses convolutions with Gaussian
+          kernels to quickly aggregate gradient histograms~\cite{tola_fast_2008}.
         % BINARY PATTERNS
         Binary descriptors such as local binary patterns (LBP)~\cite{ojala_comparative_1996, zhang_local_2010},
-        local derivative patterns~\cite{heikkila_description_2009}, and their variants such as
-        BRIEF~\cite{calonder_brief_2010}, BRISK~\cite{leutenegger_brisk_2011}, and FREAK~\cite{alahi_freak_2012}
-        also quickly compute compact distinctive descriptors. Binary descriptors are built using multiple pairwise
-        comparisons of average image intensity at predetermined locations. This results in a small descriptor that
-        effectively represents aggregated gradient information.
+          local derivative patterns~\cite{heikkila_description_2009}, and their variants such as
+          BRIEF~\cite{calonder_brief_2010}, BRISK~\cite{leutenegger_brisk_2011}, and FREAK~\cite{alahi_freak_2012}
+          also quickly compute compact distinctive descriptors.
+        Binary descriptors are built using multiple pairwise comparisons of average image intensity at
+          predetermined locations.
+        This results in a small descriptor that effectively represents aggregated gradient information.
 
         Machine learning is able to outperform the matching accuracy of SIFT, however these techniques require
         training data to adapt to each new problem domain. Learned descriptors make use of the same aggregated
@@ -137,7 +137,7 @@
         dataset is achieved using a convolutional neural network~\cite{zagoruyko_learning_2015}.
 
     \subsection{Discussion --- descriptor choices}
-        In our application we use the scale invariant feature transform (SIFT)~\cite{lowe_distinctive_2004} as our
+        In our application we use the SIFT~\cite{lowe_distinctive_2004} as our
         baseline descriptor because it is one of the most widely used and well known descriptors. SIFT describes
         images patches in such a way that small localization errors do not significantly impact the resulting
         representation. Exploration of alternative convolutional descriptors is discussed later in~\cref{sec:dcnn}.

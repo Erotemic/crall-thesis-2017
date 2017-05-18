@@ -1,7 +1,5 @@
 
 \section{Deep convolutional neural networks}\label{sec:dcnn}
-    % VGG-Net shows importance of small convolutions \cite{simonyan_very_2014}
-    % Spatial pyramids in CNNs \cite{he_spatial_2014}
     Convolutional networks have been around for over more than two decades~\cite{lecun_gradient_based_1998,
       fukushima_neocognitron_1988}.
     However, they did not receive major attention from computer vision researchers until 2012 when a deep
@@ -11,7 +9,8 @@
     Since then, many successful category recognition techniques based on DCNNs have been
       published~\cite{simonyan_very_2014, chatfield_efficient_2014, chatfield_return_2014, oquab_learning_2014,
       szegedy_going_2014, long_convnets_2014, he_spatial_2014, dean_fast_2013}.
-    DCNNs have also been shown excellent results when applied to other computer vision problems such as: %
+    DCNNs have also been shown to produce excellent results when applied to other computer vision problems such
+      as: %
     instance recognition~\cite{razavian_cnn_2014, razavian_baseline_2015, liu_learning_2015,
       held_deep_2015,arandjelovic_netvlad_2016,radenovic_cnn_2016}, %
     fine-grained recognition~\cite{branson_bird_2014, donahue_decaf_2013, catherine_wah_similarity_2014}, %
@@ -22,160 +21,63 @@
     The sudden success of deep nets has been attributed
     (1) a larger volume of available of training data, and
     (2) implementations using faster GPUs~\cite{krizhevsky_imagenet_2012}.
-
-    %\chuckcomment{This section is a bit terse but we may need to live with this}
-    %\chuckcomment{Make it clear that there are many different convolutions at each layer}
       
     Several techniques are employed to increase accuracy, reduce over-fitting,  and reduce training time.
-    %There have also been advances in training with back propagation apart from
-    %  faster GPUS and more training data \cite{dahl_improving_2013}.
-    Data augmentation is used to artificially increase the amount of training data~\cite{ciresan_multi_column_2012,
-    ciresan_high_performance_2011, simard_best_2003}. The dropout technique has been shown to reducing
-    over-fitting~\cite{dahl_improving_2013, srivastava_dropout_2014}. At training time outputs of hidden units are
-    randomly suppressed which forces the network to learn a more robust representation. It has been shown that dropout
-    can be viewed as a form of model averaging~\cite{hinton_improving_2012}. Rectified Linear Units (ReLU) have been
-    shown to be a faster alternative to the standard sigmoid activation functions~\cite{vinod_rectified_2010,
-    dahl_improving_2013}. An ReLU is similar to a hinge function and simply outputs the signal of a unit if it is
-    positive and outputs a zero otherwise.
-    %  \max(0, x)$.
-    %\begin{equation}
-    %    f(x) = \max(0, x)
-    %\end{equation}
-    %\chuckcomment{give an intuition}
-    Leaky Rectified Linear Units (LReLU) further improve network accuracy by including a ``leakiness'' term while
-    maintaining the speed of ReLUs~\cite{maas_rectifier_2013}. While a ReLU strictly suppresses a feature activation if
-    it is negative a LReLU returns a small negative signal (by multiplying by a constant) instead of zero.
-    %The following is a common definition of a LReLU:
-    %\begin{equation}
-    %    f(x) = \fullbincases{x}{x > 0}{.01x}
-    %\end{equation}
-    %\chuckcomment{What is your point}
+    Data augmentation is used to artificially increase the amount of training
+      data~\cite{ciresan_multi_column_2012, ciresan_high_performance_2011, simard_best_2003}.
+    The dropout technique has been shown to reducing over-fitting~\cite{dahl_improving_2013,
+      srivastava_dropout_2014}.
+    At training time outputs of hidden units are randomly suppressed which forces the network to learn a more
+      robust representation.
+    It has been shown that dropout can be viewed as a form of model averaging~\cite{hinton_improving_2012}.
+    Rectified linear units (ReLU) have been shown to be a faster alternative to the standard sigmoid activation
+      functions~\cite{vinod_rectified_2010, dahl_improving_2013}.
+    An ReLU is similar to a hinge function and simply outputs the signal of a unit if it is positive and outputs
+      a zero otherwise.
+    Leaky rectified linear units (LReLU) further improve network accuracy by including a ``leakiness'' term while
+      maintaining the speed of ReLUs~\cite{maas_rectifier_2013}.
+    While a ReLU strictly suppresses a feature activation if it is negative a LReLU returns a small negative
+      signal (by multiplying by a constant) instead of zero.
 
-    A deep neural network is constructed by stacking several layers of units (neurons) together. Data is used to
-    initialize the activations of an input layer, and the information is forward propagated through the network. Weights
-    are chosen to optimize a loss function --- \eg{} categorical cross-entropy error or triplet
-    loss~\cite{schroff_facenet_2015} --- which is chosen depending on the application. Optimization of the loss function
-    is performed using back-propagation~\cite{rumelhart_learning_1986} --- typically using mini-batches and stochastic
-    gradient descent with momentum~\cite{sutskever_importance_2013}. Traditionally each layer in a neural network is
-    fully connected --- each pair of units between the previous layer this layer has its own edge weight ---  to the
-    previous layer. However, in computer vision networks are constructed using convolutional layers.
+    A deep neural network is constructed by stacking several layers of units (neurons) together.
+    Data is used to initialize the activations of an input layer, and the information is forward propagated
+      through the network.
+    Weights are chosen to optimize a loss function --- \eg{} categorical cross-entropy error or triplet
+      loss~\cite{schroff_facenet_2015} --- which is chosen depending on the application.
+    Optimization of the loss function is performed using back-propagation~\cite{rumelhart_learning_1986} ---
+      typically using mini-batches and stochastic gradient descent with momentum~\cite{sutskever_importance_2013}.
+    Traditionally each layer in a neural network is fully connected --- each pair of units between the previous
+      layer and the current layer has its own edge weight ---  to the previous layer.
+    However, in computer vision networks are constructed using convolutional layers.
 
-    %Convolutional networks are used to extract features from
     A DCNN connects the input layer to a stack of convolutional layers~\cite{krizhevsky_imagenet_2012}.
-    %A DCNN typically consists of several stacked convolutional layers
-    %  connected to several stacked fully connected
-    %  layers~\cite{krizhevsky_imagenet_2012}.
-    A convolutional layer differs from a fully connected layer in that it is sparsely connected and that most of the
-    edge weights between layers are shared~\cite{lecun_gradient_based_1998, fukushima_neocognitron_1988,
-    serre_robust_2007}. Each convolutional layer is broken into several channels. Each channel is given its own weight
-    matrix with a fixed width and height. This matrix of weights is convolved with the input layer to produce a feature
-    activation map, one for each channel. Convolutional layers often use several pooling layers that aggregate
-    information over a small area, reduce the size of the feature map, and increase robustness to transformations.
+    A convolutional layer differs from a fully connected layer in that it is sparsely connected and that most of
+      the edge weights between layers are shared~\cite{lecun_gradient_based_1998, fukushima_neocognitron_1988,
+      serre_robust_2007}.
+    Each convolutional layer is broken into several channels.
+    Each channel is given its own weight matrix with a fixed width and height.
+    This matrix of weights is convolved with the input layer to produce a feature activation map, one for each
+      channel.
+    Convolutional layers often use several pooling layers that aggregate information over a small area, reduce
+      the size of the feature map, and increase robustness to transformations.
     Common pooling operations are max-pooling~\cite{serre_robust_2007, krizhevsky_imagenet_2012} and
-    maxout~\cite{goodfellow_maxout_2013}.
-    %The most common pooling operation is
-    %  max-pooling~\cite{serre_robust_2007, krizhevsky_imagenet_2012}.
-    %Similar to max pooling is a maxout layer where the input to a unit
-    %  is the maximum output over all channels output by the previous
-    %  convolution~\cite{goodfellow_maxout_2013}.
-    %These shared weights act as a filter --- somewhat similar to a
-    %  Gabor filter~\cite{gabor_theory_1946} --- that is applied
-    %  convolutionally to produce a feature map.
-    The convolutional layers may also be connected to a stack of fully connected layers. In this case, hierarchies of
-    feature maps are built in the low level convolutional layers, and then fully connected layers learn decision
-    boundaries between these features~\cite{zeiler_visualizing_2014}.
-    %Convolutional neural networks are trained using back propagation
+      maxout~\cite{goodfellow_maxout_2013}.
+    The convolutional layers may also be connected to a stack of fully connected layers.
+    In this case, hierarchies of feature maps are built in the low level convolutional layers, and then fully
+      connected layers learn decision boundaries between these features~\cite{zeiler_visualizing_2014}.
 
-    %Deep convolutional architectures have been developed to learn
-    %  visual similarity between images
-    %  patches~\cite{osendorfer_convolutional_2013, han_matchnet_2015,
-    %  ng_exploiting_2015, zagoruyko_learning_2015, han_matchnet_2015}.
-    Because of weight sharing convolutional networks must learn significantly less parameters than fully connected
-    networks. This allows convolutional networks to be trained much faster. Fewer weights also acts as a form of
-    regularization for the network. Intuitively learned convolutional filters are similar to Gabor
-    filters~\cite{gabor_theory_1946}, which are a naturally suited for extracting features from images. Even without
-    learning weights, convolutions can be used to extract powerful features for matching~\cite{revaud_deep_2015}. The
-    popular SIFT and HoG features~\cite{mahendran_understanding_2014} can even be implemented as convolutional networks.
-    Despite the lack of hard theoretical insight into the inner workings of these networks, their empirical performance
-    cannot be denied.
-
-   % Formally a convolutional layer is defined as follows:
-   % An activation function, $f^\ell$, defines a neural response using
-   %   the input from the previous layer.
-   % Let $C^{\ell}$ be the number of channels in the $\ell$\th{} layer.
-   % Let $\mat{H}^\ell_c$ be the feature map of neural activations for
-   %   the $c\th$ channel in the $\ell$\th{} layer.
-   % Let $b^\ell_c$ be a bias of this channel.
-   % Let $\mat{W}^\ell_{k,c} \in \Real^{n \times m}$ be a weight matrix
-   %   between the $k$\th{} channel of layer $\ell - 1$ and the $c$\th{}
-   %   channel of layer $\ell$ with width $n$ and height $m$.
-   % The discrete convolution operator $\conv_{x, y}$ is applied with
-   %   strides in the $x$ and $y$ direction.
-   % Here, we overload all operations between scalars and tensors to be
-   %   elementwise.
-   % The activations of a convolutional layer is given by the following
-   %   equation:
-   % \begin{equation}
-   %     \mat{H}_c^\ell = f^{\ell}\paren{
-   %         \sum_{k=1}^{C^{\ell - 1}} 
-   %       \paren{
-   %         \mat{H}_k^{\ell-1} {\conv}_{x, y}
-   %         \mat{W}_{k,c}^\ell 
-   %       } 
-   %         + b^\ell_{c}
-   %     }
-   % \end{equation}
-
-   % To see the difference between a convolutional layer and a fully
-   %   connected layer consider the activation of a single unit in a fully
-   %   connected layer.
-   % Let $L^{\ell}$ be the number of units in layer $\ell$.
-   % Let $h_j^\ell$ be the activation of the $j$\th{} unit in the
-   %   $\ell$\th{} layer.
-   % Let $w^\ell_{i,j}$ be the weight between $o_i^{\ell - 1}$ and
-   %   $h_j^\ell$.
-   % Let $b^\ell_j$ be the bias of this unit.
-   %\begin{equation}
-   %     h_j^\ell = f^{\ell}\paren{
-   %         %\paren{
-   %         \sum_{i=1}^{L^{\ell - 1}}
-   %                 h_i^{\ell - 1} w^\ell_{i,j}
-   %         %}
-   %         + b^\ell_j
-   %         }
-   % \end{equation}
-   % The number of weights to learn for a fully connected layer is
-   %   $\bigoh{L^{\ell - 1}L^{\ell}}$, whereas the number of weights to
-   %   learn for a convolutional layer is $\bigoh{n m C^{\ell - 1}
-   %   C^{\ell}}$.
-   % The number weights into to a fully connected layer grows very fast
-   %   with respect to the number of units.
-   % In contrast, the number of weights into a convolutional layer
-   %   depends only on the number of channels and size of the
-   %   convolutional filter.
-   % It does not depend on the number of input or output units.
-   % Having fewer weights allows networks to be trained much faster.
-   % Fewer weights also acts as a form of regularization for the
-   %   network:
-   % the same convolutional filters must be applicable to all locations
-   %   in the image.
-
-    %Careful initialization of weights is important. A good initialization
-    %scheme is orthogonal initialization.
-    %\subsection{Deep convolutional descriptors}
-    %\label{sec:deepdesc}
-
-    %    %Features extracted from deep networks are quickly outperforming hand
-    %    %  crafted and even learned features in vision competitions
-    %    %  \cite{krizhevsky_imagenet_2012,razavian_cnn_2014}.
-    %    %This was most clearly demonstrated in the 2012 ImageNet competition
-    %    %  where SVM based techniques were outperformed by deep convolution neural
-    %    %  networks by a large margin \cite{deng_imagenet_2009,
-    %    %  russakovsky_imagenet_2014,krizhevsky_imagenet_2012}.
-    %    %For more details about convolutional networks see~\cref{sec:dcnn}.
-    %    %Here we will discuss on the descriptors they can extract.
-
-
+    Because of weight sharing convolutional networks must learn significantly fewer parameters than fully
+      connected networks.
+    This allows convolutional networks to be trained much faster.
+    Fewer weights also acts as a form of regularization for the network.
+    Intuitively learned convolutional filters are similar to Gabor filters~\cite{gabor_theory_1946}, which are a
+      naturally suited for extracting features from images.
+    Even without learning weights, convolutions can be used to extract powerful features for
+      matching~\cite{revaud_deep_2015}.
+    The popular SIFT and HoG features~\cite{mahendran_understanding_2014} can even be implemented as
+      convolutional networks.
+    Despite the lack of hard theoretical insight into the inner workings of these networks, their empirical
+      performance cannot be denied.
 
   \subsection{Discussion --- deep convolutional neural networks}\label{subsec:dcnndiscuss}
         Because of the astounding success of convolutional networks in almost every area in computer vision, we have
@@ -196,10 +98,10 @@
         Face, we were unable to produce promising results.
         
         Due to these issues, this \thesis{} does not further pursue techniques based on DCNNs. We include this
-        discussion to note on the potential of deep learning applied to animal identification and to strongly suggest
-        further investigation of these techniques in the future research. Of particular interest for future research is
-        the matching technique presented in \cite{rocco_convolutional_2017}. This method is particularly promising
-        because it learns to match and align images by mimicking a classic computer vision pipeline while using only
-        synthetic training data. This may be able to overcome the issues mentioned above, however further investigation
-        is needed.
+        discussion to note the potential of deep learning applied to animal identification and to strongly suggest
+        further investigation of these techniques in the future research. Of particular interest for future
+        research is the matching technique presented in \cite{rocco_convolutional_2017}. This method is
+        particularly promising because it learns to match and align images by mimicking a classic computer vision
+        pipeline while using only synthetic training data. This may be able to overcome the issues mentioned above,
+        however further investigation is needed.
 

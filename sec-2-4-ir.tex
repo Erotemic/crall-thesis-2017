@@ -1,35 +1,27 @@
 
 \section{Instance recognition}\label{sec:ir}
-    There are many variations on the problem of visual recognition such as:
-    specific object recognition (\eg{} CD-covers)~\cite{lowe_distinctive_2004, sivic_efficient_2009,
-      nister_scalable_2006},
+    There are many variations on the problem of visual recognition such as: specific object recognition (\eg{}
+    CD-covers)~\cite{lowe_distinctive_2004, sivic_efficient_2009, nister_scalable_2006},
       % --
     location recognition~\cite{jegou_hamming_2008,jegou_aggregating_2012,tolias_aggregate_2013},
       % --
     person re-identification~\cite{shi_embedding_2016,karanam_person_2015,wu_viewpoint_2015},
       % --
     face verification/recognition~\cite{chopra_learning_2005, huang_labeled_2007, berg_tom_vs_pete_2012,
-      chen_blessing_2013, taigman_deepface_2014, schroff_facenet_2015},
+    chen_blessing_2013, taigman_deepface_2014, schroff_facenet_2015},
       % --
     category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,mccann_local_2012,boiman_defense_2008},
       % --
     and fine-grained recognition~\cite{parkhi_cats_2012,berg_poof_2013, gavves_local_2014}.
       % --
-    %What all of these techniques used to solve these problems have in common
-    %  is that a query image is compared to a database of images using some
-    %  underlying image representation.
-    %The differences among the techniques are in the details of the
-    %  representations, indexing schemes, and similarity metrics.
-    The different types of recognition problems lie on a spectrum of specificity \wrt{} the objects they attempt
-      to recognize.
-    On one end of the spectrum, \glossterm{instance recognition} techniques --- like scene recognition or face
-      verification --- search for matches of the same exact object.
-    On the other end of the spectrum category recognition algorithms --- like car, bird, dog, and plane detectors
-      --- look for the same type of objects.
+    The different types of recognition problems lie on a spectrum of specificity \wrt{} the objects they attempt to
+    recognize. On one end of the spectrum, \glossterm{instance recognition} techniques --- like scene recognition
+    or face verification --- search for matches of the same exact object. On the other end of the spectrum category
+    recognition algorithms --- like car, bird, dog, and plane detectors --- look for the same type of objects.
     Other problems sit --- like fine-grained recognition where the goal might be to recognize specific subspecies
-      of dog (\eg{} German Shepard, Golden Retriever, Boxer, Beagle, \ldots{}) --- somewhere in the middle.
-    Animal identification is closest to the instance recognition side of the spectrum, but the proposed solution
-      draws upon techniques from other forms of recognition.
+    of dog (\eg{} German Shepard, Golden Retriever, Boxer, Beagle, \ldots{}) --- somewhere in the middle. Animal
+    identification is closest to the instance recognition side of the spectrum, but the proposed solution draws
+    upon techniques from other forms of recognition.
 
     The discussion in this section focuses on instance recognition.
     The next two sections will discuss category recognition and fine-grained recognition.
@@ -104,10 +96,6 @@
         each matching image, the sum of the tf-idf scores of the corresponding features is used as the image score.
         Finally, the ranked list of images is returned. These steps are now described in further detail.
 
-        %\chuckcomment{You need a paragraph defining the bag-of-words matching
-        %  algorithm in general terms.: This allows the readier to organize
-        %  mentally the different ideas}
-
         \paragraph{The inverted index}
             The visual vocabulary allows for a constant length image representation. An image is represented as a
             histogram of visual words called a bag-of-words. A bag-of-words histogram is sparse because each image
@@ -118,8 +106,6 @@
             feature the inverted index maps to. For each correspondence a feature matching score is computed.
             Because all of the word assignments and feature correspondences are known, the scores of all matching
             images can be efficiently computed by summing the scores of their respective feature correspondences.
-
-            %\chuckcomment{Seems like this discussion ends to soon... what does it do with these features?}
 
         \paragraph{Vocabulary tf-idf weighting}
             Each word in the database is weighted by its inverse document frequency (idf), and each individual
@@ -149,11 +135,7 @@
 
             Similarity between bag-of-words vectors is computed using the weighted cosine similarity. It is only
             necessary to sum the scores of matching features, because the weight of a word that is not in both a
-            query and database image is $0$.
-            %component 
-            %Due to the sparse nature of bag-of-words vectors similarity between all
-            %images can be computed efficiently.
-            The tf-idf similarity between two images can be written as
+            query and database image is $0$. The tf-idf similarity between two images can be written as
             \begin{equation}
                 \opname{sim}(\X, \Y) = \sum_{\c \in q(\X) \isect q(\Y)} \opname{tf}(\X, \c) \opname{tf}(\Y, \c) \opname{idf}(\c) 
             \end{equation}
@@ -179,15 +161,9 @@
             of descriptors space~\cite{philbin_object_2007}. Approximate hierarchical clustering and approximate
             k-means have been used to build vocabularies with up to $1.6 \times 10^7$
             words~\cite{nister_scalable_2006, philbin_object_2007, mikulik_learning_2010}. Alternative similarity
-            measures for descriptor quantization are also explored in~\cite{mikulik_learning_2010}.
-            %In our baseline approach we do not use quantization of descriptors,
-            %  however our investigation of quantized techniques may benefit from
-            %  adopting these practices.
-            A projection matrix for SIFT descriptors is learned in~\cite{philbin_descriptor_2010} to preserve
-            information that would be lost in quantization.
-            % \chuckcomment{Have not defined?}
-            %This increases the mean average precision (mAP) score on the Oxford
-            %  buildings dataset from $0.613$ to $0.662$.
+            measures for descriptor quantization are also explored in~\cite{mikulik_learning_2010}. A projection
+            matrix for SIFT descriptors is learned in~\cite{philbin_descriptor_2010} to preserve information that
+            would be lost in quantization.
 
             Because the tf-idf weighting was original designed for text recognition, it does not take into account
             challenges that occur in image recognition such as bursty features --- a single feature that appears in
@@ -206,7 +182,7 @@
             result in the ranked list, it only improves recall for queries that already have high accuracy.
 
             One method to improve the performance of bag-of-words search is to remove non-useful features. It is
-            found that $4\percent$ of the features can be used in location recognition without loss in
+            found that as few as $4\percent$ of the features can be used in location recognition without loss in
             accuracy~\cite{turcot_better_2009}. This related work defines a useful feature as one that is robust
             enough to be matched with a corresponding feature and stable enough to exist in multiple viewpoints.
             Thus, these useful features are computed as those that produced a spatially verified match to a correct
@@ -214,13 +190,16 @@
             non-robust features both saves space and improves matching accuracy.
 
     \subsection{Min hash}
-        Min-hashing is the analog of locality sensitive hashing for sets. Min-hashing has been applied as an image
-        recognition technique for near-duplicate image detection, rigid object recognition, scene recognition, and
-        unsupervised object discovery~\cite{chum_near_2008, zhang_image_2011, romberg_robust_2012,
-        romberg_bundle_2013, chum_geometric_2009, chum_large_scale_2010, chum_fast_2012, wang_semi_supervised_2012}.
+        Min-hashing is the analog of locality sensitive hashing for sets.
+        Min-hashing has been applied as an instance recognition technique for near-duplicate image
+          detection~\cite{chum_near_2008}, logo recognition~\cite{romberg_bundle_2013}, large scale image
+          search~\cite{wang_semi_supervised_2012}, scene recognition~\cite{zhang_image_2011}, and unsupervised
+          object discovery~\cite{chum_geometric_2009, chum_large_scale_2010}.
+
         The basic idea is to represent an image as a set of hashes based on permutations of a visual vocabulary.
-        Recognition is performed performing a lookup for each hash. Any collisions are returned as the recognition
-        results. Like LSH, the primary advantage of using min hash for instance recognition is its speed.
+        Recognition is performed performing a lookup for each hash.
+        Collisions are returned as the recognition results.
+        Like LSH, the primary advantage of using min hash for instance recognition is its speed.
 
     \subsection{Hamming embedding}
         Hamming embedding is an extension of the bag-of-words framework that reduces the information lost in
@@ -234,7 +213,8 @@
 
         When any descriptor, $\desc$, is assigned to a word $\c$ it is also assigned a binary Hamming code,
         $\vec{b}$. To compute the binary Hamming code the descriptor is projected using the word's orthogonal
-        matrix, $\vec{b}' = \mat{P}_\c \desc$, and then each dimension is thresholded, $b_i = b'_i > t_{\c{}i}$.
+        matrix, $\vec{b}' = \mat{P}_\c \desc$, and then each dimension is binarized based on a threshold, %
+        $b_i = (b'_i > t_{\c{}i})$.
 
         When a query descriptor, $\desc$, is assigned to a word, $\c$, it is matched to all database descriptors
         belonging to that word. Each match is then assigned a score. First, the Hamming distance, $h_d$, is
@@ -242,15 +222,8 @@
         match is not within threshold, $h_t$, the score of the match is $0$ and does not contribute to bag-of-words
         scoring. Otherwise, the score is the word's squared idf weight multiplied by a Gaussian falloff based on
         the Hamming distance.
-        %The hyper-parameters chosen in \cite{jegou_burstiness_2009} are
-        %  $\sigma=16$ and $h_t=24$.
-        %  \begin{equation}
-        %      sim(\desc_1, \desc_2) = \fullbincases{\opname{idf}(\c)^2 \exp{\frac{-h_d^2}{\sigma ^ 2}}}{h_d \leq h_t}{0}
-        %  \end{equation}
-        %\noindent
         Using the inverted index, each image is scored by summing the scores of the descriptors that matched that
         image. The image scores are used to define a ranked list of results.
-
         %In \cite{jegou_hamming_2008} only the idf weight is used 
         %In \cite{jegou_burstiness_2009} squared idf and the Gaussian falloff
         %In \cite{jegou_improving_2010} squared idf and the probability having a Hamming distance lower than or equal to a.
@@ -258,38 +231,38 @@
         %w_d(h_d) = -\log_2\paren{2^{-d_b} \sum_{i = 0}^{h_d} \binom{i}{d_b}}
         %\end{equation}
 
-    \subsection{Fisher Vector}
-        A Fisher Vector is an alternative to a bag-of-words~\cite{perronnin_large_scale_2010_1,
-        jegou_aggregating_2010}. Like bag-of-words, Fisher Vector representations have been used in both instance
+    \subsection{Fisher vector}
+        A Fisher vector is an alternative to a bag-of-words~\cite{perronnin_large_scale_2010_1,
+        jegou_aggregating_2010}. Like bag-of-words, Fisher vector representations have been used in both instance
         and category recognition~\cite{perronnin_fisher_2007, cinbis_image_2012, sun_large_scale_2013,
         sanchez_image_2013, juneja_blocks_2013, douze_combining_2011, ma_local_2012, murray_generalized_2014,
         gosselin_revisiting_2014}. Instead of training discrete visual vocabulary using the cluster centers of
-        k-means, a Fisher Vector encoding uses a continuous Gaussian mixture model (GMM). The number of Gaussian
+        k-means, a Fisher vector encoding uses a continuous Gaussian mixture model (GMM). The number of Gaussian
         components in the GMM is  similar to the number of words in a vocabulary. An image is encoded using the GMM
         by computing the likelihood of each feature with respect to the GMM{}. Likelihoods for different components
         of the GMM are aggregated using a soft-max function. Often, each component of this vector $\vec{v}$ is then
         power law normalized with fixed constant $0 \leq \beta < 1$. Power law normalization is a simple post
         processing method written as $v_i = \txt{sign}\paren{v_i}\abs{v_i}^\beta$~\cite{jegou_aggregating_2012}.
-        Fisher Vectors produce a much richer representation than normal bag-of-words vector because each descriptor
+        Fisher vectors produce a much richer representation than normal bag-of-words vector because each descriptor
         is assigned to a continuous mixture of words rather than a single word.
 
-        It is noted in~\cite{perronnin_large_scale_2010_1} that using Fisher Vectors for instance recognition is
-        similar to tf-idf. Normalized Fisher Vectors down-weight frequently occurring GMM components --- \ie{}
-        words with low idf weights. Furthermore, Fisher Vector representations are well suited for compression,
+        It is noted in~\cite{perronnin_large_scale_2010_1} that using Fisher vectors for instance recognition is
+        similar to tf-idf. Normalized Fisher vectors down-weight frequently occurring GMM components --- \ie{}
+        words with low idf weights. Furthermore, Fisher vector representations are well suited for compression,
         which allows scaling to large image collections.
 
     \subsection{VLAD --- Vector of Locally Aggregated Descriptors} 
 
-        A Vector of Locally Aggregated Descriptors (VLAD) is similar to a Fisher Vector descriptor --- in fact it
-        is a discrete analog of a Fisher Vector~\cite{jegou_aggregating_2010, jegou_aggregating_2012} Like Fisher
-        Vectors, VLAD has been used in the context of both instance and category
+        A Vector of Locally Aggregated Descriptors (VLAD) is similar to a Fisher vector descriptor --- in fact it
+        is a discrete analog of a Fisher vector~\cite{jegou_aggregating_2010, jegou_aggregating_2012} Like Fisher
+        vectors, VLAD has been used in the context of both instance and category
         recognition~\cite{jegou_negative_2012, delhumeau_revisiting_2013, arandjelovic_all_2013}. VLAD still
         computes a visual vocabulary and assigns each feature to its nearest word, but instead of only recording
         presence or absence of a word, each feature computes the residual vector from the centroid of its assigned
         word. The residual vectors are summed to produce one constant length vector per word. All summed residuals
         are concatenated to produce a constant length image representation. Aggregation of the residual vectors
         allows for an accuracy similar to bag-of-words methods to be obtained, but using a smaller vocabulary
-        ($\OnTheOrderOf{1} - \OnTheOrderOf{2}$ words). Like Fisher Vectors, VLAD descriptors are also power-law
+        ($\OnTheOrderOf{1} - \OnTheOrderOf{2}$ words). Like Fisher vectors, VLAD descriptors are also power-law
         normalized~\cite{jegou_aggregating_2012}.
 
         There have been many extensions of the VLAD descriptor. The value of PCA, whitening, and negative evidence
@@ -310,72 +283,22 @@
         state-of-the art image retrieval techniques.
 
     \subsection{SMK --- the Selective Match Kernel}\label{sec:smk}
-        %\chuckcomment{Needs a little more otherwise its unclear and not worth saying}
         The Selective Match Kernel (SMK) encapsulates the vocabulary based techniques such as bag-of-words, Hamming
-        Embedding, VLAD, and Fisher Vectors into a unified framework~\cite{bo_efficient_2009,
+        embedding, VLAD, and Fisher vectors into a unified framework~\cite{bo_efficient_2009,
         tolias_aggregate_2013, tolias_image_2015, jegou_triangulation_2014}. SMK provides a framework that
         ``bridges the gap'' between matching-based (here a match refers to a feature correspondence) approaches and
-        aggregation-based approaches. The scores of matching-based approaches such as Hamming Embedding and
+        aggregation-based approaches. The scores of matching-based approaches such as Hamming embedding and
         bag-of-words are based on establishing individual features correspondences. In contrast, the scores of
         aggregation approaches such as VLAD and Fisher vectors are computed from compressed image representations,
         where the individual features are not considered.
 
-        An advantage of a matching based approach like Hamming Embedding is that it can define a selectivity
+        An advantage of a matching based approach like Hamming embedding is that it can define a selectivity
         function. A selectivity function down weights individual feature correspondence with low descriptor
         similarity. Aggregation schemes have been shown to have their own advantages. Aggregated approaches like
         VLAD allow for matching applications to scale to a large number of images because each image is indexed
         with a compressed representation. Furthermore, aggregation-based approaches have been shown to provide
         better matching results on many datasets because they implicitly down weight bursty
         features~\cite{tolias_aggregate_2013, tolias_image_2015}.
-
-        %The SMK kernel computes similarity between two images $\X$ and $\Y$ and
-        %  can be expressed as:
-        %   \begin{equation}
-        %    \K(\X, \Y) = \gamma(\X)\gamma(\Y)\sum_{\c \in \C} w_\c \M(\X_\c, \Y_\c)
-        %   \end{equation}
-
-        %\noindent 
-        %The function $\gamma$ regulates the self similarity of an image to be 1.
-        %\begin{equation}
-        %    \gamma(\X) = \paren{\sum_{\c \in \C} w_\c \M(\X_\c, \X_\c)}^{-1/2}
-        %\end{equation}
-
-        %In SMK the choice of aggregation is a parameter.
-        %Thus could implement implement a aggregation-based Hamming Embedding similarity
-        %  function, or a matching-based VLAD similarity function.
-        %The choice of selectivity function is also a paramter, and can even be
-        %  applied when using aggregation-based matching.
-        %The function $\phi$ embeds a descriptor into a mid level representation.
-        %One choice of $\phi$, inspired by VLAD, is a normalized residual vector
-        %  $\phi(x) = \frac{x - q(x)}{\elltwo{x - q(x)}}$.
-        %To implement an aggregated approach, the aggregated matching function is
-        %  used:
-
-        %   \newcommand{\sigmafn}[1]{\func{\sigma}{#1}}
-        %   \newcommand{\psifn}[1]{\func{\psi}{#1}}
-
-        %   \begin{equation}
-        %       \M_{\tt{agg}}(\X_\c, \Y_\c) = 
-        %           \sigmafn{
-        %               \psifn{\sum_{x \in \X_\c} \phi(x)}^T
-        %               \psifn{\sum_{x \in \Y_\c} \phi(y)}
-        %           }
-        %   \end{equation} 
-
-        %\noindent
-        %In the aggregated case, an additional normalization function is used:
-        %$\psifn{\x} = \frac{\x}{\elltwo{\x}}$.
-        %The non aggregated matching function is:
-
-        %\begin{equation}
-        %    \M_{\tt{nonagg}}(\X_\c, \Y_\c) = \sum_{x \in \X_\c} \sum_{y \in \Y_\c} \sigma(\phi(x)^T \phi(y))
-        %\end{equation} 
-
-        %Notice that the selectivy function $\sigma$ is applied in both cases.
-        %One choice of the selectivy function is:
-        %\begin{equation}
-        %  \sigma(u)_\alpha = \bincases{\txt{sign}(u)|u|^\alpha}{u > \tau}
-        %\end{equation}
 
         In the SMK framework a matching function and selectivity function are chosen. Different selections of these
         functions can implement and blend desirable attributes of the aforementioned frameworks. The matching
@@ -387,10 +310,6 @@
         matching. In this case the selectivity function is applied to all correspondences assigned to a particular
         word.
 
-        %\chuckcomment{What has been done since this paper?}
-
-        %\cite{tolias_image_2015} is a 2015 IJCV journal version of the SMK paper.
-
     \subsection{Face recognition and verification}
         Face recognition is a specific form of instance recognition with the goal of recognizing individual human
         faces~\cite{zhao_face_2003, huang_labeled_2007}. Related to face recognition is the problem of face
@@ -398,10 +317,6 @@
         they show the same face or different faces~\cite{taigman_deepface_2014}. Clearly these techniques are
         complementary because highly ranked results from a face recognition algorithm can be verified as true or
         false by a face verification algorithm.
-        %Face recognition can be thought of in terms of a supervised
-        %  learning problem because all individuals are previously known,
-        %  whereas face verification can be interpreted as more of an
-        %  unsupervised problem.
 
         Due to the specific nature of this problem specialized features detectors are often used. Facial feature
         detectors localize facial-landmarks such as the eye, mouth, and nose center and corner
@@ -415,19 +330,6 @@
         Recently, algorithms using both local and global representations computed using deep convolutional neural
         networks have shown state-of-the-art performance on both machine and human verification and recognition
         benchmarks~\cite{taigman_deepface_2014}.
-            %Specialized features and detectors are used Texture based
-            %  descriptors
-        
-        %There is a distinction between face recognition and face
-        %  verification.
-        %In face recognition the input is a test image and the output is
-        %  either a single classification or a ranked list of candidate results.
-
-        %Face verification algorithms decide if two images of human face
-        %  depict the same individual.
-       
-        %Recently approaches using convolutional networks with Siamese
-        %  architectures have been successful.
 
         In face recognition, each face image is encoded into a single vector. A function is trained to classify an
         unseen test image as an individual from the database of known faces. Many techniques are used in the
@@ -437,15 +339,12 @@
         (FLD)~\cite{liu_robust_2000}, linear discriminant analysis (LDA)~\cite{lu_face_2003}, and support vector
         machines (SVMs)~\cite{phillips_support_1998, levy_svm_minus_2013}.
 
-        %As in category recognition,
         Before the neural network revolution~\cite{krizhevsky_imagenet_2012}, sparse coding was one of the most
         popular techniques to retrieve faces~\cite{aharon_k_svd_2006, wright_robust_2009, zhang_sparse_2011,
         jiang_label_2013}. Sparse coding attempts to reconstruct unlabeled test vectors by searching for a linear
         combination of basis vectors from an over-complete labeled training database. Coding based techniques are
         very similar to vocabulary based methods. A codebook, dictionary, and vocabulary all are used to build
         image-level vector representations by quantizing raw features.
-
-        %\subsubsection{Face verification}
 
         Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of $N$
         individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
@@ -465,11 +364,8 @@
         and a 3D face model are used to register a 3D affine camera to an RGB-image. The image is then warped into
         a ``frontalized'' view using a piecewise affine transform. A face is represented as the $4096$ dimensional
         output of a deep $7$ layer convolutional neural network that exploits the aligned nature input images. An
-        8th layer is used in supervised training where each output unit corresponds to a specific individual.
-        %that classifies an input face as an individual is
-        %  used in training.
-        %\chuckcomment{Is this the best algorithm? Discuss experimental comparison results}
-        At test time the L2-normalized output of the network is used as the feature representation. In a supervised
+        8th layer is used in supervised training where each output unit corresponds to a specific individual. At
+        test time the L2-normalized output of the network is used as the feature representation. In a supervised
         setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset using the descriptor
         vectors produced by the network. In an unsupervised setting an ensemble of classifiers is used. The
         ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} as well as several
@@ -477,14 +373,10 @@
         of a deep neural network's output layer --- of the 3D aligned RGB-image, the 2D aligned RGB-image
         (generated using a simpler model based on similarity transforms), and an image comprised of intensity,
         magnitude, and orientation channels. Each input was fed through four deep networks each with different
-        initialization seeds.
-        %In an unsupervised setting verification is performed
-        %  using an ensemble of non-linear SVMs as well as a Siamese
-        %  network.
-        DeepFace achieves an accuracy of $0.9735$ on the Labeled Faces in the Wild
+        initialization seeds. DeepFace achieves an accuracy of $0.9735$ on the Labeled Faces in the Wild
         dataset~\cite{huang_labeled_2007}, which is comparable to the human performance measured at $0.975$. When
-        using unaligned faces the ROC score drops to $0.879$. This demonstrates that alignment is very important for
-        handling the problem of viewpoint in face verification.
+        using unaligned faces the ROC score drops to $0.879$. This demonstrates that alignment is very important
+        for handling the problem of viewpoint in face verification.
 
     \subsection{Person re-identification}
         %Radke dictionary learning ICCV \cite{karanam_person_2015}
@@ -554,7 +446,7 @@
         are some reasons why convolutional neural networks will not make a prominent appearance in this \thesis{}.
         Other reasons involve the size of our datasets. The recent NetVLAD network was trained using training
         datasets with $10,000$ to $90,000$ images~\cite{arandjelovic_netvlad_2016}. We simply do not have this much
-        labeled data. However, one goal of this paper is to develop techniques that will help bootstrap labeled
+        labeled data. However, one goal of this \thesis{} is to develop techniques that will help bootstrap labeled
         datasets of this size. Future research should investigate these deep learning techniques so they can be
         used after enough data has been collected for a specific species.
 
