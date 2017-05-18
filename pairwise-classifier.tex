@@ -1,4 +1,4 @@
-\newcommand{\nan}{\text{NaN}}
+\newcommand{\nan}{\text{nan}}
 
 \chapter{Pairwise classification}\label{chap:pairclf}
 
@@ -410,7 +410,7 @@ If this was not the case, then we would include an additional partition for inco
 
     %NOTES:
 
-    \subsection{Matching State}
+    \subsection{Matching state}
 
         The primary classifier predicts the matching state (positive, negative, incomparable) of a pair of
           annotations.
@@ -433,7 +433,7 @@ If this was not the case, then we would include an additional partition for inco
           strong predictive power.
         
 
-        \paragraph{Binary Positive Classification}
+        \paragraph{Binary positive classification}
         Although the accuracy of multiclass predictions is important, we are most concerned with distinguishing
           positive pairs from the other classes.
         Ideally our learned classifiers will result in superior separation when compared to using just the LNBNN
@@ -459,7 +459,7 @@ If this was not the case, then we would include an additional partition for inco
         \PositiveROC{}
 
 
-        \paragraph{Feature Importance}
+        \paragraph{Feature importance}
         %The most important features for the zebra datasets are illustrated in
         %\Cref{fig:MatchWordCloud} and the top $5$ are given in \cref{tbl:ImportantMatchFeat}.
         To see what the classifier is using to make its predictions we measure the importance of each dimension
@@ -482,7 +482,7 @@ If this was not the case, then we would include an additional partition for inco
         \MatchWordCloud{}
         \ImportantMatchFeat{}
 
-        \paragraph{Failure Cases}
+        \paragraph{Failure cases}
 
         Lastly we investigate several failure cases.
         First, it is not surprising that incomparable pairs like the one illustrated in \cref{fig:PairFailIN}
@@ -509,7 +509,7 @@ If this was not the case, then we would include an additional partition for inco
 
 
     %---------
-    \subsection{Photobomb State}
+    \subsection{Photobomb state}
         We perform a subset of similar experiments to demonstrate the effectiveness of our photobomb classifier.
         The overall performance is given in the classification confusion matrix illustrated in
           \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
