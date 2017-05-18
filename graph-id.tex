@@ -12,12 +12,12 @@ Therefore, stated abstractly, goal of graph identification is to determine a cor
   the decision graph.
 
 To construct the decision graph, we develop a semi-automatic review procedure that combines the ranking and
-verification algorithms presented in Chapters~\ref{chap:ranking} and \ref{chap:pairclf}. The ranking algorithm will
-be used to suggest candidate edges to be placed in the graph, and the verification algorithm will be used to
-automatically review as many edges as possible.  The key reason for combining these algorithms with a decision
-graph is to take advantage of its connectivity information.  Connectivity not only identifies the individuals, but
-it can also be used to develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and
-\emph{convergence}.  By combining these graph measures with the ranking and verification algorithms we can
+verification algorithms presented in \cref{chap:ranking,chap:pairclf}. The ranking algorithm will be used to
+suggest candidate edges to be placed in the graph, and the verification algorithm will be used to automatically
+review as many edges as possible. The key reason for combining these algorithms with a decision graph is to take
+advantage of its connectivity information. Connectivity not only identifies the individuals, but it can also be
+used to develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and
+\emph{convergence}. By combining these graph measures with the ranking and verification algorithms we can
 prioritize edges for review based on both their pairwise probabilities and their ability to affect the consistency
 of the graph, which in turn allows us to:
 \begin{enumin}
@@ -549,36 +549,29 @@ Still, even if we could estimate the latter probability the amount of manual eff
 %\newcommand{\PT}{\Pr{T\teq1}}
 %\newcommand{\T}{\Pr{T\teq1}}
 
-Based on these observations we estimate the probability that ``there will be a meaningful review soon''.
-We define ``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful consecutive
-  reviews that a manual reviewer is willing to do between meaningful reviews.
-Let $M\teq1$ be the event that a review is meaningful and $M\teq0$ otherwise.
-Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and denote the index of the
-  next review as $n$.
-Let $T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ be the event that any of the next $a$ reviews will be
-  meaningful.
-Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
-  to measure the probability the event $T\teq1$.
-We can periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and
-  either refresh or terminate.
+Based on these observations we estimate the probability that ``there will be a meaningful review soon''. We define
+``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful consecutive reviews that a
+manual reviewer is willing to do between meaningful reviews. Let $M\teq1$ be the event that a review is meaningful
+and $M\teq0$ otherwise. Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and
+denote the index of the next review as $n$. Let $T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ be the event
+that any of the next $a$ reviews will be meaningful. Thus, the aforementioned question can be addressed by
+measuring the probability of the event $T\teq1$ The goal is to measure the probability the event $T\teq1$. We can
+periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and either
+refresh or terminate.
 
 To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
-  $M_i$ must follow a uniform distribution.
-This would be true if the edges were reviewed in a random order.
-However, the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right
-  skewed long tail distribution and violate Poisson assumptions.
-Even so, the use of a Poisson model can be both justified by considering a sliding window along the distribution
-  of $M_i$.
-Recall that we only need to make predictions about the next $a$ reviews in the future, thus we are only concerned
-  with a small window to the right on the distribution.
-Because the long tailed distribution is monotonic decreasing, we can use a small window in the past to estimate a
-  upper bound on probability of $T\eq1$ in the future.
-As the window moves to the right, the interval on the distribution becomes increasingly approximately uniform and
-  the tightness of the bound improves and eventually becomes tight.
-This is because once the prioritization algorithm cannot distinguish positive from negative cases, the order of
-  the remaining reviews becomes random and the Poisson model becomes exactly appropriate.
-Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on $\Pr{T\teq1}$,
-  and the smaller $\Pr{T\teq1}$ is, the more accurate our estimate will be.
+$M_i$ must follow a uniform distribution. This would be true if the edges were reviewed in a random order. However,
+the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right skewed long
+tail distribution and violate Poisson assumptions. Even so, the use of a Poisson model can be both justified by
+considering a sliding window along the distribution of $M_i$. Recall that we only need to make predictions about
+the next $a$ reviews in the future, thus we are only concerned with a small window to the right on the
+distribution. Because the long tailed distribution is monotonic decreasing, we can use a small window in the past
+to estimate a upper bound on probability of $T\teq1$ in the future. As the window moves to the right, the interval
+on the distribution becomes increasingly approximately uniform and the tightness of the bound improves and
+eventually becomes tight. This is because once the prioritization algorithm cannot distinguish positive from
+negative cases, the order of the remaining reviews becomes random and the Poisson model becomes exactly
+appropriate. Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on
+$\Pr{T\teq1}$, and the smaller $\Pr{T\teq1}$ is, the more accurate our estimate will be.
 
 
 \subsection{Details of Poisson convergence}
@@ -594,7 +587,7 @@ The exponential decay $\alpha = 2 / (s + 1)$ is determined by a span parameter $
 Using this model, the desired probability that any of the next $a$ reviews will be meaningful is %
 $\Pr{T\teq1} = 1 - \exp{-\mu  a}$.
 The example in \cref{fig:poisson} illustrates the behavior of the criteria using a synthetic dataset.
-In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $.1$.
+%In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $t=\exp{-2}\approx.135$.
 
 %To achieve a certain threshold with a specified span the number of iterations required is: 
 %$\lceil{\frac{\log{\left (t \right )}}{\log{\left (\frac{s - 1}{s + 1} \right )}}}\rceil$
@@ -603,9 +596,20 @@ In this example we use a window span of $s=20$, a patience of $a=20$, and a thre
 %  many successive consecutive non-meaningful decisions are necessary before reaching the threshold if starting from
 %  initial state.
 
+\begin{comment}
+Another alternative might be measuring once the advantages from the ranking
+algorithm become indistinguishable from a brute force search.
+
+
+Let $D = \binom{|V|}{2}$ be the number of edges in the dataset and let $N=\sum_{C \in \set{C}} (|C| - 1)$ the
+  number of edges in the MSTs of all PCCs.
+We can measure the density of meaninful reviews in the current labeled dataset as $N/D$.
+
+After our estimated mu gets close enough to to $N/D$, we can terminate.
+
+\end{comment}
 
 \poisson{}
-  
 
 %As the last outer iteration of the overall algorithm before convergence, triggered when the LNBNN ranking algorithm
 %fails to produce positive edges, candidate edges between untested pairs of annotations are added within PCCs that are
@@ -613,164 +617,236 @@ In this example we use a window span of $s=20$, a patience of $a=20$, and a thre
 %imperfect and the missed matches tend to affect small PCCs disproportionately, which are the last to satisfy redundancy
 %tests.
 
-
-
 %Re-estimating the $k\mu$ at each time-step should
 
 
 \section{Converting existing datasets}\label{sec:rename}
 
-In this section we briefly discuss the problem of applying graph identification to existing databases.
-Most datasets used in practice ignore detailed connectivity information and simply associate a name label with a
-  database of cropped (or sometimes un-cropped) images.
-Because graph identification relies on this detailed connectivity, we must reconstruct it before new images can
-  be added.
-
-%While we believe this framework efficiently and effectively addresses common problems in maintaining animal
-%  identification datasets, 
+In this section we briefly discuss the problem of applying graph identification to existing databases. Most
+datasets used in practice ignore detailed connectivity information and simply associate a name label with a
+database of cropped (or sometimes un-cropped) images. Because graph identification relies on this detailed
+connectivity, we must reconstruct it before new images can be added.
 
 To apply graph identification to a previously existing dataset where annotations have been assigned name labels and
 connectivity between the annotations is unknown we follow the following process. First we compute the pairwise
 probabilities between each pair of annotations labeled with the same name. We automatically review any edge above a
-threshold as positive, negative, or incomparable (these may potentially result in inconsistencies). For any unconnected
-PCC we compute an edge augmentation to connect the PCC \cite{eswaran_augmentation_1976,khuller_approximation_1993}, and
-insert these edges into the graph labeling them as positive but assigning them the confidence of guessing.
+threshold as positive, negative, or incomparable (these may potentially result in inconsistencies). For any
+unconnected PCC we compute an edge augmentation to connect the PCC
+\cite{eswaran_augmentation_1976,khuller_approximation_1993}, and insert these edges into the graph labeling them as
+positive but assigning them the confidence of guessing.
 
-It will be common for such datasets to contain errors, we resolve any inconsistent PCCs as normal, but then we search
-for additional split cases using the pairwise classifier. In the case that a pairwise classifier does not exist, the
-temporary edges defined by the maximum spanning trees can be used to construct one. The main idea is to re-review all
-edges where the pairwise classifier prediction disagrees with its assigned match state. Edges are sorted by the
-magnitude of the disagreement, but any edge with a confidence of absolutely-sure is ignored. This will present edges
-labeled as guessing for the user to re-review. At this point the dataset is in a legal state, where the name labels
-correspond to PCCs. The final step is to execute normal graph review in order to find any merge cases and explicitly
-label hard negative edges.
+It will be common for such datasets to contain errors, we resolve any inconsistent PCCs as normal, but then we
+search for additional split cases using the pairwise classifier. In the case that a pairwise classifier does not
+exist, the temporary edges defined by the maximum spanning trees can be used to construct one. The main idea is to
+re-review all edges where the pairwise classifier prediction disagrees with its assigned match state. Edges are
+sorted by the magnitude of the disagreement, but any edge with a confidence of absolutely-sure is ignored. This
+will present edges labeled as guessing for the user to re-review. At this point the dataset is in a legal state,
+where the name labels correspond to PCCs. The final step is to execute normal graph review in order to find any
+merge cases and explicitly label hard negative edges.
 
-It is sometimes desirable new PCCs to keep the old name labels from the original database (\eg{} sometimes ecologists
-encoded information in these names). This is a simple matter when the original database contained no mistakes, but when
-the original database contains errors care must be taken. We address this problem by seeking to minimize the number of
-annotations that have their name label changed from the original dataset. This can be computing by finding a maximum
-linear sum assignment using the Munkres algorithm implemented in SciPy~\cite{eric_jones_scipy_2001}. We create a matrix
-where each rows represents a group of annotations in the same PCC and each column represents an original name. If there
-are more PCCs than original names the columns are padded with extra values. The matrix is first initialized to be
-negative infinity representing impossible assignments. Then for each column representing a padded name, we set we its
-value to $1$ indicating that each new name could be assigned to a padded name for some small profit. Finally, we encode
-both the profit of assigning a new name with an original name and the extra one ensures that these original names are
-always preferred over padded names. Let $f_{rc}$ be the number of annotations in row $r$ with an original name of $c$,
-and set matrix value $(r, c)$ to $f_{rc} + 1$ if $f_{rc} > 0$. The maximum linear sum assignment of this matrix results
-in the optimal consistent assignment of PCCs to original name labels.
+It is sometimes desirable new PCCs to keep the old name labels from the original database (\eg{} sometimes
+ecologists encoded information in these names). This is a simple matter when the original database contained no
+mistakes, but when the original database contains errors care must be taken. We address this problem by seeking to
+minimize the number of annotations that have their name label changed from the original dataset. This can be
+computing by finding a maximum linear sum assignment using the Munkres algorithm implemented in
+SciPy~\cite{eric_jones_scipy_2001}. We create a matrix where each rows represents a group of annotations in the
+same PCC and each column represents an original name. If there are more PCCs than original names the columns are
+padded with extra values. The matrix is first initialized to be negative infinity representing impossible
+assignments. Then for each column representing a padded name, we set we its value to $1$ indicating that each new
+name could be assigned to a padded name for some small profit. Finally, we encode both the profit of assigning a
+new name with an original name and the extra one ensures that these original names are always preferred over padded
+names. Let $f_{rc}$ be the number of annotations in row $r$ with an original name of $c$, and set matrix value %
+$(r, c)$ to $f_{rc} + 1$ if $f_{rc} > 0$. The maximum linear sum assignment of this matrix results in the optimal
+consistent assignment of PCCs to original name labels.
   
   
 \section{Experiments}\label{sec:graphexpt}
 
     In this section we design an end-to-end experiment where we start with a set of annotations without any name
       labels, and then we proceed to construct all of the names.
-    This design simulates identification events like the \GZC{} and provides insight into how the user will
-      experience the algorithm.
+    This design simulates identification events like the \GZC{} and provides insight into the algorithms behave
+      in practice.
     Because our algorithms are semi-automatic we simulate a noisy user response using ground-truth data.
-    We will use the plains and Grévy's zebras datasets previously described in \cref{sub:datasets}.
-    
-    to measure the impact of graph identification on the number of manual reviews required to complete
-      identification as well as the accuracy of those identifications.
-    Our experiment simulates the semi-automatic identification process from a user's perspective.
-    We consider three algorithms:
-    (1) a baseline ranking-based protocol from \cref{chap:ranking},
-    (2) the same ranking algorithm but augmented with the verification algorithm from \cref{chap:pairclf}, and
-      finally
-    (3) the graph identification algorithm introduced in this chapter.
+    Given a pair of annotations, the simulated user returns the ground-truth classification $98\percent$ of the
+      time, making errors $2\percent$ of the time uniformly at random.
+    This accuracy assumption is simplistic and may be too low for an expert reviewer, but it will serve to
+      demonstrate our graph algorithm's ability to recover from errors.
+    We will measure the accuracy of and error as a function of the number of manual reviews.
 
-    Because our algorithms are semi-automatic we simulate a noisy user response using ground-truth data.
-    The simulated user returns the ground-truth classification $98\percent$ of the time, making errors
-      $2\percent$ of the time uniformly at random.
-    This accuracy assumption is simplistic and may be too low for an expert reviewer, but for this experiment it
-      will serve to demonstrate our graph algorithm's ability to recover from errors.
+    For this experiment, we will use the plains and Grévy's zebras datasets previously described in
+      \cref{sub:datasets}.
+    Because some of our algorithms will require training, we split each dataset into a training set and a testing
+      set each containing half of the names.
+    The training dataset is further split into learning and validation sets as needed.
 
-    The protocol for the graph identification algorithm is defined in \cref{sub:graphalgo}.
-    The pairwise classifier, corresponding thresholds, and termination criteria are learned on a disjoint
-      training set.
-    Because our algorithm is able to handle errors, we set our automatic classification thresholds to achieve a
-      false positive rate of $.1\percent$ on a validation set.
-    We disable automatic review for incomparable cases due to the small number of labeled training examples.
+    This experiment will compare the three main algorithms described in this thesis.
+    We denote these algorithms as:
+    These algorithms are:
+    \begin{enumin}
+    \item \pvar{ranking} --- the ranking algorithm from \cref{chap:ranking},
+    \item \pvar{rank+clf} --- the same ranking algorithm but augmented with the automatic classification algorithm from \cref{chap:pairclf}, and finally
+    \item \pvar{graph} --- the graph identification algorithm introduced in this chapter.
+    \end{enumin}
+    In the case \pvar{graph}, the procedure from~\cref{sub:graphalgo} can be directly applied.
+    However, \pvar{ranking} and \pvar{rank+clf} must first be adapted with a protocol defining the order of
+      reviews and when to stop.
 
-    The baseline algorithm captures the effect of using a purely rank-based approach for animal identification.
-    We first run the ranking algorithm and add the top $5$ results from each query to a list sorted by the LNBNN
-      score.
+    \subsection{Identification protocols}
+
+    We design the protocol for \pvar{ranking} to be similar to the approach described in \cref{sec:introgzc} that
+      was used in the \GZC{}.
+    Given the unlabeled annotations we index the database, issue each annotation as a query, and collect the top
+      $5$ results from each ranked list.
+    The resulting pairs of query and database annotations are stacked and sorted by LNBNN score.
     The user reviews each result in the list sequentially, without regard to the underlying graph structure.
-    Once, new reviews determined to no longer be consistently meaningful (using the approach
-      from~\cref{sec:converge}), we first prioritize and review edges that would complete positive redundancy.
-    Then, if any the name labels of any annotation was changed in the previous iteration, we generate a new
-      ranked list and iterate.
-    Otherwise, if an entire iteration completes without a change in name labels, we terminate.
+    As was done in the \GZC{}, all redundant reviews are all manually considered and verified, and all
+      inconsistencies are ignored.
+    Unlike the \GZC{} we only run the ranking algorithm once --- in part for simplicity and in part because it
+      does not change how we interpret the results.
+    We also do not apply the consistency checks used in during the \GZC{} because these were mainly based on
+      heuristics that are difficult to reproduce and splitting names is difficult without connectivity information.
+    This algorithm does not require training and thus only the testing set is used.
 
-    The intermediate protocol will demonstrate the effect of augmenting the baseline algorithm with our pairwise
-      classifier.
-    The procedure is the exactly the same as the baseline algorithm, except that any item with a predicted
-      probability above a threshold is automatically reviewed.
-    Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
-      that achieve a $0\percent$ false positive rate on a validation dataset.
+    The protocol for \pvar{rank+clf} is only slightly modified from the used for the \pvar{ranking}.
+    The main difference is that we use the automatic classification algorithm to predict pairwise probabilities
+      for each pair of top ranked query and database annotations.
+    If the probabilities of a class are above a threshold, then the pair is automatically reviewed, thus reducing
+      the total number of manual reviews.
+    The rest of the protocol is unchanged.
+    The pairwise classifier is trained on the training set, and the algorithm is evaluated on the test set.
+    We choose automatic thresholds by finding the thresholds that result in a specified false positive rate on a
+      validation dataset.
+    Because \pvar{rank+clf} has no mechanisms for error recovery, we choose conservative automatic thresholds by
+      specifying a false positive rate close to $0$.
+    When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
+    This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting data.
 
-    \begin{comment}
-    python -m ibeis Chap5.print_measures --db GZ_Master1 --diskshow
-    \end{comment}
+    %Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
+    %  that achieve a $0\percent$ false positive rate on a validation dataset.
+
+    Finally, the protocol for \pvar{graph} has already been defined in ~\cref{sub:graphalgo}.
+    To quickly recap, LNBNN is used to search for candidate edges, which are then either automatically or
+      manually classified based on their order in a priority queue.
+    Connectivity information is used to enforce a minimum level of redundancy, preventing extraneous redundancy,
+      and ensure consistency.
+    The convergence criteria determines when candidate edges should be refreshed and when the algorithm should
+      terminate.
+    The automatic classifier is the same one used in \pvar{rank+clf}, but because this algorithm can recover from
+      errors we can choose a slightly more aggressive threshold.
+    A false positive rate of $0.0014$ results in a positive threshold of $0.97$, a negative threshold of $0.99$,
+      and an incomparable threshold of $1.0$.
+    %For the convergence criteria use a patience of $a=20$, a window span of $s=20$, and a termination threshold
+    %  of $0.5$, which causes the criteria to trigger after at most $7$ consecutive non-meaningful reviews.
+    For the convergence criteria use a patience of $a=20$, a window span of $s=20$, and a termination threshold
+      of $\exp{-2}\approx0.135$, which causes the criteria to trigger after at most $20$ consecutive non-meaningful
+      reviews.
+
+    \subsection{Results}
+
+    We run the simulation for all combinations of datasets algorithms.
+    After each review we record two measurements pertaining to accuracy and error.
+    The accuracy measurement is the number of merges remaining before all individuals have been identified.
+    This is the number of edges in a spanning forest of the ground-truth positive subgraph minus same measurement
+      but applied to the subgraph of all correctly predicted positive edges.
+    The error measurement is the total number of edges with a predicted match-state that differs from its
+      ground-truth match-state.
+    These measurements are plotted against the number of manual reviews.
 
     \Simulation{}
 
     \Refresh{}
 
-    In all tests we record two measurements after each review pertaining to accuracy and error.
-    (1) The accuracy measurement is the number of merges remaining before all individuals have been identified.
-    This is the number of edges in a spanning forest of the ground-truth positive subgraph minus same measurement
-      but applied to the subgraph of all correctly predicted positive edges.
-    (2) The error measurement is the total number of edges with a predicted state that differs from its
-      ground-truth state.
+    The results illustrated in \cref{fig:Simulation} demonstrate that \pvar{graph} achieves the fewest manual
+      reviews with the fewest errors while still correctly identifying almost all individuals.
+    The number of remaining merges (on the left) slowly decreases \pvar{ranking}, which must manually review all
+      result.
+    For \pvar{graph} and \pvar{rank+clf} the initial decrease is instantaneous due to the automatic
+      classification algorithm, which does not cost manually reviews, but once manual reviews begin note that the
+      slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the redundancy mechanisms that remove extraneous
+      reviews.
+    Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
+      \pvar{graph} is able to terminate once the curve asymptotes using the convergence criteria.
+    The convergence criteria for this experiment is illustrated in \cref{fig:Refresh}.
 
-    Results of this test for the graph, intermediate and baseline algorithms are illustrated in \cref{fig:ETE}
-      for each dataset.
-    These results demonstrate that the algorithms using the pairwise classifier significantly improves the rate
-      at which annotations from the same individual are merged.
-    However, the graph algorithm better suited to take advantage of the pairwise classifier because it can afford
-      to a make initial mistakes and expect to recover from them later.
-    The baseline and intermediate algorithm have no mechanism for error recovery, and thus their error steadily
-      increases over time.
-    In these cases a significant number of individuals will be misidentified.
-    These results also demonstrate that the graph algorithm is able to recover from many of these errors.
-    We note that the remaining errors might be resolved if more images of individuals involved in those errors
-      are added to the system.
+    We now turn our attention to the right of \cref{fig:Simulation}.
+    The \pvar{ranking} and \pvar{rank+clf} algorithms have no mechanism for error recovery, and thus their error
+      steadily increases over time.
+    However, \pvar{graph} is able to recover from many of these errors and achieve a low error rate despite
+      starting with more errors due to an aggressive auto-classification threshold.
+
+    To further analyze the errors in a simulation, we compare the predicted PCCs to the real ground-truth PCCs.
+    We consider $3$ groups:
+    (1) the ``common'' predicted PCCs that exactly match a real PCC,
+    (2) the ``split'' predicted PCCs that must be split into real PCCs, and
+    (3) the ``merge'' predicted PCCs that must be merged into real PCCs.
+    For each group we count the number of predicted PCCs and the number of real PCCs they correspond to.
+    We also measure the average size of these predicted and real PCCs.
+    Lastly, we measure the size difference in the smallest and largest predicted PCCs in each error group.
+    An error group is defined slightly differently for splits and merges.
+    For merges the error group is the predicted PCCs that will be merged into a single real PCC.
+    For splits the error group is the real PCCs that should result from splitting a single predicted PCC.
+    There can be any number of PCCs in each error group, but in most cases the number of PCCs in each error group
+      is $2$.
+    Note that the majority of predicted PCCs can be purely split or merged into real PCCs, but there are some
+      predicted PCCs that are counted twice because they must first be split and then merged before the
+      ground-truth is achieved.
+    We do not separate these cases for simplicity.
+
+    These error measures are reported in~\cref{tbl:SimDetails}.
+    In all cases we see that \pvar{graph} results in the most number of common PCCs and fewest splits due to its
+      error recovery mechanism.
+    However, we also see that \pvar{graph} also has the most merge cases.
+    The reason for this is that the other algorithms do not have termination criteria.
+    They continued to review pairs, even long after the rankings were no longer meaningful, essentially beginning
+      a brute-force search of the database.
+    In the thousands of extra iterations, the other algorithms managed to find less than $10$ extra merge cases
+      not discovered by \pvar{graph}.
+    Furthermore, almost all merge cases for all algorithms were the result of failing to match a single
+      annotation to a larger group of annotations.
+    Lastly, many of the split cases for the \pvar{graph} algorithm involve splitting just one singleton
+      annotation off of a larger PCC.
+    Mistakes involving individuals with only one annotation are more difficult to detect and highlight the
+      importance of obtaining multiple images of each individual.
+
+    \SimDetails{}
 
  
-\section{Conclusion and summary of graph identification}\label{sec:graphconclusion}
+\FloatBarrier{}
+\section{Summary of graph identification}\label{sec:graphconclusion}
 
-TODO
+In this chapter we have introduced and developed the final component of our solution to the animal identification
+  problem.
+The graph based framework takes advantage of the algorithms previously developed in
+  \cref{chap:ranking,chap:pairclf} and uses them in a principled way to address the identification problem.
+The ranking algorithm is used to quickly identify candidate edges that are likely to be meaningful, and the
+  pairwise classifier automatically verifies pairs of annotations, reducing the required manual interaction.
+While these algorithms can be applied to address identification directly, our experiments have demonstrated that
+  there is a considerable advantage to placing them in the context of the graph identification framework.
 
-%A nice and important property of the graph identification framework is that it is agnostic to the underlying procedures
-%used to generate and review candidate edges to be placed in the decision graph. Throughout this chapter we will have
-%used the ranking algorithm from \cref{chap:ranking}, and the semi-automatic verification algorithm from
-%\cref{chap:pairclf}, which work well for distinctively textured species like zebras, giraffes, jaguars, and lionfish.
-%However, the benefits of graph identification algorithm could be realized for less textured species such as humpbacks
-%whales or bottlenose dolphins by simply using existing contour-based ranking algorithms and a manual reviewer.
+Our graph framework harnesses our ranking and verification algorithms by exploiting edge connectivity of
+  positive, negative, and incomparable reviews.
+Edge connectivity is used to enforce that the graph contains a small exact amount of redundancy.
+This controlled amount of redundancy reduces the number of manual decisions while providing the means to detect
+  inconsistencies.
+When inconsistencies are detected, edge connectivity is again used to quickly find and fix errors in edge
+  labeling.
 
-%The framework requires two external components:
-%\begin{enumin}
-%    \item a ranking algorithm to search for candidate edges, and
-%    \item a verification algorithm (either manual or automatic) that can
-%      decide if a pair of annotation is positive, negative, or incomparable.
-%  \end{enumin}
+Our framework also includes a probabilistic convergence criteria based on a Poisson process.
+This criteria stops identification once the ranking and verification algorithm are no longer able to find
+  meaningful edges.
+This means that the algorithm will stop the identification process before it devolves into brute force search.
+The point at which this happens will depend on the power of the ranking and verification algorithms.
 
-%The verification algorithm (which can be a manual reviewer) is what determines if the graph identification
-%  algorithm is manual, semi-automatic, or fully-automatic.
-%In our experiments we use the ranking algorithm from \cref{chap:ranking}, and the verification algorithm from
-%  \cref{chap:pairclf} to construct these components, which work well for
-  
-%These algorithms could easily be swapped out for other algorithms tuned
-%  towards specific species (\eg{} contour-based ranking algorithms for marine
-%  species).
-%(or any object that can be visually identified).
+This brings us to our last important point.
+The graph framework is highly general.
+It is not restricted to animal identification and could be applied to any instance recognition problem where one
+  annotation corresponds to one individual object.
+It does not depend on our ranking and verification algorithms and could easily incorporate other algorithms.
+It is even possible to use it without any algorithms in order to facilitate a more efficient brute force search.
+This case is not just theoretical.
+To extend to new species and domains it is important to be able to construct a small labeled database from which
+  ranking and verification algorithms can be bootstrapped.
+As more pairwise training data is gathered and maintained using this framework, more sophisticated pairwise
+  classifiers trained using deep learning could be applied, perhaps removing the manual component completely and
+  resulting in a fully automatic identification algorithm.
 
-Furthermore, as more pairwise training data is gathered and maintained using this framework, more sophisticated
-  pairwise classifiers trained using deep learning could be applied, perhaps removing the manual component
-  completely and resulting in a fully automatic identification algorithm.
-
-Because of this flexibility the graph identification framework generalizes beyond animal identification and could
-  be applied to any instance recognition problem using algorithms tuned for those tasks under the condition that
-one annotation corresponds to one individual object (note the photobomb classifier or a segmentation mask can be
-  used to relax this
-  constraint).

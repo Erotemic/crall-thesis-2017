@@ -38,37 +38,19 @@ python -m ibeis.scripts.specialdraw redun_demo2 \
     --figsize=10,5 --clipwhite --dpi=300 --saveparts
 \end{comment}
 \newcommand{\kredun}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunA.jpg}\caption{}\label{sub:kredunA}
-\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunA.jpg}\caption{}\label{sub:kredunA}\end{subfigure}
 ~~% --
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunB.jpg}\caption{}\label{sub:kredunB}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunC.jpg}\caption{}\label{sub:kredunC}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunD.jpg}\caption{}\label{sub:kredunD}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunE.jpg}\caption{}\label{sub:kredunE}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.31\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}
-\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunB.jpg}\caption{}\label{sub:kredunB}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunC.jpg}\caption{}\label{sub:kredunC}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunD.jpg}\caption{}\label{sub:kredunD}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunE.jpg}\caption{}\label{sub:kredunE}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}\end{subfigure}
 \caption[kredun]{\caplbl{kredun}
 %--%
 Examples of positive (top) and negative (bottom) redundancy.
@@ -97,16 +79,10 @@ python -m ibeis.core_annots --test-compute_one_vs_one --show
 \end{comment}
 
 \newcommand{\PhotobombExample}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.4\textwidth}
-\centering
-\includegraphics[height=100pt]{figures_graph/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA}
-\end{subfigure}
-\begin{subfigure}[h]{0.4\textwidth}
-\centering
-\includegraphics[height=100pt]{figures_graph/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB}
-\end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures_graph/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA} \end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures_graph/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB} \end{subfigure}
 %\begin{subfigure}[h]{0.5\textwidth}
 %\centering
 %\includegraphics[height=60pt]{figures/PhotobombExampleC.jpg}\caption{}\label{sub:PhotobombExampleC}
@@ -129,7 +105,7 @@ of~\cref{sub:PhotobombExampleB}.
 python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --patience=20 --window=20 --dpi=300 --figsize=7.4375,3.0 '--dpath=~/latex/crall-thesis-2017' --save=figures5/poisson.png --diskshow
 \end{comment}
 \newcommand{\poisson}{
-\begin{figure}[H]
+\begin{figure}[h]
     %
     \centering
     \includegraphics[width=\textwidth]{figures5/poisson.png}
@@ -139,7 +115,8 @@ python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --
     The red line indicates the fraction of meaningful reviews that remain undiscovered.
     The blue line is the probability that at least one of the next $20$ reviews will be meaningful.
     Notice that the blue line dips when the red line flattens.
-    The process terminates once this probability drops below $0.1$.
+    The process terminates once this probability drops below a thresold,
+    denoted by the green dotted line.
     %--
 } \label{fig:poisson}
 \end{figure}
@@ -154,15 +131,17 @@ python -m ibeis Chap5.draw_simulation --db PZ_Master1 --diskshow
 python -m ibeis Chap5.draw_simulation --db GZ_Master1 --diskshow
 \end{comment}
 \newcommand{\Simulation}{
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/simulation.png}\caption{Plains zebra}\end{subfigure}
 ~
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/GZ_Master1/simulation.png}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{Simulation}Simulation]{\caplbl{Simulation}
 % ---
-The user simulation experiment comparing the three identification algorithms
-discussed in this paper. 
+The user simulation experiment compares the three identification algorithms defined in this \thesis{}.
+On the left indicates the identifiation accuracy using the number of remaining merges and the right counts the
+  number of errors made (lower is better in both cases).
+The best results are clearly achieved by \pvar{graph}.
 % ---
 }
 \label{fig:Simulation}
@@ -175,7 +154,7 @@ python -m ibeis Chap5.draw_refresh --db GZ_Master1 --diskshow
 python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \end{comment}
 \newcommand{\Refresh}{
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/refresh.png}\caption{Plains zebra}\end{subfigure}
 ~
@@ -183,11 +162,11 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \caption[\caplbl{Refresh}Measured refresh and termination]{\caplbl{Refresh}
 % ---
 The measure refresh and termination criteria.
-The probability that the next reviews will be meaningful is high while new merges are discovered.
+The probability that the next reviews will be meaningful ($\Pr{T\teq1}$) is high while new merges are discovered.
 Once the probability falls under the threshold, positive redundancy is enforced (the flat areas) on existing
   PCCs, and then candidated edges are recomputed.
 After an iteration with no meaningful reviews the process terminates.
-Identification converges in $3$ iterations for plains zebras and $4$ for Grevy's.
+Identification converges in $3$ iterations for plains zebras and $3$ for Grevy's.
 % ---
 }
 \label{fig:Refresh}
@@ -195,3 +174,31 @@ Identification converges in $3$ iterations for plains zebras and $4$ for Grevy's
 }
 
 
+
+
+    \begin{comment}
+    python -m ibeis Chap5.print_measures --db GZ_Master1 --diskshow
+    python -m ibeis Chap5.print_measures --db PZ_Master1 --diskshow
+    \end{comment}
+
+
+\newcommand{\SimDetails}{
+\begin{table}[h]
+    \centering
+    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
+\caption[\caplbl{SimDetails}Simulation error details]{\caplbl{SimDetails} 
+% ---
+Detailed analysis of the errors for the simulations.
+We compare statistics the predicted PCCs with statistics of the real ground-truth PCCs.
+In each category ``pred \#'' is the number of predicted PCCs and ``pred size'' is the average number of
+  annotations in those PCCs (averages are measured as mean and standard deviation).
+The ``real \# PCCs'' and ``real size'' columns are similarly defined.
+Lastly, the ``small size'' and ``large size'' columns are the average size of the smallest and largest PCCs in
+  each error group.
+%The sum of the importance for all $205$ feature dimensions is $1$.
+% ---
+}
+\label{tbl:SimDetails}
+\end{table}
+}
