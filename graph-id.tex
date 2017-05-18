@@ -719,7 +719,12 @@ consistent assignment of PCCs to original name labels.
     Because \pvar{rank+clf} has no mechanisms for error recovery, we choose conservative automatic thresholds by
       specifying a false positive rate close to $0$.
     When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
-    This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting data.
+    This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting
+      data.
+    For Grévy's, a false positive rate of $0.001$ results in a positive threshold of $0.99$, a negative threshold
+      of $0.98$, and an incomparable threshold of $1.0$.
+    For plains, a false positive rate of $0.01$ results in a positive threshold of $0.68$, a negative threshold
+      of $0.96$, and an incomparable threshold of $1.0$.
 
     %Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
     %  that achieve a $0\percent$ false positive rate on a validation dataset.
@@ -733,10 +738,10 @@ consistent assignment of PCCs to original name labels.
       terminate.
     The automatic classifier is the same one used in \pvar{rank+clf}, but because this algorithm can recover from
       errors we can choose a slightly more aggressive threshold.
-    A false positive rate of $0.0014$ results in a positive threshold of $0.97$, a negative threshold of $0.99$,
-      and an incomparable threshold of $1.0$.
-    %For the convergence criteria use a patience of $a=20$, a window span of $s=20$, and a termination threshold
-    %  of $0.5$, which causes the criteria to trigger after at most $7$ consecutive non-meaningful reviews.
+    For Grévy's, a false positive rate of $0.0014$ results in a positive threshold of $0.97$, a negative
+      threshold of $0.97$, and an incomparable threshold of $1.0$.
+    For plains, a false positive rate of $0.03$ results in a positive threshold of $0.58$, a negative threshold
+      of $0.93$, and an incomparable threshold of $1.0$.
     For the convergence criteria use a patience of $a=20$, a window span of $s=20$, and a termination threshold
       of $\exp{-2}\approx0.135$, which causes the criteria to trigger after at most $20$ consecutive non-meaningful
       reviews.

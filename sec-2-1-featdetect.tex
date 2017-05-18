@@ -5,11 +5,11 @@
     informative patch based features are typically centered on simple image structures such as junctions, corners,
     edges, and blobs~\cite{tuytelaars_local_2007}. If these features be can be reliably detected, localized, and
     described then image matching can be posed as a problem in matching sets of features. This section describes
-    works related to detecting features in an image, and~\cref{sec:featuredescribe} will discuss how detected
+    work related to detecting features in an image, and~\cref{sec:featuredescribe} will discuss how detected
     features are then described.
 
     The region where a feature is detected is called a \glossterm{keypoint}. The simplest definition of a keypoint
-    is just an $xy$-location in an image. However, images contain information at multiple scales, therefore a
+    is just an $xy$-location in an image. However, images contain information at multiple scales; therefore a
     keypoint is typically associated with a scale. The scale of a keypoint is a non-negative real number that
     defines the level of detail at which to interpret the underlying image information. A keypoint with a scale can
     be thought of as a circular region with a radius that is the scale multiplied by some constant (\eg{}
@@ -84,7 +84,7 @@
             % See page 39 of Scale-space theory.
             %The continuous image signal is defined to be the zeroth scale $\img(\pt, 0) = \rawimg(\pt)$. 
             The discrete scale-space representation of an image is efficiently implemented using a Gaussian
-            pyramid. An scale-space pyramid consists of $L$ levels. Each level covers an octave. Starting from the
+            pyramid. A scale-space pyramid consists of $L$ levels. Each level covers an octave. Starting from the
             base of each level with scale parameter $\sigma$ the next octave is reached when $\sigma$ doubles.
             There are $s$ intervals represented within each octave. A Gaussian pyramid is illustrated
             in~\cref{fig:ScaleSpaceFigure}.
@@ -154,8 +154,8 @@
             The initial response of the detector at each point is the determinant of the Hessian matrix. This
             response is computed for level and every pixel in the scale-space pyramid. At coarser scales the
             Hessian response weakens, so to ensure that responses between scales are comparable, the initial
-            response is scale normalized by multiplying with $\sigma^2$ (See~\cite{lindeberg_feature_1998} for more
-            details about the choice of this normalization factor). The extrema of this space defines a set of
+            response is scale normalized by multiplying with $\sigma^2$. (See~\cite{lindeberg_feature_1998} for
+            more details about the choice of this normalization factor.) The extrema of this space defines a set of
             candidate keypoints, $\kpts'$.
             \begin{equation}
                 \kpts' = \argextrema{\pt,\scale} \paren{\scale^2 \detfn{\hessMAT}} 
@@ -233,16 +233,19 @@
         of an ellipse is a conic of the form $\mat{E} = \vmat^T\vmat$. This means that $\vmat$ is only defined up
         to an arbitrary rotation~\cite{mikolajczyk_comparison_2005,perdoch_efficient_2009}. Thus we can freely
         rotate $\vmat$ into a lower triangular matrix. This ensures that one of its eigenvectors is pointing
-        downwards --- \ie{} in the direction of the ``gravity vector''~\cite{perdoch_efficient_2009}. Assuming the
-        gravity vector removes a dimension of invariance. To allow for the specification of keypoint orientation,
-        the keypoint representation can be extended with a parameter $\theta$ that defaults to $0$.
+        downwards --- \ie{} in the direction of the ``gravity vector''~\cite{perdoch_efficient_2009}. Making use of
+        the gravity vector removes a dimension of invariance. To allow for the specification of keypoint
+        orientation, the keypoint representation can be extended with a parameter $\theta$ that defaults to $0$.
 
     \subsection{Orientation adaptation}
 
-        The keypoint orientation is defined using the parameter $\theta$. Without orientation adaptation a keypoint
-        can be assumed to be aligned with the ``gravity vector'' --- \ie{}
-        $\theta=0$~\cite{perdoch_efficient_2009}. Otherwise, an orientation must be computed. A common method for
-        determining a keypoint's orientation is to use the dominant gradient orientation.
+        The keypoint orientation is defined using the parameter $\theta$.
+        By default the orientation of a keypoint can be assumed to be aligned with the ``gravity vector'' ---
+          \ie{} $\theta=0$~\cite{perdoch_efficient_2009}.
+        Otherwise, an orientation must be computed.
+        A common method for determining a keypoint's orientation is to use the dominant gradient orientation.
+        In theory adapting the orientation to match the dominant gradient will cause a computed keypoint
+          description to be invariant to rotations.
 
         To compute a keypoint's dominant orientation the pixels around a keypoint vote into a fine-binned
         orientation histogram~\cite{lowe_distinctive_2004}. A pixel's vote is weighted by its gradient magnitude
@@ -283,11 +286,12 @@
 
         It is a challenge to choose the correct level of invariance when computing features. Often an application
         chooses one of two extremes. Consider the computation of keypoint orientation. Standard methods for
-        orientation invariance assume patches can freely rotate, when in fact they may be constrained by the
-        orientation of surrounding patches~\cite{lowe_distinctive_2004}. On the other side extreme is the ``gravity
-        vector''~\cite{perdoch_efficient_2009}, which globally enforces all keypoint to have a downward
-        orientation. This may be a safe assumption when working with image features from rigid objects taken in an
-        upright position, but may not be correct when dealing with non-rigid objects like zebras.
+        orientation invariance assume patches can freely rotate, when in fact they may be constrained to be
+        consistent with the orientation of surrounding patches~\cite{lowe_distinctive_2004}. On the other side
+        extreme is the ``gravity vector''~\cite{perdoch_efficient_2009}, which globally enforces all keypoint to
+        have a downward orientation. This may be a safe assumption when working with features from images of rigid
+        objects taken in an upright position. It may not be correct when dealing with non-rigid objects like
+        zebras.
         %Orientation invariance assumes that orientation is a local property
         %  of a patch, but the orientation of a patch is usually not
         %  independent of its surrounding patches on an object.

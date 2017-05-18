@@ -30,59 +30,45 @@
         helps the SIFT descriptor to be robust to small localization errors and viewpoint variations. Distance
         between two SIFT descriptors is typically computed using the Euclidean distance. The SIFT descriptor of a
         patch is visualized in~\cref{fig:vizfeatrow}.
-        %To warp a keypoint to a patch
-        %\[\pt, \vmat, \theta\]
-        %\begin{equation}
-        %\left[\begin{matrix}1 & 0 & \frac{S}{2}\\0 & 1 & \frac{S}{2}\\0 & 0 & 1\end{matrix}\right]
-        %\left[\begin{matrix}3.0 \sqrt{S} & 0 & 0\\0 & 3.0 \sqrt{S} & 0\\0 & 0 & 1\end{matrix}\right]
-        %\left[\begin{matrix}\cos{\left (\theta \right )} & \sin{\left (\theta \right )} & 0\\- \sin{\left (\theta \right )} & \cos{\left (\theta \right )} & 0\\0 & 0 & 1\end{matrix}\right]
-        %\left[\begin{matrix}a & 0 & x\\c & d & y\\0 & 0 & 1\end{matrix}\right]^{-1}
-        %\left[\begin{matrix}1 & 0 & - x\\0 & 1 & - y\\0 & 0 & 1\end{matrix}\right]
-        %\end{equation}
 
         The structure of a SIFT descriptor is as follows: A $4\times4$ regular grid is superimposing over the
         normalized patch. Each of the $16$ spatial grid cells contains an orientation histogram discretized into
-        $8$ bins. The SIFT descriptor is the concatenation of all orientation histograms, resulting in a single $16
-        \times 8 = 128$ dimensional vector.
+        $8$ bins. The SIFT descriptor is the concatenation of all orientation histograms, resulting in a single %
+        $16 \times 8 = 128$ dimensional vector.
 
         The patch information populates the SIFT descriptor as follows: For every pixel, the patch gradient (the
         derivative in the $x$ and $y$ direction) is computed. Next, each pixel computes its gradient magnitude and
         orientation. Each pixel then casts a weighted vote. The bin that a pixel votes into is computed from its
         $xy$-location and gradient orientation. The weight of a pixel's vote is based on its gradient magnitude and
-        Gaussian weighted distance to the patch center. To be robust to small localization errors, a pixel's vote is
-        split via trilinear interpolation ($x$-location, $y$-location, and orientation) into the orientation histograms
-        of the pixel's nearest grid cells as well as neighboring orientation bins in each grid cell's orientation
-        histogram.
+        Gaussian weighted distance to the patch center. To be robust to small localization errors, a pixel's vote
+        is split via trilinear interpolation ($x$-location, $y$-location, and orientation) into the orientation
+        histograms of the pixel's nearest grid cells as well as neighboring orientation bins in each grid cell's
+        orientation histogram.
 
-        Once voting is completed a SIFT descriptor is normalized to account for lighting differences between images.
-        %The resulting $128$ orientation bins are concatenated into a single
-        %  vector.
-        First, the vector is L2-normalized to unit length, which makes the descriptor invariant to linear changes in
-        intensity. Then, a heuristic --- that truncates each dimension to a maximum value of $0.2$ --- is applied to
-        increases robustness to non-linear changes in illumination. Finally the vector is renormalized.
+        Once voting is completed a SIFT descriptor is normalized to account for lighting differences between
+        images. First, the vector is L2-normalized to unit length, which makes the descriptor invariant to linear
+        changes in intensity. Then, a heuristic --- that truncates each dimension to a maximum value of $0.2$ ---
+        is applied to increases robustness to non-linear changes in illumination. Finally the vector is
+        renormalized.
 
-        For storage considerations the resulting $512$-byte floating point (float32) descriptor is typically cast as an
-        array of unsigned $8$-bit integers (uint8), resulting in a $128$-byte descriptor. To reduce the impact of this
-        quantization a trick is to multiply by $512$ instead of $255$ and then truncate values to $255$ before
-        converting from a float to a uint8. Even though each component is $8$-bits and therefore can only store a
-        maximum value of $255$, but because of truncation, L2-normalization, and properties of natural images value
-        overflow is not likely to occur.
+        For storage considerations the resulting $512$-byte floating point (float32) descriptor is typically cast
+          as an array of unsigned $8$-bit integers (uint8), resulting in a $128$-byte descriptor.
+        To reduce the impact of this quantization a trick is to multiply by $512$ instead of $255$ and then
+          truncate values to $255$ before converting from a float to a uint8.
+        Even though each component is $8$-bits and therefore can only store a maximum value of $255$, but because
+          of truncation, L2-normalization, and properties of natural images value overflow is not likely to occur.
     
        \vizfeatrow{}
 
     \subsection{Other descriptors and SIFT extensions}
-        Even a decade after its original publication, SIFT remains a popular descriptor for patch-based matching
-        because it is versatile, unsupervised, widely available, and easy to use.
-          %descriptor for patch-based matching because it is competitive with
-          %all of its hand-crafted alternatives, versatile, unsupervised,
-          %widely available, and easy to use \cite{lowe_distinctive_2004,
-          %mikolajczyk_performance_2005, alahi_freak_2012}.
-        The principles used to guide the construction of the SIFT descriptor --- particularly the use of aggregated
-        gradients --- have inspired many variants, extensions, and new
-        techniques~\cite{mikolajczyk_performance_2005, dalal_histograms_2005, bay_surf_2006}. Hand crafted
-        alternatives to SIFT have been developed that are faster to compute and more efficient to store, but these
-        alternatives do not significantly outperform SIFT's matching accuracy on general
-        data~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005, alahi_freak_2012}.
+        Even more than a decade after its original publication, SIFT remains a popular descriptor for patch-based
+          matching because it is versatile, unsupervised, widely available, and easy to use.
+        The principles used to guide the construction of the SIFT descriptor --- particularly the use of
+          aggregated gradients --- have inspired many variants, extensions, and new
+          techniques~\cite{mikolajczyk_performance_2005, dalal_histograms_2005, bay_surf_2006}.
+        Hand crafted alternatives to SIFT have been developed that are faster to compute and more efficient to
+          store, but these alternatives do not significantly outperform SIFT's matching accuracy on general
+          data~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005, alahi_freak_2012}.
         %However, if training data is provided, machine learning can be used to
         %  compute descriptors that can achieve higher matching accuracy.
         This subsection provides a brief overview of these alternatives.
@@ -106,13 +92,10 @@
         descriptor~\cite{mikolajczyk_performance_2005}. GLOH uses a similar structure to SIFT but replaces the
         rectangular-bins with log-polar bins. GLOH did achieve higher matching accuracy on some datasets, but it
         was not by a significant margin.
-        %Despite However, domain specific modifications have shown promising
-        %  results.
-        %The Rotation Invariant Feature Transform (RIFT) descriptor
-        %  \cite{lazebnik_sparse_2005} uses concentric circles to make a
-        %  similar modification.
-        %The RIFT descriptor are used in texture classification
-        %\cite{lazebnik_sparse_2005}.
+        %Despite However, domain specific modifications have shown promising results.
+        %The Rotation Invariant Feature Transform (RIFT) descriptor \cite{lazebnik_sparse_2005} uses concentric
+        %  circles to make a similar modification.
+        %The RIFT descriptor are used in texture classification \cite{lazebnik_sparse_2005}.
         Despite the lack of generic success, hand-crafted SIFT variants have been successful when applied to
         specific tasks.
         % COLORED SIFT

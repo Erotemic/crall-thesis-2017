@@ -1,15 +1,15 @@
 
 \section{Instance recognition}\label{sec:ir}
-    %\chuckcomment{Split into 3 sections with most of your discussion at the end of each section}
-    There are many variations on the problem of visual recognition such as: specific object recognition (\eg{}
-    CD-covers)~\cite{lowe_distinctive_2004,sivic_efficient_2009,nister_scalable_2006},
+    There are many variations on the problem of visual recognition such as:
+    specific object recognition (\eg{} CD-covers)~\cite{lowe_distinctive_2004, sivic_efficient_2009,
+      nister_scalable_2006},
       % --
     location recognition~\cite{jegou_hamming_2008,jegou_aggregating_2012,tolias_aggregate_2013},
       % --
     person re-identification~\cite{shi_embedding_2016,karanam_person_2015,wu_viewpoint_2015},
       % --
-    face
-    verification/recognition~\cite{chopra_learning_2005,huang_labeled_2007,berg_tom_vs_pete_2012,chen_blessing_2013,taigman_deepface_2014,schroff_facenet_2015},
+    face verification/recognition~\cite{chopra_learning_2005, huang_labeled_2007, berg_tom_vs_pete_2012,
+      chen_blessing_2013, taigman_deepface_2014, schroff_facenet_2015},
       % --
     category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,mccann_local_2012,boiman_defense_2008},
       % --
@@ -20,36 +20,27 @@
     %  underlying image representation.
     %The differences among the techniques are in the details of the
     %  representations, indexing schemes, and similarity metrics.
-    The different types of recognition problems lie on a spectrum of specificity \wrt{} the objects they attempt to
-    recognize. On one end of the spectrum, \glossterm{instance recognition} techniques --- like scene recognition
-    or face verification --- search for matches of the same exact object. On the other end of the spectrum category
-    recognition algorithms --- like car, bird, dog, and plane detectors --- look for the same type of objects.
+    The different types of recognition problems lie on a spectrum of specificity \wrt{} the objects they attempt
+      to recognize.
+    On one end of the spectrum, \glossterm{instance recognition} techniques --- like scene recognition or face
+      verification --- search for matches of the same exact object.
+    On the other end of the spectrum category recognition algorithms --- like car, bird, dog, and plane detectors
+      --- look for the same type of objects.
     Other problems sit --- like fine-grained recognition where the goal might be to recognize specific subspecies
-    of dog (\eg{} German Shepard, Golden Retriever, Boxer, Beagle, \ldots{}) --- somewhere in the middle. Animal
-    identification is closest to the instance recognition side of the spectrum, but the proposed solution draws
-    upon techniques from other forms of recognition.
+      of dog (\eg{} German Shepard, Golden Retriever, Boxer, Beagle, \ldots{}) --- somewhere in the middle.
+    Animal identification is closest to the instance recognition side of the spectrum, but the proposed solution
+      draws upon techniques from other forms of recognition.
 
-    The next two sections will discuss category recognition and fine-grained recognition. The discussion in this section
-    focuses on instance recognition.
-    %  Most similar to our work are the topics of location recognition and
-    %fine-grained recognition which seek to recognize exact instances of
-    %objects in the first case and localize distinctive attributes of
-    %objects in the second case.
-    %  Also related is category recognition which seeks to recognize 
-    %general objects.
+    The discussion in this section focuses on instance recognition.
+    The next two sections will discuss category recognition and fine-grained recognition.
 
     \subsection{Spatial verification}\label{subsec:sverreview}
-        %\chuckcomment{Paragraph is repetitive and insufficient. Give
-        %idea of RANSAC as (1) minimal subset random sampling and (2)
-        %generation of transform and tests for consistency}
-
-        Before discussing specific techniques in instance recognition, we describe a work related to spatial
+        Before discussing specific techniques in instance recognition, we describe work related to spatial
         verification. Most instance recognition techniques initially match local image features without using any
-        spatial
-        information~\cite{lowe_distinctive_2004,sivic_efficient_2009,philbin_object_2007,tolias_image_2015}. This
-        results in pairs of images with spatially inconsistent feature correspondences. Spatially inconsistent
-        matches are illustrated in~\cref{fig:figSVInlier}. Inconsistent features are removed using
-        \glossterm{spatial verification}, a process based on the random sample consensus (RANSAC)
+        spatial information~\cite{lowe_distinctive_2004, sivic_efficient_2009, philbin_object_2007,
+        tolias_image_2015}. This results in pairs of images with spatially inconsistent feature correspondences.
+        Spatially inconsistent matches are illustrated in~\cref{fig:figSVInlier}. Inconsistent features are removed
+        using \glossterm{spatial verification}, a process based on the random sample consensus (RANSAC)
         algorithm~\cite{fischler_random_1981}.
 
         RANSAC has come to refer to a family of iterative techniques to sample inliers from a noisy dataset that
@@ -63,16 +54,11 @@
         threshold distance of their corresponding feature). After a certain number of iterations the process stops
         and returns the hypothesized model with the highest score as well as the inliers to that model.
 
-        %In the case that the simple model is a good approximation of the data, 
-        %The inliers produced by RANSAC often removes a significant number of
-        %  outliers.
         When RANSAC returns a large enough set of inliers (\wrt{} some threshold) the hypothesis model it is
         generally considered to be a ``good fit''. In this case a more complex model --- that may be more sensitive
         to outliers --- can be fit. In spatial verification, it is common to use the RANSAC-inliers to estimate a
         homography transformation~\cite[311--320]{szeliski_computer_2010}. The homography is then used to estimate
         a new set of refined inliers, and these are returned as the spatially verified feature correspondences.
-        %Contextual dissimilarity measure \cite{jegou_contextual_2007}
-        %Negative Evidences \cite{jegou_negative_2012}
 
         \figSVInlier{}
 
@@ -179,7 +165,7 @@
             framework, which will be discussed later in~\cref{sec:smk}.
 
         \paragraph{Extensions to bag-of-words}
-            One of the main strengths and weakness of vocabulary based matching is its use of quantization.
+            The main strength and the main weakness of vocabulary based matching is its use of quantization.
             Quantization allows for large databases of images to be searched very
             rapidly~\cite{nister_scalable_2006}. However, quantization causes raw descriptors to lose much of their
             discriminative information~\cite{philbin_lost_2008, boiman_defense_2008}. When a high-dimensional
@@ -188,8 +174,8 @@
             with a large vocabulary. Several methods have been developed to help reduce errors caused by
             quantization.
 
-            Soft-assignment helps recover from quantization errors by assigning each raw descriptor as multiple
-            words~\cite{philbin_lost_2008}. Another way to reduce quantization error it to use a finer partitioning
+            Soft-assignment helps avoid quantization errors by mapping each raw descriptor to multiple
+            words~\cite{philbin_lost_2008}. Another way to reduce quantization error is to use a finer partitioning
             of descriptors space~\cite{philbin_object_2007}. Approximate hierarchical clustering and approximate
             k-means have been used to build vocabularies with up to $1.6 \times 10^7$
             words~\cite{nister_scalable_2006, philbin_object_2007, mikulik_learning_2010}. Alternative similarity

@@ -39,19 +39,19 @@
 
     The research that resulted in \thesis{} began in $2010$ and was completed in $2017$.
     In that time many significant developments have been made in the field of computer vision and machine
-      learning, namely the explosion of deep learning where technological and theoretical acheivments have made it
+      learning, namely the explosion of deep learning where technological and theoretical achievements have made it
       possible to efficiently train deep convolutional neural networks (DCNNs)~\cite{lecun_deep_2015}.
       %(DCNNs)~\cite{krizhevsky_imagenet_2012,taigman_deepface_2014,razavian_baseline_2015,lecun_deep_2015,arandjelovic_netvlad_2016,rocco_convolutional_2017}.
     Our approach does contain a small amount of deep learning (\eg{} the foregroundness weights), but it not
       based in it.
     In some sense this is an advantage because the algorithms can be applied to many different species without
-      any need for pre-training, but it also does not achieve the incredible accuracy acheivable by these networks.
+      any need for pre-training, but it also does not achieve the incredible accuracy achievable by these networks.
     Yet, the contributions of this \thesis{} are still relevant and complementary to DCNNs.
     This is trivially true in the case of the ranking and classification algorithms, in part due to the
-      aformentioned reasons.
+      aforementioned reasons.
     However, the contribution of the graph algorithm is still very relevant, even in the era of deep learning.
     
-    \section{Discussion of the graph algorithm}
+    %\section{Discussion of the graph algorithm}
     The graph identification algorithm models the abstract constraints of the identification problem and provides
       a framework that can efficiently harness the power of any ranking or verification algorithm, whether it be
       deep or shallow.
@@ -67,7 +67,7 @@
     Edge prioritization works in conjunction with a convergence criteria that determines when identification has
       been completed.
     When combined this means that the graph algorithm can simply be given a set of annotations and executed.
-    A signal is emited whenever manual interaction is needed, and once the responce is received the algorithm
+    A signal is emitted whenever manual interaction is needed, and once the response is received the algorithm
       continues.
     This means that the graph algorithm requires little expertise to use.
     Once it is running it effectively provides an identification wizard and simply guides the user through a set
@@ -77,47 +77,44 @@
     The algorithm stops once there is a high probability that the vast majority of identifications have been made
       correctly and consistently.
 
-    \section{Discussion of the ranking and verification algorithm}
-    pass
+    %\section{Discussion of the ranking and verification algorithm}
+    %pass
+    %\section{Contributions}\label{sec:contributions}
 
-    \section{Contributions}\label{sec:contributions}
+    A summary of the contributions made in this \thesis{} are as follows:
 
-    The summary of the contributions made in this \thesis{} is as follows:
+    \begin{enumln}
+    \item {The ranking algorithm}:
+        \begin{enumln}
+        \item We have adapted LNBNN~\cite{mccann_local_2012} to the problem of individual animal identification.
+        We have performed experiments that demonstrate the effect of the $\K$ parameter at multiple database
+          sizes.
 
-    \begin{itemln}
-    \item \textbf{The ranking algorithm}:
-        \begin{itemln}
-        \item We have adapated LNBNN~\cite{mccann_local_2012} to the problem of individual animal
-            identification.
-            We have performed experiments that demonstrate the effect of the $\K$ parameter at multiple
-            database sizes.
-
-        \item We have accounted for the influence of background features using a learned a foregroundness
-            measure to weight the LNBNN scores of feature correspondences.
-            We have empirically shown the effectiveness of this procedure.
+        \item We have accounted for the influence of background features using a learned a foregroundness measure
+          to weight the LNBNN scores of feature correspondences.
+        We have empirically shown the effectiveness of this procedure.
 
         \item We have introduced a \name{} scoring mechanism to take advantage of information in multiple
-            database exemplars.
-            Our experiments have demonstrated the significance of multiple exemplars for individual
-            identification.
+          database exemplars.
+        Our experiments have demonstrated the significance of multiple exemplars for individual identification.
 
         \item We have evaluated the effect of various levels of feature invariance in our experiments.
-            We have introduced a heuristic that augments the orientation of query keypoints to account for
-            pose variations.
-        \end{itemln}
+        We have introduced a heuristic that augments the orientation of query keypoints to account for pose
+          variations.
+        \end{enumln}
 
-    \item \textbf{The pairwise classification algorithm}:
-        \begin{itemln}
+    \item {The pairwise classification algorithm}:
+        \begin{enumln}
 
         \item We have developed a novel feature vector that represents the matching information between two
-            annotations.
+          annotations.
 
-        \item We have used these feature vectors to learn a random forest that can predict the probability
-            that two annotations are either positive, negative, or incmparable.
+        \item We have used these feature vectors to learn a random forest that can predict the probability that
+          two annotations are either positive, negative, or incomparable.
 
         \item We have compared the learned probabilities to LNBNN scores and demonstrated that the separation of
           positive cases is significantly improved.
-        \end{itemln}
+        \end{enumln}
 
             %We have proposed an algorithm to learn a pairwise match probability --- the probability that two
             %annotations match, do not match, or are not comparable. Learning if two annotations are not
@@ -133,7 +130,7 @@
             %  split cases, and an optimized choice of exemplars.
             %Work in discussion of match, no match, and not comparable.
 
-    \item \textbf{The graph identification algorithm}:
+    \item {The graph identification algorithm}:
         \begin{enumln}
         \item We have introduced the graph identification algorithm for semi-automatic animal identification.
 
@@ -149,149 +146,38 @@
 
         \item We have developed a measure of redundancy based on edge-connectivity used to increase accuracy and
           reduce the number of reviews needed.
-        \end{enumln}
-            %We have proposed an algorithm that will use the learned pairwise match probabilities to perform
-            %joint identification on a set of multiple annotations. In this way we will take advantage of
-            %information from multiple images. This algorithm will facilitate addressing the problems of
-            %\intraoccurrence{} matching, \vsexemplar{} matching, \exemplar{} selection, and split and merge
-            %case detection.
 
-    \end{itemln}
+        \item We have developed an algorithm for fixing errors whenever inconsistencies in the graph are been
+          discovered.
+        \end{enumln}
+    \end{enumln}
 
     \section{Future work}\label{sec:futurework}
-    The clearest direction to continue this research is to develop and train 
-    Clearly the most significant area that
-    To extend the work 
 
+    We have shown that our ranking and match-state classification algorithms are both accurate and work well for
+      identifying animals.
+    However, the clearest direction for future research is to replace these algorithms with ones based on DCNNs.
+    We believe that the approach in is a good starting point for~\cite{arandjelovic_netvlad_2016} replacing the
+      ranking algorithm.
+    %This algorithm is similar to the VLAD approach we tested here, the deep features and vocabularies .
+    We had briefly investigated the techniques in~\cite{taigman_deepface_2014} to the pairwise classification
+      problem, but because we did not have an alignment procedure or as much training data, the results were poor.
+    Research into the geometric matching technique described in~\cite{rocco_convolutional_2017} may help address
+      both of these these issues.
 
-
-    %However, each one of these algorithms stands in its own right, and while they do not depend on each other
-    %  they can all benifit from one another.
-
-
-    %\section{Discussion}\label{sec:discussresult} 
-
-    %    Overall our experiments have shown that we are able to accurately rank image of plains zebras, Grévy's
-    %      zebras, and Masai giraffes.
-    %    Using this system we have successfully estimated the population of plains zebras and Masai giraffes in
-    %      Nairobi National Park.
-    %    We have demonstrated that using information from multiple images improves identification accuracy.
-    %    We have also shown the importance and the difficulty of addressing the problem of decision/verification
-    %      in the context of animal identification.
-    %    Despite the successes of our system, it is not without its limitations.
-    %    The following list enumerates several limitations of the current system.
-
-    %    \begin{itemln}
-
-    %        %\item The current limitations of the system are the
-    %        %  requirement of manual verification of results and the
-    %        %  inability to run robust consistency checks.
-
-    %        \item \textbf{Scalability of the identification algorithm}:
-    %        There may be a limitation in the scalability our nearest-neighbor based algorithms. However, this may
-    %        be alleviated with the proper selection of exemplars. In the near future we do not see any reason to
-    %        move away from nearest neighbor based techniques. However, farther down the line it may be necessary to
-    %        replace or preprocess the current indexing algorithm using a vocabulary based approach.
-
-    %        \item \textbf{Identification of animals without distinguishing textures}:
-    %        The SIFT-based matching algorithms that we employ will only be able to match species containing
-    %        distinctive gradient-based markings. New algorithms will need to be developed for animals with
-    %        distinguishing shape based features. However, our system design is able to incorporate new algorithms
-    %        --- such as the whale fluke matching algorithm --- under the same image analysis API{}.
-
-    %        \item \textbf{Identification of highly deformable animals}:
-    %        Our algorithms use projective transformations to enforce spatial constraints between matches. While
-    %        this works well for the species we consider, it will be more difficult to match other species. Future
-    %        work should seek to more robustly align annotations before comparing them. This might be done directly
-    %        by warping annotations using non-linear alignment
-    %          %(like the scale-cascaded alignment in SLOOP~\cite{duyck_sloop_2015})
-    %        or via localizing and comparing smaller parts. Given a proper alignment, it should be possible to apply
-    %        state-of-the-art neural network techniques to produce reliable image descriptions and similarities.
-    %        %Our techniques will not reliable 
-    %        %Current measures of pairwise probability are not based on
-    %        %  state-of-the-art neural network techniques involving Siamese
-    %        %  networks.
-    %        %Our evaluation of these techniques yielded negative results due
-    %        %  to insufficient training data and the lack of a robust
-    %        %  algorithm to align the parts of animals.
-
-    %        %It is my hope that the work done in this \thesis{} will allow
-    %        %  for enough diverse training data to be bootstrapped to
-    %        %  accommodate training data-hungry neural networks.
-    %        %Future work should seriously consider using a parts-based model
-    %        %  and computing matching similarity between parts using a Siamese
-    %        %  network.
-    %        %Techniques such as VLADNet %
-    %        %%\ucite{vladnet}
-    %        %can be used to index these parts to reduce the pairwise search
-    %        %  space.
-    %  \end{itemln}
-        
-    
-    %\section{Summary of contributions}\label{sec:contributions}
-    %    This section enumerates the current and intended contributions of this work. The intended contributions
-    %    serve as a contract for the work needed to complete this thesis.
-      
-    %    \begin{itemln}
-
-    %        \item \textbf{The single-image animal identification algorithm}:
-
-    %            \begin{itemln}
-    %                \item We have applied LNBNN~\cite{mccann_local_2012} to the problem of individual animal
-    %                identification. We have performed experiments that demonstrate the effect of the $\K$ parameter
-    %                at multiple database sizes. This is the main focus of our publication
-    %                in~\cite{crall_hotspotter_2013}.
-
-    %                \item We have accounted for the influence of background features using a learned a
-    %                foregroundness measure to weight the LNBNN scores of feature correspondences. We have
-    %                empirically shown the effectiveness of this procedure.
-
-    %                \item We have introduced a \name{} scoring mechanism to take advantage of information in
-    %                multiple database exemplars. Our experiments have demonstrated the significance of multiple
-    %                exemplars for individual identification.
-
-    %                \item 
-    %                    We have introduced a heuristic to account for pose issues that augments the orientation of
-    %                    query keypoints. We have evaluated the effect of various levels of feature invariance in
-    %                    our experiments.
-    %            \end{itemln}
-
-    %       \item \textbf{The annotation-vs-annotation match probability}:
-    %            We have proposed an algorithm to learn a pairwise match probability --- the probability that two
-    %            annotations match, do not match, or are not comparable. Learning if two annotations are not
-    %            comparable provides a measure of confidence about the probability that the annotations are either
-    %            the same or different individuals. To learn this match probability we have proposed to use several
-    %            local and global measures of similarity.
-    %            %Learning this probability will enable our algorithm for
-    %            %  choosing exemplars and our new graph-based identification
-    %            %  algorithm.
-
-    %            %This enables identification in databases of all sizes
-    %            %  (\occurrences{}), the identification of potential merge and
-    %            %  split cases, and an optimized choice of exemplars.
-    %            %Work in discussion of match, no match, and not comparable.
-
-    %       \item \textbf{The graph-based identification algorithm}:
-    %            We have proposed an algorithm that will use the learned pairwise match probabilities to perform
-    %            joint identification on a set of multiple annotations. In this way we will take advantage of
-    %            information from multiple images. This algorithm will facilitate addressing the problems of
-    %            \intraoccurrence{} matching, \vsexemplar{} matching, \exemplar{} selection, and split and merge
-    %            case detection.
-
-    %  \end{itemln}
-
-    %\section{Future work}\label{sec:futurework}
-    %    %
-    %    This thesis is currently in the candidacy stage.
-    %    %The work that will be done in the figure is outlined in
-    %    %  \cref{chap:proposal}, which will be eventually be updated with a
-    %    %  description and evaluation of the advanced techniques.
-    %    In the future this section will be updated.
-
-    %    It may be necessary to normalize the scores with respect to timedelta.
-
-    %    Need to evaluate the scores between annotations of different viewpoints
-    %    (show the bi-modality).
+    There are also improvements that can be made to the graph algorithm.
+    First it would be useful to parallelize the algorithm so reviews could be distributed across multiple users.
+    This can be obtained by popping multiple edges from the queue at a time, but this could add extraneous
+      redundancy if the subsequent edges would have been filtered.
+    Second, the current prioritization of edges is based completely on the output of the pairwise classifier.
+    In the best case, the ordering would first construct each PCC as a chain and then only $1$ redundant review
+      would be needed.
+    In the worst case, this order would connect one annotation of an individual to all others causing a star
+      shaped PCC.
+    Then to make the PCC $2$-positive-redundant, it would take $n - 2$ reviews where $n$ is the number of
+      annotations in the PCC.
+    Determining the best order in which to review edges depending on the specified level of redundancy is an
+      interesting question, which is perhaps made more challenging if considered in a distributed setting.
 
 % L___ CHAPTER ___
 
