@@ -1188,7 +1188,6 @@
         ideal to rank the databases on the scales considered in this thesis. However, we note that SMK is more
         efficient on larger scales, and it may be necessary to consider when databases become very large.
 
-        %\item \textbf{Identification accuracy improves with more exemplars}:
         % NUM EXEMPLARS MATTERS
         In most experiments we evaluated our ranking algorithm as if it were addressing a single-shot
         identification problem. This was to establish the performance of the algorithm when an individual has only
@@ -1196,13 +1195,6 @@
         experiments demonstrated that the ranking accuracy significantly increases with the number of exemplars per
         database name. We will use this observation to address the challenges of matching through viewpoint and
         occlusion by taking advantage of multiple images of an individual in~\cref{chap:graphid}.
-
-        %\item \textbf{Foregroundness weighting reduce scenery matches}:
-        %% FOREGROUNDNESS GOOD
-        %Identification accuracy significantly improves by a few percentage points when using foregroundness
-        %  weighting.
-        %We have found that enabling foregroundness weighting eliminates nearly all failure cases due to
-        %  scenery matches without significantly affecting other results.
 
         %\item \textbf{Invariance settings are data dependent}:
         We also saw that the best choice for feature invariance is data dependant. The invariance experiment
@@ -1215,9 +1207,6 @@
         from Grévy's zebras, hence the correct match of a plains zebra feature is less likely to be its closest
         neighbor. Both the choice of $\K$ and invariance settings should be evaluated on a per-dataset basis and
         there is likely benefit to performing identification using multiple parameter choices.
-        %Furthermore, the size of the database does not seem to strongly influence the optimal choice of $\K$.
-        %However, note that most tests were run on different sizes of large databases, and the choice of $\K$
-        %  using small databases was not investigated.
 
 
 \section{Rank-based identification summary}\label{sec:staticsum}
@@ -1237,13 +1226,11 @@
     individuals from different species and (2) our approach provides more accurate rankings than standard instance
     recognition techniques. We therefore make the conclusion that the algorithm is effective at identifying medium
     to high quality images of animals with distinguishing patterns when taken from similar viewpoints.
-    %In addition we have comparative evidence that this problem is more
-    %  difficult than location recognition.
 
     While we have demonstrated that the ranking algorithm accurately ranks correct matches when they exist, there
       are several limitations to this approach.
     \begin{enumln}
-        \item All results must be manually verified, which can be a time consuming.
+        \item All results must be manually verified, which can be time consuming.
             %process for large datasets.
             %We introduced a mechanism for ranking the individuals in a database
             %based similarity to a single query, but provided no means of verifying
@@ -1255,7 +1242,3 @@
     In \Cref{chap:pairclf} we introduce an algorithm to make automatic decisions based on results from this
       algorithm, and in \cref{chap:graphid} we introduce a graph-based framework that determines identification
       confidence and introduces error recovery mechanisms.
-
-
-
-% L___ CHAPTER ___
