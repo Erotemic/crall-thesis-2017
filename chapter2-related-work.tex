@@ -5,175 +5,1244 @@
     ./texfix.py --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 -w
 \end{comment}
 
-% +--- CHAPTER --- 
-\chapter{Related work}\label{chap:relatedwork}
+\chapter{Related work}\label{chap:relatedwork} 
 
-    %Individual animal identification is an emerging topic that stems
-    %  from the success of algorithms developed in the maturing field of
-    %  computer vision.
-    %Computer vision algorithms have been applied to the problem of
-    %  individual identification for man species such as %
-    %skinks, geckos, and
-    %  salamanders~\cite{duyck_sloop_2015,martinez_trinidad_relevance_2014}, %
-    %mantra rays~\cite{town_manta_2013}, %
-    %leatherback sea turtles~\cite{de_zeeuw_computer_2010}, %
-    %wildebeests~\cite{bolger_wildid_2011,bolger_computerassisted_2012}, %
-    %plains zebras~\cite{lahiri_biometric_2011}, %
-    %gorillas and chimpanzees~\cite{loos_automated_2013}, %
-    %whale sharks~\cite{holmberg_estimating_2009}, %
-    %and African penguins~\cite{loos_automated_2013}.
-    %Computer vision algorithms make up the core of the best performing
-    %  animal identification techniques.
-    %Therefore, the focus of this chapter is to review the computer
-    %  vision algorithms themselves.
-
-    To address the individual animal identification problem we draw
-      upon related research in
-    %---
-    feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2007,
-      perdoch_efficient_2009},
-    %---
-    feature description~\cite{lowe_distinctive_2004,
-      mikolajczyk_performance_2005,simonyan_learning_2014,
-      winder_picking_2009,zagoruyko_learning_2015,han_matchnet_2015},
-    %---
-    approximate nearest neighbor search~\cite{silpa_anan_optimised_2008,
-      muja_fast_2009},
-    %---
+    To address the individual animal identification problem we draw upon related research in %
+    feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2007, perdoch_efficient_2009}, %
+    feature description~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005,simonyan_learning_2014,
+      winder_picking_2009,zagoruyko_learning_2015,han_matchnet_2015}, %
+    approximate nearest neighbor search~\cite{silpa_anan_optimised_2008, muja_fast_2009}, %
     instance recognition~\cite{sivic_efficient_2009,nister_scalable_2006,
-      philbin_object_2007,jegou_hamming_2008,bo_efficient_2009,
-      jegou_aggregating_2012, tolias_aggregate_2013},
-    %---
+      philbin_object_2007,jegou_hamming_2008,bo_efficient_2009, jegou_aggregating_2012, tolias_aggregate_2013}, %
     face verification~\cite{chopra_learning_2005,huang_labeled_2007,berg_tom_vs_pete_2012,
-      chen_blessing_2013,taigman_deepface_2014}
-    %---
-    fine-grained recognition~\cite{parkhi_cats_2012,berg_poof_2013,
-      gavves_local_2014},
-    %---
+      chen_blessing_2013,taigman_deepface_2014} %
+    fine-grained recognition~\cite{parkhi_cats_2012,berg_poof_2013, gavves_local_2014}, %
     category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,
-      mccann_local_2012,boiman_defense_2008,sanchez_compressed_2013},
-    %---
-    and convolutional neural networks~\cite{krizhevsky_imagenet_2012,
-      razavian_cnn_2014, zagoruyko_learning_2015,han_matchnet_2015,arandjelovic_netvlad_2016}.
-    %---
+      mccann_local_2012,boiman_defense_2008,sanchez_compressed_2013}, %
+    and convolutional neural networks~\cite{krizhevsky_imagenet_2012, razavian_cnn_2014,
+      zagoruyko_learning_2015,han_matchnet_2015,arandjelovic_netvlad_2016}.
 
-    At a high level main questions addressed by the aforementioned
-      research can be summarized as:
-    How should image features be detected?
-    How should detected image features be represented?
-    How much invariance should features have?
-    Should image features be quantized?
-    How should image feature be matched?
-    How should feature matches be aggregated?
-    How should feature matches be scored?
-    How should all of this be done accurately?
-    How should all of this be done efficiently?
-    Answers to these questions address many of the challenges to animal
-      identification previously introduced in~\cref{sec:challenges}.
-    %Any solution to animal identification must also address all of these
-    %  questions.
+    At a high level main questions addressed by the aforementioned research can be summarized as: How should image
+    features be detected? How should detected image features be represented? How much invariance should features
+    have? Should image features be quantized? How should image feature be matched? How should feature matches be
+    aggregated? How should feature matches be scored? How should all of this be done accurately? How should all of
+    this be done efficiently? Answers to these questions address many of the challenges to animal identification
+    previously introduced in~\cref{sec:challenges}.
 
-    This chapter summarizes literature relevant to addressing these questions
-      in the context of animal identification.
-    %In this chapter we will describe several other works and their similarities
-    %  and differences with animal identification.
-    The outline of this chapter is as follows:
-    \Cref{sec:featuredetect} will discuss feature detection.
-    \Cref{sec:featuredescribe} will discuss feature description.
-    \Cref{sec:ann} will discuss approximate nearest neighbor algorithms.
-    \Cref{sec:ir,sec:cr,sec:fgr}, will discuss approaches to recognition.
+    This chapter summarizes literature relevant to addressing these questions in the context of animal
+    identification. The outline of this chapter is as follows: \Cref{sec:featuredetect} will discuss feature
+    detection. \Cref{sec:featuredescribe} will discuss feature description. \Cref{sec:ann} will discuss approximate
+    nearest neighbor algorithms. \Cref{sec:ir,sec:cr,sec:fgr}, will discuss approaches to recognition.
     \Cref{sec:dcnn} will discuss convolutional neural networks.
-    %\Cref{sec:otherid} will discuss other works in individual animal
-    %  identification.
 
 
-\input{sec-2-1-featdetect.tex}
-\input{sec-2-2-featdescrip.tex}
-\input{sec-2-3-neighbors.tex}
-\input{sec-2-4-ir.tex}
-\input{sec-2-5-cr.tex}
-\input{sec-2-6-fgr.tex}
-\input{sec-2-7-dcnn.tex}
-% L___ CHAPTER ___
+\section{Image feature detection}\label{sec:featuredetect}
+
+    Before an image can be analyzed, it must be broken down into smaller components. An image's visual appearance
+    can be captured using a combination of local image patterns --- \glossterm{patch based features}. The most
+    informative patch based features are typically centered on simple image structures such as junctions, corners,
+    edges, and blobs~\cite{tuytelaars_local_2007}. If these features be can be reliably detected, localized, and
+    described then image matching can be posed as a problem in matching sets of features. This section describes
+    work related to detecting features in an image, and~\cref{sec:featuredescribe} will discuss how detected
+    features are then described.
+
+    The region where a feature is detected is called a \glossterm{keypoint}. The simplest definition of a keypoint
+    is just an $xy$-location in an image. However, images contain information at multiple scales; therefore a
+    keypoint is typically associated with a scale. The scale of a keypoint is a non-negative real number that
+    defines the level of detail at which to interpret the underlying image information. A keypoint with a scale can
+    be thought of as a circular region with a radius that is the scale multiplied by some constant % 
+    (\eg{} $3\sqrt{3}$ is the constant used to determine a keypoint's radius in~\cite{perdoch_efficient_2009}). To
+    account for changes in viewpoint and pose, it is also common to augment features with an orientation and shape.
+    Adding these properties is said to add invariance to the feature. Invariant features can provide similar
+    descriptions of the same semantic image region under different viewing conditions. However, adding invariance
+    can causes features to lose distinguishing information~\cite{mikolajczyk_comparison_2005,
+    tuytelaars_local_2007, perdoch_efficient_2009, lowe_distinctive_2004}.
+
+    Many detectors have been developed to detect patch based feature keypoints~\cite{mikolajczyk_comparison_2005,
+    tuytelaars_local_2007}. Algorithms such as Harris, SUSAN, and FAST detect corners~\cite{harris_combined_1988,
+    mikolajczyk_indexing_2001, smith_susannew_1997, rosten_machine_2006}. Blobs and corners can be detected with
+    Hessian~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994} or difference of
+    Gaussians~\cite{gaussier_neural_1992, lowe_distinctive_2004} detectors. There are also region based detectors:
+    maximally stable extremal regions~\cite{matas_robust_2004}, saliency based
+    methods~\cite{buoncompagni_saliency_based_2015} and superpixel based methods~\cite{ren_learning_2003,
+    mori_recovering_2004}. Some applications choose to skip keypoint detection and use a uniform grid of dense
+    features~\cite{liu_sift_2008, revaud_deep_2015, iscen_comparison_2015}. Other applications, such as face
+    recognition, use specialized keypoint detectors~\cite{dantone_real_time_2012, berg_tom_vs_pete_2012}. There
+    currently exists no principled method for selecting the appropriate feature detector. Different feature
+    detectors perform differently given the application~\cite{tuytelaars_local_2007}.
+
+    This section describes the representation of an image over multiple scales, the detection of features to
+    sub-pixel and sub-scale accuracy, and the adaption of features to specify orientation and shape. We focus on
+    the Hessian-based keypoint because it has been experimentally shown to be a reliable choice for instance
+    recognition~\cite{tuytelaars_local_2007}.
+
+   \subsection{Scale-space}
+        Scale-space theory describes image features as existing at multiple
+        scales~\cite{lindeberg_scale_space_1993}. The same point on an object seen close up appears quite different
+        compared to when it is at a distance. For example, a zebra in the distance may appear to have two stripes
+        that are connected, but when the animal appears closer it becomes clear that the stripes are actually
+        disconnected.
+        %This problem is addressed by detecting features at multiple scales.
+        Multi-scale detection is formalized by the theory of scale-space, which parameterizes a continuous signal,
+        $f$, with a scale, $\scale$. The original signal is said to exist at scale $0$. Convolving the original
+        signal with a Gaussian kernel produces coarser scales.
+
+        Let $f$ be a continuous $2$-dimensional signal that defines an image. Let vector $\pt=\ptcolvec$ be a
+        location in the image. The function $g(\scale)$
+        %= \frac{1}{\TAU\scale^2} \exp{-(\vec{i} \cdot \vec{i})/2\scale^2}$
+        is the isotropic 2D Gaussian kernel. The scale-space representation of a continuous image (for any non-zero
+        scale) takes the form: $\img(\pt, \scale) = g(\scale) \conv f(\pt)$, where $\conv$ is the convolution
+        operator. However, we do not have access to a continuous representation of an image. Therefore, in
+        practice, the continuous Gaussian kernel is replaced with the discrete Gaussian kernel. This can be
+        efficiently implemented as a discrete convolution with the $1$-dimensional discrete Gaussian kernel in the
+        $x$-direction and then in the $y$-direction, because the discrete Gaussian kernel is separable in
+        orthogonal directions~\cite{lindeberg_scale_space_1993}. Using the definition of an image at a single scale
+        the next step is to represent an image a multiple scales.
+
+       \paragraph{Gaussian pyramid}
+
+           \newcommand{\downsamp}[2]{#1[::\tightpad#2,::\tightpad#2]}
+            % See page 39 of Scale-space theory.
+            %The continuous image signal is defined to be the zeroth scale $\img(\pt, 0) = \rawimg(\pt)$. 
+            The discrete scale-space representation of an image is efficiently implemented using a Gaussian
+            pyramid. A scale-space pyramid consists of $L$ levels. Each level covers an octave. Starting from the
+            base of each level with scale parameter $\sigma$ the next octave is reached when $\sigma$ doubles.
+            There are $s$ intervals represented within each octave. A Gaussian pyramid is illustrated
+            in~\cref{fig:ScaleSpaceFigure}.
+
+            \ScaleSpaceFigure{}
+
+            The pyramid's base, %
+            $\img(\pt, 1) = g( 1 ) \conv \rawimg(\pt)$ %
+            is the $\ell=0$\th{} level of the pyramid, and is computed by blurring the original image (sometimes
+            with small initial blurring) with $\sigma=1$. Subsequent levels of the pyramid are produced by doubling
+            sigma, thus the $\ell$\th{} level of the pyramid is $\img(\pt, 2^\ell)$.
+
+            A property of discrete scale-space is that after appropriate smoothing downsampling the image by half
+            is equivalent to doubling sigma. Let
+            % ---
+            $\img_\ell(\pt) = \downsamp{\rawimg}{2^{\ell}}({\pt} / {2^{\ell}})$ 
+            % ---
+            denote the raw image downsampled by a factor of $2^{\ell}$ using Lanczos resampling. Now, each level of
+            the pyramid can be written as %
+            $\img(\pt, 2^\ell) = g( 1 ) \conv \rawimg^\ell$. Given the raw image at level $\ell$, the scale
+            corresponding to $\sigma$ can be written as a relative scale
+            % ---
+            $\sigma_\ell = \sigma / 2^\ell$.
+            % ---
+            Thus, a discrete image at any scale can be efficiently computed as:
+            \begin{equation}
+                \img(\pt, \sigma) =
+                    g(\sigma_\ell) \conv \img_\ell(\pt)
+            \end{equation}
+            Discrete convolution is applied using a window of size
+              $\floor{6\sigma_\ell + 1} + (1 -
+              (\modfn{\floor{6\sigma_\ell + 1}}{2}))$.
+            Interpolation between discrete values of $\pt$ is used to
+              sample intensity at sub-pixel accuracy.
+
+            A scale between two levels of the pyramid is called an interval. Typically, $s$ intervals --- with
+            relative scales $2^{0/s}, 2^{1/s}, \ldots 2^{s/s}$ --- are computed to represent the octave between
+            level $\ell$ and $\ell + 1$. If differences between scales are needed, then the scales $2^{-1/s}$ and
+            $2^{1 + 1/s}$ are also computed~\cite{lowe_distinctive_2004}.
+
+    \subsection{Hessian keypoint detection}
+
+        Hessian based keypoint detection searches for extrema of the Hessian operator in both space and
+        scale~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994}. The Hessian detector can
+        qualitatively be viewed as a blob detector, but it also detects corners which may appear as blobs in
+        scale-space~\cite{tuytelaars_local_2007}. The Hessian keypoint detector will compute a response value for
+        each point in scale space indicating how blob-like each pixel is. The extrema of this response defines a
+        set of Hessian keypoints. Post processing removes non-robust keypoints and localizes all other keypoints to
+        sub-pixel and sub-scale accuracy.
+
+        \paragraph{Hessian response}
+            Let subscripts denote the partial derivatives of the image intensity (\eg{} $\img_{x}$ is the first $x$
+            derivative, $\img_{xx}$ is the second $x$ derivative, and $\img_{xy}$ is the first derivative in both
+            $x$ and $y$). The Hessian is a matrix of second order partial derivatives and is defined at each point
+            in scale space.
+            \begin{equation}
+                \hessMAT = 
+                \BIGMAT{
+                \img_{xx}(\pt, \scale) & \img_{xy}(\pt, \scale) \\
+                \img_{xy}(\pt, \scale) & \img_{yy}(\pt, \scale) } 
+            \end{equation}\label{eqn:hessianmatrix}  
+            %(derivatives are computed in scale-space over an integration scale %$\scale_I$). 
+
+            The initial response of the detector at each point is the determinant of the Hessian matrix. This
+            response is computed for level and every pixel in the scale-space pyramid. At coarser scales the
+            Hessian response weakens, so to ensure that responses between scales are comparable, the initial
+            response is scale normalized by multiplying with $\sigma^2$. (See~\cite{lindeberg_feature_1998} for
+            more details about the choice of this normalization factor.) The extrema of this space defines a set of
+            candidate keypoints, $\kpts'$.
+            \begin{equation}
+                \kpts' = \argextrema{\pt,\scale} \paren{\scale^2 \detfn{\hessMAT}} 
+            \end{equation}
+            %\devcomment{Is this 2D or 3D extrema detection.  What would need to change in my math if it was 3D?} 
+            A point in this 3D space is a maxima/minima if its scale normalized value is greater/less than the
+            scale normalized values of all its neighbors in the pyramid --- \ie{} the $8$ neighbors in its current
+            interval, its $9$ neighbors in the next interval, and its $9$ neighbors in the previous interval.
+
+        \paragraph{Edge filtering}
+            Edge responses are not robust --- \ie{} the same point can not localized reliably in two views of the
+            same scene --- due to their elongated nature. Because of this, the extrema that appear too edge-like
+            are filtered using a threshold $t_{\tt{edge}}$ which is compared to the ratio of the Hessian's squared
+            trace and the determinant.
+            \begin{equation}
+                \kpts = \{(\pt, \scale) \in \kpts' \where
+                  \frac{\trfn{\hessMAT}^2}{\detfn{\hessMAT}} > t_{\tt{edge}}\}
+            \end{equation}
+
+        \paragraph{Sub-pixel and sub-scale localization}
+            To compensate for the discrete nature of pixel images, each keypoint detection is localized to
+            sub-pixel and sub-scale accuracy. The importance of feature localization is demonstrated
+            in~\cite{ke_pca_sift_2004}, where descriptors were computed on the normalized vectors of patch
+            gradients using only principal component analysis (PCA)~\cite{jolliffe_principal_2014}. Despite the
+            simplicity of the descriptors the authors were still able to effectively match two images due to the
+            robust localization of the features.
+
+            Sub-pixel and sub-scale localization transforms a keypoint $\kp_0$ into $\kp^*$ using an iterative
+            process. At each iteration $i$, a $2\nd{}$ order Taylor expansion, centered at %
+            $\kp_i = (\pt_i, \scale_i)$, approximates the scale normalized Hessian response: %
+            $T_i(\pt, \scale) \approx \scale^2 \detfn{\hessMAT}$. The keypoint is updated to the position of the
+            maximum response of the Taylor expansion: $\kp_{i + 1} = \argmax{\kp} T_i(\kp)$. This process iterates
+            until convergence. If the process does not converge before a threshold number of iterations, the
+            keypoint is deemed not robust and thrown out.
+
+    \subsection{Affine adaptation}
+        So far, the keypoints we have described correspond to circular regions where the pixel radius is some
+        multiple of the scale. To account for small affine changes seen in non-planar objects (like zebras), the
+        shape of each circular keypoint is adapted into an ellipse.
+
+        An affine shape $\vmat=\vMATRIX$ is estimated (as a lower triangular matrix) for each keypoint using an
+        iterative technique involving the second moment
+        matrix~\cite{lindeberg_shape_adapted_1997,baumberg_reliable_2000,mikolajczyk_comparison_2005}. The affine
+        shape matrix transforms an ellipse into a unit circle. Note that because the matrix is lower triangular one
+        of its eigenvectors points in the downward direction. Thus the shape has no influence on the orientation of
+        the keypoint. For each point in scale space the second moment matrix is evaluated as:
+        \begin{equation}\label{eqn:secondmoment}
+                \momentmat 
+                \tighteq 
+                \MAT{ 
+                \img_x^2(\pt, \scale)      & \img_x(\pt, \scale) \img_y(\pt, \scale) \\
+                \img_x(\pt, \scale) \img_y(\pt, \scale) & \img_y^2(\pt, \scale) }
+        \end{equation}
+
+        The goal is to ``stabilize'' each keypoint shape by searching for the transformation, $\vmat^*$, that
+        causes the second moment matrix to have equal eigenvalues. For each keypoint, its elliptical shape is
+        initialized as a circle $\vmat_0=\eyetwo$. For each iteration $i$:
+
+        \begin{enumln}
+
+            \item Compute the second moment matrix, $\warpedmomentmat{\vmat_i}$, at the warped image patch.
+
+            \item Check if the keypoint shape is stable. A keypoint shape is stable if the eigenvalue ratio of the
+            second moment matrix is close to $1$. If the keypoint has been stable for two consecutive iterations,
+            then accept $\vmat^* \leftarrow \vmat_{i}$ and stop iteration. Otherwise if the number of iterations,
+            $i$, is greater than some threshold, then stop and discard the keypoint.
+
+            \item Update the affine shape  using the rule
+                % ---
+                $\vmat_{i + 1} = \sqrtm{\warpedmomentmat{\vmat_i}} \vmat_i$.
+        \end{enumln}
+
+        The matrix $\vmat$ only defines the transformation from an ellipse to a circle. The standard representation
+        of an ellipse is a conic of the form $\mat{E} = \vmat^T\vmat$. This means that $\vmat$ is only defined up
+        to an arbitrary rotation~\cite{mikolajczyk_comparison_2005,perdoch_efficient_2009}. Thus we can freely
+        rotate $\vmat$ into a lower triangular matrix. This ensures that one of its eigenvectors is pointing
+        downwards --- \ie{} in the direction of the ``gravity vector''~\cite{perdoch_efficient_2009}. Making use of
+        the gravity vector removes a dimension of invariance. To allow for the specification of keypoint
+        orientation, the keypoint representation can be extended with a parameter $\theta$ that defaults to $0$.
+
+    \subsection{Orientation adaptation}
+
+        The keypoint orientation is defined using the parameter $\theta$.
+        By default the orientation of a keypoint can be assumed to be aligned with the ``gravity vector'' ---
+          \ie{} $\theta=0$~\cite{perdoch_efficient_2009}.
+        Otherwise, an orientation must be computed.
+        A common method for determining a keypoint's orientation is to use the dominant gradient orientation.
+        In theory adapting the orientation to match the dominant gradient will cause a computed keypoint
+          description to be invariant to rotations.
+
+        To compute a keypoint's dominant orientation the pixels around a keypoint vote into a fine-binned
+        orientation histogram~\cite{lowe_distinctive_2004}. A pixel's vote is weighted by its gradient magnitude
+        multiplied by its Gaussian weighted distance to the keypoint center. The dominant orientation %
+        $\ori \in \rangeinex{0,\TAU}$ is chosen as the peak of this histogram. If there is more than a single peak
+        it is common to create a copy of the keypoint for each maxima in this histogram. This process is
+        illustrated in~\cref{fig:testfindkpdirection}.
+
+        \testfindkpdirection{}
+
+        \FloatBarrier{}
+
+    \subsection{Discussion --- detector and invariance choices}
+        To identify individual animals, features must be detected in distinguishing areas of an animal. For a
+        feature to be useful, it must be detected in the multiple images of the same individual despite variations
+        in viewpoint, pose, lighting, and quality. In our baseline algorithm we choose to use a Hessian based
+        detector~\cite{perdoch_efficient_2009, lindeberg_feature_1998} because it generally produces a large number
+        of features and has been experimentally shown to be repeatable, accurate, and adaptable to multiple degrees
+        of invariance~\cite{tuytelaars_local_2007}.
+
+        Once a keypoint is detected, it is described using a keypoint description algorithm. It is desirable for a
+        keypoint description to be invariant to small changes in viewpoint, pose, and lighting. Accurate
+        localization of a keypoint in scale and space helps to ensure that similar images contain similar features.
+        Sometimes, it is beneficial to further localize a keypoint in shape and orientation, thus adding invariance
+        to the feature. However, if too much invariance is used, it may not be possible to distinguish between
+        semantically different features.
+
+        It is a challenge to choose the correct level of invariance when computing features. Often an application
+        chooses one of two extremes. Consider the computation of keypoint orientation. Standard methods for
+        orientation invariance assume patches can freely rotate, when in fact they may be constrained to be
+        consistent with the orientation of surrounding patches~\cite{lowe_distinctive_2004}. On the other side
+        extreme is the ``gravity vector''~\cite{perdoch_efficient_2009}, which globally enforces all keypoint to
+        have a downward orientation. This may be a safe assumption when working with features from images of rigid
+        objects taken in an upright position. It may not be correct when dealing with non-rigid objects like
+        zebras.
+        %Orientation invariance assumes that orientation is a local property
+        %  of a patch, but the orientation of a patch is usually not
+        %  independent of its surrounding patches on an object.
+        In our experiments in~\cref{sub:exptinvar} we test different degrees on invariance. This test includes a
+        novel method that achieves a middle ground between full orientation invariance and the gravity vector.
 
 
-%\section{Other animal identification projects}\label{sec:otherid}
+\section{Image feature description}\label{sec:featuredescribe}  
+
+    Once each feature has been localized its visual appearance must be described before it can be matched. The goal
+    of feature description is to encode raw image data into a vector --- \ie{} a \glossterm{descriptor}. To
+    represent the visual appearance of a keypoint a descriptor vector should have the following properties: (1) two
+    visually similar patches produce vectors with a small metric distance and (2) visually dissimilar patches have
+    vectors with large distances between them.
+
+    Constructing such a descriptor vector has been a core problem throughout the history of computer vision.
+    The first texture descriptor robust to small image transformations was the scale invariant feature
+      transform (SIFT) descriptor first published in 1999~\cite{lowe_object_1999, lowe_distinctive_2004}.
+    Since then, other hand-crafted algorithms have been proposed.
+    However, results have always been at least comparable to the SIFT descriptor, and SIFT is still an effective
+      and widely used hand-designed descriptors~\cite{mikolajczyk_performance_2005, calonder_brief_2010,
+      bay_surf_2006, leutenegger_brisk_2011, alahi_freak_2012, jegou_triangulation_2014}.
+    A promising direction for outperforming the SIFT descriptor is descriptor
+      learning~\cite{simonyan_descriptor_2012, simonyan_learning_2014, winder_picking_2009}; specifically
+      descriptor learning using deep neural networks~\cite{razavian_cnn_2014, bengio_representation_2013,
+      russakovsky_imagenet_2014}.
+    This section first describes the basic SIFT algorithm and then provides an overview of alternatives that have
+      been proposed to SIFT{}.
+    Work related to learning descriptor vectors using deep neural networks is discussed later in~\cref{sec:dcnn}.
+      
+    \subsection{SIFT}
+        The {SIFT descriptor} is a $128$ dimensional vector that summarizes the spatial distribution of the
+        gradient orientations in an image patch~\cite{lowe_distinctive_2004}. To describe a keypoint with a SIFT
+        descriptor, the keypoint's image data is warped using the affine transform of the scale space gradient
+        image into a normalized reference frame (typically $41 \times 41$ pixels). For a descriptor to be useful in
+        matching it is important that the keypoint is properly localized before a descriptor is
+        computed~\cite{ke_pca_sift_2004}. Because it is not always possible to perfectly localize a keypoint, the
+        SIFT descriptor aggregates information into a soft-histogram. Allowing data to contribute to multiple bins
+        helps the SIFT descriptor to be robust to small localization errors and viewpoint variations. Distance
+        between two SIFT descriptors is typically computed using the Euclidean distance. The SIFT descriptor of a
+        patch is visualized in~\cref{fig:vizfeatrow}.
+
+        The structure of a SIFT descriptor is as follows: A $4\times4$ regular grid is superimposing over the
+        normalized patch. Each of the $16$ spatial grid cells contains an orientation histogram discretized into
+        $8$ bins. The SIFT descriptor is the concatenation of all orientation histograms, resulting in a single %
+        $16 \times 8 = 128$ dimensional vector.
+
+        The patch information populates the SIFT descriptor as follows: For every pixel, the patch gradient (the
+        derivative in the $x$ and $y$ direction) is computed. Next, each pixel computes its gradient magnitude and
+        orientation. Each pixel then casts a weighted vote. The bin that a pixel votes into is computed from its
+        $xy$-location and gradient orientation. The weight of a pixel's vote is based on its gradient magnitude and
+        Gaussian weighted distance to the patch center. To be robust to small localization errors, a pixel's vote
+        is split via trilinear interpolation ($x$-location, $y$-location, and orientation) into the orientation
+        histograms of the pixel's nearest grid cells as well as neighboring orientation bins in each grid cell's
+        orientation histogram.
+
+        Once voting is completed a SIFT descriptor is normalized to account for lighting differences between
+        images. First, the vector is L2-normalized to unit length, which makes the descriptor invariant to linear
+        changes in intensity. Then, a heuristic --- that truncates each dimension to a maximum value of $0.2$ ---
+        is applied to increases robustness to non-linear changes in illumination. Finally the vector is
+        renormalized.
+
+        For storage considerations the resulting $512$-byte floating point (float32) descriptor is typically cast
+          as an array of unsigned $8$-bit integers (uint8), resulting in a $128$-byte descriptor.
+        To reduce the impact of this quantization a trick is to multiply by $512$ instead of $255$ and then
+          truncate values to $255$ before converting from a float to a uint8.
+        Even though each component is $8$-bits and therefore can only store a maximum value of $255$, but because
+          of truncation, L2-normalization, and properties of natural images value overflow is not likely to occur.
+    
+       \vizfeatrow{}
+
+    \subsection{Other descriptors and SIFT extensions}
+        Even more than a decade after its original publication, SIFT remains a popular descriptor for patch-based
+        matching because it is versatile, unsupervised, widely available, and easy to use. The principles used to
+        guide the construction of the SIFT descriptor --- particularly the use of aggregated gradients --- have
+        inspired many variants, extensions, and new techniques~\cite{mikolajczyk_performance_2005,
+        dalal_histograms_2005, bay_surf_2006}. Hand crafted alternatives to SIFT have been developed that are
+        faster to compute and more efficient to store, but these alternatives do not significantly outperform
+        SIFT's matching accuracy on general data~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005,
+        alahi_freak_2012}. This subsection provides a brief overview of these alternatives.
+
+        % ALTERNATIVES FOR DETECTION
+        The use of aggregated gradient information in SIFT has been adapted for use in other computer vision
+        problems such as detection and scene classification.
+        % GIST
+        The GIST descriptor is a low dimension descriptor used for scene classification that coarsely summarizes
+        rough appearance of an entire image~\cite{oliva_modeling_2001, douze_evaluation_2009}.
+        % HOG
+        The histogram of oriented gradients (HoG) descriptor is a high dimensional descriptor used in detection.
+        The HoG descriptors describes the shapes of objects in an image~\cite{dalal_histograms_2005}. Like the SIFT
+        descriptor, the HoG descriptor illustrates the value of gradient-based image descriptions and has inspired
+        extensions such as the discriminatively trained parts model~\cite{felzenszwalb_object_2010}.
+
+        As a general single-scale patch-based descriptor, the matching accuracy of SIFT has not been significantly
+        outperformed on general datasets.
+        % GLOH
+        One attempt at an improved general descriptor is the gradient location-orientation histogram (GLOH)
+        descriptor~\cite{mikolajczyk_performance_2005}. GLOH uses a similar structure to SIFT but replaces the
+        rectangular-bins with log-polar bins. GLOH did achieve higher matching accuracy on some datasets, but it
+        was not by a significant margin.
+        Despite the lack of generic success, hand-crafted SIFT variants have been successful when applied to
+        specific tasks.
+        % COLORED SIFT
+        Colored SIFT variants such as opponent-SIFT are valuable in category recognition tasks, where a color
+        difference could be the distinguishing factor between categories~\cite{van_de_sande_evaluating_2010}
+        % SCALE-LESS SIFT
+        Combining multiple SIFT descriptors over different scales has also shown moderate improvements. The
+        scale-less SIFT descriptor combines SIFT descriptors computed at multiple scales into a single descriptor.
+        It has been shown to produce more accurate dense correspondences than representing each scale with an
+        individual descriptor~\cite{hassner_sifts_2012}.
+
+        %Despite However, domain specific modifications have shown promising results.
+        %The Rotation Invariant Feature Transform (RIFT) descriptor \cite{lazebnik_sparse_2005} uses concentric
+        %  circles to make a similar modification.
+        %The RIFT descriptor are used in texture classification \cite{lazebnik_sparse_2005}.
+
+        % SURF
+        Efficiency is one area where SIFT has been significantly outperformed.
+        An approximation to SIFT called speeded up robust features (SURF) is a fast approximation to SIFT
+          based on integral images that achieves similar accuracy using a smaller $64$ dimensional
+          descriptor~\cite{bay_surf_2006}.
+        % DAISY
+        The DAISY descriptor uses a similar binning structure to GLOH, but uses convolutions with Gaussian
+          kernels to quickly aggregate gradient histograms~\cite{tola_fast_2008}.
+        % BINARY PATTERNS
+        Binary descriptors such as local binary patterns (LBP)~\cite{ojala_comparative_1996, zhang_local_2010},
+          local derivative patterns~\cite{heikkila_description_2009}, and their variants such as
+          BRIEF~\cite{calonder_brief_2010}, BRISK~\cite{leutenegger_brisk_2011}, and FREAK~\cite{alahi_freak_2012}
+          also quickly compute compact distinctive descriptors.
+        Binary descriptors are built using multiple pairwise comparisons of average image intensity at
+          predetermined locations.
+        This results in a small descriptor that effectively represents aggregated gradient information.
+
+        Machine learning is able to outperform the matching accuracy of SIFT, however these techniques require
+        training data to adapt to each new problem domain. Learned descriptors make use of the same aggregated
+        gradient information used in the construction of SIFT descriptors. The Liberty, Yosemite, and Notre-Dame
+        buildings datasets are standard datasets for descriptor learning~\cite{brown_discriminative_2011}. Error on
+        these datasets is measured using false positive rate at $95\percent$ recall (FPR95). The baseline SIFT
+        error on this dataset is $27.02\percent$. The configuration of a DAISY descriptor is learned
+        in~\cite{winder_picking_2009} and achieves an error of $15.16\percent$ on the buildings datasets.
+        In~\cite{simonyan_learning_2014}, large scale non-convex optimization is used to learn a spatial pooling
+        configuration of log-polar bins, a dimensionality reduction matrix, and a distance metric to further reduce
+        the FPR95 error to $10.98\percent$. The current state of the art error of $4.56\percent$ on the buildings
+        dataset is achieved using a convolutional neural network~\cite{zagoruyko_learning_2015}.
+
+    \subsection{Discussion --- descriptor choices}
+        In our application we use the SIFT~\cite{lowe_distinctive_2004} as our
+        baseline descriptor because it is one of the most widely used and well known descriptors. SIFT describes
+        images patches in such a way that small localization errors do not significantly impact the resulting
+        representation. Exploration of alternative convolutional descriptors is discussed later in~\cref{sec:dcnn}.
+
+
+\section{Approximate nearest neighbor search}\label{sec:ann}  
+
+    In computer vision applications it is often necessary to search a database of high dimensional
+    vectors~\cite{shakhnarovich_nearest_neighbor_2006, datar_locality_sensitive_2004, muja_fast_2009,
+    kulis_kernelized_2012, weiss_spectral_2009}. Patch descriptor vectors like SIFT are constructed such that the
+    distance (under some metric) between vectors is small for matching patches and large for non-matching patches.
+    Thus, finding matching descriptor vectors is often framed as a nearest neighbor search
+    problem~\cite{lowe_distinctive_2004}. It becomes prohibitively expensive to perform exact nearest neighbor
+    search as the size of the database increases. Therefore, approximate algorithms --- which can trade off a small
+    amount of accuracy for substantial speed ups --- can be used instead.
+
+    \subsection{Kd-tree}
+
+        A \glossterm{kd-tree} is a data structure used to index high dimensional vectors for fast approximate
+        nearest neighbor search~\cite{bentley_multidimensional_1975}. A kd-tree is an extension of a binary tree to
+        multiple dimensions. Each non-leaf node of the tree is assigned a dimension and threshold value. The node
+        splits data vectors between the left and right children by comparing the value of the data vector at the
+        assigned dimension to the assigned threshold.
+
+        \paragraph{Building a kd-tree index}
+        Indexing a set of vectors involves first choosing a dimension and threshold to split the data into two
+        partitions. Then this procedure is recursively to each of the partitions. A common measure for choosing the
+        dimension is to choose the dimension with the greatest variance in the data. The threshold is then selected
+        as the median value of the chosen dimension.
+
+        \paragraph{Augmenting a kd-tree index}
+        It is possible to augment an existing kd-tree by adding and removing vectors. Addition of a vector to a
+        kd-tree is performed by appending the point to its assigned leaf. Removal of points from a kd-tree is done
+        using lazy deletion --- \ie{} by masking the removed data. To avoid tree imbalance, a kd-tree is re-indexed
+        after the number of points added or removed passes a threshold. Any masked point is deleted whenever the
+        tree is re-indexed.
+
+        \paragraph{Searching a kd-tree index}
+        Searching for a query point's exact nearest neighbor in a kd-tree has been shown to take expected
+        logarithmic time for low ($k < 16$) dimensional data~\cite{friedman_algorithm_1977}. However, for higher
+        dimensional data this same method takes nearly linear time~\cite{sproull_refinements_1991}. This is because
+        a query point and its nearest neighbor might be on opposite sides of a partition. Therefore, searching for
+        nearest neighbors is typically done by approximate search using a priority queue~\cite{beis_shape_1997}. A
+        priority queue orders nodes to further search based on their distance to the query vector. The search
+        returns the best result after a threshold number of checks have been made. % $ ~\cite{beis_shape_1997}.
+
+        Search accuracy is improved by using multiple randomized kd-trees~\cite{silpa_anan_optimised_2008}. If a
+        single kd-tree has a probability of failure $p$, then $m$ independently constructed trees have a $p^m$
+        probability of failure. For each kd-tree a random Householder matrix is used to efficiently rotate the
+        data. Using a random rotation preserves distances between rotated vectors but does not preserve the
+        dimension of maximum variance. This means that each of the $m$ kd-trees yields a different partitioning of
+        the data, although it is not guaranteed to be independent. When searching multiple random kd-trees a single
+        priority queue keeps track of the next nearest bin boundaries to search over all of the trees.
+
+    \subsection{Hierarchical k-means}
+        Another tree-based method for approximate nearest neighbor search is the hierarchical k-means. Each level
+        in the hierarchical k-means tree partitions the data using the k-means algorithm~\cite{lloyd_least_1982}
+        with a small value of $k$ (\eg{} 3). To query a new point it moves down the tree into the bin of the
+        closest centroid at each level until it reaches a leaf node. Hierarchical k-means was one of the first
+        techniques used to define a visual vocabulary~\cite{nister_scalable_2006} --- a structure used for indexing
+        and quantizing large amounts of descriptors.
+    
+    \subsection{Locality sensitive hashing}
+        A hashing-based method for approximate nearest neighbor search is locality-sensitive hashing (LSH). This
+        method is able to search a dataset of vectors for approximate nearest neighbors in sub-linear
+        time~\cite{charikar_similarity_2002, datar_locality_sensitive_2004, kulis_fast_2009, kulis_kernelized_2012,
+        tao_locality_2013}. LSH trades off a small amount of accuracy for a large query speed-up. A database is
+        indexed using $M$ hash tables. Each hash table uses its own randomly selected hash function. For each hash
+        table, a query vector computes its hash and adds the database vectors it collided with to a shortlist. The
+        shortlist is sorted by distance and returned as the approximate nearest neighbors.
+
+    \subsection{FLANN}
+        The fast library for approximate nearest neighbors (FLANN) is a software package built to quickly index and
+        search high dimensional vectors~\cite{muja_fast_2009}. The FLANN package implements efficient algorithms
+        for hierarchical k-means, kd-trees, and LSH{}. It also implements a hybrid between the k-means and kd-tree,
+        as well as configuration optimization, to select the combination of algorithms that best reaches the
+        desired speed/accuracy trade-off for a given dataset. Configuration optimization is performed using the
+        Nelder-Mead downhill simplex method~\cite{nelder_simplex_1965} with cross-validation.
+
+    \subsection{Product quantization}
+        Product quantization is a method for speeding up approximate nearest neighbor search of a set of high
+        dimensional vectors~\cite{jegou_product_2011,ge_optimized_2013}. Each vector is split up into a set of
+        sub-vector components. For each component, the sub-vectors are separately quantized using a
+        codebook/dictionary/vocabulary. The pairwise squared distances between centroids in the vocabulary are
+        stored in a lookup table. To comparing the distance between two vectors first each vector is split into
+        sub-vectors, next the sub-vectors are quantized, and then the squared distances between quantized
+        sub-vectors are read from the lookup table. The approximated squared distance between these two vectors is
+        the sum of the squared distances between the quantized sub-vectors.
+
+    \subsection{Discussion --- choice of approximate nearest neighbor algorithm}
+        In our single annotation identification algorithm a query descriptor searches for its nearest neighbor in a
+        database containing all descriptors from all \exemplars{}. Each annotation contains \OnTheOrderOf{4}
+        features, which are described with $128$-component SIFT descriptors. Searching exact nearest neighbors
+        becomes prohibitive when hundreds or thousands of images are searched. Thus, we turn towards approximate
+        nearest neighbor algorithms. In this \thesis{} all of our approximate nearest neighbors are found using the
+        multiple kd-tree implementation in the FLANN package~\cite{muja_fast_2009}. Using the configuration
+        optimization built into the FLANN package, we have found that multiple kd-trees provide more accurate
+        feature matches for our datasets than those computed by hierarchical k-means trees or LSH{}. In addition to
+        being fast and accurate, multiple kd-trees support efficient addition and removal of points, which is
+        needed in a dynamic setting~\cite{silpa_anan_optimised_2008}.
+
+
+\section{Instance recognition}\label{sec:ir}
+    There are many variations on the problem of visual recognition such as: specific object recognition (\eg{}
+    CD-covers)~\cite{lowe_distinctive_2004, sivic_efficient_2009, nister_scalable_2006},
+      % --
+    location recognition~\cite{jegou_hamming_2008,jegou_aggregating_2012,tolias_aggregate_2013},
+      % --
+    person re-identification~\cite{shi_embedding_2016,karanam_person_2015,wu_viewpoint_2015},
+      % --
+    face verification/recognition~\cite{chopra_learning_2005, huang_labeled_2007, berg_tom_vs_pete_2012,
+    chen_blessing_2013, taigman_deepface_2014, schroff_facenet_2015},
+      % --
+    category recognition~\cite{lazebnik_beyond_2006,zhang_local_2006,mccann_local_2012,boiman_defense_2008},
+      % --
+    and fine-grained recognition~\cite{parkhi_cats_2012,berg_poof_2013, gavves_local_2014}.
+      % --
+    The different types of recognition problems lie on a spectrum of specificity \wrt{} the objects they attempt to
+    recognize. On one end of the spectrum, \glossterm{instance recognition} techniques --- like scene recognition
+    or face verification --- search for matches of the same exact object. On the other end of the spectrum category
+    recognition algorithms --- like car, bird, dog, and plane detectors --- look for the same type of objects.
+    Other problems sit --- like fine-grained recognition where the goal might be to recognize specific subspecies
+    of dog (\eg{} German shepherd, golden retriever, boxer, beagle, \ldots{}) --- somewhere in the middle. Animal
+    identification is closest to the instance recognition side of the spectrum, but the proposed solution draws
+    upon techniques from other forms of recognition.
+
+    The discussion in this section focuses on instance recognition.
+    The next two sections will discuss category recognition and fine-grained recognition.
+
+    \subsection{Spatial verification}\label{subsec:sverreview}
+        Before discussing specific techniques in instance recognition, we describe work related to spatial
+        verification. Most instance recognition techniques initially match local image features without using any
+        spatial information~\cite{lowe_distinctive_2004, sivic_efficient_2009, philbin_object_2007,
+        tolias_image_2015}. This results in pairs of images with spatially inconsistent feature correspondences.
+        Spatially inconsistent matches are illustrated in~\cref{fig:figSVInlier}. Inconsistent features are removed
+        using \glossterm{spatial verification}, a process based on the random sample consensus (RANSAC)
+        algorithm~\cite{fischler_random_1981}.
+
+        RANSAC has come to refer to a family of iterative techniques to sample inliers from a noisy dataset that
+        are consistent with some model~\cite{fischler_random_1981, hartley_multiple_2003, chum_locally_2003,
+        raguram_usac_2013}. In the context of spatial verification the model is an affine transformation matrix,
+        and the dataset is a set of feature correspondences~\cite{lowe_distinctive_2004, sivic_video_2003,
+        philbin_object_2007, chum_total_2011, arandjelovic_three_2012}. At each iteration of RANSAC a small subset
+        of points is sampled from the original dataset and used to fit a hypothesis model. All other data points
+        are tested for consistency with the hypothesis model. A score is assigned to the hypothesis model based on
+        how well the out of sample data fit the model (\eg{} the number of transformed points that are within a
+        threshold distance of their corresponding feature). After a certain number of iterations the process stops
+        and returns the hypothesized model with the highest score as well as the inliers to that model.
+
+        When RANSAC returns a large enough set of inliers (\wrt{} some threshold) the hypothesis model it is
+        generally considered to be a ``good fit''. In this case a more complex model --- that may be more sensitive
+        to outliers --- can be fit. In spatial verification, it is common to use the RANSAC-inliers to estimate a
+        homography transformation~\cite[311--320]{szeliski_computer_2010}. The homography is then used to estimate
+        a new set of refined inliers, and these are returned as the spatially verified feature correspondences.
+
+        \figSVInlier{}
+
+
+    \subsection{Lowe's object recognition}
+
+        Lowe's introduction of SIFT descriptors includes an algorithm for recognizing objects in a training
+        database and serves as an instance recognition baseline~\cite{lowe_distinctive_2004}. A single kd-tree
+        indexes all database image descriptors. Approximate nearest neighbor search of the kd-tree is performed
+        using the best-bin-first algorithm~\cite{beis_shape_1997}. For a query image, each keypoint is assigned to
+        its nearest neighbor as a match. The next nearest neighbor (belonging to a different object) is used as a
+        normalizer --- a feature used to measure the distinctiveness of a match. Any match with a ratio of
+        distances to the match and the normalizer greater than threshold $t_{\tt{ratio}}\tighteq.8$ is filtered as
+        not distinctive. Features likely to belong to the same object are clustered using a Hough Transform, and
+        then clusters of features are spatially verified with a RANSAC approach~\cite{fischler_random_1981}.
+
+
+    \subsection{Bag-of-words instance recognition}\label{subsec:bow}
+
+        One of the most well known techniques in instance recognition is the \glossterm{bag-of-words} model
+        introduced to computer vision by Sivic and Zisserman~\cite{sivic_video_2003, sivic_efficient_2009}. The
+        bag-of-words model addresses instance recognition using techniques from text-retrieval. An image is cast as
+        a text document where the image patches (detected at keypoints and described with SIFT) are the words. The
+        concept of a visual word is formalized using a visual vocabulary. A \glossterm{visual vocabulary} is
+        defined by clustering feature descriptors traditionally constructed using k-means~\cite{lloyd_least_1982}
+        (however more recent methods have learned vocabularies using neural networks
+        \cite{arandjelovic_netvlad_2016}). The centroids of the clusters represent the \glossterm{visual words} in
+        the vocabulary. These centroids are used to quantize descriptor space. A feature in an image is assigned
+        (quantized) to the visual word that is the feature's approximate nearest neighbor in the vocabulary. This
+        means that each descriptor vector can be represented using just a single number --- \ie{} its index in the
+        vocabulary. Vocabulary indices are used to construct an inverted index, which allows multiple feature
+        correspondences to be made using a single lookup.
+
+        Given a visual vocabulary, the bag-of-words algorithm consists of two high level steps: (1) an offline
+        indexing step and (2) an online search step. The offline step indexes a database of images for fast search.
+        First each descriptor in each database image is assigned to its nearest visual word. An inverted index is
+        constructed to map each visual word to the set of database features assigned to that word. Each database
+        feature is assigned a weight based on its term frequency (tf). Finally, each word in the vocabulary is
+        assigned a weight based on its inverse document frequency (idf). The online step searches for the images in
+        the database that are visually similar to the query image. First, each descriptor in the query image is
+        assigned to its visual word, and the term frequency of each visual word in the query image is computed.
+        Then, the inverted index is used to build a list of all images that share a visual word with the query. For
+        each matching image, the sum of the tf-idf scores of the corresponding features is used as the image score.
+        Finally, the ranked list of images is returned. These steps are now described in further detail.
+
+        \paragraph{The inverted index}
+            The visual vocabulary allows for a constant length image representation. An image is represented as a
+            histogram of visual words called a bag-of-words. A bag-of-words histogram is sparse because each image
+            contains only a handful of words from a vocabulary. The sparsity of these vectors allows for efficient
+            indexing using an inverted index. An inverted index maps each word to the database images that contain
+            the word. Therefore, when a feature in a new query image is quantized the inverted index looks up all
+            of the database features that it matches to. A new feature correspondence is created for each database
+            feature the inverted index maps to. For each correspondence a feature matching score is computed.
+            Because all of the word assignments and feature correspondences are known, the scores of all matching
+            images can be efficiently computed by summing the scores of their respective feature correspondences.
+
+        \paragraph{Vocabulary tf-idf weighting}
+            Each word in the database is weighted by its inverse document frequency (idf), and each individual
+            descriptor is weighted by its term-frequency (tf)~\cite{sivic_efficient_2009}. The idea behind the idf
+            weight is that words appearing infrequently in the database are discriminative and should receive
+            higher weight. The idea behind the tf weight is that words occurring more than once in the same image
+            are more important.
+
+        \paragraph{Formal bag-of-words scoring}
+            Let $\X$ be the set of descriptor vectors in an image. We also use $\X$ to refer to the image in
+            general. Descriptor space is quantized using a visual vocabulary where $\C$ is the set of word
+            centroids and $w_\c$ is the weight of a specific word. Let $\X_\c \subset \X$ be the set of descriptors
+            in an image assigned to visual word $\c$. Let $q(\x)$ be the function that maps a vector to a visual
+            word. We overload notation to also let $q(\X)$ map a set of descriptors into a set of visual words.
+
+            The tf-idf weighting of a single word $\c$ in the vocabulary is computed as follows: Let $N$ be the
+            number of images in the database. Let $N_\c$ be the number of images in the database that contain word
+            $\c$. $\card{\X}$ is the number of descriptors in an image, and $\card{\X_\c}$ is the number of
+            descriptors quantized to word $\c$ in that image. The idf weighting of word $\c$ is:
+            \begin{equation}
+                w_\c = \opname{idf}(\c) = \ln{N/N_\c}
+            \end{equation}
+            The tf weighting of a word $\c$ in a image $\X$ is:
+            \begin{equation}
+                \opname{tf}(\X, \c) = \frac{\card{\X_\c}}{\card{\X}}
+            \end{equation}
+
+            Similarity between bag-of-words vectors is computed using the weighted cosine similarity. It is only
+            necessary to sum the scores of matching features, because the weight of a word that is not in both a
+            query and database image is $0$. The tf-idf similarity between two images can be written as
+            \begin{equation}
+                \opname{sim}(\X, \Y) = \sum_{\c \in q(\X) \isect q(\Y)} \opname{tf}(\X, \c) \opname{tf}(\Y, \c) \opname{idf}(\c) 
+            \end{equation}
+            or equivalently
+            \begin{equation}
+                \opname{sim}(\X, \Y) = \frac{1}{\card{\X}\card{\Y}}\sum_{\c \in \C} w_\c \sum_{\xdesc \in \X_\c} \sum_{\ydesc \in \Y_\c} 1
+            \end{equation}
+            The second formulation unifies the bag-of-words model with other vocabulary based methods in the SMK
+            framework, which will be discussed later in~\cref{sec:smk}.
+
+        \paragraph{Extensions to bag-of-words}
+            The main strength and the main weakness of vocabulary based matching is its use of quantization.
+            Quantization allows for large databases of images to be searched very
+            rapidly~\cite{nister_scalable_2006}. However, quantization causes raw descriptors to lose much of their
+            discriminative information~\cite{philbin_lost_2008, boiman_defense_2008}. When a high-dimensional
+            feature vector is quantized, it only encodes the presence of a word in a single number. This number is
+            as descriptive as the partitioning of descriptor space, which is quite coarse in $128$ dimensions, even
+            with a large vocabulary. Several methods have been developed to help reduce errors caused by
+            quantization.
+
+            Soft-assignment helps avoid quantization errors by mapping each raw descriptor to multiple
+            words~\cite{philbin_lost_2008}. Another way to reduce quantization error is to use a finer partitioning
+            of descriptors space~\cite{philbin_object_2007}. Approximate hierarchical clustering and approximate
+            k-means have been used to build vocabularies with up to $1.6 \times 10^7$
+            words~\cite{nister_scalable_2006, philbin_object_2007, mikulik_learning_2010}. Alternative similarity
+            measures for descriptor quantization are also explored in~\cite{mikulik_learning_2010}. A projection
+            matrix for SIFT descriptors is learned in~\cite{philbin_descriptor_2010} to preserve information that
+            would be lost in quantization.
+
+            Because the tf-idf weighting was original designed for text recognition, it does not take into account
+            challenges that occur in image recognition such as bursty features --- a single feature that appears in
+            an image with a higher than term expected frequency (\eg{} bricks on a wall or vertical stripes on a
+            zebra). Strategies for accounting for burstiness involve penalizing frequently occurring features by
+            removing multiple matches to the same feature, using inter-image normalization, and using intra-image
+            normalization.~\cite{jegou_burstiness_2009}.
+            
+            Query Expansion is a way to increase the recall of retrieval techniques and recover from tf-idf
+            failure~\cite{chum_total_2007, chum_total_2011, arandjelovic_three_2012, tolias_visual_2014}. After an
+            initial query, all spatially verified feature correspondences are back-projected onto the query image.
+            Then the query is then re-issued. A model of ``confusing features'' --- features more likely to belong
+            to the background --- can be used to filter out matches that should not be back projected onto the
+            query image. Query expansion enriches the query with intermediate information that may help retrieve
+            other viewpoints of the query image. However, because this technique requires at least one correct
+            result in the ranked list, it only improves recall for queries that already have high accuracy.
+
+            One method to improve the performance of bag-of-words search is to remove non-useful features. It is
+            found that as few as $4\percent$ of the features can be used in location recognition without loss in
+            accuracy~\cite{turcot_better_2009}. This related work defines a useful feature as one that is robust
+            enough to be matched with a corresponding feature and stable enough to exist in multiple viewpoints.
+            Thus, these useful features are computed as those that produced a spatially verified match to a correct
+            image. Any feature that does not produce at least one spatially verified match is removed. Removing
+            non-robust features both saves space and improves matching accuracy.
+
+    \subsection{Min hash}
+        Min-hashing is the analog of locality-sensitive hashing for sets. Min-hashing has been applied as an
+        instance recognition technique for near-duplicate image detection~\cite{chum_near_2008}, logo
+        recognition~\cite{romberg_bundle_2013}, large scale image search~\cite{wang_semi_supervised_2012}, scene
+        recognition~\cite{zhang_image_2011}, and unsupervised object discovery~\cite{chum_geometric_2009,
+        chum_large_scale_2010}.
+
+        The basic idea is to represent an image as a set of hashes based on permutations of a visual vocabulary.
+        Recognition is performed performing a lookup for each hash. Collisions are returned as the recognition
+        results. Like LSH, the primary advantage of using min hash for instance recognition is its speed.
+
+    \subsection{Hamming embedding}
+        Hamming embedding is an extension of the bag-of-words framework that reduces the information lost in
+        quantization by assigning each descriptor a small binary vector~\cite{jegou_hamming_2008,
+        jegou_burstiness_2009, jegou_improving_2010}. Each visual word $\c$, is assigned a $d_b \times d$ random
+        orthogonal projection matrix $\mat{P}_\c$, where $d$ is the number of descriptor dimensions and $d_b$ is
+        the length of the binary code. A set of $d_b$ thresholds, $\vec{t}_\c \in \Real^{d_b}$, is precomputed for
+        each word using the descriptors used to form the visual word cluster. These descriptors are projected using
+        the word's random orthogonal matrix, and the median value of each dimension is chosen as that dimension's
+        threshold.
+
+        When any descriptor, $\desc$, is assigned to a word $\c$ it is also assigned a binary Hamming code,
+        $\vec{b}$. To compute the binary Hamming code the descriptor is projected using the word's orthogonal
+        matrix, $\vec{b}' = \mat{P}_\c \desc$, and then each dimension is binarized based on a threshold, %
+        $b_i = (b'_i > t_{\c{}i})$.
+
+        When a query descriptor, $\desc$, is assigned to a word, $\c$, it is matched to all database descriptors
+        belonging to that word. Each match is then assigned a score. First, the Hamming distance, $h_d$, is
+        computed between the binary signature of the query and database descriptors. If the Hamming distance of the
+        match is not within threshold, $h_t$, the score of the match is $0$ and does not contribute to bag-of-words
+        scoring. Otherwise, the score is the word's squared idf weight multiplied by a Gaussian falloff based on
+        the Hamming distance. Using the inverted index, each image is scored by summing the scores of the
+        descriptors that matched that image. The image scores are used to define a ranked list of results.
+        %In \cite{jegou_hamming_2008} only the idf weight is used 
+        %In \cite{jegou_burstiness_2009} squared idf and the Gaussian falloff
+        %In \cite{jegou_improving_2010} squared idf and the probability having a Hamming distance lower than or equal to a.
+        %\begin{equation}
+        %w_d(h_d) = -\log_2\paren{2^{-d_b} \sum_{i = 0}^{h_d} \binom{i}{d_b}}
+        %\end{equation}
+
+    \subsection{Fisher vector}
+        A Fisher vector is an alternative to a bag-of-words~\cite{perronnin_large_scale_2010_1,
+        jegou_aggregating_2010}. Like bag-of-words, Fisher vector representations have been used in both instance
+        and category recognition~\cite{perronnin_fisher_2007, cinbis_image_2012, sun_large_scale_2013,
+        sanchez_image_2013, juneja_blocks_2013, douze_combining_2011, ma_local_2012, murray_generalized_2014,
+        gosselin_revisiting_2014}. Instead of training discrete visual vocabulary using the cluster centers of
+        k-means, a Fisher vector encoding uses a continuous Gaussian mixture model (GMM). The number of Gaussian
+        components in the GMM is  similar to the number of words in a vocabulary. An image is encoded using the GMM
+        by computing the likelihood of each feature with respect to the GMM{}. Likelihoods for different components
+        of the GMM are aggregated using a soft-max function. Often, each component of this vector $\vec{v}$ is then
+        power law normalized with fixed constant $0 \leq \beta < 1$. Power law normalization is a simple post
+        processing method written as $v_i = \txt{sign}\paren{v_i}\abs{v_i}^\beta$~\cite{jegou_aggregating_2012}.
+        Fisher vectors produce a much richer representation than normal bag-of-words vector because each descriptor
+        is assigned to a continuous mixture of words rather than a single word.
+
+        It is noted in~\cite{perronnin_large_scale_2010_1} that using Fisher vectors for instance recognition is
+        similar to tf-idf. Normalized Fisher vectors down-weight frequently occurring GMM components --- \ie{}
+        words with low idf weights. Furthermore, Fisher vector representations are well suited for compression,
+        which allows scaling to large image collections.
+
+    \subsection{VLAD --- vector of locally aggregated descriptors} 
+
+        A vector of locally aggregated descriptors (VLAD) is similar to a Fisher vector descriptor --- in fact it
+        is a discrete analog of a Fisher vector~\cite{jegou_aggregating_2010, jegou_aggregating_2012}. Like Fisher
+        vectors, VLAD has been used in the context of both instance and category
+        recognition~\cite{jegou_negative_2012, delhumeau_revisiting_2013, arandjelovic_all_2013}. VLAD still
+        computes a visual vocabulary and assigns each feature to its nearest word, but instead of only recording
+        presence or absence of a word, each feature computes the residual vector from the centroid of its assigned
+        word. The residual vectors are summed to produce one constant length vector per word. All summed residuals
+        are concatenated to produce a constant length image representation. Aggregation of the residual vectors
+        allows for an accuracy similar to bag-of-words methods to be obtained, but using a smaller vocabulary
+        ($\OnTheOrderOf{1} - \OnTheOrderOf{2}$ words). Like Fisher vectors, VLAD descriptors are also power-law
+        normalized~\cite{jegou_aggregating_2012}.
+
+        There have been many extensions of the VLAD descriptor. The value of PCA, whitening, and negative evidence
+        was shown in~\cite{jegou_negative_2012}. The MultiVLAD scheme is inspired by~\cite{torii_visual_2011}, and
+        allows for retrieval of smaller objects that appear in larger images~\cite{arandjelovic_all_2013}. The
+        basic idea is that VLAD descriptors are tiled in $3 \times 3$ grids. An integral
+        image~\cite{viola_robust_2004} of unnormalized VLAD descriptors is used to represent many possible tiles.
+
+        A vocabulary adaptation scheme is also introduced in~\cite{arandjelovic_all_2013}. The vocabulary is
+        updated when a new image is added to the VLAD inverted index. This is performed by updating any word
+        centroid $\c$ to $\c'$, where $\c'$ is the average of all of the descriptors currently assigned to that
+        word. The residuals of the affected words are recomputed and re-aggregated into updated VLAD descriptors.
+
+        Recently, NetVLAD --- a convolutional variant of the VLAD descriptor --- has been
+        introduced~\cite{arandjelovic_netvlad_2016,radenovic_cnn_2016}. NetVLAD uses deep learning with a triplet
+        loss function to simultaneously learn both the patch-based descriptors and the vocabulary. This
+        convolutional approach shows large improvements (a $19\percent$ improvement on Oxford 5k) over previous
+        state-of-the art image retrieval techniques.
+
+    \subsection{SMK --- the selective match kernel}\label{sec:smk}
+        The selective match kernel (SMK) encapsulates the vocabulary based techniques such as bag-of-words, Hamming
+        embedding, VLAD, and Fisher vectors into a unified framework~\cite{bo_efficient_2009,
+        tolias_aggregate_2013, tolias_image_2015, jegou_triangulation_2014}. SMK provides a framework that
+        ``bridges the gap'' between matching-based (here a match refers to a feature correspondence) approaches and
+        aggregation-based approaches. The scores of matching-based approaches such as Hamming embedding and
+        bag-of-words are based on establishing individual features correspondences. In contrast, the scores of
+        aggregation approaches such as VLAD and Fisher vectors are computed from compressed image representations,
+        where the individual features are not considered.
+
+        An advantage of a matching based approach like Hamming embedding is that it can define a selectivity
+        function. A selectivity function down weights individual feature correspondence with low descriptor
+        similarity. Aggregation schemes have been shown to have their own advantages. Aggregated approaches like
+        VLAD allow for matching applications to scale to a large number of images because each image is indexed
+        with a compressed representation. Furthermore, aggregation-based approaches have been shown to provide
+        better matching results on many datasets because they implicitly down weight bursty
+        features~\cite{tolias_aggregate_2013, tolias_image_2015}.
+
+        In the SMK framework a matching function and selectivity function are chosen. Different selections of these
+        functions can implement and blend desirable attributes of the aforementioned frameworks. The matching
+        function assigns correspondences between query and database descriptors. The choice of the matching
+        function determines whether the resulting kernel is aggregated or non-aggregated. The selectivity function
+        weights a correspondence's contribution to image similarity. The selectivity function can apply either
+        power-law like normalization or hard thresholding in order to down weights correspondences with low visual
+        similarity. One advantage of the SMK framework is that the selectivity function can be used in aggregated
+        matching. In this case the selectivity function is applied to all correspondences assigned to a particular
+        word.
+
+    \subsection{Face recognition and verification}
+        Face recognition is a specific form of instance recognition with the goal of recognizing individual human
+        faces~\cite{zhao_face_2003, huang_labeled_2007}. Related to face recognition is the problem of face
+        verification. In contrast to face recognition, face verification takes two unlabeled images and decides if
+        they show the same face or different faces~\cite{taigman_deepface_2014}. Clearly these techniques are
+        complementary because highly ranked results from a face recognition algorithm can be verified as true or
+        false by a face verification algorithm.
+
+        Due to the specific nature of this problem specialized features detectors are often used. Facial feature
+        detectors localize facial-landmarks such as the eye, mouth, and nose center and corner
+        locations~\cite{dantone_real_time_2012, berg_tom_vs_pete_2012}. Local texture based descriptors such as Gabor
+        filters~\cite{liu_gabor_2002, zhang_histogram_2007, shen_review_2006} and local binary patterns
+        (LBP)~\cite{ahonen_face_2006, chen_blessing_2013} are extracted at detected facial
+        regions~\cite{belhumeur_localizing_2011}. Facial recognition researchers have also developed global
+        descriptors --- such as eigenfaces~\cite{turk_eigenfaces_1991},
+        Fisherfaces~\cite{belhumeur_eigenfaces_1997}, and neural network based
+        descriptions~\cite{lawrence_face_1997, taigman_deepface_2014}. --- that represent the entire face.
+        Recently, algorithms using both local and global representations computed using deep convolutional neural
+        networks have shown state-of-the-art performance on both machine and human verification and recognition
+        benchmarks~\cite{taigman_deepface_2014}.
+
+        In face recognition, each face image is encoded into a single vector. A function is trained to classify an
+        unseen test image as an individual from the database of known faces. Many techniques are used in the
+        literature to retrieve or classify a face. Examples of these techniques are: neural
+        networks~\cite{turk_eigenfaces_1991, taigman_deepface_2014}, sparse coding~\cite{wright_robust_2009,
+        jiang_label_2013}, principal component analysis (PCA)~\cite{craw_face_1992}, Fisher linear discriminant
+        (FLD)~\cite{liu_robust_2000}, linear discriminant analysis (LDA)~\cite{lu_face_2003}, and support vector
+        machines (SVMs)~\cite{phillips_support_1998, levy_svm_minus_2013}.
+
+        Before the neural network revolution~\cite{krizhevsky_imagenet_2012}, sparse coding was one of the most
+        popular techniques to retrieve faces~\cite{aharon_k_svd_2006, wright_robust_2009, zhang_sparse_2011,
+        jiang_label_2013}. Sparse coding attempts to reconstruct unlabeled test vectors by searching for a linear
+        combination of basis vectors from an over-complete labeled training database. Coding based techniques are
+        very similar to vocabulary based methods. A codebook, dictionary, and vocabulary all are used to build
+        image-level vector representations by quantizing raw features.
+
+        Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of $N$
+        individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
+        each facial landmark, $k$ Tom-vs-Pete classifiers are computed. A single Tom-vs-Pete classifier is a linear
+        SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all of the nose
+        descriptors from class $T$ and class $P$ make up the SVM training data, and the learned SVM classifies a
+        new nose feature as $T$-ish or $P$-ish. A descriptor vector for a single face is be made by selecting
+        $5000$ out of the total $k\binom{N}{2}$ classifiers and concatenating the signed distances from all the
+        classifiers' separating hyperplanes. This descriptor facilitates both search and verification. A pair of
+        face descriptor vectors can be verified as either a correct or incorrect match by constructing a new
+        vector. The new vector is constructed by concatenating the element-wise product and difference of the two
+        descriptor vectors. Then this new vector is classified using a radial basis function SVM{}.
+
+        One of the most recent advances in face verification and recognition is the DeepFace
+        system~\cite{taigman_deepface_2014}. The DeepFace system implements face verification using the following
+        pipeline: detect \rpipe{} align \rpipe{} represent \rpipe{} classify. Specialized facial point detectors
+        and a 3D face model are used to register a 3D affine camera to an RGB-image. The image is then warped into
+        a ``frontalized'' view using a piecewise affine transform. A face is represented as the $4096$ dimensional
+        output of a deep $7$ layer convolutional neural network that exploits the aligned nature input images. An
+        8th layer is used in supervised training where each output unit corresponds to a specific individual. At
+        test time the L2-normalized output of the network is used as the feature representation. In a supervised
+        setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset using the descriptor
+        vectors produced by the network. In an unsupervised setting an ensemble of classifiers is used. The
+        ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} as well as several
+        non-linear SVM classifiers with different inputs. The inputs are deep representations --- the activations
+        of a deep neural network's output layer --- of the 3D aligned RGB-image, the 2D aligned RGB-image
+        (generated using a simpler model based on similarity transforms), and an image comprised of intensity,
+        magnitude, and orientation channels. Each input was fed through four deep networks each with different
+        initialization seeds. DeepFace achieves an accuracy of $0.9735$ on the Labeled Faces in the Wild
+        dataset~\cite{huang_labeled_2007}, which is comparable to the human performance measured at $0.975$. When
+        using unaligned faces the ROC score drops to $0.879$. This demonstrates that alignment is very important
+        for handling the problem of viewpoint in face verification.
+
+    \subsection{Person re-identification}
+        %Radke dictionary learning ICCV \cite{karanam_person_2015}
+        %Radke pose priors TPAMI \cite{wu_viewpoint_2015}
+        %Deep model of person re-id \cite{shi_embedding_2016}.
+        The person re-identification problem is typically posed in the context of locating the same person within a
+        few minutes or hours from low-resolution surveillance
+        video~\cite{hirzer_relaxed_2012,karanam_person_2015,wu_viewpoint_2015,shi_embedding_2016}. Common
+        approaches to person re-identification typically transform images into a fixed length mid-level vector
+        representation and a learned distance metric is used to compare representations. Mid-level representations
+        can be built from color and texture histograms or extracted using a convolutional neural network. The
+        distance metric is commonly learned as a Mahalanobis distance using linear discriminant
+        analysis~\cite{hirzer_relaxed_2012}. Although alternative approaches using dictionary learning
+        ~\cite{karanam_person_2015} have also been shown to work well. Improvements to baseline can be achieved by
+        conditioning person descriptors on viewpoint and pose~\cite{wu_viewpoint_2015}. Recently both features and
+        distance metric have been learned using neural networks~\cite{shi_embedding_2016}.
+        %The data for person re-identification typically is composed of
+        %  low-resolution image captured by surveillance cameras.
+        %The goal is often to identify images of people taken within minutes or
+        %  hours of each other.
+        %and
+        %  therefore keypoint algorithms have typically proven most successful.
+        %Therefore, additional work is needed to generalize to other species.
+        %We have performed initial experiments that support this claim.
+
+    \subsection{Discussion --- instance recognition}
+        Most instance recognition techniques use an indexing scheme based on a visual
+        vocabulary~\cite{tolias_image_2015, jegou_hamming_2008, philbin_object_2007, cao_learning_2012,
+        arandjelovic_all_2013, jegou_negative_2012, chum_fast_2012, gong_multi_scale_2014}. However, our baseline
+        approach for animal identification does not use a visual vocabulary. This is because a visual vocabulary
+        quantizes the raw features in the image and thus removes some of their discriminative
+        ability~\cite{philbin_lost_2008, boiman_defense_2008}. We have found this quantization to cause a
+        noticeable drop in performance. Many aspects of our baseline algorithm are similar to Lowe's recognition
+        algorithm~\cite{lowe_distinctive_2004}, which does not quantize descriptors. The guiding principles of
+        matching, filtering based on distinctiveness, filtering based on spatial consistency, and scoring are
+        shared with our approach. However, our approach features several improvements to this algorithm.
+        Furthermore, animal identification is a dynamic problem with specific domain-based concerns --- such as
+        quality and viewpoint in natural images --- and requires innovation beyond Lowe's recognition algorithm.
+
+        % chktex-file 8
+        Even though we would prefer to retain the discriminative information contained in raw descriptors,
+        quantized image search has the ability to scale beyond our current suites~\cite{chum_fast_2012,
+        perronnin_large_scale_2010_1, tolias_image_2015}. In the future it may be necessary to investigate a VLAD
+        based SMK framework as a quantized alternative to our matching algorithm. Techniques such as
+        soft-assignment~\cite{philbin_lost_2008} and learned vocabularies~\cite{mikulik_learning_2010} could be
+        used to reduce quantization errors. It is necessary to update the vocabulary as new images are added to the
+        system. This issue could be addressed using the vocabulary adaptation technique
+        in~\cite{arandjelovic_all_2013}. However, in this research we are more focused on the problem of verifying
+        identifications to reduce manual effort. As such we leave the scalable search issue for future work.
+
+        Facial recognition is similar to the problem of animal identification.
+        %Technically is is a subset of the problem.
+        Both problems seek to identify individuals. Some techniques used for face verification such as the Siamese
+        network~\cite{chopra_learning_2005, taigman_deepface_2014} can be extended to the scope of animal
+        identification. However, there is a much more mature literature on face recognition that has resulted in
+        easily accessible and specialized algorithms for face feature detection and --- most importantly --- for
+        face alignment. Individual animal identification does not have such a corpus of knowledge. We do not have
+        access to highly specialized animal part detectors and alignment algorithms. Furthermore, we would like our
+        algorithms to generalize to multiple species, so we would like to avoid over-specialized approaches. These
+        are some reasons why convolutional neural networks will not make a prominent appearance in this \thesis{}.
+        Other reasons involve the size of our datasets. The recent NetVLAD network was trained using training
+        datasets with $10,000$ to $90,000$ images~\cite{arandjelovic_netvlad_2016}. We simply do not have this much
+        labeled data. However, one goal of this \thesis{} is to develop techniques that will help bootstrap labeled
+        datasets of this size. Future research should investigate these deep learning techniques so they can be
+        used after enough data has been collected for a specific species.
+
+        While the problem of animal identification and person re-identification are conceptually similar ---
+        sharing challenges such as lighting, pose, and viewpoint variation --- differences in data collection
+        creates the need for different solutions in practice. In contrast to the low-resolution image captured by
+        surveillance cameras, the images used in animal identification are often manually captured by scientists in
+        the field using high resolution DSLR cameras, and the goal is to match individuals over longer periods of
+        time (years). Furthermore, re-identification techniques commonly focus on aggregate features that emphasize
+        clothing, color, texture, and the presence of objects such as coats and backpacks, while in the animal id
+        problem, it is often subtle localized variations in patterns on the skin and fur that distinguish
+        individuals.
+
+
+\section{Category recognition}\label{sec:cr}  
+
+    Different types of image recognition lie at different points on a spectrum of specificity. If instance
+    recognition is at one end of the spectrum, then category recognition is at the other. The goal of a
+    \glossterm{category recognition} algorithm is to assign a categorical class label to a query
+    image~\cite{everingham_pascal_2010, everingham_pascal_2015, russakovsky_imagenet_2014, deng_imagenet_2009,
+    fei_fei_one_shot_2006, griffin_caltech_256_2007}. The categories often have visual appearances with a high
+    degree of intra-class variance. \Eg{}, a recliner and a bench both belong to the chair category. Image
+    representations and similarity measures are constructed to account for this. Despite this, techniques in
+    category recognition have many similarities to instance recognition techniques. Until the neural network
+    revolution~\cite{krizhevsky_imagenet_2012}, most category recognition techniques have been based on vocabulary
+    methods~\cite{csurka_visual_2004, yang_linear_2009, sanchez_compressed_2013, russakovsky_imagenet_2014,
+    krizhevsky_imagenet_2012} similar to those discussed in~\cref{subsec:bow}. This section first provides a brief
+    overview of this literature. Then, we discuss naive Bayes classification
+    techniques~\cite{boiman_defense_2008,mccann_local_2012} that play a large role in our baseline animal
+    identification algorithms.
+
+    \subsection{Vocabulary based methods for category recognition}
+        After vocabulary based techniques demonstrated success in instance recognition, these techniques were
+        quickly adapted and applied to category recognition~\cite{csurka_visual_2004}. Thus there are many
+        similarities --- and some differences --- in the techniques used to address these two problems. One
+        difference is the size of the visual vocabulary. Instance recognition tends to require huge vocabularies
+        ($\OnTheOrderOf{5}$ --- $\OnTheOrderOf{7}$ words) to achieve a fine sampling of descriptor
+        space~\cite{nister_scalable_2006, philbin_object_2007}. In contrast, category recognition uses smaller
+        vocabulary sizes ($\OnTheOrderOf{4}$ words) to more coarsely sample descriptor
+        space~\cite{zhang_local_2006}. However, the vocabularies used in instance recognition have decreased in
+        size with the advent of aggregated representations like VLAD and the Fisher
+        vector~\cite{arandjelovic_all_2013, sanchez_compressed_2013}.
+
+        A second difference is how similarity between images is computed. In instance recognition the similarity
+        between bag-of-word vectors is computed using a weighted cosine similarity. However, in
+        category-recognition intra-class variation requires more sophisticated similarity measurements. Here, image
+        similarity is computed using SVMs with different either linear or non-linear kernels such as $\chi^2$,
+        earth mover's distance, Hellinger, and Jensen-Shannon~\cite{zhang_local_2006, varma_learning_2007,
+        vedaldi_efficient_2012}.
+
+        A third difference is the way that spatial information is used. Instead of filtering correspondences using
+        spatial verification, spatial information is incorporated into category recognition algorithms using
+        spatial pyramids~\cite{grauman_pyramid_2005, lazebnik_beyond_2006}. A spatial pyramid sub-divides an image
+        into a hierarchy of grids. Max pooling is often used to select only the strongest features in each spatial
+        region~\cite{boureau_theoretical_2010, boureau_learning_2010}. Each section of the image is encoded using
+        the vocabulary and images are scored based on matches in each region.
+
+        \paragraph{Enhancements to category recognition}
+        There are a wide variety of extensions and enhancements for bag-of-words based image classification, such
+        as soft assignment of visual-words~\cite{liu_defense_2011} and vocabulary
+        optimization~\cite{wang_locality_constrained_2010}. Numerous matching kernels --- both linear and
+        non-linear --- have been developed such as kernel PCA, histogram intersection, and SVM square root
+        bag-of-words vectors~\cite{vedaldi_multiple_2009, maji_classification_2008, perronnin_large_scale_2010}.
+
+        % chktex-file 8
+        Generalized coding schemes improve performance over a bag-of-words image encoding. Vocabularies can be seen
+        as codebooks or dictionaries in coding based image classification techniques such as sparse coding and
+        locally constrained linear coding~\cite{jurie_creating_2005, yang_linear_2009, yang_supervised_2010,
+        yang_efficient_2010, wang_locality_constrained_2010}. Many coding schemes learn both the centroids as well
+        as the function that quantizes a raw descriptor into a word~\cite{jurie_creating_2005, yang_linear_2009,
+        yang_supervised_2010, yang_efficient_2010, wang_locality_constrained_2010, vedaldi_multiple_2009}.
+        Techniques other than k-means are used to create vocabularies such as mean
+        shift~\cite{jurie_creating_2005}, coordinate descent with the locally constrained linear code
+        criteria~\cite{wang_locality_constrained_2010}, and random forests~\cite{perronnin_fisher_2007}. Fisher
+        vectors with linear classifiers have been found to outperform non-linear bag-of-words based SVM classifiers
+        by using an L1-based distance measure and careful L2 and power-law normalization of
+        descriptors~\cite{perronnin_improving_2010, perronnin_large_scale_2010}.
+
+    \subsection{\Naive{} Bayes classification}\label{sec:nbnn}  
+
+        The \naive{} Bayes nearest neighbor (NBNN) classifier is a simple non-parametric algorithm for category
+        recognition that does not quantize descriptor vectors~\cite{boiman_defense_2008}. Boiman responds to the
+        dominance of complex non-linear category recognition algorithms in the field~\cite{varma_learning_2007,
+        marszalek_learning_2007} by showing that simple techniques can compete with complex methods for category
+        recognition. Boiman's paper also provides insight into the magnitude of information loss resulting from
+        quantization.
+          
+        Previous to~\cite{boiman_defense_2008}, nearest neighbor classifiers had shown underwhelming accuracy in
+        category recognition~\cite{varma_unifying_2004, lazebnik_beyond_2006, marszalek_learning_2007}. This was
+        shown to be a result of using image-to-image distance. To remedy this, NBNN aggregates the information from
+        multiple images by swapping the image-to-image distance for an image-to-class distance.
+
+        In NBNN, features of each class are indexed for fast nearest neighbor search, typically with a
+        kd-tree~\cite{bentley_multidimensional_1975}. For each feature, $\desc_i$, in a query image, the algorithm
+        searches for the feature's nearest neighbors in each class, $\opname{NN}_C(\desc_i)$. The result of the
+        algorithm is the class, $C$, that minimizes the image-to-class distance. In other words, the class of a
+        query image is chosen by searching for the class that minimizes the total distance between each query
+        descriptor and the nearest database descriptor in that class. This is expressed in the following equation:
+        \begin{equation}
+            C = \argmin{C} \sum_{i=1}^n ||\desc_i - \opname{NN}_C(\desc_i)||^2
+        \end{equation}
+
+        This formulation where each descriptor is assigned to only a single nearest neighbor has been shown to be a
+        good approximation to the minimum image-to-class Kullback-Leibler divergence~\cite{boiman_defense_2008} ---
+        a measure of how much information is lost when the query image is used to model the entire class.
+
+    \subsection{Local \naive{} Bayes nearest neighbor}\label{sec:lnbnn}  
+
+        Local \naive{} Bayes nearest neighbor (LNBNN) is an improved version of the NBNN algorithm in both accuracy
+        and speed~\cite{mccann_local_2012}. In the original NBNN formulation a search is executed find each query
+        descriptor's nearest neighbor in the database for each class separately. In contrast, the LNBNN
+        modification searches all database descriptors simultaneously and ignores classes that do not return
+        descriptor matches.
         
-    \begin{comment}
-    %The body of literature related to image-based individual animal
-    %  identification is relatively small compared to the other topics
-    %  reviewed in this chapter.
+        Each descriptor $\desc_i$ in the query image searches for its $K+1$ nearest neighbors, %
+        $\{\desc_1, \ldots, \desc_K, \desc_{K + 1}\}$ over all classes.
+        The first $K$ neighbors are used as matches.
+        The last nearest neighbor is used as a normalizing term to weight the query descriptor's distinctiveness.
+        Let $(\desc_i, \desc_j)$ be a matching descriptor pair, and let $C$ be the class of $\desc_j$.
+        The score of each match is computed as the distance to the match subtracted from the distance to the
+          normalizer.
+        \begin{equation}
+            s_{i, C} = \elltwo{\desc_j - \desc_K} - \elltwo{\desc_i - \desc_j}
+        \end{equation}
+        The score of a class $C$ is the sum of all the descriptor scores that match to it.
 
-    Stripe spotter is an individual identification algorithm developed
-      specifically for zebras~\cite{lahiri_biometric_2011}.
-    Images are carefully cropped to the flank of animal and the strip
-      pattern is discretized using a two dimensional grid called a
-      StripeCode.
-    The edit distance between pairs of StripeCodes is used to define
-      similarity between two individuals.
-    This algorithm is only able to achieve a median rank of $4$ for
-      datasets with fewer than $85$ individuals and has largely been
-      superseded feature matching approaches.
+    \subsection{Discussion --- class recognition}
 
-    The most successful animal identification systems have been SIFT
-      based.
-    SIFT based techniques have been shown to be a reliable way of
-      matching many species such as 
+        Progress in category recognition is generally made using techniques that allow classes with high
+        intra-class variance to have lower matching scores. This is of little value to an instance recognition
+        application, therefore we do not investigate most of the techniques in this section. However, the
+        LNBNN~\cite{mccann_local_2012} approach is interesting to us because it is a simple algorithm that does not
+        suffer from quantization artifacts. NBNN and LNBNN~\cite{boiman_defense_2008,mccann_local_2012} never
+        achieved state of the art performance in image classification, however they have produced competitive
+        results using simple techniques.
+
+        The simplicity of the techniques allowed for the authors to gain insight into visual recognition. Due to
+        its simplicity and the insight that quantization significantly reduces the descriptive power of SIFT
+        features, we adopt LNBNN as the baseline algorithm for animal identification.
 
 
-    %TODO Need to rewrite this conclusion discussion into related work.
+\section{Fine-grained recognition}\label{sec:fgr}  
 
-    %Using SIFT~\cite{lowe_distinctive_2004} based techniques we have
-    %  been able to outperform previous identification algorithms for
-    %  zebras such as Stripe Spotter~\cite{lahiri_biometric_2011}.
-    %Our system has been designed to be applicable to many different
-    %  species and is more general than other SIFT based systems used to
-    %  identify species such as manta rays~\cite{town_manta_2013},
-    %  whale sharks~\cite{lahiri_biometric_2011},
-    %  leatherback sea turtles~\cite{de_zeeuw_computer_2010}, 
-    %  wildebeests~\cite{bolger_wildid_2011,bolger_computerassisted_2012}
-    %  salamanders~\cite{duyck_sloop_2015,martinez_trinidad_relevance_2014}.
+    Fine-grained recognition is a problem more general than instance recognition, but more specific than category
+    recognition~\cite{parkhi_cats_2012, berg_poof_2013, gavves_local_2014}. Given an object of a known category,
+    such as a bird, the goal of fine-grained recognition is to sub-classify the object into a fine-grained category
+    such as a blackbird or a raven~\cite{berg_how_2013}.
 
-    Wildbook ECOCEAN \cite{holmberg_estimating_2009}
-    constellation matching.
+    Algorithms for fine-grained recognition typically start by localizing the object and its parts with a detection
+    algorithm~\cite{dalal_histograms_2005} and parts based models. Parts are segmented to remove background noise
+    using algorithms like GrabCut~\cite{rother_grabcut_2004}. Classification is performed locally on aligned parts
+    as well as globally on the entire body and aggregated to yield a final classification.
 
-    Gorilla and chimp face identification
-      system~\cite{loos_automated_2013}.
-    Contains an algorithm system pipeline that detects, aligns, and recognizes
-      faces.
-    Uses global Gabor features and local SURF features at facial
-      fiducial points.
-    Facial points are used to align the image into a canonical
-      position.
-    Concatenates local and global features into a fixed length vector
-      and uses SVMS for classification of the faces.
-    %Locality Preserving Projections (LPP)
+    Because fine-grained recognition lies on the same spectrum as instance recognition and category recognition it
+    is not surprising that many of the same techniques --- like Fisher vectors --- are
+    used~\cite{gosselin_revisiting_2014}.
+    Recently convolutional models have been successfully applied to fine-grained
+    recognition~\cite{catherine_wah_similarity_2014, branson_bird_2014, zongyuan_ge_modelling_2015,
+    zhang_weakly_2015, xiao_application_2015}.
 
-      Penguins~\cite{sherley_spotting_2010}
-      shape contexts
+    \subsection{Discussion --- fine grained recognition}
+        The goal of fine-grained recognition is somewhat similar to animal identification. Fine-grained recognition
+        localizes subtle information to distinguish between two similar species, whereas animal identification
+        localizes subtle information to distinguish between two similar individuals. However, the domains of
+        species and individuals are dissimilar enough that off the shelf techniques for fine-grained recognition
+        would need to be adapted before identification could be performed. One interesting avenue of research would
+        be to use a parts model~\cite{felzenszwalb_object_2010} as in~\cite{gavves_local_2014}, to align
+        individuals before they are compared.
 
-    Of the other animal identification projects SLOOP is the most
-      similar to ours in terms of design goals --- such as the separation
-      of computer vision components from the system
-      architecture~\cite{duyck_sloop_2015,martinez_trinidad_relevance_2014}.
-    Like our system, SLOOP is able to integrate new computer vision
-      algorithms to aid in the task of individual identification.
-    However, the algorithms implemented in SLOOP are biased towards
-      identifying small deformable amphibian species such as skinks and
-      salamanders, similar to the way that our algorithms are biased
-      towards large textured mammals such as zebras and giraffes (however
-      both systems are designed with many species in mind).
-    Both systems require more computer vision tools to address the
-      challenges presented in identifying any particular species, and as
-      such both systems have been set up to incorporate new computer
-      vision algorithms as quickly and cleanly as possible.
-    Recent development of SLOOP is targeted towards relevance feedback
-      for improving results while we are focused on verification and
-      error correction.
-    To the best of our knowledge there are no other general purpose
-      systems for individual animal identification in development.
-    Due to the success of both systems, future collaboration may be in
-      order.
 
-    \subsection{Discussion of related techniques}
-    \end{comment}
+\section{Deep convolutional neural networks}\label{sec:dcnn}
+    Convolutional networks have been around for over more than two decades~\cite{lecun_gradient_based_1998,
+    fukushima_neocognitron_1988}. However, they did not receive major attention from computer vision researchers
+    until 2012 when a deep convolutional neural network (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the
+    best support vector machines (SVMs)~\cite{vapnik_statistical_1998} by over $10\percent$ in the ImageNet
+    category recognition challenge~\cite{russakovsky_imagenet_2014}. Since then, many successful category
+    recognition techniques based on DCNNs have been published~\cite{simonyan_very_2014, chatfield_efficient_2014,
+    chatfield_return_2014, oquab_learning_2014, szegedy_going_2014, long_convnets_2014, he_spatial_2014,
+    dean_fast_2013}. DCNNs have also been shown to produce excellent results when applied to other computer vision
+    problems such as: %
+    instance recognition~\cite{razavian_cnn_2014, razavian_baseline_2015, liu_learning_2015,
+    held_deep_2015,arandjelovic_netvlad_2016,radenovic_cnn_2016}, %
+    fine-grained recognition~\cite{branson_bird_2014, donahue_decaf_2013, catherine_wah_similarity_2014}, %
+    detection~\cite{girshick_rich_2014, sermanet_overfeat_2013, li_wan_end_end_2015}, %
+    face verification~\cite{huang_learning_2012, taigman_deepface_2014, sun_deep_2013}, %
+    and learning similarity between feature patches~\cite{osendorfer_convolutional_2013, han_matchnet_2015,
+    ng_exploiting_2015, zagoruyko_learning_2015, han_matchnet_2015}. The sudden success of deep nets has been
+    attributed (1) a larger volume of available of training data, and (2) implementations using faster
+    GPUs~\cite{krizhevsky_imagenet_2012}.
+      
+    Several techniques are employed to increase accuracy, reduce over-fitting,  and reduce training time. Data
+    augmentation is used to artificially increase the amount of training data~\cite{ciresan_multi_column_2012,
+    ciresan_high_performance_2011, simard_best_2003}. The dropout technique has been shown to reducing
+    over-fitting~\cite{dahl_improving_2013, srivastava_dropout_2014}. At training time outputs of hidden units are
+    randomly suppressed which forces the network to learn a more robust representation. It has been shown that
+    dropout can be viewed as a form of model averaging~\cite{hinton_improving_2012}. Rectified linear units (ReLU)
+    have been shown to be a faster alternative to the standard sigmoid activation
+    functions~\cite{vinod_rectified_2010, dahl_improving_2013}. An ReLU is similar to a hinge function and simply
+    outputs the signal of a unit if it is positive and outputs a zero otherwise. Leaky rectified linear units
+    (LReLU) further improve network accuracy by including a ``leakiness'' term while maintaining the speed of
+    ReLUs~\cite{maas_rectifier_2013}. While a ReLU strictly suppresses a feature activation if it is negative a
+    LReLU returns a small negative signal (by multiplying by a constant) instead of zero.
+
+    A deep neural network is constructed by stacking several layers of units (neurons) together. Data is used to
+    initialize the activations of an input layer, and the information is forward propagated through the network.
+    Weights are chosen to optimize a loss function --- \eg{} categorical cross-entropy error or triplet
+    loss~\cite{schroff_facenet_2015} --- which is chosen depending on the application. Optimization of the loss
+    function is performed using back-propagation~\cite{rumelhart_learning_1986} --- typically using mini-batches
+    and stochastic gradient descent with momentum~\cite{sutskever_importance_2013}. Traditionally each layer in a
+    neural network is fully connected --- each pair of units between the previous layer and the current layer has
+    its own edge weight ---  to the previous layer. However, in computer vision networks are constructed using
+    convolutional layers.
+
+    A DCNN connects the input layer to a stack of convolutional layers~\cite{krizhevsky_imagenet_2012}. A
+    convolutional layer differs from a fully connected layer in that it is sparsely connected and that most of the
+    edge weights between layers are shared~\cite{lecun_gradient_based_1998, fukushima_neocognitron_1988,
+    serre_robust_2007}. Each convolutional layer is broken into several channels. Each channel is given its own
+    weight matrix with a fixed width and height. This matrix of weights is convolved with the input layer to
+    produce a feature activation map, one for each channel. Convolutional layers often use several pooling layers
+    that aggregate information over a small area, reduce the size of the feature map, and increase robustness to
+    transformations. Common pooling operations are max-pooling~\cite{serre_robust_2007, krizhevsky_imagenet_2012}
+    and maxout~\cite{goodfellow_maxout_2013}. The convolutional layers may also be connected to a stack of fully
+    connected layers. In this case, hierarchies of feature maps are built in the low level convolutional layers,
+    and then fully connected layers learn decision boundaries between these
+    features~\cite{zeiler_visualizing_2014}.
+
+    Because of weight sharing convolutional networks must learn significantly fewer parameters than fully connected
+    networks. This allows convolutional networks to be trained much faster. Fewer weights also acts as a form of
+    regularization for the network. Intuitively learned convolutional filters are similar to Gabor
+    filters~\cite{gabor_theory_1946}, which are a naturally suited for extracting features from images. Even
+    without learning weights, convolutions can be used to extract powerful features for
+    matching~\cite{revaud_deep_2015}. The popular SIFT and HoG features~\cite{mahendran_understanding_2014} can
+    even be implemented as convolutional networks. Despite the lack of hard theoretical insight into the inner
+    workings of these networks, their empirical performance cannot be denied.
+
+  \subsection{Discussion --- deep convolutional neural networks}\label{subsec:dcnndiscuss}
+        Because of the astounding success of convolutional networks in almost every area in computer vision, we have
+        investigated their use in animal identification. Specifically, we have investigated two approaches.
+
+        The first approach used deep convolutional feature descriptors as a replacement for the
+        SIFT~\cite{lowe_distinctive_2004} descriptor following the patch based scheme
+        in~\cite{zagoruyko_learning_2015}. The basic idea is to have two patches fed through the same
+        (Siamese)~\cite{chopra_learning_2005} architecture and then compare their resulting encodings. This
+        comparison can be as simple as Euclidean distance, or as complex as a learned distance measure. Training
+        can be performed on pairs of patches, labeled as correct or incorrect, using the discriminative loss
+        function~\cite{lecun_loss_2005}. Unfortunately, due to issues with the quality and quantity of our training
+        data our convolutional replacements for the SIFT descriptor have not been successful.
+
+        The second approach aimed to use Siamese networks to directly compare two images of an animal to determine
+        if they were the same or different, similar to the method used in DeepFace\cite{taigman_deepface_2014} for
+        face verification. However, without the large training datasets and specialized alignment procedures used
+        in Deep Face, we were unable to produce promising results.
+        
+        Due to these issues, this \thesis{} does not further pursue techniques based on DCNNs. We include this
+        discussion to note the potential of deep learning applied to animal identification and to strongly suggest
+        further investigation of these techniques in the future research. Of particular interest for future
+        research is the matching technique presented in \cite{rocco_convolutional_2017}. This method is
+        particularly promising because it learns to match and align images by mimicking a classic computer vision
+        pipeline while using only synthetic training data. This may be able to overcome the issues mentioned above,
+        however further investigation is needed.
