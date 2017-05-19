@@ -17,76 +17,31 @@ http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/0172
 
 \begin{comment}
 python -m vtool.patch --test-draw_kp_ori_steps --dpath ~/latex/cand/ --save figures2/testfindkpdirection.jpg  --figsize=14,9 --dpi=180  --adjust=.04,.05,.1 --diskshow --fname=zebra.png --fx=121 --show --clipwhite --saveparts
+
+python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --show 
+python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --dpath . --save KpOri.jpg  --figsize=10,5 --dpi=300  --diskshow  --top=0.8 --show
+--left=.04 --bottom=.05 --wspace=.2 --hspace=.3
 \end{comment}
-%\SingleImageCommand{testfindkpdirection}{.9}{testfindkpdirection}{
-%%---
-%Visualization of the steps involved in computing the dominant gradient
-%  orientations.
-%The top rows shows:
-%(1) the input image with a single elliptical keypoint,
-%(2) the normalized keypoint, (3, 4) the squared x and y image derivatives.
-%The middle row shows:
-%(5) the gradient magnitudes,
-%(6) the Gaussian weighted gradient magnitude,
-%% which defines how much of a vote each pixel has, 
-%(7, 8) the orientation at each pixel.
-%%that defines which bins the pixel will vote for.
-%The final row
-%(9) shows the histogram of weighted orientations.
-%%The circled positions show the orientations with the maximum responce, and the
-%The starred positions show the dominant gradient orientations localized to
-%  sub-orientation accuracy.
-%% ---
-%}{figures2/test_find_kp_direction.jpg}
-
-
 \newcommand{\testfindkpdirection}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionA.jpg}\caption{}\label{sub:testfindkpdirectiona}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionB.jpg}\caption{}\label{sub:testfindkpdirectionb}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionC.jpg}\caption{}\label{sub:testfindkpdirectionc}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionD.jpg}\caption{}\label{sub:testfindkpdirectiond}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionE.jpg}\caption{}\label{sub:testfindkpdirectione}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionF.jpg}\caption{}\label{sub:testfindkpdirectionf}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionG.jpg}\caption{}\label{sub:testfindkpdirectiong}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.23\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}
-\end{subfigure}
-~~% --
-\begin{subfigure}[h]{1\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures2/testfindkpdirectionI.jpg}\caption{}\label{sub:testfindkpdirectioni}
-\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionA.jpg}\caption{}\label{sub:testfindkpdirectiona}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionB.jpg}\caption{}\label{sub:testfindkpdirectionb}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionC.jpg}\caption{}\label{sub:testfindkpdirectionc}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionD.jpg}\caption{}\label{sub:testfindkpdirectiond}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionE.jpg}\caption{}\label{sub:testfindkpdirectione}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionF.jpg}\caption{}\label{sub:testfindkpdirectionf}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionG.jpg}\caption{}\label{sub:testfindkpdirectiong}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}\end{subfigure}
+~~%--
+\begin{subfigure}[h]{1\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionI.jpg}\caption{}\label{sub:testfindkpdirectioni}\end{subfigure}
 \caption[\caplbl{testfindkpdirection} Computing the dominant gradient orientation]{
 % ---
 \caplbl{testfindkpdirection} Visualization of the steps involved in
@@ -116,27 +71,11 @@ The starred positions show the dominant gradient orientations localized
 }
 
 
-%\MultiImageCommand{testfindkpdirection}{.2}{
-%test find kp direction.jpg
-%}{figures2/testfindkpdirectionA.jpg}{figures2/testfindkpdirectionB.jpg}{figures2/testfindkpdirectionC.jpg}{figures2/testfindkpdirectionD.jpg}
-
-%{figures2/testfindkpdirectionE.jpg}{figures2/testfindkpdirectionF.jpg}{figures2/testfindkpdirectionG.jpg}{figures2/testfindkpdirectionH.jpg}{figures2/testfindkpdirectionI.jpg}
-
-%{figures2/test_find_kp_directionA.jpg}{figures2/test_find_kp_directionB.jpg}{figures2/test_find_kp_directionC.jpg}{figures2/test_find_kp_directionD.jpg}
-%{figures2/test_find_kp_directionH.jpg}{figures2/test_find_kp_directionI.jpg}
-
-
-
 \begin{comment}
-python -m plottool.viz_featrow --test-draw_feat_row --dpath ~/latex/cand/ --save figures2/viz_featrow.jpg --figsize=12,6 --dpi 180 --clipwhite --diskshow --fname zebra.png --fx=121  --saveparts
+python -m plottool.viz_featrow --test-draw_feat_row --fname zebra.png --fx=121  --show
+--dpath ~/latex/cand/ --save figures2/viz_featrow.jpg --figsize=12,6 --dpi 180 
+--clipwhite --diskshow  --saveparts
 \end{comment}
-%\SingleImageCommand{vizfeatrow}{.8}{vizfeatrow}{
-%% ---
-%The left shows a SIFT feature superimposed over pixels it describes.
-%The right shows the same SIFT descriptor as a flat histogram.
-%Notice the correspondence between the colors of the histogram bars
-%% ---
-%}{figures2/viz_featrow.jpg}
 \MultiImageCommandII{vizfeatrow}{.4}{A SIFT descriptor}{
 % ---
 \Cref{sub:vizfeatrowA} shows a SIFT feature superimposed over pixels it
@@ -149,22 +88,29 @@ Notice the correspondence between the colors of the histogram bars.
 
 
 \begin{comment}
-python -m plottool.draw_sv --test-show_sv_simple --dpath ~/latex/cand/ --save figures2/figSVInlier.jpg --figsize=12,6 --dpi 300 --clipwhite --diskshow
+python -m plottool.draw_sv --test-show_sv_simple --dpath ~/latex/crall-thesis-2017/ --save figures2/figSVInlier.jpg --figsize=12,6 --dpi 300 --clipwhite --diskshow
 \end{comment}
-\SingleImageCommand{figSVInlier}{.8}{Visualization of spatial verification}{
+\newcommand{\figSVInlier}{
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=.6\textwidth]{figures2/figSVInlier.jpg}
+\caption[Visualization of spatial verification]{\caplbl{figSVInlier}
 % ---
 Matches before and after spatial verification.
 Inconsistent matches are shown in red.
 Consistent matches are shown in blue.
 Notice that not all spatially consistent matches are correct.
 % ---
-}{figures2/figSVInlier.jpg}
+}
+\label{fig:figSVInlier}
+\end{figure}
+}
+
+
 
 \begin{comment}
 wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
-
-python -m ibeis.scripts.specialdraw scalespace --show  --dpath ~/latex/cand/ --save figures2/ScaleSpaceFigure.png --dpi 120 --clipwhite --diskshow
-
+python -m ibeis.scripts.specialdraw scalespace --dpath ~/latex/crall-thesis-2017/ --save figures2/ScaleSpaceFigure.png --dpi 300 --clipwhite --diskshow
 \end{comment}
 \SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
 % ---
