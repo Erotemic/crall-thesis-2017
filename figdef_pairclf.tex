@@ -71,20 +71,12 @@ scores the learned probabilities exhibit better separability.
 \newcommand{\PositiveROC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/roc_match_state.png}
-\caption{Plains zebra}\label{sub:pos_roc_pz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/roc_match_state.png}\caption{Plains zebra}\label{sub:pos_roc_pz}\end{subfigure}
 ~
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/roc_match_state.png}
-\caption{Grévy's zebra}\label{sub:pos_roc_gz}
-\end{subfigure}
-\caption[\caplbl{PositiveROC}Positive match state ROC]{\caplbl{PositiveROC}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/roc_match_state.png}\caption{Grévy's zebra}\label{sub:pos_roc_gz}\end{subfigure}
+\caption[\caplbl{PositiveROC}Positive match-state ROC]{\caplbl{PositiveROC}
 % ---
-Positive match state ROC.
+Positive match-state ROC.
 % ---
 }
 \label{fig:PositiveROC}
@@ -101,14 +93,14 @@ Positive match state ROC.
     \centering
     \caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
     % ---
-    Multiclass match state confusion for plains and Grévy's zebras.
+    Multiclass match-state confusion for plains and Grévy's zebras.
     The rows are the real (groundtruth) state, and the columns are the predicted states.
     The final column indicates the number of examples for each class.
     % ---
     }
     \label{tbl:ConfusionMatch}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}\caption{Plains zebras match state confusion}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}\caption{Grévy zebras match state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}\caption{Plains zebras match-state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}\caption{Grévy zebras match-state confusion}\end{subtable} %
 \end{table}
 }
 
@@ -117,14 +109,14 @@ Positive match state ROC.
 \begin{table}
     \caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
     % ---
-    Multiclass match state evaluation metrics for plains and Grévy's zebras
+    Multiclass match-state evaluation metrics for plains and Grévy's zebras
     computed from the confusion matrix.
     % ---
     }
     \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}\caption{Plains zebras match state metrics}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}\caption{Grévy zebras match state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}\caption{Grévy zebras match-state metrics}\end{subtable} %
 \end{table}
 }
 
@@ -141,20 +133,12 @@ Positive match state ROC.
 \newcommand{\MatchWordCloud}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/wc_match_state.png}
-\caption{Plains zebra}\label{sub:wc_pz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
 ~
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/wc_match_state.png}
-\caption{Grévy's zebra}\label{sub:wc_gz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
 \caption[\caplbl{MatchWordCloud}Word cloud of important features for matching]{\caplbl{MatchWordCloud}
 % ---
-Word cloud of important features for predicting match state.
+Word cloud of important features for predicting match-state.
 For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_delta)}) has high importance
   because of its role in distinguishing incomparable cases.
 % ---
@@ -211,9 +195,8 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \begin{table}[h]
     \caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
     % ---
-    Photobomb state confusion for plains and Grévy's zebras. The columns indicate
-    predicted classes, and the rows indicate real (groundtruth) classes.  The final
-    column indicates the number of examples of each class.
+    The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
+    (groundtruth) classes.  The final column indicates the number of examples of each class.
     % ---
     }
     \label{tbl:ConfusionPhotobomb}
@@ -227,8 +210,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \begin{table}
     \caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
     % ---
-    Photobomb state evaluation metrics for plains and Grévy's zebras computed from
-    the confusion matrix.
+    The photobomb-state evaluation metrics computed from the confusion matrix.
     % ---
     }
     \label{tbl:EvalMetricsPhotobomb}
@@ -296,7 +278,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
 % ---
 The pair is incomparable, but the classifier predicts negative due to the small amount of incomparable training
-  data available.
+data available.
 % ---
 }
 \label{fig:PairFailIN}
@@ -331,38 +313,6 @@ The pair is positive, but the classifier predicts negative because of occlusion 
 \label{fig:PairFailPN}
 \end{figure}
 }
-
-
-
-%\SingleImageCommand{PairFailIN}{.7}{
-%Incomparable Pairwise failure case
-%}{
-%% ---
-%The pair is incomparable, but the classifier predicts negative due to the small
-%amount of incomparable training data available.
-%% ---
-%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Incomparable_Negative_383_503_custom.jpg}
-
-
-%\SingleImageCommand{PairFailNP}{.9}{
-%Negative pairwise failure case
-%}{
-%% ---
-%This pair is negative, but the classifier predicts positive because of
-%similarity in pose and coarse patterns. The classifier is unable to recognize
-%that the shoulder is the same region on both animals and contains distinctive
-%patterns that do not match.
-%% ---
-%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Negative_Positive_424_465}
-
-
-%\SingleImageCommand{PairFailPN}{.9}{
-%Positive pairwise failure case
-%}{
-%% ---
-%The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.
-%% ---
-%}{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Positive_Negative_63_72.jpg}
 
 
 \newcommand{\LeftRightFace}{

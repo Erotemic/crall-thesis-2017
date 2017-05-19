@@ -58,11 +58,6 @@
     ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
 \end{comment}
 
-%\includeonly{chapter3-matching, chapter4-application}
-%\includeonly{chapter4-application}
-%\includeonly{chapter5-systemchapter}
-%\includeonly{chapter4-application,chapter5-systemchapter}
-
 
 \author{Jonathan P. Crall}
 \ifrpilayout{}
@@ -100,24 +95,19 @@
 \input{figdef1}
 \input{figdef2}
 \input{figdef3}
-\input{figdef4}
-\input{figdef5}
 \input{figdefexpt.tex}
 \input{figdefindiv.tex}
 \input{figdefdbinfo.tex}
 \input{figdef_pairclf.tex}
 \input{figdef_graphid.tex}
 
-%\include{newchap3_outline}
-%\include{newchap4_outline}
+%\setcounter{chapter}{0}
 
 \include{chapter1-intro}
 \include{chapter2-related-work}
-%\setcounter{chapter}{2}
 \include{chapter3-matching}
-\include{pairwise-classifier}
-\setcounter{chapter}{4}
-\include{graph-id}
+\include{chapter4-pairclf}
+\include{chapter5-graphid}
 \include{chapter6-conclusion}
 \include{appendix}
 
@@ -127,10 +117,3 @@
 
 \end{document}
 % chktex-file 17
-
-
-%\include{chapter4-application}
-%\include{new-work}
-%\include{rf_train_outline}
-%\setcounter{chapter}{4}
-%\include{chapter5-systemchapter}

@@ -23,10 +23,6 @@ A pair of annotations is either:
 
     \item negative --- the annotations are visually comparable and different individuals.
 \end{enumln}
-%Two annotations are incomparable if no distinguishing parts of the annotations
-%  can be put in correspondence.
-%Otherwise, we can determine if the distinguishing parts are the same or
-%  different.
 Two annotations can be incomparable if the annotations show different parts or sides of an animal, or if the
   distinguishing information on an animal is obscured or occluded.
 The positive and negative states each require distinguishing information to be present.
@@ -38,11 +34,6 @@ The multi-label classifier then predicts the probability of each of the three st
 
 To construct a pairwise probabilistic classifier we turn towards supervised machine learning, which requires that
   we:
-%Probabilistic machine learning problems can be generally stated as
-%  constructing a function using a labeled dataset of of fixed length feature
-%  vectors and corresponding labels indicating the desired output class.
-%The resulting function maps a novel feature vector to a probability
-%  distribution over each possible output class.
 \begin{enumin}
 
     \item determine a set of labeled annotation pairs for training, 
@@ -74,13 +65,10 @@ We choose to use a random forest classifier, in part because they are fast to tr
 
 A final concern that is investigated in this chapter is the issue of image challenges that may confound the
   match-state pairwise classifier.
-Recall from~\cref{sub:exptfail}, {photobombs} --- pairs of annotations where feature correspondences
-  are caused by a secondary animal --- which are the most notable cause of such a challenge.
-%Several examples of pairs of annotations with photobombs are illustrated in
-%  \cref{fig:photobomb}.
+Recall from~\cref{sub:exptfail}, {photobombs} --- pairs of annotations where feature correspondences are caused
+  by a secondary animal --- which are the most notable cause of such a challenge.
 By most accounts photobombs appear very similar to positive matches, and this similarity could confuse the
   match-state classifier.
-%it may be reasonable to expand the match-state classifier to learn this subtlety.
 However, because photobombs are inherently a pairwise property between annotations, it should be possible to
   learn a separate classifier explicitly tasked with the challenge.
 Therefore, we also learn a photobomb classifier using the same sort of pairwise feature vector and random forest
@@ -142,13 +130,6 @@ An example illustrating such a case where two annotations with different viewpoi
 
 \LeftRightFace{}
 
-
-%Of these four ``unary'' attributes only the qualities are used directly.
-%By themselves the other unary attributes like time should not influence an
-%  annotations ability to match, so to prevent potential overfitting they are not
-%  included in the global vector.
-%Instead we
-
 These four ``unary'' attributes are gathered for each annotation.
 Thus for each attribute we have two measurements, but we do not use them directly because the ordering of the
   annotations in each pair is arbitrary.
@@ -168,10 +149,6 @@ These \nan{} values are handled by treating them as a separate class when growin
   random forest ~\cite{ding_investigation_2010}.
 The random forest will even be able to take advantage of \nan{} values, if the data is not missing completely at
   random (\ie{} it is predictive when images are not provided with metadata).
-
-%New:
-%We no longer include the unary attributes except for quality, but we remove
-%  the asymetry by recording the dimensions as minqual and maxqual.
 
 \subsection{The local feature vector}
 The local feature vector distills two orderless bag-of-features representations into a fixed length vector
@@ -260,8 +237,8 @@ This softens the impact of its binary threshold and adds robustness to viewpoint
                  ('mean(ratio)',         0.50),
                  ('std(ratio)',          0.09)])
 \end{minted}
-\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} Example of a small pairwise feature
-  vector containing local and global information.
+\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
+Example of a small pairwise feature vector containing local and global information.
 In practice the pairwise feature vectors include many more dimensions.
 }
 \label{fig:PairFeatVec}
@@ -272,7 +249,6 @@ This results in a final descriptor vector that can be quite large (thousands of 
   dimensions might not be useful.
 Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
 This is done by considering the importance of each feature dimension as reported by the random forest classifier.
-%More details on this will be given in the experiment section.
 The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
 
 
@@ -307,10 +283,6 @@ We use the LNBNN ranking algorithm to estimate how easy or difficult it might be
 Pairs with higher LNBNN ranks will be easier to classify for positive examples and will be more difficult for
   negative examples, and lower ranks will have the reverse effect.
 
-%The training data for the pairwise classifier is a set of annotation pairs and a set of corresponding labels.
-%To train the classifier we follow the methodology of selecting hard negatives and moderate
-%  positives~\cite{shi_embedding_2016}.
-
 Specifically, to sample a dataset for learning, we first rank the database for each query image using the ranking
   algorithm.
 We partition the ranked lists into two parts:
@@ -320,9 +292,7 @@ For positive examples we select $4$ from the top, $2$ from the middle, $2$ from 
 For negative examples we select $3$ from the top, $2$ from the middle, $1$ from the bottom, and $2$ randomly.
 We included all pairs explicitly labeled as incomparable because there is only a small number of such examples.
 If this was not the case, then we would include an additional partition for incomparable cases.
-%Because our current datasets only contain a small number of explicitly labeled incomparable cases, we include all
-%  such pairs.
-%The same is true for pairs labeled as photobombs.
+
 
 \section{Secondary classifier to address photobombs}\label{sec:learnpb}
     It is useful to augment the primary match-state pairwise classifier with a secondary classifier able to
@@ -348,74 +318,51 @@ If this was not the case, then we would include an additional partition for inco
 \section{Pairwise classification experiments}\label{sec:pairexpt}
 
     We evaluate the pairwise classifiers on two datasets, one of plains zebras and the other of Grévy's zebras.
-    These datasets were previously described in \cref{sub:datasets}.
-    When interpreting the results of these experiments it is important to note that the plains zebra dataset
-      contains only $233$ labeled incomparable cases and $285$ labeled photobombs.
-    Our Grévy's zebra dataset contains $1$ labeled incomparable cases and $85$ labeled photobombs.
-    Therefore, our experiments will primarily focus on the important question of separating positive from
-      negative matching states.
+    These datasets were previously described in \cref{sub:datasets}. When interpreting the results of these
+    experiments it is important to note that the plains zebra dataset contains only $233$ labeled incomparable
+    cases and $285$ labeled photobombs. Our Grévy's zebra dataset contains $1$ labeled incomparable cases and $85$
+    labeled photobombs. Therefore, our experiments will primarily focus on the important question of separating
+    positive from negative matching states.
 
-    For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}.
-    Each pair is associated with a ground-truth matching state label of either positive, negative, or
-      incomparable.
-    Additionally each pair is also labeled as either a photobomb or not a photobomb.
-    For each pair we construct a pairwise feature vector as described in \cref{sec:pairfeat}.
-    We have found that, for plains zebras, it is important to use orientation augmentation when computing
-      one-vs-one matches.
-    In this case we should not use the second nearest neighbor as the normalizer for the ratio test, because the
-      augmented keypoints will have similar descriptors.
-    We account for this by using the 3rd nearest neighbor as the normalizer instead.
+    For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}. Each pair is
+    associated with a ground-truth matching state label of either positive, negative, or incomparable. Additionally
+    each pair is also labeled as either a photobomb or not a photobomb. For each pair we construct a pairwise
+    feature vector as described in \cref{sec:pairfeat}. We have found that, for plains zebras, it is important to
+    use orientation augmentation when computing one-vs-one matches. In this case we should not use the second
+    nearest neighbor as the normalizer for the ratio test, because the augmented keypoints will have similar
+    descriptors. We account for this by using the 3rd nearest neighbor as the normalizer instead.
 
     We split this dataset of labeled annotation pairs into into multiple disjoint training and testing sets using
-      grouped stratified $k$-fold cross validation (we use $3$ folds).
-    First, we enforce that each sample (a pair of annotations) within the same name or between the same two names
-      must be placed in the same group.
-    Then, the cross validation is constrained such all samples in a group are either in the training or testing
-      set for each split.
-    In other words, this means that a specific individual cannot appear in both the training and testing set,
-      which helps ensures that our results will generalize to new individuals.
+    grouped stratified $k$-fold cross validation (we use $3$ folds). First, we enforce that each sample (a pair of
+    annotations) within the same name or between the same two names must be placed in the same group. Then, the
+    cross validation is constrained such all samples in a group are either in the training or testing set for each
+    split. In other words, this means that a specific individual cannot appear in both the training and testing
+    set, which helps ensures that our results will generalize to new individuals.
 
-    For each cross validation split, we train the matching state and photobomb state classifier on the training
-      set and then predict probabilities on each sample in the testing set.
-    Because the cross validation is $k$-fold and the splits are disjoint, we make a single prediction for each
-      sample for each classifier.
-    The result is that each sample in our dataset will be assigned unbiased probabilities.
+    For each cross validation split, we train the matching state and photobomb-state classifier on the training set
+    and then predict probabilities on each sample in the testing set. Because the cross validation is $k$-fold and
+    the splits are disjoint, we make a single prediction for each sample for each classifier. The result is that
+    each sample in our dataset will be assigned unbiased probabilities.
 
-    We will compare these predictions with the scores generated by LNBNN, so we must additionally generate an
-      LNBNN score for each pair.
-    This is done by issuing each annotation as a query.
-    Any (undirected) pair in our dataset that appears as a query / database pair in the ranked list is assigned
-      that LNBNN score.
-    If a pair appears multiple times in the ranked list, then the maximum of the two scores is used.
-    Any pair that does not appear in the ranked list (because LNBNN failed to return it) is implicitly given a
-      score of zero.
+    We will compare these predictions with the scores generated by LNBNN, so we must additionally generate an LNBNN
+    score for each pair. This is done by issuing each annotation as a query. Any (undirected) pair in our dataset
+    that appears as a query / database pair in the ranked list is assigned that LNBNN score. If a pair appears
+    multiple times in the ranked list, then the maximum of the two scores is used. Any pair that does not appear in
+    the ranked list (because LNBNN failed to return it) is implicitly given a score of zero.
 
     We have now predicted match-state probabilities, photobomb-state probabilities, and one-vs-many LNBNN scores
-      for each pair in our dataset.
-    We now analyze the results for each classifier in the following subsections.
-    Our tests will directly compare the match state classifier with the direct use of LNBNN as a verification
-      mechanism.
-    Additionally, for each classifier we will measure the number of classification errors and success in a
-      confusion matrix.
-    We also inspect the importance of each feature dimension of our pairwise feature vector.
+    for each pair in our dataset. We now analyze the results for each classifier in the following subsections. Our
+    tests will directly compare the match-state classifier with the direct use of LNBNN as a verification
+    mechanism. Additionally, for each classifier we will measure the number of classification errors and success in
+    a confusion matrix. We also inspect the importance of each feature dimension of our pairwise feature vector.
     Finally, we will present the several examples of failure cases to illustrate where improvements are can be
-      made.
-
-    %To train a classifier to be applied to new data, all collected data becomes
-    %  the training set.
-    %We measure binary classification performance in a one-vs-rest manner
-    %  focusing on positive-vs-rest.
-    %Results for binary classification experiments are reported as ROC curves.
-
-
-    %NOTES:
+    made.
 
     \subsection{Matching state}
 
         The primary classifier predicts the matching state (positive, negative, incomparable) of a pair of
-          annotations.
-        To demonstrate the effectiveness of our multiclass classifier we report the confusion matrix of class
-          predictions for plains and Grévy's zebras in \cref{tbl:ConfusionMatch}.
+        annotations. To demonstrate the effectiveness of our multiclass classifier we report the confusion matrix
+        of class predictions for plains and Grévy's zebras in \cref{tbl:ConfusionMatch}.
 
         \ConfusionMatch{}
 
@@ -429,7 +376,7 @@ If this was not the case, then we would include an additional partition for inco
         An MCC ranges from $+1$, indicating perfect predictions, to $-1$, indicates pathological inverse
           predictions, with $0$ being random uninformed predictions \cite{powers_evaluation_2011}.
         % FIXME: ensure these numbers match the tables
-        The MCC of $0.85$ for Grévy's zebras and $0.86$ for plains zebras, indicating that our classifiers have
+        The MCC of $0.86$ for Grévy's zebras and $0.91$ for plains zebras, indicating that our classifiers have
           strong predictive power.
         
 
@@ -514,7 +461,7 @@ If this was not the case, then we would include an additional partition for inco
         The overall performance is given in the classification confusion matrix illustrated in
           \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
 
-        Due to the small amount of available training data the performance of the photobomb state classifier is
+        Due to the small amount of available training data the performance of the photobomb-state classifier is
           weaker than the match-state classifier.
         For plains zebras the MCC of $0.64$ demonstrates that the photobomb classifier has moderate predictive
           power.
@@ -536,7 +483,7 @@ If this was not the case, then we would include an additional partition for inco
 
     \FloatBarrier{}
     \subsection{Classifier experiment conclusions}
-        In these experiments we have demonstrated that our pairwise match state classifier is able to reliably
+        In these experiments we have demonstrated that our pairwise match-state classifier is able to reliably
           separate positive from negative and incomparable cases.
         When compared to the LNBNN scores from~\cref{chap:ranking}, not only do these probabilities have more
           predictive power, they are interpretable, always ranging between $0$ and $1$.
