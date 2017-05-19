@@ -638,7 +638,7 @@ positive but assigning them the confidence of guessing.
 It will be common for such datasets to contain errors, we resolve any inconsistent PCCs as normal, but then we
 search for additional split cases using the pairwise classifier. In the case that a pairwise classifier does not
 exist, the temporary edges defined by the maximum spanning trees can be used to construct one. The main idea is to
-re-review all edges where the pairwise classifier prediction disagrees with its assigned match state. Edges are
+re-review all edges where the pairwise classifier prediction disagrees with its assigned match-state. Edges are
 sorted by the magnitude of the disagreement, but any edge with a confidence of absolutely-sure is ignored. This
 will present edges labeled as guessing for the user to re-review. At this point the dataset is in a legal state,
 where the name labels correspond to PCCs. The final step is to execute normal graph review in order to find any
@@ -819,8 +819,7 @@ consistent assignment of PCCs to original name labels.
 \FloatBarrier{}
 \section{Summary of graph identification}\label{sec:graphconclusion}
 
-In this chapter we have introduced and developed the final component of our solution to the animal identification
-  problem.
+In this chapter we have described the final component in our approach to animal identification.
 The graph based framework takes advantage of the algorithms previously developed in
   \cref{chap:ranking,chap:pairclf} and uses them in a principled way to address the identification problem.
 The ranking algorithm is used to quickly identify candidate edges that are likely to be meaningful, and the
@@ -828,30 +827,32 @@ The ranking algorithm is used to quickly identify candidate edges that are likel
 While these algorithms can be applied to address identification directly, our experiments have demonstrated that
   there is a considerable advantage to placing them in the context of the graph identification framework.
 
-Our graph framework harnesses our ranking and verification algorithms by exploiting edge connectivity of
-  positive, negative, and incomparable reviews.
-Edge connectivity is used to enforce that the graph contains a small exact amount of redundancy.
-This controlled amount of redundancy reduces the number of manual decisions while providing the means to detect
-  inconsistencies.
+Our graph framework uses the connectivity of positive, negative, and incomparable edges in order to quickly
+  converge on a final identification.
+Edge connectivity is used to enforce that the graph contains a small exact amount of redundancy, which reduces
+  the number of manual decisions while providing the means to detect inconsistencies.
 When inconsistencies are detected, edge connectivity is again used to quickly find and fix errors in edge
   labeling.
-
 Our framework also includes a probabilistic convergence criteria based on a Poisson process.
 This criteria stops identification once the ranking and verification algorithm are no longer able to find
   meaningful edges.
-This means that the algorithm will stop the identification process before it devolves into brute force search.
+This means that the algorithm will stop the identification process before it devolves into a brute force search.
 The point at which this happens will depend on the power of the ranking and verification algorithms.
 
-This brings us to our last important point.
-The graph framework is highly general.
-It is not restricted to animal identification and could be applied to any instance recognition problem where one
-  annotation corresponds to one individual object.
-It does not depend on our ranking and verification algorithms and could easily incorporate other algorithms.
-It is even possible to use it without any algorithms in order to facilitate a more efficient brute force search.
+This brings us to our last point.
+The graph framework is general.
+It is not restricted to animal identification.
+It could be applied to any instance recognition problem where one annotation corresponds to one individual
+  object.
+It does not depend on our specific ranking and verification algorithms and could easily incorporate other
+  algorithms.
+It is even possible to use it without any algorithms.
+Even though this does result in a brute force search, the redundancy criteria still reduces the number of
+  reviews, and error recovery still ensures that the graph is always consistent.
 This case is not just theoretical.
 To extend to new species and domains it is important to be able to construct a small labeled database from which
-  ranking and verification algorithms can be bootstrapped.
+  learned ranking and verification algorithms can be bootstrapped.
 As more pairwise training data is gathered and maintained using this framework, more sophisticated pairwise
-  classifiers trained using deep learning could be applied, perhaps removing the manual component completely and
-  resulting in a fully automatic identification algorithm.
+  classifiers trained using deep learning could be applied, perhaps removing the need for manual verification
+  interaction and resulting in a fully automatic identification algorithm.
 

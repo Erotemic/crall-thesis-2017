@@ -6,20 +6,13 @@
 
 \newcommand{\MatchStateExample}{
 \begin{figure}[h] \centering
-\begin{subfigure}[h]{0.26\textwidth} \centering
-\includegraphics[height=160pt]{figures_pairclf/classesC.png}\caption{positive}\label{sub:classesC}
-\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth} \centering
-\includegraphics[height=160pt]{figures_pairclf/classesA.png}\caption{negative}\label{sub:classesA}
-\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth} \centering
-\includegraphics[height=160pt]{figures_pairclf/classesB.png}\caption{incomparable}\label{sub:classesB}
-\end{subfigure}
-\caption[\caplbl{MatchStateExample}Match state example]{\caplbl{MatchStateExample}
+\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesC.png}\caption{positive}\label{sub:classesC}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesA.png}\caption{negative}\label{sub:classesA}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesB.png}\caption{incomparable}\label{sub:classesB}\end{subfigure}
+\caption[\caplbl{MatchStateExample}Match-state example]{\caplbl{MatchStateExample}
 % ---
-Examples of positive (\ref{sub:classesC}), negative  (\ref{sub:classesA}), and
-  incomparable (\ref{sub:classesB}) pairs of annotations.
-Local feature correspondences are superimposed over the pairs.
+Examples of positive (\ref{sub:classesC}), negative  (\ref{sub:classesA}), and incomparable (\ref{sub:classesB})
+pairs of annotations. Local feature correspondences are superimposed over the pairs.
 % ---
 }
 \label{fig:MatchStateExample}
@@ -27,34 +20,32 @@ Local feature correspondences are superimposed over the pairs.
 }
 
 
+\newcommand{\LeftRightFace}{
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures_pairclf/custom_match_leftrightface_5245_5161.jpg}
+\caption[\caplbl{LeftRightFace}Face match]{\caplbl{LeftRightFace}
+% ---
+Even though this pair has different viewpoints, it is positive and comparable
+because we can establish a distinctive correspondence in the face. 
+% ---
+}
+\label{fig:LeftRightFace}
+\end{figure}
+}
+
+
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_lnbnn.png}
-\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
 ~
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_pos_learn(sum,glob).png}
-\caption{Plains zebras learned}\label{sub:pos_hist_pz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
 ~
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_lnbnn.png}
-\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
 ~
-\begin{subfigure}[h]{0.47\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_pos_learn(sum,glob).png}
-\caption{Grévy's zebras learned}\label{sub:pos_hist_gz}
-\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
-
 \caption[\caplbl{PositiveHist}Positive scores]{\caplbl{PositiveHist}
 % ---
 Positive scores of LNBNN (left) and pairiwse (right) matching for plains (top)
@@ -91,7 +82,7 @@ Positive match-state ROC.
 \newcommand{\ConfusionMatch}{
 \begin{table}
     \centering
-    \caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
+    \caption[\caplbl{ConfusionMatch}Match-state confusion]{\caplbl{ConfusionMatch}
     % ---
     Multiclass match-state confusion for plains and Grévy's zebras.
     The rows are the real (groundtruth) state, and the columns are the predicted states.
@@ -107,7 +98,7 @@ Positive match-state ROC.
 
 \newcommand{\EvalMetricsMatch}{
 \begin{table}
-    \caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
+    \caption[\caplbl{EvalMetricsMatch}Match-state metrics]{\caplbl{EvalMetricsMatch}
     % ---
     Multiclass match-state evaluation metrics for plains and Grévy's zebras
     computed from the confusion matrix.
@@ -119,6 +110,41 @@ Positive match-state ROC.
     \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}\caption{Grévy zebras match-state metrics}\end{subtable} %
 \end{table}
 }
+
+\begin{comment}
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=photobomb_state
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=photobomb_state
+\end{comment}
+\newcommand{\ConfusionPhotobomb}{
+\begin{table}[h]
+    \caption[\caplbl{ConfusionPhotobomb}Photobomb-state confusion]{\caplbl{ConfusionPhotobomb}
+    % ---
+    The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
+    (groundtruth) classes.  The final column indicates the number of examples of each class.
+    % ---
+    }
+    \label{tbl:ConfusionPhotobomb}
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
+\end{table}
+}
+
+
+\newcommand{\EvalMetricsPhotobomb}{
+\begin{table}
+    \caption[\caplbl{EvalMetricsPhotobomb}Photobomb-state metrics]{\caplbl{EvalMetricsPhotobomb}
+    % ---
+    The photobomb-state evaluation metrics computed from the confusion matrix.
+    % ---
+    }
+    \label{tbl:EvalMetricsPhotobomb}
+    \centering
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_photobomb_state.tex}\caption{Grévy zebras photobomb metrics}\end{subtable} %
+\end{table}
+}
+
+
 
 \begin{comment}
     python -m ibeis.scripts.script_vsone report_classifier_importance --db PZ_PB_RF_TRAIN \
@@ -146,6 +172,8 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \label{fig:MatchWordCloud}
 \end{figure}
 }
+
+
 
 \newcommand{\ImportantMatchFeat}{
 \begin{table}
@@ -180,51 +208,6 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
             \bottomrule
         \end{tabular}
         \caption{Grévy's zebra}
-    \end{subtable} %
-\end{table}
-}
-
-
-
-
-\begin{comment}
-    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=photobomb_state
-    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=photobomb_state
-\end{comment}
-\newcommand{\ConfusionPhotobomb}{
-\begin{table}[h]
-    \caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
-    % ---
-    The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
-    (groundtruth) classes.  The final column indicates the number of examples of each class.
-    % ---
-    }
-    \label{tbl:ConfusionPhotobomb}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
-\end{table}
-}
-
-
-\newcommand{\EvalMetricsPhotobomb}{
-\begin{table}
-    \caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
-    % ---
-    The photobomb-state evaluation metrics computed from the confusion matrix.
-    % ---
-    }
-    \label{tbl:EvalMetricsPhotobomb}
-    \centering
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\pzcode/eval_metrics_photobomb_state.tex}
-        \caption{Plains zebras photobomb metrics}
-    \end{subtable} %
-
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\gzcode/eval_metrics_photobomb_state.tex}
-        \caption{Grévy zebras photobomb metrics}
     \end{subtable} %
 \end{table}
 }
@@ -311,20 +294,5 @@ The pair is positive, but the classifier predicts negative because of occlusion 
 % ---
 }
 \label{fig:PairFailPN}
-\end{figure}
-}
-
-
-\newcommand{\LeftRightFace}{
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth]{figures_pairclf/custom_match_leftrightface_5245_5161.jpg}
-\caption[\caplbl{LeftRightFace}Face match]{\caplbl{LeftRightFace}
-% ---
-Even though this pair has different viewpoints, it is positive and comparable
-because we can establish a distinctive correspondence in the face. 
-% ---
-}
-\label{fig:LeftRightFace}
 \end{figure}
 }

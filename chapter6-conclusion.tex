@@ -24,7 +24,7 @@
 
     By combining these algorithms we have made a several meaningful contributions to the problem of animal
       identification.
-    In \cref{sec:introgzc} we discussed the Great Zebra Count (\GZC{}), where the ranking algorithm in
+    In \cref{sec:introgzc} we discussed the Great Zebra Count (\GZC{}), where the ranking algorithm was used in
       combination with the effort of citizen scientists to provide an estimate of the number of plains zebras and
       Masai giraffes in Nairobi National Park.
     In \cref{sec:rankexpt} we investigated several parameters and factors that can impact the performance of the
@@ -32,24 +32,28 @@
     We discovered that having multiple photos of each individual significantly improves the accuracy of the
       ranking algorithm and we designed a novel name scoring mechanism with this in mind.
     In \cref{sec:pairexpt} we demonstrated that a classification algorithm can be used to improve the separation
-      of positive from negative and incomparable ranked results.
+      of positive results from negative and incomparable results in a ranked list.
     In \cref{sec:graphexpt} we simulated the \GZC{} and demonstrated that our improvements to the ranking
       algorithm --- made by the classification and graph algorithm --- enable us to perform identification in less
       than $25\percent$ of the time required by the original event.
 
-    The research that resulted in \thesis{} began in $2010$ and was completed in $2017$.
-    In that time many significant developments have been made in the field of computer vision and machine
-      learning, namely the explosion of deep learning where technological and theoretical achievements have made it
-      possible to efficiently train deep convolutional neural networks (DCNNs)~\cite{lecun_deep_2015}.
+    \section{Discussion}\label{sec:discuss}
+
+    The research that resulted in this \thesis{} began in $2010$ and was completed in $2017$.
+    During that time, many significant developments were made in the fields of computer vision and machine
+      learning, most notably the explosion of deep learning~\cite{lecun_deep_2015}.
+      %where technological and theoretical achievements have
+      %made it possible to efficiently train deep convolutional neural networks (DCNNs).
       %(DCNNs)~\cite{krizhevsky_imagenet_2012,taigman_deepface_2014,razavian_baseline_2015,lecun_deep_2015,arandjelovic_netvlad_2016,rocco_convolutional_2017}.
-    Our approach does contain a small amount of deep learning (\eg{} the foregroundness weights), but it not
-      based in it.
+    While some steps in our approach (\eg{} the foregroundness weights) do make use of deep convolutional neural
+      networks (DCNNs), most do not.
     In some sense this is an advantage because the algorithms can be applied to many different species without
-      any need for pre-training, but it also does not achieve the incredible accuracy achievable by these networks.
+      any need for pre-training, but this also means they do not obtain the level of accuracy shown to be
+      achievable by these networks.
     Yet, the contributions of this \thesis{} are still relevant and complementary to DCNNs.
     This is trivially true in the case of the ranking and classification algorithms, in part due to the
       aforementioned reasons.
-    However, the contribution of the graph algorithm is still very relevant, even in the era of deep learning.
+    However, the contribution of the graph algorithm is relevant, even in the era of deep learning.
     
     %\section{Discussion of the graph algorithm}
     The graph identification algorithm models the abstract constraints of the identification problem and provides
@@ -61,46 +65,54 @@
       interesting connection between two annotations like scenery matches and photobombs.
     As new relationships are added, errors are discovered and corrected, and the identifications are updated.
 
-    The framework also provides a means of prioritizing which edges need to be reviewed based on the underlying
-      computer vision algorithms, the edge-augmentation needed to ensure minimum redundancy, and the minimum cut
-      needed to correct an error and split an inconsistent individual.
+    The framework also provides a means of prioritizing which edges need to be reviewed based on
+    (1) the underlying computer vision algorithms,
+    (2) the edge-augmentation needed to ensure minimum redundancy, and
+    (3) the minimum cut needed to correct an error and split an inconsistent individual.
     Edge prioritization works in conjunction with a convergence criteria that determines when identification has
       been completed.
-    When combined this means that the graph algorithm can simply be given a set of annotations and executed.
-    A signal is emitted whenever manual interaction is needed, and once the response is received the algorithm
-      continues.
-    This means that the graph algorithm requires little expertise to use.
-    Once it is running it effectively provides an identification wizard and simply guides the user through a set
-      of simple questions.
-    An obvious choice would be to run the graph algorithm on a web server and send questions to remote users that
-      can be quickly done in a web browser.
+    %This means that the graph algorithm can simply be given a set of annotations and executed.
+    A signal is emitted whenever manual interaction is needed, and once the user returns with a response the
+      algorithm continues.
+    The only time a user interacts with the algorithm after it begins is to label an edge as positive, negative,
+      or incomparable.
+    All other decisions are made internally.
     The algorithm stops once there is a high probability that the vast majority of identifications have been made
       correctly and consistently.
+    This means that the graph algorithm requires little expertise to use and can be thought of as an
+      ``identification wizard'' that simply guides the user through a set of simple questions.
+    This design allows the graph algorithm to be run on a web server, where requests for manual interactions can
+      be sent to remote users and quickly done in a web browser.
 
     %\section{Discussion of the ranking and verification algorithm}
     %pass
-    %\section{Contributions}\label{sec:contributions}
+    \section{Contributions}\label{sec:contributions}
 
     A summary of the contributions made in this \thesis{} are as follows:
 
     \begin{enumln}
     \item {The ranking algorithm}:
         \begin{enumln}
-        \item We have adapted LNBNN~\cite{mccann_local_2012} to the problem of individual animal identification.
-        We have performed experiments that demonstrate the effect of the $\K$ parameter at multiple database
+        \item
+        We have adapted LNBNN~\cite{mccann_local_2012} to the problem of individual animal identification.
+        We have performed experiments that demonstrate the effect of several parameters at multiple database
           sizes.
 
-        \item We have accounted for the influence of background features using a learned a foregroundness measure
-          to weight the LNBNN scores of feature correspondences.
-        We have empirically shown the effectiveness of this procedure.
-
-        \item We have introduced a \name{} scoring mechanism to take advantage of information in multiple
-          database exemplars.
-        Our experiments have demonstrated the significance of multiple exemplars for individual identification.
-
-        \item We have evaluated the effect of various levels of feature invariance in our experiments.
+        \item
+        We have evaluated the effect of various levels of feature invariance in our experiments.
         We have introduced a heuristic that augments the orientation of query keypoints to account for pose
           variations.
+
+        \item
+        We have accounted for the influence of background features using a learned a foregroundness measure to
+          weight the LNBNN scores of feature correspondences.
+        We have empirically shown the effectiveness of this procedure.
+
+        \item
+        We have developed a \name{} scoring mechanism to take advantage of information in database names with
+          multiple exemplars.
+        Our experiments have demonstrated that having multiple exemplars per name significantly improves the
+          accuracy of identification.
         \end{enumln}
 
     \item {The pairwise classification algorithm}:
@@ -109,46 +121,33 @@
         \item We have developed a novel feature vector that represents the matching information between two
           annotations.
 
-        \item We have used these feature vectors to learn a random forest that can predict the probability that
-          two annotations are either positive, negative, or incomparable.
+        \item We have used this feature vector to learn a random forest that can predict the probability that two
+          annotations are either positive, negative, or incomparable.
 
         \item We have compared the learned probabilities to LNBNN scores and demonstrated that the separation of
           positive cases is significantly improved.
         \end{enumln}
 
-            %We have proposed an algorithm to learn a pairwise match probability --- the probability that two
-            %annotations match, do not match, or are not comparable. Learning if two annotations are not
-            %comparable provides a measure of confidence about the probability that the annotations are either
-            %the same or different individuals. To learn this match probability we have proposed to use several
-            %local and global measures of similarity.
-            %Learning this probability will enable our algorithm for
-            %  choosing exemplars and our new graph-based identification
-            %  algorithm.
-
-            %This enables identification in databases of all sizes
-            %  (\occurrences{}), the identification of potential merge and
-            %  split cases, and an optimized choice of exemplars.
-            %Work in discussion of match, no match, and not comparable.
-
     \item {The graph identification algorithm}:
         \begin{enumln}
-        \item We have introduced the graph identification algorithm for semi-automatic animal identification.
+        %\item We have introduced the graph identification algorithm for semi-automatic animal identification.
 
-        \item We have demonstrated that the algorithm can use the ranking and verification algorithms to improve
-          the accuracy and efficiency of identification.
+        \item 
+            We have demonstrated that combining the graph algorithm with existing ranking and verification
+              algorithms improves the accuracy and efficiency of semi-automatic animal identification.
+            We have designed the framework to be agnostic to the specific ranking and verification algorithms so
+              future DCNN based algorithms can be swapped in.
+            %The algorithms discussed in this \thesis{} could be replaced with algorithms based on DCNNs.
+            %The framework can even be used without any computer vision algorithms in order to facilitate a more
+            %  efficient brute force search for small databases.
 
-        \item The framework is agnostic to the specific ranking and verification algorithms.
-        The algorithms discussed in this paper could be replaced with algorithms based on DCNNs.
-        The framework can even be used without any computer vision algorithms in order to facilitate a more
-          efficient brute force search for small databases.
-
-        \item We have developed a probabilistic termination criteria that determines when to stop identification.
-
-        \item We have developed a measure of redundancy based on edge-connectivity used to increase accuracy and
+        \item We have proposed a measure of redundancy based on edge-connectivity used to increase accuracy and
           reduce the number of reviews needed.
 
         \item We have developed an algorithm for fixing errors whenever inconsistencies in the graph are been
           discovered.
+
+        \item We have developed a probabilistic termination criteria that determines when to stop identification.
         \end{enumln}
     \end{enumln}
 
@@ -157,24 +156,25 @@
     We have shown that our ranking and match-state classification algorithms are both accurate and work well for
       identifying animals.
     However, the clearest direction for future research is to replace these algorithms with ones based on DCNNs.
-    We believe that the approach in is a good starting point for~\cite{arandjelovic_netvlad_2016} replacing the
-      ranking algorithm.
+    To replace the ranking algorithm, we believe that the approach in~\cite{arandjelovic_netvlad_2016} is a good
+      starting point.
     %This algorithm is similar to the VLAD approach we tested here, the deep features and vocabularies .
-    We had briefly investigated the techniques in~\cite{taigman_deepface_2014} to the pairwise classification
-      problem, but because we did not have an alignment procedure or as much training data, the results were poor.
+    We had briefly investigated replacing the pairwise classifier using the techniques
+      in~\cite{taigman_deepface_2014}, but the results were poor because we did not have as much training data or
+      an alignment procedure.
     Research into the geometric matching technique described in~\cite{rocco_convolutional_2017} may help address
       both of these these issues.
 
     There are also improvements that can be made to the graph algorithm.
     First it would be useful to parallelize the algorithm so reviews could be distributed across multiple users.
     This can be obtained by popping multiple edges from the queue at a time, but this could add extraneous
-      redundancy if the subsequent edges would have been filtered.
+      redundancy if one edge in the popped set would have been filtered by another.
     Second, the current prioritization of edges is based completely on the output of the pairwise classifier.
-    In the best case, the ordering would first construct each PCC as a chain and then only $1$ redundant review
+    In the best case, the ordering would first construct each PCC as a chain, and then only $1$ redundant review
       would be needed.
     In the worst case, this order would connect one annotation of an individual to all others causing a star
       shaped PCC.
-    Then to make the PCC $2$-positive-redundant, it would take $n - 2$ reviews where $n$ is the number of
+    Then to make the PCC $2$-positive-redundant, it would take $n - 2$ reviews, where $n$ is the number of
       annotations in the PCC.
     Determining the best order in which to review edges depending on the specified level of redundancy is an
       interesting question, which is perhaps made more challenging if considered in a distributed setting.

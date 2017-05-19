@@ -487,9 +487,11 @@ If this was not the case, then we would include an additional partition for inco
           separate positive from negative and incomparable cases.
         When compared to the LNBNN scores from~\cref{chap:ranking}, not only do these probabilities have more
           predictive power, they are interpretable, always ranging between $0$ and $1$.
-        In practice, we have found these probabilities to be well calibrated, meaning that a validation dataset
-          can be used to select a threshold --- to automatically classify pairs --- where the false positive rate
-          is sufficiently low.
+        In practice, we have found that a validation dataset can be used to select a threshold --- to
+          automatically classify pairs --- where the false positive rate is sufficiently low.
+        %In practice, we have found these probabilities to be well calibrated, meaning that a validation dataset
+        %  can be used to select a threshold --- to automatically classify pairs --- where the false positive rate
+        %  is sufficiently low.
         Because the positive cases are well separated from the negative and incomparable cases, a significant
           number of automatic reviews is possible.
         Furthermore, because the classifier was trained using hard, moderate, and easy training examples, it is
@@ -516,41 +518,18 @@ If this was not the case, then we would include an additional partition for inco
       --- a pair of annotations might confuse the primary match-state classifier.
     This was done by constructing a feature vector that contains matching information about a pair of
       annotations.
-    We have shown how to construct a representative training set by selecting hard, moderate, and easy training
-      examples.
+    We have constructed a representative training set by selecting hard, moderate, and easy training examples.
     Our classifiers were learned using the random forest learning algorithm.
     Our experiments demonstrate that the match-state classifier is able to strongly separate positive and
       negative cases.
     The performance of the photobomb classifier was weaker, but could likely be improved with more training data.
 
-    Based on our experiments, it is clear that the ranking algorithm is improved by a verifier, but by themselves
-      ranking verification is not enough to robustly address animal identification.
+    Based on our experiments, it is clear that the ranking algorithm is improved by an automatic verifier, but by
+      themselves ranking and verification are not enough to robustly address animal identification.
     There is no mechanism for error recovery, nor is there a mechanism for determining when identification is
       complete.
-    This means the automatic review threshold must still be set quite high, and the amount of time a manual
-      review spends checking results under this threshold can be quite large.
+    This means the automatic review threshold must conservatively resulting in more work for a manual reviewer.
     These issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification
       process.
     This framework will detect when errors have occurred, recover from the errors, and stop the identification
       process in a timely manner.
-
-
-    %\begin{itemln}
-
-    %\item The probabilities from the match-state classifier can be used to re-rank results of the ranking
-    %  algorithm.
-    %Because the classifier was trained using difficult training examples, it is able to correctly re-rank the
-    %  case where the correct match was ranked highly, but not in rank $1$.
-
-    %\item The probabilities can be used to make automatic decisions about the highest confidence results.
-    %This is possible because the output from the pairwise algorithm is interpretable, ranging between $0$ and
-    %  $1$.
-    %We have found that these probabilities are well calibrated.
-    %A validation dataset can be used to select a threshold where the false positive rate is sufficiently low
-    %  (even $0$).
-    %Because the positive cases are well separated from the negative and incomparable cases, a significant number
-    %  of automatic reviews is possible.
-
-    %\item Because the classifier outputs probabilities about pairs independent of their rank, we can address the
-    %  case where a correct positive match does not exist, and automatically reject negative results at rank $1$.
-    %\end{itemln}
