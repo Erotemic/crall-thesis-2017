@@ -43,7 +43,7 @@
     annotations. In each annotation a set of patch-based features is detected at keypoint locations. Then the
     visual appearance of each patch is described using SIFT~\cite{lowe_distinctive_2004}. A nearest neighbor
     algorithm establishes a set of feature correspondences between query and annotations in database. A scoring
-    mechanism based on Local \Naive{} Bayes Nearest Neighbor (LNBNN)~\cite{mccann_local_2012} produces a score for
+    mechanism based on local \naive{} Bayes nearest neighbor (LNBNN)~\cite{mccann_local_2012} produces a score for
     each feature correspondence. These scores are then aggregated into a single score for each \name{} in the
     database, producing a ranked list of \names{}. Identification is performed by applying a classifier (decision
     algorithm) to the scores in this ranked list. If the top ranked \name{} has a ``high'' score it is likely to be

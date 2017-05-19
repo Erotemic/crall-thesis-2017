@@ -19,7 +19,7 @@
     or face verification --- search for matches of the same exact object. On the other end of the spectrum category
     recognition algorithms --- like car, bird, dog, and plane detectors --- look for the same type of objects.
     Other problems sit --- like fine-grained recognition where the goal might be to recognize specific subspecies
-    of dog (\eg{} German Shepard, Golden Retriever, Boxer, Beagle, \ldots{}) --- somewhere in the middle. Animal
+    of dog (\eg{} German shepherd, golden retriever, boxer, beagle, \ldots{}) --- somewhere in the middle. Animal
     identification is closest to the instance recognition side of the spectrum, but the proposed solution draws
     upon techniques from other forms of recognition.
 
@@ -190,7 +190,7 @@
             non-robust features both saves space and improves matching accuracy.
 
     \subsection{Min hash}
-        Min-hashing is the analog of locality sensitive hashing for sets.
+        Min-hashing is the analog of locality-sensitive hashing for sets.
         Min-hashing has been applied as an instance recognition technique for near-duplicate image
           detection~\cite{chum_near_2008}, logo recognition~\cite{romberg_bundle_2013}, large scale image
           search~\cite{wang_semi_supervised_2012}, scene recognition~\cite{zhang_image_2011}, and unsupervised
@@ -251,10 +251,10 @@
         words with low idf weights. Furthermore, Fisher vector representations are well suited for compression,
         which allows scaling to large image collections.
 
-    \subsection{VLAD --- Vector of Locally Aggregated Descriptors} 
+    \subsection{VLAD --- vector of locally aggregated descriptors} 
 
-        A Vector of Locally Aggregated Descriptors (VLAD) is similar to a Fisher vector descriptor --- in fact it
-        is a discrete analog of a Fisher vector~\cite{jegou_aggregating_2010, jegou_aggregating_2012} Like Fisher
+        A vector of locally aggregated descriptors (VLAD) is similar to a Fisher vector descriptor --- in fact it
+        is a discrete analog of a Fisher vector~\cite{jegou_aggregating_2010, jegou_aggregating_2012}. Like Fisher
         vectors, VLAD has been used in the context of both instance and category
         recognition~\cite{jegou_negative_2012, delhumeau_revisiting_2013, arandjelovic_all_2013}. VLAD still
         computes a visual vocabulary and assigns each feature to its nearest word, but instead of only recording
@@ -282,8 +282,8 @@
         convolutional approach shows large improvements (a $19\percent$ improvement on Oxford 5k) over previous
         state-of-the art image retrieval techniques.
 
-    \subsection{SMK --- the Selective Match Kernel}\label{sec:smk}
-        The Selective Match Kernel (SMK) encapsulates the vocabulary based techniques such as bag-of-words, Hamming
+    \subsection{SMK --- the selective match kernel}\label{sec:smk}
+        The selective match kernel (SMK) encapsulates the vocabulary based techniques such as bag-of-words, Hamming
         embedding, VLAD, and Fisher vectors into a unified framework~\cite{bo_efficient_2009,
         tolias_aggregate_2013, tolias_image_2015, jegou_triangulation_2014}. SMK provides a framework that
         ``bridges the gap'' between matching-based (here a match refers to a feature correspondence) approaches and
@@ -335,7 +335,7 @@
         unseen test image as an individual from the database of known faces. Many techniques are used in the
         literature to retrieve or classify a face. Examples of these techniques are: neural
         networks~\cite{turk_eigenfaces_1991, taigman_deepface_2014}, sparse coding~\cite{wright_robust_2009,
-        jiang_label_2013}, principal component analysis (PCA)~\cite{craw_face_1992}, Fisher linear Discriminant
+        jiang_label_2013}, principal component analysis (PCA)~\cite{craw_face_1992}, Fisher linear discriminant
         (FLD)~\cite{liu_robust_2000}, linear discriminant analysis (LDA)~\cite{lu_face_2003}, and support vector
         machines (SVMs)~\cite{phillips_support_1998, levy_svm_minus_2013}.
 

@@ -1,19 +1,20 @@
 \section{Category recognition}\label{sec:cr}  
 
-    Different types of image recognition lie at different points on a spectrum of specificity. If instance
-    recognition is at one end of the spectrum, then category recognition is at the other. The goal of a
-    \glossterm{category recognition} algorithm is to assign a categorical class label to a query
-    image~\cite{everingham_pascal_2010, everingham_pascal_2015, russakovsky_imagenet_2014, deng_imagenet_2009,
-    fei_fei_one_shot_2006, griffin_caltech_256_2007}. The categories often have visual appearances with a high
-    degree of intra-class variance. \Eg{}, a recliner and a bench both belong to the chair category. Image
-    representations and similarity measures are constructed to account for this. Despite this, techniques in
-    category recognition have many similarities to instance recognition techniques. Until the neural network
-    revolution~\cite{krizhevsky_imagenet_2012}, most category recognition techniques have been based on vocabulary
-    methods~\cite{csurka_visual_2004, yang_linear_2009, sanchez_compressed_2013, russakovsky_imagenet_2014,
-    krizhevsky_imagenet_2012} similar to those discussed in~\cref{subsec:bow}. This section first provides a brief
-    overview of this literature. Then, we discuss Naive Bayes classification
-    techniques~\cite{boiman_defense_2008,mccann_local_2012} that play a large role in our baseline animal
-    identification algorithms.
+    Different types of image recognition lie at different points on a spectrum of specificity.
+    If instance recognition is at one end of the spectrum, then category recognition is at the other.
+    The goal of a \glossterm{category recognition} algorithm is to assign a categorical class label to a query
+      image~\cite{everingham_pascal_2010, everingham_pascal_2015, russakovsky_imagenet_2014, deng_imagenet_2009,
+      fei_fei_one_shot_2006, griffin_caltech_256_2007}.
+    The categories often have visual appearances with a high degree of intra-class variance.
+    \Eg{}, a recliner and a bench both belong to the chair category.
+    Image representations and similarity measures are constructed to account for this.
+    Despite this, techniques in category recognition have many similarities to instance recognition techniques.
+    Until the neural network revolution~\cite{krizhevsky_imagenet_2012}, most category recognition techniques
+      have been based on vocabulary methods~\cite{csurka_visual_2004, yang_linear_2009, sanchez_compressed_2013,
+      russakovsky_imagenet_2014, krizhevsky_imagenet_2012} similar to those discussed in~\cref{subsec:bow}.
+    This section first provides a brief overview of this literature.
+    Then, we discuss naive Bayes classification techniques~\cite{boiman_defense_2008,mccann_local_2012} that play
+      a large role in our baseline animal identification algorithms.
 
     \subsection{Vocabulary based methods for category recognition}
         After vocabulary based techniques demonstrated success in instance recognition, these techniques were
@@ -66,7 +67,7 @@
 
     \subsection{\Naive{} Bayes classification}\label{sec:nbnn}  
 
-        The \Naive{} Bayes nearest neighbor (NBNN) classifier is a simple non-parametric algorithm for category
+        The \naive{} Bayes nearest neighbor (NBNN) classifier is a simple non-parametric algorithm for category
         recognition that does not quantize descriptor vectors~\cite{boiman_defense_2008}. Boiman responds to the
         dominance of complex non-linear category recognition algorithms in the field~\cite{varma_learning_2007,
         marszalek_learning_2007} by showing that simple techniques can compete with complex methods for category
@@ -92,9 +93,9 @@
         good approximation to the minimum image-to-class Kullback-Leibler divergence~\cite{boiman_defense_2008} ---
         a measure of how much information is lost when the query image is used to model the entire class.
 
-    \subsection{Local \Naive{} Bayes Nearest Neighbor}\label{sec:lnbnn}  
+    \subsection{Local \naive{} Bayes nearest neighbor}\label{sec:lnbnn}  
 
-        Local \Naive{} Bayes nearest neighbor (LNBNN) is an improved version of the NBNN algorithm in both accuracy
+        Local \naive{} Bayes nearest neighbor (LNBNN) is an improved version of the NBNN algorithm in both accuracy
         and speed~\cite{mccann_local_2012}. In the original NBNN formulation a search is executed find each query
         descriptor's nearest neighbor in the database for each class separately. In contrast, the LNBNN
         modification searches all database descriptors simultaneously and ignores classes that do not return

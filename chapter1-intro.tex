@@ -41,11 +41,11 @@
     individuals in the images remains. Manual methods are infeasible due to the rapid rate at which images can be
     collected. Therefore, we must turn towards computer vision based methods.
 
-    This \thesis{} develops the foundation of the image analysis component of \IBEIS{} --- the Image Based
-    Ecological Information System. The purpose of this system is to gain ecological insight from images using
-    computer vision. We focus on estimating the size of a population of animals as just one example of ecological
-    insight that might be gained from images. Thus we come to the core problem addressed in this \thesis{}: image
-    based identification of individual animals.
+    This \thesis{} develops the foundation of the image analysis component the ``Image Based Ecological Information
+    System'' (IBEIS). The purpose of this system is to gain ecological insight from images using computer vision.
+    We focus on estimating the size of a population of animals as just one example of ecological insight that might
+    be gained from images. Thus we come to the core problem addressed in this \thesis{}: image based identification
+    of individual animals.
 
 \section{Challenges of animal identification}\label{sec:challenges}
 
@@ -160,22 +160,27 @@
 \FloatBarrier{}
 \section{The Great Zebra Count}\label{sec:introgzc}
 
-    To further illustrate the problems addressed in this \thesis{}, we consider the Great Zebra Count (\GZC{}),
-    held at Nairobi National Park on March 1\st{} and 2\nd{}, 2015~\cite{rubenstein_great_2015}. This event was
+    To further illustrate the problems addressed in this \thesis{}, we consider the ``Great Zebra Count'' (\GZC{}),
+    held at Nairobi National Park on March 1\st{} and 2\nd{}, $2015$~\cite{rubenstein_great_2015}. This event was
     designed with two purposes in mind: (1) to involve citizens in the scientific data collection effort, thereby
     increasing their interest in conservation, and (2) to determine the number of plains zebras and Masai giraffes
     in the park.
 
     \subsection{Data collection}
-        Volunteer participants --- each with his or her own camera --- arrived by car at the park. Some cars had more
-        than one photographer. Each car was assigned a route to drive through the park. We attached a GPS dongle to each
-        car to record time and location throughout the drive. Correlating this with the time stamp on each image (after
-        adding a correction offset for each camera) allowed us to determine the geolocation of each image. Each
-        photographer was given instructions guiding them toward taking quality images of the left sides of the animals
-        they saw. When the cars returned --- some after just an hour or two, others after the whole day --- the images
-        were copied from the cameras, a small sample of each photographer's images was immediately processed to
-        illustrate what we would do with the data, and the entire set of images was stored for further processing. The
-        result of this crowd-sourced collection event was a 48GB dataset consisting of $9406$ images.
+        Volunteer participants --- each with his or her own camera --- arrived by car at the park.
+        Some cars had more than one photographer.
+        Each car was assigned a route to drive through the park.
+        We attached a GPS dongle to each car to record time and location throughout the drive.
+        Correlating this with the time stamp on each image (after adding a correction offset for each camera)
+          allowed us to determine the geolocation of each image.
+        Each photographer was given instructions guiding them toward taking quality images of the left sides of
+          the animals they saw.
+        When the cars returned --- some after just an hour or two, others after the whole day --- the images were
+          copied from the cameras, a small sample of each photographer's images was immediately processed to
+          illustrate what we would do with the data, and the entire set of images was stored for further
+          processing.
+        The result of this crowd-sourced collection event was a $\SI{48}{\giga\byte}$ dataset consisting of
+          $9406$ images.
 
     \subsection{Data processing}\label{subsec:introdataprocess}
 
@@ -219,7 +224,7 @@
               uncommon for each individual to photographed multiple times and from multiple viewpoints.
             This redundancy in images will be exploited in \Cref{chap:graphid}.
 
-        \subsubsection{Animal Detection}
+        \subsubsection{Animal detection}
             Before matching begins each image is cropped to focus on a particular animal and remove background
             distractors. A detection algorithm localizes animals within the images. Each verified detection
             generates an \glossterm{\annot{}} --- a bounding box around a single animal in an image. An example
