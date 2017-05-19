@@ -9,33 +9,16 @@
 \chapter{Identification using a ranking algorithm}\label{chap:ranking}
 
     This chapter addresses the problem of computer-assisted animal identification, where an algorithm suggests
-    likely possibilities, but a human reviewer always makes the final decision. Given, a single annotation
-    depicting an unknown animal and a database of previously identified annotations, the task is to determine a
-    ranking of database individuals most likely to match the unknown animal. A manual reviewer determines which ---
-    if any --- of the top ranked results are correct.
+      likely possibilities, but a human reviewer always makes the final decision.
+    Given, a single annotation depicting an unknown animal and a database of previously identified annotations,
+      the task is to determine a ranking of database individuals most likely to match the unknown animal.
+    A human reviewer manually determines which --- if any --- of the top ranked results are correct.
 
     An \glossterm{annotation} is a rectangular region  of interest around a specific animal within an image. Each
     known annotation is associated with a \name{} label denoting its individual identity. A \glossterm{\name{}}
     refers to a group of annotations known to be the same individual. The identification process assigns a \name{}
     label to an unknown annotation either as (1) the \name{} label of a matched database annotation or (2) a new
     \name{} label if no matches are found.
-
-    %A static context is chosen for this chapter in order to introduce
-    %  and determine the effectiveness of the algorithm that identifies a
-    %  query by ranking the \names{} in the database.
-    %In the static context, only a single query annotation is used to
-    %  perform identification, all \name{} labels in the database are
-    %  assumed to be correct, and annotations are not added to or removed
-    %  from the database.
-    %This is done to determine what properties of query annotations,
-    %  configurations of the database, and parameters of the
-    %  identification algorithm have the highest impact on identification
-    %  accuracy.
-    %In~\cref{chap:application}, the identification algorithm is
-    %  extended for use in a dynamic context.
-    %In the dynamic context, annotations are added and removed from the
-    %  database, multiple annotations are used to perform identification,
-    %  and the database is assumed to contain errors.
 
     The ranking algorithm is based on the feature correspondences between a query annotation and a set of database
     annotations. In each annotation a set of patch-based features is detected at keypoint locations. Then the
@@ -52,7 +35,7 @@
 
     The outline of this chapter is as follows: \Cref{sec:annotrepr} discusses the initial processing of an
     annotation which involves image normalization, feature extraction, and feature weighting.
-    \Cref{sec:baselineranking,sec:sver} describes the baseline ranking and scoring algorithm. The first of these
+    \Cref{sec:baselineranking,sec:sver} describe the baseline ranking and scoring algorithm. The first of these
     sections focuses on establishing feature correspondences, and the second focuses on verifying the
     correspondences. \Cref{sec:exempselect} describes the process for selecting \exemplars{}.
     \Cref{sec:rankexpt} provides an experimental evaluation of the ranking algorithm.
@@ -122,10 +105,10 @@
         We introduce a simple orientation heuristic to help match keypoints from the same animal in the presence of
         small pose variations. Instead of extracting a single keypoint in the direction of gravity or multiple
         keypoints in the directions of the dominant gradient orientation we extract 3 descriptors at every
-        keypoint: one in the direction of gravity, and the other two offset at $\pm15\degrees$. This provides a
-        middle ground between rotation invariance and the gravity vector. Using this heuristic, it will be more
-        likely to extract similar descriptors from two annotations of the same animal seen from slightly different
-        poses.
+        keypoint: one in the direction of gravity, and the other two offset at $\pm15\degrees$ from the gravity
+        direction. This provides a middle ground between rotation invariance and strict use of the gravity vector.
+        Using this heuristic, it will be more likely to extract similar descriptors from two annotations of the
+        same animal seen from slightly different poses.
 
     \subsection{Feature weighting}
      
@@ -147,11 +130,11 @@
         region around the keypoint in the intensity image is warped into a normalized reference frame. Each pixel
         in the normalized intensity patch is weighted using a Gaussian falloff based on the pixel's distance from
         the center of the patch. The sum of these weighted intensities is the feature's foregroundness weight. The
-        steps of feature weight computation are illustrated in~\cref{fig:genfeatweight}.
+        steps of feature weight computation are illustrated in~\cref{fig:fgweight}.
 
         \SceneryMatch{}
 
-        \genfeatweight{}
+        \fgweight{}
 
     \subsection{Keypoint structure overview}\label{sec:kpstructure}
         %Before we discuss the computation of the we review the structure of
@@ -293,13 +276,13 @@
             The selection process described in the original formulation of LNBNN is to simply choose the $\K +
             1$\th{} nearest neighbor, which amounts to setting $\Knorm=1$. The authors of LNBNN find that there is
             no benefit to using a higher value of $\Knorm$~\cite{mccann_local_2012}. However, this does not account
-            for the case when the $\K + 1$\th{} nearest neighbor belongs to the same class as one of the nearest
-            $\K$ neighbors. Therefore, we employ a slightly different selection process. To motivate our selection
-            process, consider the case when there are more than $\K$ images of the same individual from the same
-            viewpoint in the database and a distinctive feature from a new annotation of that individual is being
-            scored. In this case $\K$ correspondences will be correctly established a distinctive the query feature
-            and $\K$ database features. However, if the normalizer is chosen as the $\K + 1$ neighbor, then these
-            correspondences will be inappropriately downweighted.
+            for the case when some or all of the $\K + 1$\th{} nearest neighbor belongs to the same class as one of
+            the nearest $\K$ neighbors. Therefore, we employ a slightly different selection process. To motivate
+            our selection process, consider the case when there are more than $\K$ images of the same individual
+            from the same viewpoint in the database and a distinctive feature from a new annotation of that
+            individual is being scored. In this case $\K$ correspondences will be correctly established a
+            distinctive the query feature and $\K$ database features. However, if the normalizer is chosen as the
+            $\K + 1$ neighbor, then these correspondences will be inappropriately downweighted.
               
             % probably need to reword.
             Consider the example in~\cref{fig:knorm}. In this case there are two examples
@@ -317,10 +300,7 @@
             descriptor with the smallest distance to the query descriptor that is not from the same \name{} as any
             of the chosen correspondences. Let $\nid_j$ be the \name{} associated with the annotation containing
             descriptor $\desc_j$. Let %
-            %$\multiset{N}_i \eqv \curly{\nid_j \quad \forall j \in \NN(\desc_i, \K + \Knorm)}$
-            $\multiset{N}_i \eqv \curly{\nid_j \where j \in \NN(\AnyDB, \desc_i, \K + \Knorm)}$
-              %\NN(\desc_i, \K + \Knorm)}$
-              %
+            $\multiset{N}_i \eqv \curly{\nid_j \where j \in \NN(\AnyDB, \desc_i, \K)}$
             be the set of \names{} matched by the $i$\th{} query feature. The descriptor that normalizes all
             matches of query descriptor $\desc_i$ is:
               \begin{equation}
@@ -401,17 +381,14 @@
         All scoring mechanisms presented in this subsection are based on aggregating scores from features
         correspondences. The set of all feature correspondences for a query annotation $\X$ is expressed as:
         \begin{equation}
-            %\Matches \eqv \{(i, j) \where \desc_i \in \X \AND j \in \NN(\desc_i, \K)\}
             \Matches \eqv \{(i, j) \where \desc_i \in \X \AND j \in \NN(\AnyDB, \desc_i, \K)\}
         \end{equation}
 
-        % FIXME: SAME AS IMAGE-TO-IMAGE
+        % SAME AS IMAGE-TO-IMAGE
         \paragraph{Annotation scoring}
             An \annotscore{} is a measure of similarity between two annotations.
             An \annotscore{} between a query annotation and a database annotation is defined as the sum of the
               feature correspondence scores matching to the features from that database annotation.
-            %However, the \annotscore{} will allow us to compare our
-            %  techniques against other instance recognition techniques.
             Let $\daid_j$ be the database annotation containing feature $j$.
             Let
             %
@@ -423,7 +400,7 @@
                 \annotscoreop(\qaid, \daid) \eqv \sum_{(i, j) \in \Matches_{\daid}} \fs_{i, j}
             \end{equation}
 
-        % FIXME: SAME AS IMAGE-TO-CLASS
+        % SAME AS IMAGE-TO-CLASS
         \paragraph{Name scoring (1) --- \csumprefix{}} %
 
             The \cscoring{} mechanism aggregates \annotscores{} into \namescores{} by taking as the score highest
@@ -437,7 +414,6 @@
                 \paren{
                     \annotscoreop\paren{\qaid, \daid}
                 }
-                %\opname{annot\_score}(\qaid, \daid) \eqv \sum_{m_a \in \Matches_{\daid}} \fs_{i, j}
             \end{equation}
 
         \paragraph{Name scoring (2) --- \nsumprefix{}} %
@@ -498,6 +474,7 @@
             \namematch{}
 
 
+\FloatBarrier{}
 \section{Spatial verification}\label{sec:sver}
 
     The basic matching algorithm treats each annotation as an orderless set of feature descriptors (with a small
@@ -506,8 +483,8 @@
     inconsistent feature correspondences. Determining which features are inconsistent is done by first estimating
     an affine transform between the two annotations. Then a projective transform is estimated using the inliers to
     the affine transform. Finally any correspondences that do not agree with the projective transform
-    transformation are removed~\cite{fischler_random_1981, philbin_object_2007}. We have reviewed related work in
-    spatial verification in~\cref{subsec:sverreview}.
+    transformation are removed~\cite{fischler_random_1981, philbin_object_2007}. This process is illustrated in
+    \cref{fig:sver}. We have reviewed related work in spatial verification in~\cref{subsec:sverreview}.
 
     %In our problem, the animals are seen in a wide variety of poses,
     %  and projective transforms may not always be sufficient to capture
@@ -516,6 +493,8 @@
     %  background features will be spatially verified.
     %For now, we proceed with standard techniques for spatial
     %  verification and evaluate if more sophisticated methods are needed.
+
+     \sver{}
 
     \subsection{Shortlist selection}
         Standard methods for spatial verification are defined on the feature correspondences between two
@@ -631,20 +610,17 @@
             %\end{equation}
             \begin{equation}\label{eqn:inlierchecks}
                 \begin{gathered}
-                %\begin{aligned}
                     \isinlierop((\idxI, \idxII), \AffMat)  \eqv  
                         \Delta \pt_{\idxI, \idxII} < \xythresh \AND 
                         \Delta \scale_{\idxI, \idxII} < \scalethresh \AND 
                         \Delta \ori_{\idxI, \idxII} < \orithresh
-                %\end{aligned}
                 \end{gathered}
             \end{equation}
         The set of inlier matches for a hypothesis transformation $\AffMat$ can then be written as:
         \begin{equation}\label{eqn:affinliers}
             \Matches_{\AffMat} \eqv \curly{m \in \Matches_{\annotII} \where \isinlierop(m, \AffMat)}
         \end{equation}
-        The best affine hypothesis transformation, $\HypothAffMat$, maximizes the weighted sum of inlier scores. %
-        FIXME
+        The best affine hypothesis transformation, $\HypothAffMat$, maximizes the weighted sum of inlier scores. 
         \begin{equation}
             \HypothAffMat \eqv \argmax{\AffMat \in \HypothSet} 
                 \sum_{(\idxI, \idxII) \in \Matches_{\AffMat}} \fs_{\idxI, \idxII}
@@ -657,7 +633,7 @@
         in database annotation $\annotII$ are removed. The refinement step estimates a projective transform from
         $\annotI$ to  $\annotII$. To avoid numerical errors the $xy$-locations of the correspondence are normalized
         to have a mean of $0$ and a standard deviation of $1$ prior to estimation. A more comprehensive explanation
-        of estimating projective transformations using point correspondences can be found
+        of estimating projective transformations using point correspondences an be found
         in~\cite[311--320]{szeliski_computer_2010}.
 
         Unlike in the affine hypothesis estimation where many transformations are generated, only one homography
@@ -737,10 +713,8 @@
         these inlier feature correspondences. This final per-name score is the output of the identification
         algorithm and used to form a ranked list that is presented to a user for review.
 
-     \sver{}
-     \FloatBarrier
 
-
+\FloatBarrier{}
 \section{Exemplar selection}\label{sec:exempselect}
     To scale one-vs-many matching to larger databases and to allow the LNBNN mechanism to find appropriate
     normalizers we restrict the number of examples of each individual in the database to a set of exemplars.
@@ -779,7 +753,7 @@
     name. The accuracy of identification is measured using the cumulative match
     characteristic~\cite{decann_relating_2013} which can be understood as the probability that a query correctly
     finds a match at a specified rank under the assumption that a correct match exists in the database. We are
-    primarily returned with only the first point in this curve --- the fraction of queries with a correct result at
+    primarily concerned with only the first point in this curve --- the fraction of queries with a correct result at
     rank $1$ --- because often a user of the system will only review the first result of a query.
 
     The outline of this section is as follows. First, \cref{sub:datasets} introduces and describes each dataset.
@@ -803,11 +777,11 @@
         all annotations with the same identity. Some of this groundtruth labeling was generated independently.
         However, large portions of the datasets were labeled with assistance from the matching algorithm. While
         this may introduce some bias in the results, there was no alternative because the amount of time needed to
-        independently label a large dataset is prohibitive.
+        independently and completely label a large dataset is prohibitive and error prone.
 
         There are two important things to note before we describe each dataset. First, in order to control for
         challenging factors in the images such as quality and viewpoint some experiments sample subsets of the
-        datasets we describe here. Second, note that there do exist labeling errors in some datasets.
+        datasets we describe here. Second, labeling errors exist in some datasets.
 
         \DatabaseInfo{}
 
@@ -856,12 +830,14 @@
             of annotations where a background animal in one annotation matches the foreground animal in the other
             --- when matching.
 
-            \item \textbf{Humpback whales}. The humpback dataset was collected by FlukeBook over nearly 15 years.
-            Images were contributed by both marine and citizen scientists. The original groundtruth was established
-            using both manual and automated methods that are disjoint from these techniques considered here,
-            however our software was used to correct mistakes. The annotations in this dataset have not been
-            manually reviewed. Some are cropped to the fluke while others encompass the entire image. Quality and
-            viewpoint labels do not exist for this dataset.
+            \item \textbf{Humpback whales}.
+            The humpback dataset was collected by FlukeBook~\cite{levenson_flukebook_2015} over nearly 15 years.
+            Images were contributed by both marine and citizen scientists.
+            The original groundtruth was established using both manual and automated methods that are disjoint
+              from these techniques considered here, however our software was used to correct mistakes.
+            The annotations in this dataset have not been manually reviewed.
+            Some are cropped to the fluke while others encompass the entire image.
+            Quality and viewpoint labels do not exist for this dataset.
         \end{itemln}
 
     \FloatBarrier{}
@@ -872,10 +848,10 @@
         gravity vector, $\K\tighteq4$ as the number of feature correspondences assigned to each query feature, and
         \nscoring{} (\nsum{}). In this test we control for several biases that may be introduced by carefully
         selecting a subset of our datasets. We only use annotations that (1) are known (\ie{} have been assigned a
-        name), (2) are comparable the species primary viewpoint (\eg{} left, front-left, and back-left for plains
-        zebras), (3) have not been assigned a quality of ``junk''. Furthermore, to account for the fact that some
-        \names{} contain more annotations than others, we constrain our data selection such that there is only one
-        correct exemplar in the database for each query annotation.
+        name), (2) are comparable to the species primary viewpoint (\eg{} left, front-left, and back-left for
+        plains zebras), (3) have not been assigned a quality of ``junk''. Furthermore, to account for the fact that
+        some \names{} contain more annotations than others, we constrain our data selection such that there is only
+        one correct exemplar in the database for each query annotation.
 
         Of these annotations, we group them into encounters. For each encounter we sample one annotation with the
         highest quality. Names with only one encounter are added to the database as distractors. For the other
@@ -886,8 +862,8 @@
 
         The results of this baseline experiment demonstrates that our algorithm is able to reliably find matching
         annotations in a database with many other images. The accuracy is over $60\percent$ for all species
-        considered. Subsequent experiments will restrict our focus to Grévy's plains zebras in order to investigate
-        detailed parameter choices of the ranking algorithm as well as alternative ranking algorithms.
+        considered. Subsequent experiments will restrict our focus to Grévy's and plains zebras in order to
+        investigate detailed parameter choices of the ranking algorithm as well as alternative ranking algorithms.
       
         \BaselineExpt{}
 
@@ -896,7 +872,7 @@
 
         Before we investigate the parameter choices of the LNBNN ranking algorithm, we briefly evaluate the
         performance of an alternative ranking algorithm, namely VLAD-flavored SMK. The SMK algorithm is a
-        vocabulary based algorithm, that is representative of more traditional approaches to instance recognition
+        vocabulary based algorithm that is representative of more traditional approaches to instance recognition
         problems. In contrast to the raw descriptors used in LNBNN, SMK assigns each descriptor to a visual word
         and builds a weighted histogram of visual words (accumulated residual vectors in the case of VLAD) to
         represent each annotation as a sparse fixed length vector. We have experimented with several configurations
@@ -914,8 +890,8 @@
 
         The results of the SMK experiment are illustrated in \cref{fig:SMKExpt}. The query and database annotations
         are the same in each experiment. Despite the bias in the SMK vocabulary, our measurements show that LNBNN
-        provides the most accurate rankings. For plains zebra's there is a difference of $8\percent$ in the number
-        of correct matches at rank $1$, and for Grévy's zebras the difference is $6\percent$.
+        provides more accurate rankings. For plains zebra's there is a difference of $8\percent$ in the number of
+        correct matches at rank $1$, and for Grévy's zebras the difference is $6\percent$.
 
         \SMKExpt{}
 
@@ -952,7 +928,7 @@
         %The rest of the pipeline configuration is the same as the baseline test.
 
         The accuracy of the foregroundness is illustrated in~\cref{fig:FGIntraExpt}. The results show that using
-        foregroundness weights improve the number of correct results at rank $1$ by a significant margin for both
+        foregroundness weights improves the number of correct results at rank $1$ by a significant margin for both
         species. In the higher ranks using using the \pvar{fg=T} line occasionally dips below the \pvar{fg=F} line
         because sometimes the foregroundness mask covers distinguishing keypoints, but this is neither significant
         nor common. Therefore we find it beneficial to always include foregroundness when a trained estimator is
@@ -1029,8 +1005,8 @@
         invariance seems to be the most important setting for matching Grévy's zebras. The distinctive details on
         Grévy's zebras are finer then plains zebras and are well captured by affine keypoints. While the QRH does
         improve accuracy for Grévy's zebras the density of the distinctive keypoints means that it is less
-        important because it is more likely that a two annotations will have at least one distinctive region
-        aligned an in common.
+        important because it is more likely two annotations will have at least one distinctive region aligned and
+        in common.
 
         \InvarExpt{}
 
@@ -1062,7 +1038,7 @@
         test does suggest that \nsum{} results in slightly more accurate ranking, but the overall difference in
         accuracy is relatively small (about $1-3\percent$). Intuitively, the \nsum{} scoring should produce better
         ranks because it can combine scores from multiple correspondences to different correct annotations. Note
-        that when $\pvar{dpername}=1$, the \csum{} and \nsum{} scores might still be different because \nsum{}
+        that when $\pvar{dpername}=1$, the \csum{} and \nsum{} scores might still be different because 
         multiple correspondences to a name which may be generated when $\K > 1$ or when \pvar{QRH=T}.
 
         Perhaps the more interesting result of this experiment is the effect of increasing the number of exemplars
@@ -1088,7 +1064,7 @@
         neighbors to be $\Knorm=1$.
 
         Two database factors that may influence the best choice of $\K$ are the number of annotations in the
-        database and the number of annotation per name in the database. If there are more correct matches for a
+        database and the number of annotations per name in the database. If there are more correct matches for a
         query annotation it would be beneficial to allow it to match more annotations. Likewise, if there are more
         overall annotation in the database, then it might be beneficial to search deeper into all of the database
         descriptors to find the correct matches. Therefore, in addition to varying $\K$ we also vary the number
@@ -1099,7 +1075,7 @@
         database. However, controlling for these factors constrains the number of annotations we can use. For
         Grévy's, we can vary the total database size between $476$ and $774$. For plains we have more confuser
         annotations allowing us to test database sizes of $578$ and $1650$. We vary the number of \exemplars{} per
-        name between $1$ and $2$
+        name between $1$ and $2$.
 
         The results of this experiment are illustrated in ~\cref{fig:KExptA,fig:KExptB}. Similarly to the previous
         experiment, the number of exemplars per name is the most significant variable impacting accuracy.
@@ -1124,7 +1100,7 @@
     \FloatBarrier{}
     \subsection{Failure cases}\label{sub:exptfail}  
         
-        We no investigate the causes of identification failure and consider example failure cases. When
+        We now investigate the causes of identification failure and consider example failure cases. When
         investigating the cause of a failure case we consider both (1) the matches between the query annotation and
         the incorrect \name{}  at rank $1$ and (2) the matches between the query annotation and the correct \name{}
         that appears further down the ranked list. We identify the main 3 failure cases as: (1) unaligned
@@ -1248,7 +1224,7 @@
 
     In this chapter we have addressed the problem of animal identification using a computer-assisted algorithm
     based on LNBNN that ranks a labeled database of \names{} by their similarity to a single query annotation. This
-    algorithm beings by extracting local patch-based features from cropped and normalized chips. Features from
+    algorithm begins by extracting local patch-based features from cropped and normalized chips. Features from
     database annotations are indexed for fast nearest neighbor search using a kd-tree. A mechanism based on LNBNN
     is used to compute a matching score for each database annotation. A shortlist of top scoring results have their
     feature correspondences spatially verified and then are re-scored. We have shown how this algorithm can be

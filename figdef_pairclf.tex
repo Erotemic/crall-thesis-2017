@@ -99,52 +99,32 @@ Positive match state ROC.
 \newcommand{\ConfusionMatch}{
 \begin{table}
     \centering
-
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}
-        \caption{Plains zebras match state confusion}
-    \end{subtable} %
-
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}
-        \caption{Grévy zebras match state confusion}
-    \end{subtable} %
-\caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
-% ---
-Multiclass match state confusion for plains and Grévy's zebras.
-The rows are the real (groundtruth) state, and the columns are the predicted states.
-The final column indicates the number of examples for each class.
-% ---
-}
-\label{tbl:ConfusionMatch}
+    \caption[\caplbl{ConfusionMatch}Match state confusion]{\caplbl{ConfusionMatch}
+    % ---
+    Multiclass match state confusion for plains and Grévy's zebras.
+    The rows are the real (groundtruth) state, and the columns are the predicted states.
+    The final column indicates the number of examples for each class.
+    % ---
+    }
+    \label{tbl:ConfusionMatch}
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}\caption{Plains zebras match state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}\caption{Grévy zebras match state confusion}\end{subtable} %
 \end{table}
 }
 
 
 \newcommand{\EvalMetricsMatch}{
 \begin{table}
+    \caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
+    % ---
+    Multiclass match state evaluation metrics for plains and Grévy's zebras
+    computed from the confusion matrix.
+    % ---
+    }
+    \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}
-        \caption{Plains zebras match state metrics}
-    \end{subtable} %
-
-    \begin{subtable}[h]{\textwidth}
-        \centering
-        \input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}
-        \caption{Grévy zebras match state metrics}
-    \end{subtable} %
-\caption[\caplbl{EvalMetricsMatch}Match state metrics]{\caplbl{EvalMetricsMatch}
-% ---
-Multiclass match state evaluation metrics for plains and Grévy's zebras
-computed from the confusion matrix.
-% ---
-}
-
-\label{tbl:EvalMetricsMatch}
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}\caption{Plains zebras match state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}\caption{Grévy zebras match state metrics}\end{subtable} %
 \end{table}
 }
 
@@ -186,6 +166,14 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \newcommand{\ImportantMatchFeat}{
 \begin{table}
     \centering
+    \caption[\caplbl{ImportantMatchFeat}Important features for match prediction]{\caplbl{ImportantMatchFeat} 
+    % ---
+    Top $5$ most important features for predicting that matching state (positive, negative, incomparable) for a pair of
+    annotations.
+    %The sum of the importance for all $205$ feature dimensions is $1$.
+    % ---
+    }
+    \label{tbl:ImportantMatchFeat}
     \begin{subtable}[h]{0.44\textwidth}
         \centering
         \begin{tabular}{l c}
@@ -209,14 +197,6 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
         \end{tabular}
         \caption{Grévy's zebra}
     \end{subtable} %
-\caption[\caplbl{ImportantMatchFeat}Important features for match prediction]{\caplbl{ImportantMatchFeat} 
-% ---
-Top $5$ most important features for predicting that matching state (positive, negative, incomparable) for a pair of
-annotations.
-%The sum of the importance for all $205$ feature dimensions is $1$.
-% ---
-}
-\label{tbl:ImportantMatchFeat}
 \end{table}
 }
 
@@ -229,22 +209,29 @@ annotations.
 \end{comment}
 \newcommand{\ConfusionPhotobomb}{
 \begin{table}[h]
+    \caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
+    % ---
+    Photobomb state confusion for plains and Grévy's zebras. The columns indicate
+    predicted classes, and the rows indicate real (groundtruth) classes.  The final
+    column indicates the number of examples of each class.
+    % ---
+    }
+    \label{tbl:ConfusionPhotobomb}
     \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
     \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
-\caption[\caplbl{ConfusionPhotobomb}Photobomb state confusion]{\caplbl{ConfusionPhotobomb}
-% ---
-Photobomb state confusion for plains and Grévy's zebras. The columns indicate
-predicted classes, and the rows indicate real (groundtruth) classes.  The final
-column indicates the number of examples of each class.
-% ---
-}
-\label{tbl:ConfusionPhotobomb}
 \end{table}
 }
 
 
 \newcommand{\EvalMetricsPhotobomb}{
 \begin{table}
+    \caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
+    % ---
+    Photobomb state evaluation metrics for plains and Grévy's zebras computed from
+    the confusion matrix.
+    % ---
+    }
+    \label{tbl:EvalMetricsPhotobomb}
     \centering
     \begin{subtable}[h]{\textwidth}
         \centering
@@ -257,13 +244,6 @@ column indicates the number of examples of each class.
         \input{figures_pairclf/\expandafter\gzcode/eval_metrics_photobomb_state.tex}
         \caption{Grévy zebras photobomb metrics}
     \end{subtable} %
-\caption[\caplbl{EvalMetricsPhotobomb}Match state metrics]{\caplbl{EvalMetricsPhotobomb}
-% ---
-Photobomb state evaluation metrics for plains and Grévy's zebras computed from
-the confusion matrix.
-% ---
-}
-\label{tbl:EvalMetricsPhotobomb}
 \end{table}
 }
 
@@ -271,6 +251,15 @@ the confusion matrix.
 \newcommand{\ImportantPBFeat}{
     \begin{table}
         \centering
+        \caption[\caplbl{ImportantPBFeat}Important features for photobomb prediction]{\caplbl{ImportantPBFeat} 
+        % ---
+        Top $5$ most important features for predicting if a pair of annotations has a photobomb.  Notice that these
+        features are related to the spatial location of the matches and to global information like speed that might
+        preclude a match from occuring. Annotations taken at the same time and place are more likely to contain
+        photobombs.
+        % ---
+        }
+        \label{tbl:ImportantPBFeat}
         \begin{subtable}[h]{0.44\textwidth} 
             \centering
             \begin{tabular}{l c}
@@ -293,14 +282,6 @@ the confusion matrix.
             \end{tabular}
             \caption{Grévy's zebra phototomb importance}
         \end{subtable} %
-        \caption[\caplbl{ImportantPBFeat}Important features for photobomb prediction]{\caplbl{ImportantPBFeat} 
-% ---
-Top $5$ most important features for predicting if a pair of annotations has a photobomb.  Notice that these
-features are related to the spatial location of the matches and to global information like speed that might
-preclude a match from occuring. Annotations taken at the same time and place are more likely to contain photobombs.
-% ---
-        }
-        \label{tbl:ImportantPBFeat}
     \end{table}
 }
 

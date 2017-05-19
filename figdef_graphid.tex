@@ -185,8 +185,6 @@ Identification converges in $3$ iterations for plains zebras and $3$ for Grevy's
 \newcommand{\SimDetails}{
 \begin{table}[h]
     \centering
-    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
-    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{SimDetails}Simulation error details]{\caplbl{SimDetails} 
 % ---
 Detailed analysis of the errors for the simulations.
@@ -200,5 +198,7 @@ Lastly, the ``small size'' and ``large size'' columns are the average size of th
 % ---
 }
 \label{tbl:SimDetails}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
 \end{table}
 }
