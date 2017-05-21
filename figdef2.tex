@@ -16,54 +16,52 @@ http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/0172
 
 
 \begin{comment}
-python -m vtool.patch --test-draw_kp_ori_steps --dpath ~/latex/cand/ --save figures2/testfindkpdirection.jpg  --figsize=14,9 --dpi=180  --adjust=.04,.05,.1 --diskshow --fname=zebra.png --fx=121 --show --clipwhite --saveparts
+python -m vtool.patch --test-draw_kp_ori_steps \
+ --fname=zebra.png --fx=121 --stride=2 \
+ --dpath ~/latex/crall-thesis-2017/ --save figures2/testfindkpdirection.jpg \
+ --saveparts --diskshow --figsize=10,5 --dpi=300 --hspace=.4 --top=.9
+
+
+this is bugged in mpl 2.0.2, but works in 2.0.0
+
 
 python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --show 
-python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --dpath . --save KpOri.jpg  --figsize=10,5 --dpi=300  --diskshow  --top=0.8 --show
+python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --dpath . --save KpOri.jpg  --figsize=10,5 --dpi=300  --diskshow  --top=0.8 --saveparts
+python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --dpath . --save KpOri.jpg  --figsize=10,5 --dpi=300  --diskshow  --top=0.9 --hspace=.4
 --left=.04 --bottom=.05 --wspace=.2 --hspace=.3
 \end{comment}
 \newcommand{\testfindkpdirection}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionA.jpg}\caption{}\label{sub:testfindkpdirectiona}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=60pt]{figures2/testfindkpdirectionA.jpg}\caption{}\label{sub:testfindkpdirectiona}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionB.jpg}\caption{}\label{sub:testfindkpdirectionb}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionB.jpg}\caption{}\label{sub:testfindkpdirectionb}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionC.jpg}\caption{}\label{sub:testfindkpdirectionc}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionC.jpg}\caption{}\label{sub:testfindkpdirectionc}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionD.jpg}\caption{}\label{sub:testfindkpdirectiond}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionD.jpg}\caption{}\label{sub:testfindkpdirectiond}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionE.jpg}\caption{}\label{sub:testfindkpdirectione}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionE.jpg}\caption{}\label{sub:testfindkpdirectione}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionF.jpg}\caption{}\label{sub:testfindkpdirectionf}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionF.jpg}\caption{}\label{sub:testfindkpdirectionf}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionG.jpg}\caption{}\label{sub:testfindkpdirectiong}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionG.jpg}\caption{}\label{sub:testfindkpdirectiong}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}\end{subfigure}
+\begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}\end{subfigure}
 ~~%--
 \begin{subfigure}[h]{1\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionI.jpg}\caption{}\label{sub:testfindkpdirectioni}\end{subfigure}
-\caption[\caplbl{testfindkpdirection} Computing the dominant gradient orientation]{
+\caption[\caplbl{testfindkpdirection} Computing the dominant gradient orientation]{\caplbl{testfindkpdirection} 
 % ---
-\caplbl{testfindkpdirection} Visualization of the steps involved in
-  computing the dominant gradient orientations.
+Visualization of the steps involved in computing the dominant gradient orientations.
 The top rows shows:
-\Cref{sub:testfindkpdirectiona} the input image with a single
-  elliptical keypoint, \Cref{sub:testfindkpdirectionb} the normalized
-  keypoint, \Cref{sub:testfindkpdirectionc,sub:testfindkpdirectiond} the
-  squared x and y image derivatives.
+\cref{sub:testfindkpdirectiona} the input image with a single elliptical keypoint,
+  \cref{sub:testfindkpdirectionb} the normalized keypoint, \cref{sub:testfindkpdirectionc,sub:testfindkpdirectiond}
+  the squared x and y image derivatives.
 The middle row shows:
-\Cref{sub:testfindkpdirectione} the gradient magnitudes,
-  \Cref{sub:testfindkpdirectionf} the Gaussian weighted gradient
-  magnitude,
-% which defines how much of a vote each pixel has, 
-\Cref{sub:testfindkpdirectiong,sub:testfindkpdirectionh} the
-  orientation at each pixel.
-%that defines which bins the pixel will vote for.
-The final row~\cref{sub:testfindkpdirectioni} shows the histogram of
-  weighted orientations.
-%The circled positions show the orientations with the maximum responce, and the
-The starred positions show the dominant gradient orientations localized
-  to sub-orientation accuracy.
+\cref{sub:testfindkpdirectione} the gradient magnitudes, \cref{sub:testfindkpdirectionf} the Gaussian weighted
+  gradient magnitude, \cref{sub:testfindkpdirectiong,sub:testfindkpdirectionh} the orientation at each pixel.
+The final row~\cref{sub:testfindkpdirectioni} shows the histogram of weighted orientations.
+The starred positions show the dominant gradient orientations localized to sub-orientation accuracy.
 % ---
 }
 \label{fig:testfindkpdirection}
@@ -72,18 +70,30 @@ The starred positions show the dominant gradient orientations localized
 
 
 \begin{comment}
-python -m plottool.viz_featrow --test-draw_feat_row --fname zebra.png --fx=121  --show
---dpath ~/latex/cand/ --save figures2/viz_featrow.jpg --figsize=12,6 --dpi 180 
---clipwhite --diskshow  --saveparts
+python -m plottool.viz_featrow draw_feat_row --fname zebra.png --fx=121 \
+    --dpath ~/latex/crall-thesis-2017/ --save figures2/vizfeatrow.jpg \
+    --figsize=6,3 --dpi 300 --diskshow --saveparts
+
+python -m plottool.viz_featrow --test-draw_feat_row --fname zebra.png --fx=121 --save foo.jpg --figsize=6,3 --dpi 300  --diskshow
 \end{comment}
-\MultiImageCommandII{vizfeatrow}{.4}{A SIFT descriptor}{
+\newcommand{\vizfeatrow}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowA.jpg}\caption{}\label{sub:vizfeatrowA}\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowB.jpg}\caption{}\label{sub:vizfeatrowB}\end{subfigure}
+\caption[vizfeatrow]{\caplbl{vizfeatrow}
 % ---
 \Cref{sub:vizfeatrowA} shows a SIFT feature superimposed over pixels it
   describes.
 \Cref{sub:vizfeatrowB} shows the same SIFT descriptor as a flat histogram.
-Notice the correspondence between the colors of the histogram bars.
+Notice the correspondence between the colors of the histogram bars. 
 % ---
-}{figures2/viz_featrowA.jpg}{figures2/viz_featrowB.jpg}
+}
+\label{fig:vizfeatrow}
+\end{figure}
+}
+
 
 
 
