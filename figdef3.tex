@@ -54,7 +54,7 @@ python -m ibeis.scripts.specialdraw simple_vsone_matches \
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{figures3/SceneryMatch2.jpg}
-\caption[SceneryMatch]{\caplbl{SceneryMatch}
+\caption[A scenery match]{\caplbl{SceneryMatch}
 % ---
 An example of two different animals with appearing in front of the same
 distinctive background, illustrating the importance of background
@@ -77,10 +77,6 @@ python -m ibeis.scripts.specialdraw featweight_fig --db PZ_MTEST --aid=1 \
 %--adjust=.15,.15,.1
 
 \end{comment}
-%\MultiImageCommandII{genfeatweight}{.31}{
-%    Foregroundness weights
-%}{
-%}{figures3/genfeatweightA.png}{figures3/genfeatweightB.png}{figures3/genfeatweightC.png}
 \newcommand{\fgweight}{
 \begin{figure}[ht!]
 \centering
@@ -89,14 +85,12 @@ python -m ibeis.scripts.specialdraw featweight_fig --db PZ_MTEST --aid=1 \
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightB.png}\caption{}\label{sub:fgweightB}\end{subfigure}
 ~~% --
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightC.png}\caption{}\label{sub:fgweightC}\end{subfigure}
-\caption[fgweight]{\caplbl{fgweight}
+\caption[Foregroundness weights]{\caplbl{fgweight}
 % ---
 Generation of foregroundness feature weights. \Cref{sub:fgweightA} shows the annotation's cropped chip.
 This chip is passed to the species detector. \Cref{sub:fgweightB} shows the species detector outputs an
 intensity image indicating the likelihood that each pixel belongs to the foreground. \Cref{sub:fgweightC}
 shows the weighted sum of the intensity under each feature is used as that feature's foregroundness score.
-% ---
-% ---
 }
 \label{fig:fgweight}
 \end{figure}

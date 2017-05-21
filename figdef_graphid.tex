@@ -4,12 +4,22 @@ python -m ibeis.scripts.specialdraw draw_graph_id \
     --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/decisiongraph.jpg" \
     --figsize=12,8 --clipwhite --dpi=300 --diskshow
 \end{comment}
-\ImageCommand{figures_graph/decisiongraph.jpg}{\textwidth}{
-    An example of a consistent synthetic decision graph with positive,
-      negative, and incomparable edges.
-    The color of each node represents the positive connected compoment (PCC)
-      it belongs to.
-}{decisiongraph}
+\newcommand{\decisiongraph}{
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures_graph/decisiongraph.jpg}
+\caption[A synthetic decision graph]{\caplbl{decisiongraph}
+% ---
+An example of a consistent synthetic decision graph with positive,
+  negative, and incomparable edges.
+The color of each node represents the positive connected compoment (PCC)
+  it belongs to.
+% ---
+}
+\label{fig:decisiongraph}
+\end{figure}
+}
+
 
 
 
@@ -20,12 +30,26 @@ python -m ibeis.scripts.specialdraw draw_inconsistent_pcc \
     --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/inconpcc.jpg" \
     --figsize=15,10 --clipwhite --dpi=300 --diskshow --saveparts
 \end{comment}
-\MultiImageCommandII{inconpcc}{.4}{inconpcc}{
-    Any PCC containing at least one negative edge is inconsistent.
-    Subfigure \Cref{sub:inconpccA} shows an inconsistent PCC, and
-    \Cref{sub:inconpccB} shows the same PCC where the edges hypothesized to be
-    errors are highlighted.
-}{figures_graph/inconpccA.jpg}{figures_graph/inconpccB.jpg}
+%\MultiImageCommandII{inconpcc}{.4}{inconpcc}{
+%}{figures_graph/inconpccA.jpg}{figures_graph/inconpccB.jpg}
+\newcommand{\inconpcc}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/inconpccA.jpg}\caption{}\label{sub:inconpccA}\end{subfigure}
+~~% --
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/inconpccB.jpg}\caption{}\label{sub:inconpccB}\end{subfigure}
+\caption[An inconsistent PCC]{\caplbl{inconpcc}
+% ---
+Any PCC containing at least one negative edge is inconsistent.
+Subfigure \Cref{sub:inconpccA} shows an inconsistent PCC, and
+\Cref{sub:inconpccB} shows the same PCC where the edges hypothesized to be
+errors are highlighted.
+% ---
+}
+\label{fig:inconpcc}
+\end{figure}
+}
+
 
 
   
@@ -51,7 +75,7 @@ python -m ibeis.scripts.specialdraw redun_demo2 \
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunE.jpg}\caption{}\label{sub:kredunE}\end{subfigure}
 ~~%--
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}\end{subfigure}
-\caption[kredun]{\caplbl{kredun}
+\caption[Examples of $k$-redundancy]{\caplbl{kredun}
 %--%
 Examples of positive (top) and negative (bottom) redundancy.
 The positive edges are colored blue and the negative edges are colored red.
@@ -136,7 +160,7 @@ python -m ibeis Chap5.draw_simulation --db GZ_Master1 --diskshow
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/simulation.png}\caption{Plains zebra}\end{subfigure}
 ~
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/GZ_Master1/simulation.png}\caption{Grévy's zebra}\end{subfigure}
-\caption[\caplbl{Simulation}Simulation]{\caplbl{Simulation}
+\caption[\caplbl{Simulation}Simulation experiment]{\caplbl{Simulation}
 % ---
 The user simulation experiment compares the three identification algorithms defined in this \thesis{}.
 On the left indicates the identifiation accuracy using the number of remaining merges and the right counts the
@@ -159,9 +183,9 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/refresh.png}\caption{Plains zebra}\end{subfigure}
 ~
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/GZ_Master1/refresh.png}\caption{Grévy's zebra}\end{subfigure}
-\caption[\caplbl{Refresh}Measured refresh and termination]{\caplbl{Refresh}
+\caption[\caplbl{Refresh}Measured refresh and termination probabilities]{\caplbl{Refresh}
 % ---
-The measure refresh and termination criteria.
+The measured refresh and termination criteria.
 The probability that the next reviews will be meaningful ($\Pr{T\teq1}$) is high while new merges are discovered.
 Once the probability falls under the threshold, positive redundancy is enforced (the flat areas) on existing
   PCCs, and then candidated edges are recomputed.
