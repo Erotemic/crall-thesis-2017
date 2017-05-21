@@ -1,84 +1,42 @@
 %! TEX root = main.tex
 
-% Define global boolean flags
-\newif\ifonecolumn{}
 \newif\ifusegraphics{}
 \newif\ifpublishversion{}
-\newif\ifrpilayout{}
-%\onecolumntrue{}
 \usegraphicstrue{}
 \publishversiontrue{}
-\rpilayouttrue{}
 
-
-% --- Document Settings ---
-%\onecolumnfalse{}
-%\usegraphicsfalse{}
-%\publishversionfalse{}
-%\rpilayoutfalse{}
-% ---
-
-\ifrpilayout{}
-    \documentclass[chap]{thesis}
-\else
-    \ifonecolumn{}
-        \documentclass[chap]{book}
-        \newcounter{firstchapter}
-        \setcounter{firstchapter}{0}
-    \else
-        \documentclass[10pt,twocolumn,letterpaper]{article}
-        \newcommand{\chapter}{\section}
-    \fi
-\fi
+\documentclass[chap]{thesis}
 
 \usepackage{makecell}
 \usepackage[section]{placeins}
 
 \input{CrallPramb}
-\usepackage[inline]{enumitem}
-%\usepackage{enumitem}
 \input{CrallDef}
-
-
-\newlist{itemln}{itemize}{2}
-\setlist[itemln]{label=\textbullet,noitemsep,nolistsep}
-\newlist{enumln}{enumerate}{2}
-\setlist[enumln]{label=(\arabic*),noitemsep,nolistsep}
-%\setlist[enumln]{label=(\arabic*)}
-\newlist{enumin}{enumerate*}{2}
-\setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
-
 
 \begin{comment}
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/ ~/latex/crall-thesis-2017
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@lev.cs.rpi.edu:latex/crall-thesis-2017/ ~/latex/crall-thesis-2017
+
+    rsync -arvhzP --include='figures*/***' --exclude='*' ~/latex/crall-thesis-2017 joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/ 
+
+
+    rsync -arvhzP ~/latex/crall-thesis-2017/figures2/ joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/figures2
+    rsync -arvhzP ~/latex/crall-thesis-2017/figures1/ joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/figures1
 
     ./texfix.py --fpaths main.tex --outline --asmarkdown --numlines=999 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
     ./texfix.py --fpaths main.tex --outline --numlines=0 -w --ignoreinputstartswith=def,Crall,header,colordef,figdef
     ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
 \end{comment}
 
-
 \author{Jonathan P. Crall}
-\ifrpilayout{}
-    \input{thesis_preamb}
-\else
-\fi
+\input{thesis_preamb}
 
 
 \begin{document}
 
 \input{def}
 \input{colordef}
-
-\ifrpilayout{}
-    \input{header}
-\else
-    \ifpublishversion{}
-        \tableofcontents{}
-        \listoffigures{}    
-    \fi
-\fi
+\input{header}
 
 %\newcommand{\fnote}[1]{\footnote{#1}}
 \newcommand{\fnote}[1]{ (#1)}
@@ -95,11 +53,8 @@
 \input{figdef1}
 \input{figdef2}
 \input{figdef3}
-\input{figdefexpt.tex}
-\input{figdefindiv.tex}
-\input{figdefdbinfo.tex}
-\input{figdef_pairclf.tex}
-\input{figdef_graphid.tex}
+\input{figdef4}
+\input{figdef5}
 
 %\setcounter{chapter}{0}
 

@@ -223,3 +223,362 @@ LNBNN normalizer to score the first three matches.
 \label{fig:knorm}
 \end{figure}
 }
+
+
+\begin{comment}
+ALL DATABASE INFO
+python -m ibeis Chap3.measure dbstats --dbs=PZ_Master1,GZ_Master1,GIRM_Master1,humpbacks_fb
+python -m ibeis Chap3.agg_dbstats
+\end{comment}
+
+\newcommand{\DatabaseInfo}{
+\begin{table}[ht!]
+\centering
+\caption[Database statistics]{Database statistics.}
+\label{tbl:DatabaseStatistics}
+\input{figuresY/agg-enc.tex}
+\end{table}
+%--
+\begin{table}[h!]
+\centering
+\caption[Annotations per quality]{Annotations per quality.}
+\label{tbl:AnnotationsPerQuality}
+\input{figuresY/agg-qual.tex}
+\end{table}
+%--
+\begin{table}[h!]
+\centering
+\caption[Annotations per viewpoint]{Annotations per viewpoint.}
+\label{tbl:AnnotationsPerViewpoint}
+\input{figuresY/agg-view.tex}
+\end{table}
+}
+
+%-------------
+% TimeDeltas
+\begin{comment}
+python -m ibeis Chap3.measure time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,humpbacks_fb --diskshow
+python -m ibeis Chap3.draw time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,humpbacks_fb --diskshow
+\end{comment}
+\newcommand{\timedist}{
+\begin{figure}[ht!] \centering
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/PZ_Master1/timedist.png}\caption{plains zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
+\caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
+% ---
+Distribution of image timestamps.
+The y-axis is plotted on a square-root scale to emphasize times when only a few images were taken.
+For plains zebras and Grévy's zebras images were collected over many years.
+For Masai giraffes all data was collected immediately before and during the \GZC{}.
+% ---
+}
+\label{fig:timedist}
+\end{figure}
+}
+
+
+% -------------------------------
+% --- Baseline Experiments ---
+% -------------------------------
+
+
+\begin{comment}                                                                                                                                       
+\end{comment}
+                                                                                                                                                      
+\begin{comment}                                                                                                                                       
+python -m ibeis Chap3.draw_agg_baseline --diskshow
+
+python -m ibeis Chap3.draw_all --dbs=GZ_Master1,PZ_Master1,GIRM_Master1
+python -m ibeis Chap3.draw_all --db GZ_Master1
+python -m ibeis Chap3.draw_all --db PZ_Master1
+python -m ibeis Chap3.draw_all --db GIRM_Master1
+\end{comment}
+
+\newcommand{\BaselineExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/agg-baseline.png}\end{subfigure}
+        \caption[\caplbl{BaselineExpt}Baseline experiment]{\caplbl{BaselineExpt}
+    % ---
+    The baseline experiment is a high-level indicator of the ranking accuracy of each species.
+    We measure ranking accuracy using a single query and database annotation --- selected from different
+      encounters --- per individual.
+    The number of query annotations (\pvar{qsize}) and database annotations (\pvar{dsize}) are given for each
+      species in the legend.
+    % ---
+        }
+        \label{fig:BaselineExpt}
+    \end{figure}
+}
+
+\begin{comment}
+python -m ibeis Chap3.draw_all --dbs=GZ_Master1,PZ_Master1
+\end{comment}
+
+
+
+\begin{comment}
+
+ibeis Chap3.measure smk --db=GZ_Master1
+ibeis Chap3.draw smk --db=GZ_Master1 --diskshow
+
+ibeis Chap3.measure smk --db=PZ_Master1
+ibeis Chap3.draw smk --db=PZ_Master1 --diskshow
+
+ibeis Chap3.measure smk --dbs=GZ_Master1,PZ_Master1
+ibeis Chap3.draw smk --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
+\newcommand{\SMKExpt}{
+\begin{figure}[ht!]\centering
+    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/smk.png}\caption{plains zebras}\label{sub:SMKExptA}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/smk.png}\caption{Grévy's zebras}\label{sub:SMKExptB}\end{subfigure}
+    \caption[\caplbl{SMKExpt}SMK experiment]{\caplbl{SMKExpt}
+    % ---
+    The (VLAD based) SMK algorithm compared to our LNBNN ranking algorithm.
+    The results demonstrate that LNBNN outperforms the ranking accuracy of SMK.
+    The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are
+    shown in the lower left.
+    % ---
+    }
+    \label{fig:SMKExpt}
+\end{figure}
+}
+
+
+
+\begin{comment}
+python -m ibeis Chap3.measure foregroundness --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw foregroundness --dbs=GZ_Master1,PZ_Master1 --diskshow
+
+python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --show
+\end{comment}
+\newcommand{\ForegroundExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness.png}\caption{plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness.png}\caption{Grévy's zebras}\label{sub:ForegroundExptB}\end{subfigure}
+        \caption[\caplbl{ForegroundExpt}Foregroundness experiment]{\caplbl{ForegroundExpt}
+            % ---
+            Weighting the score of the feature correspondences using foregroundness results in more accurate
+              identifications.
+            % ---
+        }
+        \label{fig:ForegroundExpt}
+    \end{figure}
+}
+
+
+\newcommand{\FGIntraExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness_intra.png}\caption{plains zebras}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness_intra.png}\caption{Grévy's zebras}\end{subfigure}
+        \caption[\caplbl{FGIntraExpt}Foregroundness experiment]{\caplbl{FGIntraExpt}
+            % ---
+            Applying foregroundness weights to feature correspondences improves the identification accuracy at
+              the top rank by filtering matches in scenery.
+            This experiment was performed by matching annotations within serveral occurrences.
+            Thus, in this experiment \pvar{qsize} is a sum and \pvar{dsize} is an average.
+            % ---
+        }
+        \label{fig:FGIntraExpt}
+    \end{figure}
+}
+
+% -------------------------------
+% --- Invariance Experiments ----
+% -------------------------------
+
+
+\newcommand{\InvarExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{plains zebras}\label{sub:InvarExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
+        \caption[\caplbl{InvarViewExpt}Feature invariance experiment]{\caplbl{InvarExpt}
+            % ---
+            Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the
+              query-side rotation heuristic (QRH).
+            For plains zebras circular keypoints with the QRH are the most accurate.
+            For Grévy's zebras enabling affine invariance works the best.
+            The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
+            % ---
+        }
+        \label{fig:InvarExpt}
+    \end{figure}
+}
+
+% -------------------------------
+% --- K Experiments
+% -------------------------------
+
+\begin{comment}
+python -m ibeis Chap3.measure kexpt --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
+\newcommand{\KExptA}{
+    \begin{figure}[ht!]\centering
+        \centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}
+        \caption[\caplbl{KExptA}The $K$ experiment for plains zebras]{\caplbl{KExptA}
+            % ---
+            Identification accuracy for plains zebras using different values of $\K$ (the number of nearest
+              neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
+              different database sizes (\pvar{dsize}).
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:KExptA}
+    \end{figure}
+}
+\newcommand{\KExptB}{
+    \begin{figure}[ht!]\centering
+        \centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}
+        \caption[\caplbl{KExptB}The $K$ experiment for Grévy's zebras]{\caplbl{KExptB}
+            % ---
+            Identification accuracy for Grévy's zebras using different values of $\K$ (the number of nearest
+              neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
+              different database sizes (\pvar{dsize}).
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:KExptB}
+    \end{figure}
+}
+
+% -------------------------------
+% --- Namescore Experiments ----
+% -------------------------------
+
+\begin{comment}
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
+
+\newcommand{\NScoreExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/nsum.png}\caption{plains zebras}\label{sub:NScoreExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
+        \caption[\caplbl{InvarViewExpt}Name scoring experiment]{\caplbl{NScoreExpt}
+            % ---
+            Results of the name scoring mechanism experiment.
+            There is a clear separation between identification accuracy when the number of exemplars per name is
+              $1$ compared to when it is $3$.
+            Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
+              based name scoring (\csum{}).
+            The number of query /database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
+            Database size was normalized using confusors.
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:NScoreExpt}
+    \end{figure}
+}
+
+
+
+% --- Photobomb
+
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore --db PZ_Master1 \
+--qaid=3727 --cmdaug="FailPhotobomb" --hargv=match --render
+\end{comment}
+\SingleImageCommand{FailPhotobomb}{1}{
+    Photobomb failure case
+}{
+% ---
+A photobombing animal in the background of the query annotation cause LNBNN to return the incorrect result (on
+  the left) at rank $1$.
+The correct match (on the right), has a significant number of matches, but there is a difference of $1$ day
+  between the pair.
+On the other hand, the annotations in the photobomb pair were taken within minutes of each other and therefore
+  have much higher visual similarity.
+% ---
+}{figuresC/case_FailPhotobomb.png}
+
+
+% --- Scenery Match
+
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 \
+    --qaid 1988 \
+    --hargv=match --render  --cmdaug="FailScenery" \
+    --cappref="Failure case due to a scenery match. Most scenery match cases have small timedeltas between the images."
+
+# 2811
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
+
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
+python -m ibeis.dev -e draw_cases -a timectrl -t best:sv_on=False --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
+python -m ibeis.dev -e draw_cases -a timectrl -t best:sv_on=False,AI=False --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
+\end{comment}
+\SingleImageCommand{FailScenery}{1}{
+    Scenery failure case
+}{
+% ---
+The incorrect pair of annotations (on the left) was returned at rank $1$ because of strong matches in the
+  background scenery.
+The correct pair was returned at rank $2$ and did not produce matches in the front leg due to pose variations.
+The annotations in the scenery match pair were taken $8$ seconds appart in the same location causing their
+  backgrounds to be near duplicates.
+The foregroundness measure was disabled to produce this example, enabling it addresses nearly all scenery match
+  cases.
+% ---
+}{figuresC/case_FailScenery.png}
+
+% --- QUALITY
+
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Quality,sortdsc=gfscore --db GIRM_Master1 --qaid 639 \
+    --hargv=match --render --cmdaug="FailQuality" --vert=False
+\end{comment}
+\SingleImageCommand{FailQuality}{1}{
+Quality failure case
+}{
+% ---
+The low resolution of the query annotation and the overall viewpoint difference causes the correct pair of
+  annotations (on the right) to be returned at rank $75$.
+The incorrect pair of annotation (on the left) did not recieve a particularly high score, but it was returned at
+  rank $1$ because there were no feature correspondences established to the correct match.
+% ---
+}{figuresC/case_FailQuality.png}
+
+
+% --- OCCLUSION
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Occlusion,sortdsc=gfscore --db PZ_Master1 --qaid 3812 \
+    --hargv=match --render  --cmdaug="Occlusion" \
+    --cappref="Failure case due to occlusion. "
+\end{comment}
+\SingleImageCommand{FailOcclusion}{1}{
+Occlusion failure case
+}{
+% ---
+The plants occluding both the query and database annotations inhibit the creation of feature correspondences,
+  causing the correct pair of annotations (on the right) to be returned at rank $2$.
+This is exacerbated by pose and viewpoint variations.
+The incorrect pair of annotation (on the left) at rank $1$ are relatively distinctive by coincidence.
+% ---
+}{figuresC/case_Occlusion.png}
+
+
+
+% --- VIEWPOINT
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore --db GZ_Master1  --qaid 2787 \
+    --hargv=match --render  --cmdaug="FailViewpoint" \
+    --overwrite
+%--qaid 2660 \
+\end{comment}
+\SingleImageCommand{FailViewpoint}{1}{
+Unaligned failure case
+}{
+% ---
+Due to pose and viewpoint variations, the correctly matching pair of annotations (on the right) is returned at
+  rank $2$ while the incorrect pair of annotations (on the left) is returned at rank $1$.
+In the correct pair, the features on the front leg are not aligned and failed to match.
+In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
+  that are distinctive by coincidence.
+% ---
+}{figuresC/case_FailViewpoint.png}

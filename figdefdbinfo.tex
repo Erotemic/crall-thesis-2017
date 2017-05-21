@@ -1,5 +1,5 @@
 \begin{comment}
-        python -m ibeis.scripts.gen_cand_expts --exec-parse_latex_comments_for_commmands --fname figdefdbinfo.tex
+    python -m ibeis.scripts.gen_cand_expts --exec-parse_latex_comments_for_commmands --fname figdefdbinfo.tex
 \end{comment}
 
 
@@ -8,8 +8,6 @@ ALL DATABASE INFO
 python -m ibeis Chap3.measure dbstats --dbs=PZ_Master1,GZ_Master1,GIRM_Master1,humpbacks_fb
 python -m ibeis Chap3.agg_dbstats
 \end{comment}
-
-% <DBINFO>
 
 \newcommand{\DatabaseInfo}{
 \begin{table}[ht!]
@@ -34,9 +32,6 @@ python -m ibeis Chap3.agg_dbstats
 \end{table}
 }
 
-% </DBINFO>
-
-
 %-------------
 % TimeDeltas
 \begin{comment}
@@ -50,15 +45,13 @@ python -m ibeis Chap3.draw time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
 \caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
-    % ---
-    Distribution of image timestamps.
-    The y-axis is plotted on a square-root scale to emphasize times when only a
-    few images were taken.
-    For plains zebras and Grévy's zebras images were collected over many years.
-    For Masai giraffes all data was collected immediately before and during the \GZC{}.
-    % ---
-  }
-  \label{fig:timedist}
-  \end{figure}
+% ---
+Distribution of image timestamps.
+The y-axis is plotted on a square-root scale to emphasize times when only a few images were taken.
+For plains zebras and Grévy's zebras images were collected over many years.
+For Masai giraffes all data was collected immediately before and during the \GZC{}.
+% ---
 }
-
+\label{fig:timedist}
+\end{figure}
+}

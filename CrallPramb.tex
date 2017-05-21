@@ -2,8 +2,8 @@
 \usepackage[hang]{caption} 
 \usepackage[T1]{fontenc}
 
-
 \usepackage{times}
+\usepackage{verbatim} 
 \ifusegraphics{}
     \usepackage{graphicx}
 \else
@@ -15,21 +15,7 @@
 \usepackage{amssymb}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
-% Upside Down Text
-% References;
-% http://tex.stackexchange.com/questions/28861/text-upside-down-characters-rotated-along-baseline
 \usepackage{xstring}
-\usepackage{forloop}
-\newcounter{idx}
-\newcounter{posx}
-\DeclareRobustCommand{\rotraise}[1]{%
-  \StrLen{#1}[\slen]
-  \forloop[-1]{idx}{\slen}{\value{idx}>0}{%
-    \StrChar{#1}{\value{idx}}[\crtLetter]%
-    \IfSubStr{tlQWERTZUIOPLKJHGFDSAYXCVBNM}{\crtLetter}
-      {\raisebox{\depth}{\rotatebox{180}{\crtLetter}}}
-      {\raisebox{1ex}{\rotatebox{180}{\crtLetter}}}}%
-}
 
 \usepackage{mathtools}
 \usepackage{algorithm}
@@ -44,8 +30,6 @@
 \usepackage{subcaption} % REMOVE?
 \captionsetup{compatibility=false}
 
-%Gives \begin{comment} \end{comment}
-\usepackage{verbatim} 
 
 \newlength{\subfigheight} % REMOVE?
 \setlength{\subfigheight}{1in} % REMOVE?
@@ -203,9 +187,6 @@
 \usepackage{import}
 \usepackage{rotating}
 
-%\usepackage[natbib=true]{biblatex} 
-% http://www.latex-community.org/forum/viewtopic.php?f=50&t=23682
-%\usepackage[hide=true]{nobibprint}
 \usepackage[numbers,sort]{natbib}
 
 \usepackage{silence}
@@ -227,157 +208,28 @@
 %\usepackage{minted}
 \newenvironment{code}{\captionsetup{type=listing}}{}
 
-% REMOVE? 
-% Package caused warnings, will convert eps files to pdfs for windows
-%\usepackage{epstopdf}
-%\usepackage{epsfig}
-% Package converts pngs and eps to jpgs for PDF compression
-%\usepackage{degrade}
-% Had to comment out in Ubuntu
-%\usepackage[scientific-notation=true]{siunitx}
-%\usepackage{subfig}
-%\usepackage[english=nohyphenation]{hyphsubst}
 
-% ------
-% References: http://latex-community.org/forum/viewtopic.php?f=44&t=22367
-%\usepackage{tikz}
-%\usetikzlibrary{graphs,graphs.standard,graphdrawing,quotes,shapes,calc}
-%\usetikzlibrary{graphs,graphs.standard,graphdrawing,quotes,shapes}
-%\usegdlibrary{layered}
-%\usetikzlibrary{graphs}
-%\usetikzlibrary{arrows, shapes,positioning}
-%\usepackage{tikz}
-%\newcommand*\circled[1]{\tikz[baseline= (char.base)]{
-%  \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
-%\usepackage{mathrsfs}
-%\usepackage[mathscr]{euscript}
-% References: http://tex.stackexchange.com/questions/215375/how-to-get-the-old-mathcal-letters
-%\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
-%\usepackage[cal=lucida]{mathalfa}
-%\usepackage{unicode-math}
-%\setmathfont[range={\mathcal}]{Lucida Calligraphy}
-
-%\usepackage{caption} % REMOVE?
-%\usepackage{stmaryrd}
-%\SetSymbolFont{stmry}{bold}{U}{stmry}{b}{n}
-
-%\newif\ifreadable
-%\readabletrue
-%\usepackage[none]{hyphenat} % No Hyphenations
-%\raggedright{} % No Justification
-%\usepackage{pgf} % REMOVE?
-%\usepackage[latin9]{inputenc}
-%\usepackage[utf8]{inputenc}
-%\usepackage{type1cm}
-%\usepackage{lettrine}
-%\lettrine[lines=4]{A}{n}
-%\usepackage{yfonts,color}
-
-%\usepackage{wasysym}  % causes issue with greekvec
-%\usepackage[createtips]{fancytooltips}
-
-%\usepackage{color, colortbl}
-%\definecolor{LightCyan}{rgb}{0.88,1,1}
-%\usepackage{algorithmic}
-%\usepackage{tabularx}
-%\usepackage[style=ieee]{biblatex}
-
-%\usepackage{bookman}
-%\usepackage{color}
-%\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-
-% Fix Float Paramaeter? 
-%\renewcommand\floatpagefraction{1}
-%\renewcommand\topfraction{1}
-%\renewcommand\bottomfraction{1}
-%\renewcommand\textfraction{0}  
-%
-% WACV Float Fix? 
-%\renewcommand{\textfraction}{0.01}
-%\renewcommand{\floatpagefraction}{0.99}
-%\renewcommand{\topfraction}{0.99}
-%\renewcommand{\bottomfraction}{0.99}
-%\renewcommand{\dblfloatpagefraction}{0.99}
-%\renewcommand{\dbltopfraction}{0.99}
-%\setcounter{totalnumber}{99}
-%\setcounter{topnumber}{99}
-%\setcounter{bottomnumber}{99}
+\usepackage[inline]{enumitem}
+\newlist{itemln}{itemize}{2}
+\setlist[itemln]{label=\textbullet,noitemsep,nolistsep}
+\newlist{enumln}{enumerate}{2}
+\setlist[enumln]{label=(\arabic*),noitemsep,nolistsep}
+%\setlist[enumln]{label=(\arabic*)}
+\newlist{enumin}{enumerate*}{2}
+\setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
 
 
-% Makes no indent the default
-%\setlength{\parindent}{1pc}
-%WACV 
-% set dimensions of columns, gap between columns, and paragraph indent
-%\setlength{\textheight}{8.875in}
-%\setlength{\textwidth}{6.875in}
-%\setlength{\columnsep}{0.3125in}
-%\setlength{\topmargin}{0in}
-%\setlength{\headheight}{0in}
-%\setlength{\headsep}{0in}
-%\setlength{\parindent}{0pc}
-%\setlength{\oddsidemargin}{-.304in}
-%\setlength{\evensidemargin}{-.304in}
-
-%\usepackage{pdfcomment}
-%\usepackage[landscape]{geometry}
-%\usepackage{wallpaper}
-%\usepackage{fullpage}
-
-% Enable to turn sections from X.1 into 1
-%\renewcommand{\thesection}{\arabic{section}}
-%\usepackage[numbers]{natbib} % THESIS COMMENT
-
-%\usepackage{minted}
-%\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
-%\newmintedfile[pythoncode]{python}{
-%    %bgcolor=mintedbackground,
-%    fontfamily=courier, % tt, courier, helvetica
-%    fontsize=\footnotesize,
-%    frame= leftline, %none, % non, leftline, topline, bottomline, lines, single
-%    %framerule=0.4pt,
-%    framesep=2mm,
-%    gobble=0,
-%    linenos=true, % number the lines? 
-%    %mathescape=false
-%    numberblanklines=true,
-%    numbersep=5pt, % 12pt
-%    %obeytabs=false,
-%    samepage=false, %with this setting you can force the list to appear on the same page
-%    %showspaces=false,
-%    %showtabs =false,
-%    tabsize=4,
-%    %texcl=false,
-%}
-
-%\makeglossaries % THESIS COMMENT
-%\subimport{common}{cosmetix.tex}
-
-%\usepackage[nocite]{showkeys}
-%\usepackage{refcheck}
-%
-% Uncomment to show figure labels in margin
-%\usepackage[inner]{showlabels} 
-%\usepackage{silence}
-%\WarningFilter[undefref]{cleveref}{undefined on input}
-%\WarningFilter*{hyperref}{undefined on input}
-%\WarningFilter[pdftoc]{hyperref}{Token not allowed in a PDF string}
-
-%% move all floats to the end of document
-%\renewcommand\textfraction{1.0}  
-%\renewcommand\floatpagefraction{.9}  
-%%\usepackage{endfloVt}
-
-%\usepackage[numbers,sort&compress]{natbib}
-%\usepackage{lmodern}
-% Make centering default
-% http://tex.stackexchange.com/questions/2651/should-i-use-center-or-centering-for-figures-and-tables
-%\makeatletter
-%\g@addto@macro\@floatboxreset\centering
-%\makeatother
-
-% http://tex.stackexchange.com/questions/75014/is-it-possible-to-make-a-reference-to-a-subfigure-to-appear-figure-2a-with-cle
-%\captionsetup[subfigure]{subrefformat=simple,labelformat=simple,listofformat=subsimple}
-%\renewcommand\thesubfigure{(\alph{subfigure})}
-%\captionsetup[subfigure]{subrefformat=simple,labelformat=simple,listofformat=subsimple}
-%\usepackage[caption=false,labelformat=simple]{subfig}
-%\renewcommand{\thesubfigure}{(\alph{subfigure})}
+% Upside Down Text
+% References;
+% http://tex.stackexchange.com/questions/28861/text-upside-down-characters-rotated-along-baseline
+\usepackage{forloop}
+\newcounter{idx}
+\newcounter{posx}
+\DeclareRobustCommand{\rotraise}[1]{%
+  \StrLen{#1}[\slen]
+  \forloop[-1]{idx}{\slen}{\value{idx}>0}{%
+    \StrChar{#1}{\value{idx}}[\crtLetter]%
+    \IfSubStr{tlQWERTZUIOPLKJHGFDSAYXCVBNM}{\crtLetter}
+      {\raisebox{\depth}{\rotatebox{180}{\crtLetter}}}
+      {\raisebox{1ex}{\rotatebox{180}{\crtLetter}}}}%
+}

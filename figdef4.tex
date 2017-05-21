@@ -24,7 +24,7 @@ pairs of annotations. Local feature correspondences are superimposed over the pa
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures_pairclf/custom_match_leftrightface_5245_5161.jpg}
-\caption[\caplbl{LeftRightFace}Face match]{\caplbl{LeftRightFace}
+\caption[\caplbl{LeftRightFace}A comparable pair with different viewpoints]{\caplbl{LeftRightFace}
 % ---
 Even though this pair has different viewpoints, it is positive and comparable
 because we can establish a distinctive correspondence in the face. 
@@ -46,7 +46,7 @@ because we can establish a distinctive correspondence in the face.
 ~
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
-\caption[\caplbl{PositiveHist}Positive scores]{\caplbl{PositiveHist}
+\caption[\caplbl{PositiveHist}Positive score histogram experiment]{\caplbl{PositiveHist}
 % ---
 Positive scores of LNBNN (left) and pairiwse (right) matching for plains (top)
 and Grévy's (bottom) zebras. In addition to being more interpretable than LNBNN
@@ -65,9 +65,10 @@ scores the learned probabilities exhibit better separability.
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/roc_match_state.png}\caption{Plains zebra}\label{sub:pos_roc_pz}\end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/roc_match_state.png}\caption{Grévy's zebra}\label{sub:pos_roc_gz}\end{subfigure}
-\caption[\caplbl{PositiveROC}Positive match-state ROC]{\caplbl{PositiveROC}
+\caption[\caplbl{PositiveROC}Positive match-state ROC experiment]{\caplbl{PositiveROC}
 % ---
-Positive match-state ROC.
+The positive match-state ROC for scores computed using the pairwise classifier and the LNBNN ranking algorithm.
+The scores from the pairwise classifier are better at separating out the positive cases.
 % ---
 }
 \label{fig:PositiveROC}
@@ -82,7 +83,7 @@ Positive match-state ROC.
 \newcommand{\ConfusionMatch}{
 \begin{table}
     \centering
-    \caption[\caplbl{ConfusionMatch}Match-state confusion]{\caplbl{ConfusionMatch}
+    \caption[\caplbl{ConfusionMatch}Match-state experiment confusion matrix]{\caplbl{ConfusionMatch}
     % ---
     Multiclass match-state confusion for plains and Grévy's zebras.
     The rows are the real (groundtruth) state, and the columns are the predicted states.
@@ -98,7 +99,7 @@ Positive match-state ROC.
 
 \newcommand{\EvalMetricsMatch}{
 \begin{table}
-    \caption[\caplbl{EvalMetricsMatch}Match-state metrics]{\caplbl{EvalMetricsMatch}
+    \caption[\caplbl{EvalMetricsMatch}Match-state experiment evaluation metrics]{\caplbl{EvalMetricsMatch}
     % ---
     Multiclass match-state evaluation metrics for plains and Grévy's zebras
     computed from the confusion matrix.
@@ -117,7 +118,7 @@ Positive match-state ROC.
 \end{comment}
 \newcommand{\ConfusionPhotobomb}{
 \begin{table}[h]
-    \caption[\caplbl{ConfusionPhotobomb}Photobomb-state confusion]{\caplbl{ConfusionPhotobomb}
+    \caption[\caplbl{ConfusionPhotobomb}Photobomb-state experiment confusion matrix]{\caplbl{ConfusionPhotobomb}
     % ---
     The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
     (groundtruth) classes.  The final column indicates the number of examples of each class.
@@ -132,7 +133,7 @@ Positive match-state ROC.
 
 \newcommand{\EvalMetricsPhotobomb}{
 \begin{table}
-    \caption[\caplbl{EvalMetricsPhotobomb}Photobomb-state metrics]{\caplbl{EvalMetricsPhotobomb}
+    \caption[\caplbl{EvalMetricsPhotobomb}Photobomb-state experiment evaluation metrics]{\caplbl{EvalMetricsPhotobomb}
     % ---
     The photobomb-state evaluation metrics computed from the confusion matrix.
     % ---
@@ -162,7 +163,7 @@ Positive match-state ROC.
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
 ~
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
-\caption[\caplbl{MatchWordCloud}Word cloud of important features for matching]{\caplbl{MatchWordCloud}
+\caption[\caplbl{MatchWordCloud}Word cloud of important features for match-state prediction]{\caplbl{MatchWordCloud}
 % ---
 Word cloud of important features for predicting match-state.
 For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_delta)}) has high importance
@@ -178,10 +179,10 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \newcommand{\ImportantMatchFeat}{
 \begin{table}
     \centering
-    \caption[\caplbl{ImportantMatchFeat}Important features for match prediction]{\caplbl{ImportantMatchFeat} 
+    \caption[\caplbl{ImportantMatchFeat}Important features for match-state prediction]{\caplbl{ImportantMatchFeat} 
     % ---
-    Top $5$ most important features for predicting that matching state (positive, negative, incomparable) for a pair of
-    annotations.
+    Top $5$ most important features for predicting the match-state (positive,
+    negative, incomparable) for a pair of annotations.
     %The sum of the importance for all $205$ feature dimensions is $1$.
     % ---
     }
@@ -216,7 +217,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \newcommand{\ImportantPBFeat}{
     \begin{table}
         \centering
-        \caption[\caplbl{ImportantPBFeat}Important features for photobomb prediction]{\caplbl{ImportantPBFeat} 
+        \caption[\caplbl{ImportantPBFeat}Important features for photobomb-state prediction]{\caplbl{ImportantPBFeat} 
         % ---
         Top $5$ most important features for predicting if a pair of annotations has a photobomb.  Notice that these
         features are related to the spatial location of the matches and to global information like speed that might

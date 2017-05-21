@@ -15,6 +15,22 @@ http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/0172
 % --------
 
 
+
+\begin{comment}
+wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
+python -m ibeis.scripts.specialdraw scalespace --dpath ~/latex/crall-thesis-2017/ --save figures2/ScaleSpaceFigure.png --dpi 300 --clipwhite --diskshow
+\end{comment}
+\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
+% ---
+A Gaussian pyramid is used as a scale space representation of an image.
+A property of scale space is that doubling the scale is equivalent to
+  downsampling the image by half.
+The set of images of a specific size correspond to an octave.
+The images within each octave are the intervals.
+% ---
+}{figures2/ScaleSpaceFigure.png}
+
+
 \begin{comment}
 python -m vtool.patch --test-draw_kp_ori_steps \
  --fname=zebra.png --fx=121 --stride=2 \
@@ -82,7 +98,7 @@ python -m plottool.viz_featrow --test-draw_feat_row --fname zebra.png --fx=121 -
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowA.jpg}\caption{}\label{sub:vizfeatrowA}\end{subfigure}
 ~~% --
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowB.jpg}\caption{}\label{sub:vizfeatrowB}\end{subfigure}
-\caption[A SIFT descriptor]{\caplbl{vizfeatrow}
+\caption[Example of a SIFT descriptor]{\caplbl{vizfeatrow}
 % ---
 \Cref{sub:vizfeatrowA} shows a SIFT feature superimposed over pixels it
   describes.
@@ -104,7 +120,7 @@ python -m plottool.draw_sv --test-show_sv_simple --dpath ~/latex/crall-thesis-20
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=.6\textwidth]{figures2/figSVInlier.jpg}
-\caption[Visualization of spatial verification]{\caplbl{figSVInlier}
+\caption[Before and after spatial verification]{\caplbl{figSVInlier}
 % ---
 Matches before and after spatial verification.
 Inconsistent matches are shown in red.
@@ -115,19 +131,3 @@ Notice that not all spatially consistent matches are correct.
 \label{fig:figSVInlier}
 \end{figure}
 }
-
-
-
-\begin{comment}
-wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
-python -m ibeis.scripts.specialdraw scalespace --dpath ~/latex/crall-thesis-2017/ --save figures2/ScaleSpaceFigure.png --dpi 300 --clipwhite --diskshow
-\end{comment}
-\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
-% ---
-A Gaussian pyramid is used as a scale space representation of an image.
-A property of scale space is that doubling the scale is equivalent to
-  downsampling the image by half.
-The set of images of a specific size correspond to an octave.
-The images within each octave are the intervals.
-% ---
-}{figures2/ScaleSpaceFigure.png}

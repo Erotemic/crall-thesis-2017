@@ -23,37 +23,24 @@ python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=
 
 python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6416,7458,13339,10170 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/PlainsFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
 \end{comment}
-%\SingleImageCommand{PlainsFigure}{.9}{
-\MultiImageCommandII{PlainsFigure}{.48}{Plains zebras}{
+\newcommand{\PlainsFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureA.jpg}\caption{}\label{sub:PlainsFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureB.jpg}\caption{}\label{sub:PlainsFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureD.jpg}\caption{}\label{sub:PlainsFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureC.jpg}\caption{}\label{sub:PlainsFigureC}\end{subfigure}
+\caption[\caplbl{PlainsFigure}Distinguishing features for plains zebras]{\caplbl{PlainsFigure}
 % ---
-For plains zebras, most distinguishing features tend to be located on
-  the upper shoulder.
-Other distinguishing features are typically be found on the face and
-  side.
-Image pairs~\cref{sub:PlainsFigureA,sub:PlainsFigureB}
-  and~\cref{sub:PlainsFigureC,sub:PlainsFigureD} depict the same
-  individual.
-% ---
-}{figures1/PlainsFigureA.jpg}{figures1/PlainsFigureB.jpg}{figures1/PlainsFigureC.jpg}{figures1/PlainsFigureD.jpg}
-%}{figures1/PlainsFigure.jpg}
-
-
-\begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=13285,12598,6563,9332 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/HardCaseFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
-\end{comment}
-\MultiImageCommandII{HardCaseFigure}{.48}{
-Visually similar plains zebras}{
-% ---
-Plains zebras with visual similarities can be difficult to distinguish.
-There are three individuals in these four images.
-The images in~\cref{sub:HardCaseFigureB,sub:HardCaseFigureD} depict the
+For a plains zebra, the most distinguishing features tend to be located on the upper shoulder.
+Other distinguishing features are typically be found on the face and side.
+Image pairs~\cref{sub:PlainsFigureA,sub:PlainsFigureB} and~\cref{sub:PlainsFigureC,sub:PlainsFigureD} depict the
   same individual.
-Dissimilarities can be seen on the lower thigh of
-  images~\cref{sub:HardCaseFigureC,sub:HardCaseFigureD}, as well as on
-  the front shoulder of
-  images~\cref{sub:HardCaseFigureA,sub:HardCaseFigureB}.
 % ---
-}{figures1/HardCaseFigureA.jpg}{figures1/HardCaseFigureB.jpg}{figures1/HardCaseFigureC.jpg}{figures1/HardCaseFigureD.jpg}
+}
+\label{fig:PlainsFigure}
+\end{figure}
+}
 
 
 \begin{comment}
@@ -61,19 +48,25 @@ python -m ibeis.viz.viz_name --exec-show_multiple_chips --aids=163,253,286,449 -
 %ib 
 %./main.py --db NNP_MasterGIRM_core --query 164 --daids-mode=all -y
 \end{comment}
-\MultiImageCommandII{GirMasaiFigure}{.33}{
-Masai giraffes}{
+\newcommand{\GirMasaiFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=265pt]{figures1/GirMasaiFigureA.jpg}\caption{}\label{sub:GirMasaiFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=265pt]{figures1/GirMasaiFigureB.jpg}\caption{}\label{sub:GirMasaiFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=180pt]{figures1/GirMasaiFigureC.jpg}\caption{}\label{sub:GirMasaiFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=180pt]{figures1/GirMasaiFigureD.jpg}\caption{}\label{sub:GirMasaiFigureD}\end{subfigure}
+\caption[\caplbl{GirMasaiFigure}Distinguishing features for Masai giraffes]{\caplbl{GirMasaiFigure}
 % ---
-Masai giraffes have an abundance of features distinctive to each
-  individual.
-There are two individuals seen in images
-  pairs~\cref{sub:GirMasaiFigureA,sub:GirMasaiFigureB}
+Masai giraffes have an abundance of features distinctive to each individual.
+There are two individuals seen in images pairs~\cref{sub:GirMasaiFigureA,sub:GirMasaiFigureB}
   and~\cref{sub:GirMasaiFigureC,sub:GirMasaiFigureD}.
-Note that the numerous features make it initially difficult for a human
-  to match giraffes.
-In contrast, this is easy for algorithms.
+Note that the numerous features make it initially difficult for a human to match giraffes.
+In contrast, this is easier for algorithms.
 % ---
-}{figures1/GirMasaiFigureA.jpg}{figures1/GirMasaiFigureB.jpg}{figures1/GirMasaiFigureC.jpg}{figures1/GirMasaiFigureD.jpg}
+}
+\label{fig:GirMasaiFigure}
+\end{figure}
+}
 
 
 \begin{comment}
@@ -81,77 +74,78 @@ python -m ibeis.viz.viz_name --exec-show_multiple_chips --aids=923,1013,823,960 
 %ib 
 ./main.py --db GZ_ALL --query 923 --daids-mode=all -y
 \end{comment}
-\MultiImageCommandII{GrevysFigure}{.48}{Grévy's zebras}{
+\newcommand{\GrevysFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureA.jpg}\caption{}\label{sub:GrevysFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureB.jpg}\caption{}\label{sub:GrevysFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureC.jpg}\caption{}\label{sub:GrevysFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureD.jpg}\caption{}\label{sub:GrevysFigureD}\end{subfigure}
+\caption[\caplbl{GrevysFigure}Distinguishing features for Grévy's zebras]{\caplbl{GrevysFigure}
 % ---
-Grévy's zebras most distinctive features are above the front and rear legs.
+A Grévy's zebra's most distinctive features are above the front and rear legs.
 Useful, but less distinctive information can be seen on the side of the body.
-Image pairs~\cref{sub:GrevysFigureA,sub:GrevysFigureB}
-and~\cref{sub:GrevysFigureC,sub:GrevysFigureD} depict the same individual.
+Image pairs~\cref{sub:GrevysFigureA,sub:GrevysFigureB} and~\cref{sub:GrevysFigureC,sub:GrevysFigureD} depict the
+  same individual.
 % ---
-}{figures1/GrevysFigureA.jpg}{figures1/GrevysFigureB.jpg}{figures1/GrevysFigureC.jpg}{figures1/GrevysFigureD.jpg}
+}
+\label{fig:GrevysFigure}
+\end{figure}
+}
 
 
 \begin{comment}
 python -m ibeis.viz.viz_name show_multiple_chips --aids=7,2,8 --db=humpbacks_fb --dpath ~/latex/crall-thesis-2017/ --save "figures1/HumpbackFig.jpg" --figsize=9,4 --clipwhite --dpi=300 --no-inimage --adjust=.05,.05,.15 --no-figtitle --notitle --diskshow --saveparts 
 \end{comment}
-\MultiImageCommandII{HumpbackFig}{.31}{Humpback whale}{
-    %
-    A humpback whale can be identified by the texture patterns on the fluke or
-    using the shape of the notches along the edge of the fluke.  Note that some
-    humpbacks (like the on seen in \ref{sub:HumpbackFigB}) do not have any
-    texture patterns on their fluke.  Subfigures \ref{sub:HumpbackFigA} and
-    \ref{sub:HumpbackFigC} are the same individual.
-    %
-}{figures1/HumpbackFigA.jpg}{figures1/HumpbackFigB.jpg}{figures1/HumpbackFigC.jpg}
-
-
+\newcommand{\HumpbackFig}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigA.jpg}\caption{}\label{sub:HumpbackFigA}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigB.jpg}\caption{}\label{sub:HumpbackFigB}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigC.jpg}\caption{}\label{sub:HumpbackFigC}\end{subfigure}
+\caption[\caplbl{HumpbackFig}Distinguishing features for humpback whales]{\caplbl{HumpbackFig}
+% ---
+A humpback whale can be identified by the texture patterns on the fluke or using the shape of the notches along
+  the edge of the fluke.
+Note that some humpbacks (like the on seen in \ref{sub:HumpbackFigB}) do not have any texture patterns on their
+  fluke.
+The pair of images \cref{sub:HumpbackFigA,sub:HumpbackFigC} depict the same individual.
+% ---
+}
+\label{fig:HumpbackFig}
+\end{figure}
+}
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save 'figures1/OccludeFigure.jpg' --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=180 --adjust=.05,.05,.05,.15 --clipwhite --no-inimage --aids=13870,13740,7735,13233,13603,13906,7354,9776 --rc=2,4 --append temp_out_figure.tex --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=13285,12598,6563,9332 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/HardCaseFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
 \end{comment}
-\newcommand{\OccludeFigure}{
-\begin{figure}[ht!]
+\newcommand{\HardCaseFigure}{
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureA.jpg}\caption{}\label{sub:OccludeFigureA}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureB.jpg}\caption{}\label{sub:OccludeFigureB}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureC.jpg}\caption{}\label{sub:OccludeFigureC}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureD.jpg}\caption{}\label{sub:OccludeFigureD}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureE.jpg}\caption{}\label{sub:OccludeFigureE}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureF.jpg}\caption{}\label{sub:OccludeFigureF}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureG.jpg}\caption{}\label{sub:OccludeFigureG}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures1/OccludeFigureH.jpg}\caption{}\label{sub:OccludeFigureH}\end{subfigure}
-\caption[\caplbl{OccludeFigure}Examples of occlusion and distractors]{\caplbl{OccludeFigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureB.jpg}\caption{}\label{sub:HardCaseFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureA.jpg}\caption{}\label{sub:HardCaseFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureC.jpg}\caption{}\label{sub:HardCaseFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureD.jpg}\caption{}\label{sub:HardCaseFigureD}\end{subfigure}
+\caption[\caplbl{HardCaseFigure}Visually similar plains zebras]{\caplbl{HardCaseFigure}
 % ---
-Animals under varying degrees of occlusion from scenery and other secondary animals.
-Occlusions can obfuscate or remove distinctive feature entirely.
-Secondary animals can introduce new distinctive features that do not belong to the primary animal.
-Images like this can cause other images of the secondary animal to the primary animal.
+Different plains zebras sometimes have visual similarities that can be difficult to distinguish.
+There are three individuals in these four images.
+The images in~\cref{sub:HardCaseFigureB,sub:HardCaseFigureD} depict the same individual.
+Dissimilarities can be seen on the lower thigh of images~\cref{sub:HardCaseFigureC,sub:HardCaseFigureD}, as well
+  as on the front shoulder of images~\cref{sub:HardCaseFigureA,sub:HardCaseFigureB}.
 % ---
 }
-\label{fig:OccludeFigure}
+\label{fig:HardCaseFigure}
 \end{figure}
 }
+
 
 
 
 \begin{comment}
 python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6524,6540,6571,6751 --no-inimage --notitle --adjust=.05 --dpath ~/latex/cand/ --save "figures1/BacksFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --rc=1,4 --diskshow --saveparts
 \end{comment}
-%\MultiImageCommandII{BacksFigure}{.22}{Back viewpoints of plains zebras}{
-%% ---
-%The backs of plains zebras have very little distinguishing information.
-%All of the above images are different individuals.
-%% ---
-%}{figures1/BacksFigureA.jpg}{figures1/BacksFigureB.jpg}{figures1/BacksFigureC.jpg}{figures1/BacksFigureD.jpg}
-
 \newcommand{\BacksFigure}{
 \begin{figure}[h]
 \centering
@@ -176,24 +170,19 @@ python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=5
 ./dev.py --db PZ_Master0 --eval="','.join(list(map(str, ibs.search_annot_notes('360'))))"
 \end{comment}
 \newcommand{\ThreeSixtyFigure}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=120pt]{figures1/ThreeSixtyFigureA.jpg}\caption{}\label{sub:ThreeSixtyFigureA}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=120pt]{figures1/ThreeSixtyFigureB.jpg}\caption{}\label{sub:ThreeSixtyFigureB}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[height=120pt]{figures1/ThreeSixtyFigureC.jpg}\caption{}\label{sub:ThreeSixtyFigureC}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureD.jpg}\caption{}\label{sub:ThreeSixtyFigureD}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.33\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureE.jpg}\caption{}\label{sub:ThreeSixtyFigureE}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureF.jpg}\caption{}\label{sub:ThreeSixtyFigureF}\end{subfigure}
-\caption[\caplbl{ThreeSixtyFigure}Viewpoint variations]{\caplbl{ThreeSixtyFigure}
+%\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureF.jpg}\caption{}\label{sub:ThreeSixtyFigureF}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureA.jpg}\caption{}\label{sub:ThreeSixtyFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.28\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureB.jpg}\caption{}\label{sub:ThreeSixtyFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureC.jpg}\caption{}\label{sub:ThreeSixtyFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureD.jpg}\caption{}\label{sub:ThreeSixtyFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureE.jpg}\caption{}\label{sub:ThreeSixtyFigureE}\end{subfigure}
+\caption[\caplbl{ThreeSixtyFigure}Examples of viewpoint variations]{\caplbl{ThreeSixtyFigure}
 % ---
-Viewpoint variations of a individual Grévy's zebra.  It would not be possible
-to match image~\cref{sub:ThreeSixtyFigureA,sub:ThreeSixtyFigureE} without
-information from images showing intermediate views.
+Viewpoint variations of an individual Grévy's zebra.
+It would not be possible to match image~\cref{sub:ThreeSixtyFigureA,sub:ThreeSixtyFigureE} without information
+  from images showing intermediate views.
 % ---
 }
 \label{fig:ThreeSixtyFigure}
@@ -205,30 +194,51 @@ information from images showing intermediate views.
 python -m ibeis.viz.viz_name --test-show_multiple_chips --aids=11081,13057,15897,15249,8081,13758 --db NNP_Master3 --dpath ~/latex/cand --save figures1/PoseFigure.jpg  --figsize=9,4 --clipwhite --dpi=180 --adjust=.05,.05,.05,.15 --no-figtitle --notitle --diskshow --no-draw_lbls --zoom=.5 --saveparts
 \end{comment}
 \newcommand{\PoseFigure}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureA.jpg}\caption{}\label{sub:PoseFigureA}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureB.jpg}\caption{}\label{sub:PoseFigureB}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureC.jpg}\caption{}\label{sub:PoseFigureC}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureD.jpg}\caption{}\label{sub:PoseFigureD}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureE.jpg}\caption{}\label{sub:PoseFigureE}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[width=\textwidth]{figures1/PoseFigureF.jpg}\caption{}\label{sub:PoseFigureF}\end{subfigure}
-\caption[\caplbl{PoseFigure}Challenging pose variations]{\caplbl{PoseFigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureA.jpg}\caption{}\label{sub:PoseFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureE.jpg}\caption{}\label{sub:PoseFigureE}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureD.jpg}\caption{}\label{sub:PoseFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureB.jpg}\caption{}\label{sub:PoseFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureC.jpg}\caption{}\label{sub:PoseFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=100pt]{figures1/PoseFigureF.jpg}\caption{}\label{sub:PoseFigureF}\end{subfigure}
+\caption[\caplbl{PoseFigure}Examples of challenging pose variations]{\caplbl{PoseFigure}
 % ---
 Animals can appear in a wide variety of poses.
-To clearly see the different poses, the images are shown with
-  surrounding context.
-When running identification the image is cropped to the bounding box
-  shown around each animal.
-%When matching an animal, the
+To clearly see the different poses, the images are shown with surrounding context.
+Durring identification the image is cropped to the bounding box shown around each animal.
 % ---
 }
 \label{fig:PoseFigure}
+\end{figure}
+}
+
+
+
+\begin{comment}
+python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save 'figures1/OccludeFigure.jpg' --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=180 --adjust=.05,.05,.05,.15 --clipwhite --no-inimage --aids=13870,13740,7735,13233,13603,13906,7354,9776 --rc=2,4 --append temp_out_figure.tex --diskshow --saveparts
+\end{comment}
+\newcommand{\OccludeFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureC.jpg}\caption{}\label{sub:OccludeFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureB.jpg}\caption{}\label{sub:OccludeFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureH.jpg}\caption{}\label{sub:OccludeFigureH}\end{subfigure}
+\begin{subfigure}[h]{0.38\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureD.jpg}\caption{}\label{sub:OccludeFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.30\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureE.jpg}\caption{}\label{sub:OccludeFigureE}\end{subfigure}
+\begin{subfigure}[h]{0.30\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureF.jpg}\caption{}\label{sub:OccludeFigureF}\end{subfigure}
+
+%\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[height=80pt]{figures1/OccludeFigureA.jpg}\caption{}\label{sub:OccludeFigureA}\end{subfigure}
+%\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=60pt]{figures1/OccludeFigureG.jpg}\caption{}\label{sub:OccludeFigureG}\end{subfigure}
+\caption[\caplbl{OccludeFigure}Examples of occlusion and distractors]{\caplbl{OccludeFigure}
+% ---
+Animals under varying degrees of occlusion from scenery and other secondary animals.
+Occlusions can obfuscate or remove distinctive feature entirely.
+Secondary animals can introduce new distinctive features that do not belong to the primary animal.
+Images like this can cause other images of the secondary animal to the primary animal.
+% ---
+}
+\label{fig:OccludeFigure}
 \end{figure}
 }
 
@@ -240,24 +250,17 @@ python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --s
 \newcommand{\IlluminationFigure}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureA.jpg}\caption{}\label{sub:IlluminationFigureA} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureB.jpg}\caption{}\label{sub:IlluminationFigureB} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureC.jpg}\caption{}\label{sub:IlluminationFigureC} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureD.jpg}\caption{}\label{sub:IlluminationFigureD} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureE.jpg}\caption{}\label{sub:IlluminationFigureE} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.3\textwidth} \centering \includegraphics[width=\textwidth]{figures1/IlluminationFigureF.jpg}\caption{}\label{sub:IlluminationFigureF} \end{subfigure}
-\caption[\caplbl{IlluminationFigure}Challenging outdoor lighting conditions]{\caplbl{IlluminationFigure}
+%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureA.jpg}\caption{}\label{sub:IlluminationFigureA}\end{subfigure}
+%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureB.jpg}\caption{}\label{sub:IlluminationFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.36\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureC.jpg}\caption{}\label{sub:IlluminationFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.60\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureF.jpg}\caption{}\label{sub:IlluminationFigureF}\end{subfigure}
+\begin{subfigure}[h]{0.50\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureD.jpg}\caption{}\label{sub:IlluminationFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.46\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureE.jpg}\caption{}\label{sub:IlluminationFigureE}\end{subfigure}
+\caption[\caplbl{IlluminationFigure}Examples of different lighting conditions]{\caplbl{IlluminationFigure}
 % ---
 The effects of outdoor and illumination.
-Shadow and illumination can cause variations in the underlying image intensity
-  and gradients.
-This can makes it more difficult to localize repeatable keypoints and describe
-  the underlying texture patterns.
+Shadow and illumination can cause variations in the underlying image intensity and gradients.
+This can makes it more difficult to localize repeatable keypoints and describe the underlying texture patterns.
 % ---
 }
 \label{fig:IlluminationFigure}
@@ -273,26 +276,20 @@ python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --dpath
 \newcommand{\QualityFigure}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures1/QualityFigureA.jpg}\caption{}\label{sub:QualityFigureA} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures1/QualityFigureB.jpg}\caption{}\label{sub:QualityFigureB} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures1/QualityFigureC.jpg}\caption{}\label{sub:QualityFigureC} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures1/QualityFigureD.jpg}\caption{}\label{sub:QualityFigureD} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures1/QualityFigureE.jpg}\caption{}\label{sub:QualityFigureE} \end{subfigure}
-\caption[\caplbl{QualityFigure}Challenging image qualities]{\caplbl{QualityFigure}
+\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[height=150pt]{figures1/QualityFigureA.jpg}\caption{}\label{sub:QualityFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[height=150pt]{figures1/QualityFigureB.jpg}\caption{}\label{sub:QualityFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[height=150pt]{figures1/QualityFigureC.jpg}\caption{}\label{sub:QualityFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[height=150pt]{figures1/QualityFigureD.jpg}\caption{}\label{sub:QualityFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[height=150pt]{figures1/QualityFigureE.jpg}\caption{}\label{sub:QualityFigureE}\end{subfigure}
+\caption[\caplbl{QualityFigure}Examples of different image qualities]{\caplbl{QualityFigure}
 % ---
 An individual seen in images of different qualities.
-The bottom row shows the cropped images that correspond to the ROIs in the top
-  row.
+The bottom row shows the cropped images that correspond to the bounding boxes in the top row.
 Each column shows different qualities:
-\Cref{sub:QualityFigureA} an excellent quality image taken from a short distance,
-\Cref{sub:QualityFigureB} a good quality image with minor shadow and taken from a medium distance,
-\Cref{sub:QualityFigureC} an ok quality image due to minor occlusion,
-\Cref{sub:QualityFigureD} a poor quality image due to major occlusion,
-\Cref{sub:QualityFigureE} a junk quality image due to considerable blur.
+\Cref{sub:QualityFigureA} an excellent quality image taken from a short distance, \Cref{sub:QualityFigureB} a
+  good quality image with minor shadow and taken from a medium distance, \Cref{sub:QualityFigureC} an ok quality
+  image due to minor occlusion, \Cref{sub:QualityFigureD} a poor quality image due to major occlusion,
+  \Cref{sub:QualityFigureE} a junk quality image due to considerable blur.
 % ---
 }
 \label{fig:QualityFigure}
@@ -303,45 +300,57 @@ Each column shows different qualities:
 \begin{comment}
 python -m ibeis.viz.viz_name --test-show_name --name=08_106 --db PZ_MTEST --save "figures1/Age.jpg" --dpath ~/latex/cand/ --figsize=9,4 --clipwhite --dpi=180 --adjust=.05 --no-figtitle --notitle --diskshow --no-draw_lbls --no-inimage --saveparts
 \end{comment}
-%\SingleImageCommand{AgeFigure}{.9}{Visual differences caused by age}{
-\MultiImageCommandII{AgeFigure}{.4}{Visual differences caused by age}{
+\newcommand{\AgeFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/AgeA.jpg}\caption{}\label{sub:AgeA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/AgeB.jpg}\caption{}\label{sub:AgeB}\end{subfigure}
+\caption[\caplbl{AgeFigure}Examples of visual differences caused by age]{\caplbl{AgeFigure}
 % ---
 The left and right images show the adult and juvenile appearance of the
   same individual.
 As an animal ages its appearance changes mainly in color and texture
   with some minor shape and scale differences.
 % ---
-}{figures1/AgeA.jpg}{figures1/AgeB.jpg}
-%}{figures1/Age.jpg}
+}
+\label{fig:AgeFigure}
+\end{figure}
+}
 
 
 \begin{comment}
 python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=4020,4839 --no-inimage --notitle --adjust=.05 --dpath ~/latex/cand/ --save "figures1/GashFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
 \end{comment}
-\MultiImageCommandII{GashFigure}{.4}{Visual differences caused by injuries}{
+\newcommand{\GashFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/GashFigureA.jpg}\caption{}\label{sub:GashFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/GashFigureB.jpg}\caption{}\label{sub:GashFigureB}\end{subfigure}
+\caption[\caplbl{GashFigure}Examples of visual differences caused by injuries]{\caplbl{GashFigure}
 % ---
 Injuries can obscure features on an animal as well as creating new ones.
 The left image shows a wounded animal, and the right image shows an animal
   with a distinguishing scaring pattern.
 % ---
-}{figures1/GashFigureA.jpg}{figures1/GashFigureB.jpg}
-%}{figures1/gash.jpg}
+}
+\label{fig:GashFigure}
+\end{figure}
+}
 
 
 \begin{comment}
 python -m ibeis.viz.viz_image --test-show_multi_images --db NNP_Master3 --gids=7409,7448,4670,7497,7496,7464 --adjust=.05 --dpath ~/latex/cand/ --save "figures1/DetectFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
 7409,7448,4670,7497,7496,7464,7446,7442 
 \end{comment}
-%\SingleImageCommand{DetectFigure}{.9}{Detection of plains zebras}{
 \newcommand{\DetectFigure}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureA.jpg}\caption{}\label{sub:DetectFigureA} \end{subfigure}
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureB.jpg}\caption{}\label{sub:DetectFigureB} \end{subfigure}
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureC.jpg}\caption{}\label{sub:DetectFigureC} \end{subfigure}
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureD.jpg}\caption{}\label{sub:DetectFigureD} \end{subfigure}
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureE.jpg}\caption{}\label{sub:DetectFigureE} \end{subfigure}
-\begin{subfigure}[h]{0.32\textwidth} \centering \includegraphics[width=\textwidth]{figures1/DetectFigureF.jpg}\caption{}\label{sub:DetectFigureF} \end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureA.jpg}\caption{}\label{sub:DetectFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureB.jpg}\caption{}\label{sub:DetectFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureC.jpg}\caption{}\label{sub:DetectFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureD.jpg}\caption{}\label{sub:DetectFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureE.jpg}\caption{}\label{sub:DetectFigureE}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=80pt]{figures1/DetectFigureF.jpg}\caption{}\label{sub:DetectFigureF}\end{subfigure}
 \caption[\caplbl{DetectFigure}Detection of plains zebras]{\caplbl{DetectFigure}
 % ---
 Images from the \GZC{} with detections of plains zebras.
@@ -356,43 +365,25 @@ Detections were automatically suggested and manually verified before
 \begin{comment}
 python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save figures1/OccurrenceComplementFigure.jpg --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --clipwhite --dpi=180 --adjust=.03 --no-inimage --aids=15288,15333,15797 --diskshow --saveparts
 \end{comment}
-\MultiImageCommandII{OccurrenceComplementFigure}{.3}{Multiple views in an \occurrence{}}{
+\newcommand{\OccurrenceComplementFigure}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.33\textwidth}\centering\includegraphics[height=85pt]{figures1/OccurrenceComplementFigureA.jpg}\caption{}\label{sub:OccurrenceComplementFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[height=85pt]{figures1/OccurrenceComplementFigureB.jpg}\caption{}\label{sub:OccurrenceComplementFigureB}\end{subfigure}
+\begin{subfigure}[h]{0.30\textwidth}\centering\includegraphics[height=85pt]{figures1/OccurrenceComplementFigureC.jpg}\caption{}\label{sub:OccurrenceComplementFigureC}\end{subfigure}
+\caption[\caplbl{OccurrenceComplementFigure}Multiple images in an occurrence]{\caplbl{OccurrenceComplementFigure}
 % ---
-Images taken within an \occurrence{} that demonstrate redundant and
-  complementary features.
+Images taken within an occurrence that demonstrate redundant and complementary features.
 Features on the shoulders are somewhat redundant in
   images~\cref{sub:OccurrenceComplementFigureA,sub:OccurrenceComplementFigureB,sub:OccurrenceComplementFigureC}
-  because they are all under approximately constant illumination and are
-  seen from the same angle.
-Images~\cref{sub:OccurrenceComplementFigureA,sub:OccurrenceComplementFigureC}
-  have complementary features because the viewpoint of the animal has
-  shifted slightly.
+  because they are all under approximately constant illumination and are seen from the same angle.
+Images~\cref{sub:OccurrenceComplementFigureA,sub:OccurrenceComplementFigureC} have complementary features because
+  the viewpoint of the animal has shifted slightly.
 % ---
-}{figures1/OccurrenceComplementFigureA.jpg}{figures1/OccurrenceComplementFigureB.jpg}{figures1/OccurrenceComplementFigureC.jpg}
-
-
-\begin{comment}
-
-python -m ibeis.viz.viz_qres show_qres --db=PZ_MTEST --qaid=45 --top-aids=5 \
-    --simplemode --sidebyside --annot_mode=0 --notitle --no-viz_name_score \
-    --max_nCols=3 --adjust=.02 --figsize=9,4 --show --dpi=300 \
-    --dpath=~/latex/crall-thesis-2017 --save=figures1/RankFigure2.jpg --diskshow --saveparts
-
-python -m ibeis.viz.viz_qres show_qres --db=PZ_MTEST --qaids=45 --top-aids=5 \
-    --simplemode --sidebyside --annot_mode=0 --notitle --no-viz_name_score --max_nCols=1 --adjust=.02 --figsize=9,4 --show
-
-python -m ibeis.viz.viz_qres --test-show_qres --qaids=45 --top-aids=12 --db=PZ_MTEST --simplemode --sidebyside --annot_mode=0 --notitle --no-viz_name_score --max_nCols=4 --adjust=.02 --figsize=9,4 --dpi=120 --clipwhite --dpath=~/latex/cand --save=figures1/RankFigure.jpg --diskshow
-\end{comment}
-%\SingleImageCommand{RankFigure}{.9}{Examples of top ranked matches}{
-%% ---
-%A ranked list image pairs.
-%Each pair is a one-vs-one comparison.
-%All of the left images are the same.
-%The right image in each pair shows a candidate match.
-%The correct match is in the top-left.
-%% ---
-%}{figures1/RankFigure.jpg}
-
+}
+\label{fig:OccurrenceComplementFigure}
+\end{figure}
+}
 
 \begin{comment}
 python -m ibeis.viz.viz_qres show_qres --db=PZ_MTEST --qaid=45 --top-aids=5 --simplemode --sidebyside --annot_mode=0 --notitle --no-viz_name_score --max_nCols=3 --adjust=.02 --figsize=9,4 --show --dpi=300 '--dpath=~/latex/crall-thesis-2017' --save=figures1/RankFigure2.jpg --diskshow --saveparts
