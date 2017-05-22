@@ -17,17 +17,17 @@
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6416,7458,13339,10170 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/PlainsFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --numlbl
-
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6416,7458,13339,10170 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/PlainsFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
+python -m ibeis.viz.viz_name show_multiple_chips --db NNP_Master3 --aids=6416,7458,13339,10170 \
+    --no-inimage --notitle --adjust=.05 --rc=1,4 --saveparts \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures1/PlainsFigure.jpg" --figsize=9,4 --dpi=300 --diskshow 
 \end{comment}
 \newcommand{\PlainsFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureA.jpg}\caption{}\label{sub:PlainsFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureA.jpg}\caption{}\label{sub:PlainsFigureA}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureB.jpg}\caption{}\label{sub:PlainsFigureB}\end{subfigure}
-\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureD.jpg}\caption{}\label{sub:PlainsFigureD}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureC.jpg}\caption{}\label{sub:PlainsFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.44\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureD.jpg}\caption{}\label{sub:PlainsFigureD}\end{subfigure}%
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/PlainsFigureC.jpg}\caption{}\label{sub:PlainsFigureC}\end{subfigure}%
 \caption[\caplbl{PlainsFigure}Distinguishing features for plains zebras]{\caplbl{PlainsFigure}
 % ---
 For a plains zebra, the most distinguishing features tend to be located on the upper shoulder.
@@ -42,16 +42,18 @@ Image pairs~\cref{sub:PlainsFigureA,sub:PlainsFigureB} and~\cref{sub:PlainsFigur
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --exec-show_multiple_chips --aids=163,253,286,449 --db=NNP_MasterGIRM_core --dpath ~/latex/cand/ --save "figures1/GirMasaiFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --no-inimage --adjust=.05 --no-figtitle --notitle --diskshow --rc=1,4 --numlbl
-%ib 
+python -m ibeis.viz.viz_name show_multiple_chips --aids=163,253,286,449 --db=NNP_MasterGIRM_core \
+    --no-inimage --adjust=.05 --no-figtitle --notitle --rc=1,4  --dpi=300 --figsize=9,4 \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures1/GirMasaiFigure.jpg"  \
+    --saveparts --diskshow
 %./main.py --db NNP_MasterGIRM_core --query 164 --daids-mode=all -y
 \end{comment}
 \newcommand{\GirMasaiFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=265pt]{figures1/GirMasaiFigureA.jpg}\caption{}\label{sub:GirMasaiFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=265pt]{figures1/GirMasaiFigureA.jpg}\caption{}\label{sub:GirMasaiFigureA}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=265pt]{figures1/GirMasaiFigureB.jpg}\caption{}\label{sub:GirMasaiFigureB}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=180pt]{figures1/GirMasaiFigureC.jpg}\caption{}\label{sub:GirMasaiFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=180pt]{figures1/GirMasaiFigureC.jpg}\caption{}\label{sub:GirMasaiFigureC}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=180pt]{figures1/GirMasaiFigureD.jpg}\caption{}\label{sub:GirMasaiFigureD}\end{subfigure}
 \caption[\caplbl{GirMasaiFigure}Distinguishing features for Masai giraffes]{\caplbl{GirMasaiFigure}
 % ---
@@ -68,16 +70,19 @@ In contrast, this is easier for algorithms.
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --exec-show_multiple_chips --aids=923,1013,823,960 --db=GZ_ALL --dpath ~/latex/cand/ --save "figures1/GrevysFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --no-inimage --adjust=.05,.05,.15 --no-figtitle --notitle --diskshow --rc=2,2 --numlbl
+python -m ibeis.viz.viz_name show_multiple_chips --aids=923,1013,823,960 --db=GZ_ALL  \
+    --no-figtitle --notitle --no-inimage --rc=2,2 \
+    --dpath ~/latex/cand/ --save "figures1/GrevysFigure.jpg"  --saveparts \
+    --figsize=9,4  --dpi=300 --diskshow
 %ib 
 ./main.py --db GZ_ALL --query 923 --daids-mode=all -y
 \end{comment}
 \newcommand{\GrevysFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureA.jpg}\caption{}\label{sub:GrevysFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureA.jpg}\caption{}\label{sub:GrevysFigureA}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureB.jpg}\caption{}\label{sub:GrevysFigureB}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureC.jpg}\caption{}\label{sub:GrevysFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureC.jpg}\caption{}\label{sub:GrevysFigureC}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=90pt]{figures1/GrevysFigureD.jpg}\caption{}\label{sub:GrevysFigureD}\end{subfigure}
 \caption[\caplbl{GrevysFigure}Distinguishing features for Grévy's zebras]{\caplbl{GrevysFigure}
 % ---
@@ -93,14 +98,14 @@ Image pairs~\cref{sub:GrevysFigureA,sub:GrevysFigureB} and~\cref{sub:GrevysFigur
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name show_multiple_chips --aids=7,2,8 --db=humpbacks_fb --dpath ~/latex/crall-thesis-2017/ --save "figures1/HumpbackFig.jpg" --figsize=9,4 --clipwhite --dpi=300 --no-inimage --adjust=.05,.05,.15 --no-figtitle --notitle --diskshow --saveparts 
+python -m ibeis.viz.viz_name show_multiple_chips --aids=7,2,8 --db=humpbacks_fb --dpath ~/latex/crall-thesis-2017/ --save "figures1/HumpbackFig.jpg" --figsize=9,4  --dpi=300 --no-inimage --adjust=.05,.05,.15 --no-figtitle --notitle --diskshow --saveparts 
 \end{comment}
 \newcommand{\HumpbackFig}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigA.jpg}\caption{}\label{sub:HumpbackFigA}\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigB.jpg}\caption{}\label{sub:HumpbackFigB}\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigC.jpg}\caption{}\label{sub:HumpbackFigC}\end{subfigure}
+\begin{subfigure}[h]{0.33\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigA.jpg}\caption{}\label{sub:HumpbackFigA}\end{subfigure}%
+\begin{subfigure}[h]{0.33\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigB.jpg}\caption{}\label{sub:HumpbackFigB}\end{subfigure}%
+\begin{subfigure}[h]{0.33\textwidth}\centering\includegraphics[height=88pt]{figures1/HumpbackFigC.jpg}\caption{}\label{sub:HumpbackFigC}\end{subfigure}
 \caption[\caplbl{HumpbackFig}Distinguishing features for humpback whales]{\caplbl{HumpbackFig}
 % ---
 A humpback whale can be identified by the texture patterns on the fluke or using the shape of the notches along
@@ -116,15 +121,15 @@ The pair of images \cref{sub:HumpbackFigA,sub:HumpbackFigC} depict the same indi
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=13285,12598,6563,9332 --no-inimage --notitle --adjust=.05 --rc=1,4 --dpath ~/latex/cand/ --save "figures1/HardCaseFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
+python -m ibeis.viz.viz_name show_multiple_chips --db NNP_Master3 --aids=13285,12598,6563,9332 --no-inimage --notitle --rc=1,4 --dpath ~/latex/crall-thesis-2017/ --save "figures1/HardCaseFigure.jpg" --figsize=9,4  --dpi=300 --diskshow --saveparts
 \end{comment}
 \newcommand{\HardCaseFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureB.jpg}\caption{}\label{sub:HardCaseFigureB}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureA.jpg}\caption{}\label{sub:HardCaseFigureA}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureC.jpg}\caption{}\label{sub:HardCaseFigureC}\end{subfigure}
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureD.jpg}\caption{}\label{sub:HardCaseFigureD}\end{subfigure}
+\begin{subfigure}[h]{0.45\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureB.jpg}\caption{}\label{sub:HardCaseFigureB}\end{subfigure}%
+\begin{subfigure}[h]{0.55\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureA.jpg}\caption{}\label{sub:HardCaseFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.45\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureC.jpg}\caption{}\label{sub:HardCaseFigureC}\end{subfigure}%
+\begin{subfigure}[h]{0.55\textwidth}\centering\includegraphics[height=110pt]{figures1/HardCaseFigureD.jpg}\caption{}\label{sub:HardCaseFigureD}\end{subfigure}
 \caption[\caplbl{HardCaseFigure}Visually similar plains zebras]{\caplbl{HardCaseFigure}
 % ---
 Different plains zebras sometimes have visual similarities that can be difficult to distinguish.
@@ -142,14 +147,14 @@ Dissimilarities can be seen on the lower thigh of images~\cref{sub:HardCaseFigur
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6524,6540,6571,6751 --no-inimage --notitle --adjust=.05 --dpath ~/latex/cand/ --save "figures1/BacksFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --rc=1,4 --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --aids=6524,6540,6571,6751 --no-inimage --notitle --dpath ~/latex/crall-thesis-2017/ --save "figures1/BacksFigure.jpg" --figsize=9,4  --dpi=300 --rc=1,4 --diskshow --saveparts
 \end{comment}
 \newcommand{\BacksFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureA.jpg}\caption{}\label{sub:BacksFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureA.jpg}\caption{}\label{sub:BacksFigureA}\end{subfigure}%
 \begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureB.jpg}\caption{}\label{sub:BacksFigureB}\end{subfigure}
-\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureC.jpg}\caption{}\label{sub:BacksFigureC}\end{subfigure}
+\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureC.jpg}\caption{}\label{sub:BacksFigureC}\end{subfigure}%
 \begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=165pt]{figures1/BacksFigureD.jpg}\caption{}\label{sub:BacksFigureD}\end{subfigure}
 \caption[\caplbl{BacksFigure}Back viewpoints of plains zebras]{\caplbl{BacksFigure}
 % ---
@@ -164,13 +169,14 @@ All of the above images are different individuals.
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=5878,5885,5886,5888,5890,5904 --no-inimage --notitle --adjust=.05,.05,.05,.15 --dpath ~/latex/cand/ --save "figures1/ThreeSixtyFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=5878,5885,5886,5888,5890,5904 --no-inimage --notitle --dpath ~/latex/crall-thesis-2017/ --save "figures1/ThreeSixtyFigure.jpg" --figsize=9,4  --dpi=300 --diskshow --saveparts
+
 ./dev.py --db PZ_Master0 --eval="','.join(list(map(str, ibs.search_annot_notes('360'))))"
 \end{comment}
 \newcommand{\ThreeSixtyFigure}{
 \begin{figure}[h]
 \centering
-%\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureF.jpg}\caption{}\label{sub:ThreeSixtyFigureF}\end{subfigure}
+%\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=110pt]{figures1/ThreeSixtyFigureF.jpg}\caption{}\label{sub:ThreeSixtyFigureF}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureA.jpg}\caption{}\label{sub:ThreeSixtyFigureA}\end{subfigure}
 \begin{subfigure}[h]{0.28\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureB.jpg}\caption{}\label{sub:ThreeSixtyFigureB}\end{subfigure}
 \begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[height=155pt]{figures1/ThreeSixtyFigureC.jpg}\caption{}\label{sub:ThreeSixtyFigureC}\end{subfigure}
@@ -189,7 +195,9 @@ It would not be possible to match image~\cref{sub:ThreeSixtyFigureA,sub:ThreeSix
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --aids=11081,13057,15897,15249,8081,13758 --db NNP_Master3 --dpath ~/latex/cand --save figures1/PoseFigure.jpg  --figsize=9,4 --clipwhite --dpi=180 --adjust=.05,.05,.05,.15 --no-figtitle --notitle --diskshow --no-draw_lbls --zoom=.5 --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --aids=11081,13057,15897,15249,8081,13758 --db NNP_Master3 --dpath ~/latex/crall-thesis-2017 --save figures1/PoseFigure.jpg  --figsize=9,4  --dpi=300 --no-figtitle --notitle --diskshow --no-draw_lbls --zoom=.5 --saveparts
+
+--adjust=.05,.05,.05,.15 
 \end{comment}
 \newcommand{\PoseFigure}{
 \begin{figure}[h]
@@ -214,7 +222,7 @@ Durring identification the image is cropped to the bounding box shown around eac
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save 'figures1/OccludeFigure.jpg' --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=180 --adjust=.05,.05,.05,.15 --clipwhite --no-inimage --aids=13870,13740,7735,13233,13603,13906,7354,9776 --rc=2,4 --append temp_out_figure.tex --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/crall-thesis-2017 --save 'figures1/OccludeFigure.jpg' --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=300 --no-inimage --aids=13870,13740,7735,13233,13603,13906,7354,9776 --rc=2,4 --diskshow --saveparts
 \end{comment}
 \newcommand{\OccludeFigure}{
 \begin{figure}[h]
@@ -226,8 +234,8 @@ python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --s
 \begin{subfigure}[h]{0.30\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureE.jpg}\caption{}\label{sub:OccludeFigureE}\end{subfigure}
 \begin{subfigure}[h]{0.30\textwidth}\centering\includegraphics[height=95pt]{figures1/OccludeFigureF.jpg}\caption{}\label{sub:OccludeFigureF}\end{subfigure}
 
-%\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[height=80pt]{figures1/OccludeFigureA.jpg}\caption{}\label{sub:OccludeFigureA}\end{subfigure}
-%\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=60pt]{figures1/OccludeFigureG.jpg}\caption{}\label{sub:OccludeFigureG}\end{subfigure}
+%\begin{subfigure}[h]{0.3\textwidth}\centering\includegraphics[height=80pt]{figures1/OccludeFigureA.jpg}\caption{}\label{sub:OccludeFigureA}\end{subfigure}%
+%\begin{subfigure}[h]{0.24\textwidth}\centering\includegraphics[height=60pt]{figures1/OccludeFigureG.jpg}\caption{}\label{sub:OccludeFigureG}\end{subfigure}%
 \caption[\caplbl{OccludeFigure}Examples of occlusion and distractors]{\caplbl{OccludeFigure}
 % ---
 Animals under varying degrees of occlusion from scenery and other secondary animals.
@@ -242,14 +250,13 @@ Images like this can cause other images of the secondary animal to the primary a
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save figures1/IlluminationFigure.jpg --no-figtitle --notitle --db NNP_Master3 --figsize=9,3 --no-inimage --append temp_out_figure.tex --aids=6466,10161,10634,9458,12472,14728 --clipwhite --diskshow  --saveparts --adjust=.05,.10,.05,.23
-,10647 
+python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/crall-thesis-2017 --save figures1/IlluminationFigure.jpg --no-figtitle --notitle --db NNP_Master3 --figsize=9,3 --no-inimage --aids=6466,10161,10634,9458,12472,14728  --diskshow  --saveparts --dpi=300
 \end{comment}
 \newcommand{\IlluminationFigure}{
 \begin{figure}[ht!]
 \centering
-%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureA.jpg}\caption{}\label{sub:IlluminationFigureA}\end{subfigure}
-%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureB.jpg}\caption{}\label{sub:IlluminationFigureB}\end{subfigure}
+%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureA.jpg}\caption{}\label{sub:IlluminationFigureA}\end{subfigure}%
+%\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=65pt]{figures1/IlluminationFigureB.jpg}\caption{}\label{sub:IlluminationFigureB}\end{subfigure}%
 \begin{subfigure}[h]{0.36\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureC.jpg}\caption{}\label{sub:IlluminationFigureC}\end{subfigure}
 \begin{subfigure}[h]{0.60\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureF.jpg}\caption{}\label{sub:IlluminationFigureF}\end{subfigure}
 \begin{subfigure}[h]{0.50\textwidth}\centering\includegraphics[height=110pt]{figures1/IlluminationFigureD.jpg}\caption{}\label{sub:IlluminationFigureD}\end{subfigure}
@@ -268,8 +275,11 @@ This can makes it more difficult to localize repeatable keypoints and describe t
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db NNP_Master3 --dpath ~/latex/cand --save 'figures1/QualityFigure.jpg' --no-figtitle --notitle  --figsize=9,4 --dpi=220 --adjust=.05  --rc=2,5  --no-draw_lbls --doboth --diskshow  --trydrawline --qualtitle --aids=6416,8227,6262,10705,15417 --saveparts --grouprows
-
+python -m ibeis.viz.viz_name --test-show_multiple_chips \
+    --db NNP_Master3 --aids=6416,8227,6262,10705,15417 \
+    --no-figtitle --notitle  --figsize=9,4 --dpi=300 \
+    --adjust=.05  --rc=2,5  --no-draw_lbls --doboth --trydrawline --qualtitle  --grouprows \
+    --dpath ~/latex/crall-thesis-2017 --save 'figures1/QualityFigure.jpg'  --diskshow  --saveparts 
 \end{comment}
 \newcommand{\QualityFigure}{
 \begin{figure}[ht!]
@@ -296,12 +306,12 @@ Each column shows different qualities:
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_name --name=08_106 --db PZ_MTEST --save "figures1/Age.jpg" --dpath ~/latex/cand/ --figsize=9,4 --clipwhite --dpi=180 --adjust=.05 --no-figtitle --notitle --diskshow --no-draw_lbls --no-inimage --saveparts
+python -m ibeis.viz.viz_name --test-show_name --name=08_106 --db PZ_MTEST --save "figures1/Age.jpg" --dpath ~/latex/crall-thesis-2017/ --figsize=9,4  --dpi=300 --no-figtitle --notitle --diskshow --no-draw_lbls --no-inimage --saveparts
 \end{comment}
 \newcommand{\AgeFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/AgeA.jpg}\caption{}\label{sub:AgeA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/AgeA.jpg}\caption{}\label{sub:AgeA}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/AgeB.jpg}\caption{}\label{sub:AgeB}\end{subfigure}
 \caption[\caplbl{AgeFigure}Examples of visual differences caused by age]{\caplbl{AgeFigure}
 % ---
@@ -317,12 +327,12 @@ As an animal ages its appearance changes mainly in color and texture
 
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=4020,4839 --no-inimage --notitle --adjust=.05 --dpath ~/latex/cand/ --save "figures1/GashFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --db PZ_Master0 --aids=4020,4839 --no-inimage --notitle --adjust=.05 --dpath ~/latex/crall-thesis-2017/ --save "figures1/GashFigure.jpg" --figsize=9,4  --dpi=300 --diskshow --saveparts
 \end{comment}
 \newcommand{\GashFigure}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/GashFigureA.jpg}\caption{}\label{sub:GashFigureA}\end{subfigure}
+\begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/GashFigureA.jpg}\caption{}\label{sub:GashFigureA}\end{subfigure}%
 \begin{subfigure}[h]{0.48\textwidth}\centering\includegraphics[height=100pt]{figures1/GashFigureB.jpg}\caption{}\label{sub:GashFigureB}\end{subfigure}
 \caption[\caplbl{GashFigure}Examples of visual differences caused by injuries]{\caplbl{GashFigure}
 % ---
@@ -337,8 +347,7 @@ The left image shows a wounded animal, and the right image shows an animal
 
 
 \begin{comment}
-python -m ibeis.viz.viz_image --test-show_multi_images --db NNP_Master3 --gids=7409,7448,4670,7497,7496,7464 --adjust=.05 --dpath ~/latex/cand/ --save "figures1/DetectFigure.jpg" --figsize=9,4 --clipwhite --dpi=180 --diskshow --saveparts
-7409,7448,4670,7497,7496,7464,7446,7442 
+python -m ibeis.viz.viz_image --test-show_multi_images --db NNP_Master3 --gids=7409,7448,4670,7497,7496,7464 --adjust=.05 --dpath ~/latex/crall-thesis-2017/ --save "figures1/DetectFigure.jpg" --figsize=9,4  --dpi=300 --diskshow --saveparts
 \end{comment}
 \newcommand{\DetectFigure}{
 \begin{figure}[ht!]
@@ -361,7 +370,7 @@ Detections were automatically suggested and manually verified before
 }
 
 \begin{comment}
-python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/cand --save figures1/OccurrenceComplementFigure.jpg --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --clipwhite --dpi=180 --adjust=.03 --no-inimage --aids=15288,15333,15797 --diskshow --saveparts
+python -m ibeis.viz.viz_name --test-show_multiple_chips --dpath ~/latex/crall-thesis-2017 --save figures1/OccurrenceComplementFigure.jpg --no-figtitle --notitle --db NNP_Master3 --figsize=9,4 --dpi=300 --no-inimage --aids=15288,15333,15797 --diskshow --saveparts
 \end{comment}
 \newcommand{\OccurrenceComplementFigure}{
 \begin{figure}[h]
@@ -392,8 +401,8 @@ python -m ibeis.viz.viz_qres show_qres --db=PZ_MTEST --qaid=45 --top-aids=5 --si
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2A.jpg}\caption{Rank 1}\label{sub:RankFigure2A}\end{subfigure}
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2B.jpg}\caption{Rank 2}\label{sub:RankFigure2B}\end{subfigure}
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2C.jpg}\caption{Rank 3}\label{sub:RankFigure2C}\end{subfigure}
-%\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2D.jpg}\caption{}\label{sub:RankFigure2D}\end{subfigure}
-%\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2E.jpg}\caption{}\label{sub:RankFigure2E}\end{subfigure}
+%\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2D.jpg}\caption{}\label{sub:RankFigure2D}\end{subfigure}%
+%\begin{subfigure}[h]{0.19\textwidth}\centering\includegraphics[width=\textwidth]{figures1/RankFigure2E.jpg}\caption{}\label{sub:RankFigure2E}\end{subfigure}%
 \caption[Examples of top ranked matches]{\caplbl{RankFigure}
 % ---
 A ranked list image pairs.

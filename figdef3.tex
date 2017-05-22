@@ -484,8 +484,12 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 
 % --- VIEWPOINT
 \begin{comment}
+python -m ibeis draw_match_cases --db GZ_Master1 --qaid 2787  -a timectrl -t best --filt :fail=True,sortdsc=gtscore --show --verbose
+python -m ibeis draw_match_cases --db GZ_Master1 --qaid 2787  -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore \
+
 python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore --db GZ_Master1  --qaid 2787 \
     --hargv=match --render  --cmdaug="FailViewpoint" \
+
     --overwrite
 %--qaid 2660 \
 \end{comment}
@@ -505,7 +509,11 @@ In the incorrect pair, the heads of the animals are in a similar pose and thus c
 % --- Photobomb
 
 \begin{comment}
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore --db PZ_Master1 \
+python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  --show --verbose
+
+python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  \
+
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  \
 --qaid=3727 --cmdaug="FailPhotobomb" --hargv=match --render
 \end{comment}
 \SingleImageCommand{FailPhotobomb}{1}{
