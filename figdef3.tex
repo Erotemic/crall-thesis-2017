@@ -46,11 +46,6 @@ python -m ibeis.scripts.specialdraw simple_vsone_matches \
     --diskshow
 
 \end{comment}
-%\SingleImageCommand{SceneryMatch}{1}{Scenery match}{
-%    An example of two different animals with appearing in front of the same
-%    distinctive background, illustrating the importance of background
-%    downweighting.
-%}{figures3/SceneryMatch.jpg}
 \newcommand{\SceneryMatch}{
 \begin{figure}[ht!]
 \centering
@@ -74,17 +69,12 @@ python -m ibeis gen_featweight_worker --dpath ~/latex/crall-candidacy-2015/ --sa
 python -m ibeis.scripts.specialdraw featweight_fig --db PZ_MTEST --aid=1 \
 --dpath ~/latex/crall-thesis-2017/ --save figures3/fgweight.png \
 --figsize=12,3 --dpi=300 --saveparts --diskshow 
-
-%--adjust=.15,.15,.1
-
 \end{comment}
 \newcommand{\fgweight}{
 \begin{figure}[ht!]
 \centering
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightA.png}\caption{}\label{sub:fgweightA}\end{subfigure}
-~~% --
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightB.png}\caption{}\label{sub:fgweightB}\end{subfigure}
-~~% --
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightC.png}\caption{}\label{sub:fgweightC}\end{subfigure}
 \caption[Foregroundness weights]{\caplbl{fgweight}
 % ---
@@ -96,86 +86,6 @@ shows the weighted sum of the intensity under each feature is used as that featu
 \label{fig:fgweight}
 \end{figure}
 }
-
-
-
-\begin{comment}
-python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 1 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
-#
-python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 2 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
-python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 3 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
-python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 4 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
---verbose 
-\end{comment}
-\SingleImageCommand{namematch}{1}{Name scoring}{
-    % ---
-    Visualization of \nsumprefix{} \namescoring{}.
-    The query annotation is at the top left.
-    Each query feature matches at most one feature in the database
-      annotations.
-    Each line denotes a feature correspondence colored by its matching
-      score.
-    Feature scores from multiple views are combined into a name score
-      shown on top.
-    % ---
-}{figures3/namematch.jpg}
-
-
-\begin{comment}
-ibeis sver_single_chipmatch -t default:refine_method=cv2-lmeds-homog,full_homog_checks=True -a default --qaid 18 --dpath ~/latex/crall-candidacy-2015 --save figures3/sverkpts.jpg --label sver --dpi=300 --clipwhite --diskshow --saveparts --figsize=10,10 --norefinelbl
-\end{comment}
-\newcommand{\sver}{
-\begin{figure}[h]
-\centering
-\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsA.jpg}\caption{}\label{sub:svera}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsB.jpg}\caption{}\label{sub:sverb}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsC.jpg}\caption{}\label{sub:sverc}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsD.jpg}\caption{}\label{sub:sverd}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsE.jpg}\caption{}\label{sub:svere}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsF.jpg}\caption{}\label{sub:sverf}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsG.jpg}\caption{}\label{sub:sverg}\end{subfigure}
-\caption[Spatial verification]{
-    % ---
-    An example of spatial verification process. The three images on the top show~\cref{sub:svera} the original
-    matches, \Cref{sub:sverb} the best set of inliers from affine hypothesis generation, and \Cref{sub:sverc} the
-    final set of homography inliers. The images on the bottom show~\cref{sub:sverd,sub:sverf} the matching images
-    warped and superimposed by both the best affine \Cref{sub:svere} and estimated homography
-    transformation~\cref{sub:sverg}.
-    % ---
-}
-\label{fig:sver}
-\end{figure}
-}
-
-
-
-% TODO; http://tex.stackexchange.com/questions/75014/is-it-possible-to-make-a-reference-to-a-subfigure-to-appear-figure-2a-with-cle
-
-\begin{comment}
-        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --aid 44  --dpath ~/latex/crall-candidacy-2015/figures3 --save pzaffkpts.jpg --label pzkptstype --dpi=180 --clipwhite --diskshow --darken
-        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --aid 44  --dpath ~/latex/crall-candidacy-2015/figures3 --save pzcirckpts.jpg --label pzaffkpts --dpi=180 --clipwhite --diskshow --affine-invariance=False --augment_orientation=True --ori --darken
-       
-        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --db GZ_Master1 --aid 1000  --dpath ~/latex/crall-candidacy-2015/figures3 --save gzaffkpts.jpg --label pzkptstype --dpi=180 --clipwhite --diskshow --darken
-        python -m ibeis.viz.viz_chip --test-show_chip --weight_label=None --ecc --db GZ_Master1 --aid 1000  --dpath ~/latex/crall-candidacy-2015/figures3 --save gzcirckpts.jpg --label pzaffkpts --dpi=180 --clipwhite --diskshow --affine-invariance=False --augment_orientation=True --ori --darken
-\end{comment}
-
-\MultiImageCommandII{kptstype}{.45}{
-    Keypoint detection
-}{
-% ---
-Many affine keypoints detected on plains zebras tend to encompass only one or two stripes. The distinctive stripe
-patterns on Grévy's zebras are well captured by affine keypoints, whereas circular keypoints are more spread out.
-For visibility this figure shows a random sample of all keypoints on a darkened image. Elliptical keypoints
-in~\cref{sub:kptstypeA,sub:kptstypeC} are colored by eccentricity and circular keypoints
-in~\cref{sub:kptstypeB,sub:kptstypeD}  are colored by scale.
-% ---
-}{figures3/pzaffkpts.jpg}{figures3/pzcirckpts.jpg}{figures3/gzaffkpts.jpg}{figures3/gzcirckpts.jpg}
 
 
 
@@ -193,25 +103,16 @@ python -m ibeis.viz.interact.interact_matches --test-testdata_match_interact --s
 \newcommand{\knorm}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormA.png}\caption{}\label{sub:knorma} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormC.png}\caption{}\label{sub:knormb} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormE.png}\caption{}\label{sub:knormc} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormG.png}\caption{}\label{sub:knormd} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormI.png}\caption{}\label{sub:knorme} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormB.png}\caption{}\label{sub:knormf} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormD.png}\caption{}\label{sub:knormg} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormF.png}\caption{}\label{sub:knormh} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormH.png}\caption{}\label{sub:knormi} \end{subfigure}
-~~% --
-\begin{subfigure}[h]{0.18\textwidth} \centering \includegraphics[width=\textwidth]{figures3/knormJ.png}\caption{}\label{sub:knormj} \end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormA.png}\caption{}\label{sub:knorma}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormC.png}\caption{}\label{sub:knormb}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormE.png}\caption{}\label{sub:knormc}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormG.png}\caption{}\label{sub:knormd}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormI.png}\caption{}\label{sub:knorme}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormB.png}\caption{}\label{sub:knormf}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormD.png}\caption{}\label{sub:knormg}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormF.png}\caption{}\label{sub:knormh}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormH.png}\caption{}\label{sub:knormi}\end{subfigure}
+\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormJ.png}\caption{}\label{sub:knormj}\end{subfigure}
 \caption[\caplbl{knorm}LNBNN feature correspondence scoring]{
 % ---
 \caplbl{knorm} The four nearest neighbors of a distinctive query feature~\cref{sub:knormf}. The bottom row shows
@@ -222,6 +123,56 @@ LNBNN normalizer to score the first three matches.
 % ---
 }
 \label{fig:knorm}
+\end{figure}
+}
+
+
+
+\begin{comment}
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 1 \
+    --noshow_truth --show_timedelta=False --show_aid=False \
+    --dpath ~/latex/crall-thesis-2017 --save figures3/namematch.jpg --diskshow --dpi=300 --figsize=5,5
+#
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 2 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 3 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 4 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
+--verbose 
+\end{comment}
+\SingleImageCommand{namematch}{1}{Name scoring}{
+    % ---
+    \Nsumprefix{} \namescoring{}.
+    The query annotation is at the top left.
+    Each query feature matches at most one feature in the exemplars for a name.
+    Each line denotes a feature correspondence colored by its matching score.
+    In the top right of each database annotation is its annotation score.
+    Feature scores from multiple views are combined into a name score shown on top.
+    % ---
+}{figures3/namematch.jpg}
+
+
+\begin{comment}
+ibeis sver_single_chipmatch -t default:refine_method=cv2-lmeds-homog,full_homog_checks=True -a default --qaid 18 --dpath ~/latex/crall-candidacy-2015 --save figures3/sverkpts.jpg --label sver --dpi=300 --clipwhite --diskshow --saveparts --figsize=10,10 --norefinelbl
+\end{comment}
+\newcommand{\sver}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsA.jpg}\caption{}\label{sub:svera}\end{subfigure}
+\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsB.jpg}\caption{}\label{sub:sverb}\end{subfigure}
+\begin{subfigure}[h]{0.25\textwidth}\centering\includegraphics[height=130pt]{figures3/sverkptsC.jpg}\caption{}\label{sub:sverc}\end{subfigure}
+\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsD.jpg}\caption{}\label{sub:sverd}\end{subfigure}
+\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsE.jpg}\caption{}\label{sub:svere}\end{subfigure}
+\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsF.jpg}\caption{}\label{sub:sverf}\end{subfigure}
+\begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsG.jpg}\caption{}\label{sub:sverg}\end{subfigure}
+\caption[Spatial verification]{
+    % ---
+    An example of spatial verification process. The three images on the top show~\cref{sub:svera} the original
+    matches, \Cref{sub:sverb} the best set of inliers from affine hypothesis generation, and \Cref{sub:sverc} the
+    final set of homography inliers. The images on the bottom show~\cref{sub:sverd,sub:sverf} the matching images
+    warped and superimposed by both the best affine \Cref{sub:svere} and estimated homography
+    transformation~\cref{sub:sverg}.
+    % ---
+}
+\label{fig:sver}
 \end{figure}
 }
 
@@ -394,7 +345,7 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{plains zebras}\label{sub:InvarExptA}\end{subfigure}
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
-        \caption[\caplbl{InvarViewExpt}Feature invariance experiment]{\caplbl{InvarExpt}
+        \caption[\caplbl{InvarExpt}Feature invariance experiment]{\caplbl{InvarExpt}
             % ---
             Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the
               query-side rotation heuristic (QRH).
@@ -406,6 +357,85 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
         \label{fig:InvarExpt}
     \end{figure}
 }
+
+
+
+% TODO; http://tex.stackexchange.com/questions/75014/is-it-possible-to-make-a-reference-to-a-subfigure-to-appear-figure-2a-with-cle
+
+\begin{comment}
+    python -m ibeis.viz.viz_chip --test-show_chip --aid 44 \
+        --weight_label=None --ecc --dpi=300 --draw_lbls=False \
+        --ellalpha=.8 --ell_linewidth=1.4 --notitle \
+        --dpath ~/latex/crall-thesis-2017/figures3 --save=pzaffkpts.jpg --diskshow --darken
+
+    python -m ibeis.viz.viz_chip --test-show_chip --aid 44 \
+        --weight_label=None --ecc --dpi=300 --draw_lbls=False \
+        --ellalpha=.8 --ell_linewidth=1.4 --notitle \
+        --affine-invariance=False --augment_orientation=True --ori \
+        --dpath ~/latex/crall-thesis-2017/figures3 --save=pzcirckpts.jpg --diskshow --darken
+
+    python -m ibeis.viz.viz_chip --test-show_chip --db GZ_Master1 --aid 1000 \
+        --weight_label=None --ecc --dpi=300 --draw_lbls=False \
+        --ellalpha=.8 --ell_linewidth=1.4 --notitle \
+        --dpath ~/latex/crall-thesis-2017/figures3 --save=gzaffkpts.jpg --diskshow --darken
+
+    python -m ibeis.viz.viz_chip --test-show_chip --db GZ_Master1 --aid 1000 \
+        --weight_label=None --ecc --dpi=300 --draw_lbls=False \
+        --ellalpha=.8 --ell_linewidth=1.4 --notitle \
+        --affine-invariance=False --augment_orientation=True --ori \
+        --dpath ~/latex/crall-thesis-2017/figures3 --save=gzcirckpts.jpg --diskshow --darken 
+\end{comment}
+\newcommand{\kptstype}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/pzaffkpts.jpg}\caption{}\label{sub:kptstypeA}\end{subfigure}
+        \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/pzcirckpts.jpg}\caption{}\label{sub:kptstypeB}\end{subfigure}
+        \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/gzaffkpts.jpg}\caption{}\label{sub:kptstypeC}\end{subfigure}
+        \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/gzcirckpts.jpg}\caption{}\label{sub:kptstypeD}\end{subfigure}
+        \caption[\caplbl{kptstype}Examples of keypoint invariance]{\caplbl{kptstype}
+            % ---
+            Many affine keypoints detected on plains zebras tend to encompass only one or two stripes. The distinctive stripe
+            patterns on Grévy's zebras are well captured by affine keypoints, whereas circular keypoints are more spread out.
+            For visibility this figure shows a random sample of all keypoints on a darkened image. Elliptical keypoints
+            in~\cref{sub:kptstypeA,sub:kptstypeC} are colored by eccentricity and circular keypoints
+            in~\cref{sub:kptstypeB,sub:kptstypeD} are colored by scale.
+            % ---
+        }
+        \label{fig:kptstype}
+    \end{figure}
+}
+
+% -------------------------------
+% --- Namescore Experiments ----
+% -------------------------------
+
+\begin{comment}
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1
+python -m ibeis Chap3.measure nsum --dbs=GZ_Master1,PZ_Master1
+python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
+\end{comment}
+
+\newcommand{\NScoreExpt}{
+    \begin{figure}[ht!]\centering
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/nsum.png}\caption{plains zebras}\label{sub:NScoreExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
+        \caption[\caplbl{NScoreExpt}Name scoring experiment]{\caplbl{NScoreExpt}
+            % ---
+            Results of the name scoring mechanism experiment.
+            There is a clear separation between identification accuracy when the number of exemplars per name is
+              $1$ compared to when it is $3$.
+            Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
+              based name scoring (\csum{}).
+            The number of query /database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
+            Database size was normalized using confusors.
+            %Note that the scores reported here are higher than the baseline for
+            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
+            % ---
+        }
+        \label{fig:NScoreExpt}
+    \end{figure}
+}
+
+
 
 % -------------------------------
 % --- K Experiments
@@ -445,38 +475,6 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
         \label{fig:KExptB}
     \end{figure}
 }
-
-% -------------------------------
-% --- Namescore Experiments ----
-% -------------------------------
-
-\begin{comment}
-python -m ibeis Chap3.measure nsum --dbs=GZ_Master1
-python -m ibeis Chap3.measure nsum --dbs=GZ_Master1,PZ_Master1
-python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
-\end{comment}
-
-\newcommand{\NScoreExpt}{
-    \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/nsum.png}\caption{plains zebras}\label{sub:NScoreExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
-        \caption[\caplbl{InvarViewExpt}Name scoring experiment]{\caplbl{NScoreExpt}
-            % ---
-            Results of the name scoring mechanism experiment.
-            There is a clear separation between identification accuracy when the number of exemplars per name is
-              $1$ compared to when it is $3$.
-            Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
-              based name scoring (\csum{}).
-            The number of query /database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
-            Database size was normalized using confusors.
-            %Note that the scores reported here are higher than the baseline for
-            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
-            % ---
-        }
-        \label{fig:NScoreExpt}
-    \end{figure}
-}
-
 
 
 % --- Photobomb
