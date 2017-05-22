@@ -566,7 +566,7 @@ tail distribution and violate Poisson assumptions. Even so, the use of a Poisson
 considering a sliding window along the distribution of $M_i$. Recall that we only need to make predictions about
 the next $a$ reviews in the future, thus we are only concerned with a small window to the right on the
 distribution. Because the long tailed distribution is monotonic decreasing, we can use a small window in the past
-to estimate a upper bound on probability of $T\teq1$ in the future. As the window moves to the right, the interval
+to estimate an upper bound on probability of $T\teq1$ in the future. As the window moves to the right, the interval
 on the distribution becomes increasingly approximately uniform and the tightness of the bound improves and
 eventually becomes tight. This is because once the prioritization algorithm cannot distinguish positive from
 negative cases, the order of the remaining reviews becomes random and the Poisson model becomes exactly

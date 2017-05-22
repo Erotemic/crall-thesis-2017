@@ -114,9 +114,9 @@
 
             The pyramid's base, %
             $\img(\pt, 1) = g( 1 ) \conv \rawimg(\pt)$ %
-            is the $\ell=0$\th{} level of the pyramid, and is computed by blurring the original image (sometimes
+            is the $\ell=0\th{}$ level of the pyramid, and is computed by blurring the original image (sometimes
             with small initial blurring) with $\sigma=1$. Subsequent levels of the pyramid are produced by doubling
-            sigma, thus the $\ell$\th{} level of the pyramid is $\img(\pt, 2^\ell)$.
+            sigma, thus the $\ell\th{}$ level of the pyramid is $\img(\pt, 2^\ell)$.
 
             A property of discrete scale-space is that after appropriate smoothing downsampling the image by half
             is equivalent to doubling sigma. Let
@@ -677,7 +677,7 @@
             \begin{equation}
                 w_\c = \opname{idf}(\c) = \ln{N/N_\c}
             \end{equation}
-            The tf weighting of a word $\c$ in a image $\X$ is:
+            The tf weighting of a word $\c$ in an image $\X$ is:
             \begin{equation}
                 \opname{tf}(\X, \c) = \frac{\card{\X_\c}}{\card{\X}}
             \end{equation}
@@ -911,7 +911,7 @@
         and a 3D face model are used to register a 3D affine camera to an RGB-image. The image is then warped into
         a ``frontalized'' view using a piecewise affine transform. A face is represented as the $4096$ dimensional
         output of a deep $7$ layer convolutional neural network that exploits the aligned nature input images. An
-        8th layer is used in supervised training where each output unit corresponds to a specific individual. At
+        $8$\th layer is used in supervised training where each output unit corresponds to a specific individual. At
         test time the L2-normalized output of the network is used as the feature representation. In a supervised
         setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset using the descriptor
         vectors produced by the network. In an unsupervised setting an ensemble of classifiers is used. The
@@ -1177,18 +1177,22 @@
     attributed (1) a larger volume of available of training data, and (2) implementations using faster
     GPUs~\cite{krizhevsky_imagenet_2012}.
       
-    Several techniques are employed to increase accuracy, reduce over-fitting,  and reduce training time. Data
-    augmentation is used to artificially increase the amount of training data~\cite{ciresan_multi_column_2012,
-    ciresan_high_performance_2011, simard_best_2003}. The dropout technique has been shown to reducing
-    over-fitting~\cite{dahl_improving_2013, srivastava_dropout_2014}. At training time outputs of hidden units are
-    randomly suppressed which forces the network to learn a more robust representation. It has been shown that
-    dropout can be viewed as a form of model averaging~\cite{hinton_improving_2012}. Rectified linear units (ReLU)
-    have been shown to be a faster alternative to the standard sigmoid activation
-    functions~\cite{vinod_rectified_2010, dahl_improving_2013}. An ReLU is similar to a hinge function and simply
-    outputs the signal of a unit if it is positive and outputs a zero otherwise. Leaky rectified linear units
-    (LReLU) further improve network accuracy by including a ``leakiness'' term while maintaining the speed of
-    ReLUs~\cite{maas_rectifier_2013}. While a ReLU strictly suppresses a feature activation if it is negative a
-    LReLU returns a small negative signal (by multiplying by a constant) instead of zero.
+    Several techniques are employed to increase accuracy, reduce over-fitting,  and reduce training time.
+    Data augmentation is used to artificially increase the amount of training
+      data~\cite{ciresan_multi_column_2012, ciresan_high_performance_2011, simard_best_2003}.
+    The dropout technique has been shown to reducing over-fitting~\cite{dahl_improving_2013,
+      srivastava_dropout_2014}.
+    At training time outputs of hidden units are randomly suppressed which forces the network to learn a more
+      robust representation.
+    It has been shown that dropout can be viewed as a form of model averaging~\cite{hinton_improving_2012}.
+    Rectified linear units (ReLU) have been shown to be a faster alternative to the standard sigmoid activation
+      functions~\cite{vinod_rectified_2010, dahl_improving_2013}.
+    A ReLU is similar to a hinge function and simply outputs the signal of a unit if it is positive and outputs a
+      zero otherwise.
+    Leaky rectified linear units (LReLU) further improve network accuracy by including a ``leakiness'' term while
+      maintaining the speed of ReLUs~\cite{maas_rectifier_2013}.
+    While a ReLU strictly suppresses a feature activation if it is negative a LReLU returns a small negative
+      signal (by multiplying by a constant) instead of zero.
 
     A deep neural network is constructed by stacking several layers of units (neurons) together. Data is used to
     initialize the activations of an input layer, and the information is forward propagated through the network.

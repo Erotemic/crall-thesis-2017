@@ -5,27 +5,28 @@
 
             
 \begin{comment}
-ibeis --tf _ChipMatchVisualization.show_ranked_matches --qaid 86 --clip-top=4 --saveparts --save figures3/rankedmatches.jpg --diskshow --dpi=256 --clipwhite --colorbar_=False --show_aid=False --score_precision=2 --stack_larger=True --labelsize=12 --titlesize=12 
-
-ibeis --tf _ChipMatchVisualization.show_ranked_matches --qaid 86 --dpath ~/latex/crall-candidacy-2015 --save figures3/rankedmatches.jpg --diskshow --dpi=360 --clipwhite --figsize=12,11 --vert --adjust=.01,.05,.08,.95,.93,.18
+ibeis ChipMatch.show_ranked_matches --qaid 79 --db PZ_MTEST --show --heatmask=True
+ibeis ChipMatch.show_ranked_matches --qaid 79 --db PZ_MTEST \
+    --clip-top=4 --colorbar_=False --show_aid=False --score_precision=2 --stack_larger=True --noshow_truth --draw_lbl=False --stack_side=True --show_timedelta=False \
+    --dpath ~/latex/crall-thesis-2017 --save figures3/rankedmatches.jpg \
+    --diskshow --saveparts --dpi=300 --figsize=14,14 
 \end{comment}
 \newcommand{\rankedmatches}{
-\begin{figure}[ht!]
+\begin{figure}[h]
 \centering
-\begin{subfigure}[h]{.8\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesA.jpg}\caption{}\label{sub:rankedmatchesa}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesB.jpg}\caption{}\label{sub:rankedmatchesb}\end{subfigure}
-~~%--
-\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesC.jpg}\caption{}\label{sub:rankedmatchesc}\end{subfigure}
-\caption[\caplbl{rankedmatches}Ranked matches]{
+\begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesA.jpg}\caption{}\label{sub:rankedmatchesa}\end{subfigure}
+\begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesB.jpg}\caption{}\label{sub:rankedmatchesb}\end{subfigure}
+\begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesC.jpg}\caption{}\label{sub:rankedmatchesc}\end{subfigure}
+\caption[\caplbl{rankedmatches}Ranked matches]{\caplbl{rankedmatches}
     % ---
-    \caplbl{rankedmatches} The top three ranked results from the identification algorithm. Each results shows the
-    matches to a particular \name{}. The match to the \groundtrue{} name is shown in \Cref{sub:rankedmatchesa}. The
-    matches to the incorrect names are shown in \Cref{sub:rankedmatchesb,sub:rankedmatchesc}. In each result, the
-    query annotation is shown in the top left, the matching database annotations for a specific \name{} are shown
-    in the bottom left and the right. The overall matching score is shown on the top of each result. The feature
-    matches are overlaid on each result and colored by the feature correspondence score. Notice that each database
-    \name{} may have a different number of annotations.
+    The top three ranked results from the ranking algorithm.
+    Each results shows the matches to a particular \name{}.
+    The top-ranked match in \cref{sub:rankedmatchesa} is correct.
+    The other ranks in \cref{sub:rankedmatchesb,sub:rankedmatchesc} are incorrect.
+    In each result, the query annotation is on the left and the matching exemplars for the name are on the right.
+    The overall matching score is shown on the top of each result.
+    The feature matches are overlaid on each result and colored by the feature correspondence score.
+    Notice that each database \name{} may have a different number exemplars.
     % ---
 }
 \label{fig:rankedmatches}

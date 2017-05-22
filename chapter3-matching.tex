@@ -259,12 +259,12 @@
                 %\NN(\desc_i, \K + \Knorm) \eqv \dotarrIII{j}{\K}{\K + \Knorm}
             \end{equation}
             The $\K$ nearest neighbors, $\dotsubarr{\desc}{{j_1}}{{j_\K}}$, are the initial feature correspondences
-            to the $i$\th{} query feature. The remaining $\Knorm$ neighbors, $\dotsubarr{\desc}{{j_{\K +
-            1}}}{j_{\Knorm}}$, are candidate normalizers for use in LNBNN scoring.
+            to the $i\th{}$ query feature. The remaining $\Knorm$ neighbors,%
+            $\dotsubarr{\desc}{{j_{\K + 1}}}{j_{\Knorm}}$, are candidate normalizers for use in LNBNN scoring.
 
         \paragraph{Normalizer selection}
             A single descriptor $\descnorm_{i}$ is selected from the $\Knorm{}$ candidate normalizers and used in
-            computing the LNBNN score for all (up to $\K$) of the $i$\th{} query descriptor's correspondences in
+            computing the LNBNN score for all (up to $\K$) of the $i\th{}$ query descriptor's correspondences in
             the database. The purpose of a normalizing descriptor is to estimate the local density of descriptor
             space, which can be interpreted as a measure of the query descriptor's distinctiveness \wrt{} the
             database. The normalizing descriptor is chosen as the most visually similar descriptor to the query
@@ -273,10 +273,10 @@
             that are close to distinctive features in the query except for the features that belong to the correct
             match.
 
-            The selection process described in the original formulation of LNBNN is to simply choose the $\K +
-            1$\th{} nearest neighbor, which amounts to setting $\Knorm=1$. The authors of LNBNN find that there is
+            The selection process described in the original formulation of LNBNN is to simply choose the %
+            $\K + 1\th{}$ nearest neighbor, which amounts to setting $\Knorm=1$. The authors of LNBNN find that there is
             no benefit to using a higher value of $\Knorm$~\cite{mccann_local_2012}. However, this does not account
-            for the case when some or all of the $\K + 1$\th{} nearest neighbor belongs to the same class as one of
+            for the case when some or all of the $\K + 1\th{}$ nearest neighbor belongs to the same class as one of
             the nearest $\K$ neighbors. Therefore, we employ a slightly different selection process. To motivate
             our selection process, consider the case when there are more than $\K$ images of the same individual
             from the same viewpoint in the database and a distinctive feature from a new annotation of that
@@ -301,7 +301,7 @@
             of the chosen correspondences. Let $\nid_j$ be the \name{} associated with the annotation containing
             descriptor $\desc_j$. Let %
             $\multiset{N}_i \eqv \curly{\nid_j \where j \in \NN(\AnyDB, \desc_i, \K)}$
-            be the set of \names{} matched by the $i$\th{} query feature. The descriptor that normalizes all
+            be the set of \names{} matched by the $i\th{}$ query feature. The descriptor that normalizes all
             matches of query descriptor $\desc_i$ is:
               \begin{equation}
                   \descnorm_{i} \eqv 
@@ -540,15 +540,15 @@
             \end{equation}
 
         \subsubsection{Measuring the affine transformation error}
-            The transformation $\AffMatij$ perfectly aligns the corresponding $i$\th{} query feature with the
-            $j$\th{} database feature in the space of the database annotation ($\annotII$). If the correspondence
+            The transformation $\AffMatij$ perfectly aligns the corresponding $i\th{}$ query feature with the
+            $j\th{}$ database feature in the space of the database annotation ($\annotII$). If the correspondence
             is indeed correct, then we can expect that other corresponding features will be well aligned by the
             transformation. The next step is to determine how close the other transformed features from the query
             annotation ($\annotI$) are to their corresponding features in database annotation ($\annotII$). This
             can be measured using the error in distance, scale, and orientation for every correspondence. The
             following procedure is repeated for each hypothesis transform %
-            $\AffMatij \in \HypothSet$. Note that the following description is in the context of the $i$\th{} query
-            feature and the $j$\th{} database feature, and the $i,j$ suffix is omitted for clarity. In this
+            $\AffMatij \in \HypothSet$. Note that the following description is in the context of the $i\th{}$ query
+            feature and the $j\th{}$ database feature, and the $i,j$ suffix is omitted for clarity. In this
             context, the suffixes $\idxI$ and $\idxII$ will be used to index into features correspondences.
 
             Let $\set{B}_{\idxI} = \curly{\invvrmatI \where (\idxI, \idxII) \in \Matches_{\annotII}}$ be the set of
@@ -567,8 +567,8 @@
             %Each warped point is checked for consistency with its
             %  correspondence's $\ptII$, scale $\scaleII$, and orientation
             %  $\oriII$, in $\annotII$.
-            The absolute distance in position, scale, and orientation between the $\idxI$\th{} query feature and
-            the $\idxII$\th{} database feature with respect to hypothesis transformation $\AffMat$ is measured as
+            The absolute distance in position, scale, and orientation between the $\idxI\th{}$ query feature and
+            the $\idxII\th{}$ database feature with respect to hypothesis transformation $\AffMat$ is measured as
             follows:
             \begin{equation}\label{eqn:inlierdelta}
                 \begin{aligned}
@@ -633,7 +633,7 @@
         in database annotation $\annotII$ are removed. The refinement step estimates a projective transform from
         $\annotI$ to  $\annotII$. To avoid numerical errors the $xy$-locations of the correspondence are normalized
         to have a mean of $0$ and a standard deviation of $1$ prior to estimation. A more comprehensive explanation
-        of estimating projective transformations using point correspondences an be found
+        of estimating projective transformations using point correspondences can be found
         in~\cite[311--320]{szeliski_computer_2010}.
 
         Unlike in the affine hypothesis estimation where many transformations are generated, only one homography
@@ -661,7 +661,7 @@
 
         \subsubsection{Estimation of warped shape parameters}
         Because we cannot warp the shape of an affine keypoint using a projective transformation, we instead
-        estimate the warped scale and orientation for the $\idxI$\th{} query feature using a reference point. Given
+        estimate the warped scale and orientation for the $\idxI\th{}$ query feature using a reference point. Given
         a single feature match $(\idxI, \idxII) \in \Matches_{\annotII}$, we associate a reference point $\refptI$
         with the query location $\ptI$, scale $\scaleI$ and orientation $\oriI$. The reference point is defined to
         be $\scaleI$ distance away from the feature center at an angle of $\oriI$ radians in $\annotI$-space.
@@ -682,7 +682,7 @@
         \end{equation}
         The warped scale is estimated using the length of the residual vector, and the warped orientation is
           estimated using the angle of the residual vector.
-        In summary, the warped location, scale, and orientation of the $\idxI$\th{} query feature is:
+        In summary, the warped location, scale, and orientation of the $\idxI\th{}$ query feature is:
         \begin{equation}\label{eqn:homogwarp}
             \begin{aligned}
                 \warp{\ptI}      &\eqv \unhmg{\HmgMatBest \tohmg{\refptI}} \\
