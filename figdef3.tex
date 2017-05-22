@@ -477,6 +477,31 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 }
 
 
+% -------------------------------
+% --- Failure Cases
+% -------------------------------
+
+
+% --- VIEWPOINT
+\begin{comment}
+python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore --db GZ_Master1  --qaid 2787 \
+    --hargv=match --render  --cmdaug="FailViewpoint" \
+    --overwrite
+%--qaid 2660 \
+\end{comment}
+\SingleImageCommand{FailViewpoint}{1}{
+Unaligned failure case
+}{
+% ---
+Due to pose and viewpoint variations, the correctly matching pair of annotations (on the right) is returned at
+  rank $2$ while the incorrect pair of annotations (on the left) is returned at rank $1$.
+In the correct pair, the features on the front leg are not aligned and failed to match.
+In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
+  that are distinctive by coincidence.
+% ---
+}{figuresC/case_FailViewpoint.png}
+
+
 % --- Photobomb
 
 \begin{comment}
@@ -560,24 +585,3 @@ This is exacerbated by pose and viewpoint variations.
 The incorrect pair of annotation (on the left) at rank $1$ are relatively distinctive by coincidence.
 % ---
 }{figuresC/case_Occlusion.png}
-
-
-
-% --- VIEWPOINT
-\begin{comment}
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore --db GZ_Master1  --qaid 2787 \
-    --hargv=match --render  --cmdaug="FailViewpoint" \
-    --overwrite
-%--qaid 2660 \
-\end{comment}
-\SingleImageCommand{FailViewpoint}{1}{
-Unaligned failure case
-}{
-% ---
-Due to pose and viewpoint variations, the correctly matching pair of annotations (on the right) is returned at
-  rank $2$ while the incorrect pair of annotations (on the left) is returned at rank $1$.
-In the correct pair, the features on the front leg are not aligned and failed to match.
-In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
-  that are distinctive by coincidence.
-% ---
-}{figuresC/case_FailViewpoint.png}
