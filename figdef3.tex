@@ -64,8 +64,6 @@ downweighting. The matching regions are highlighted.
 
 
 \begin{comment}
-python -m ibeis gen_featweight_worker --dpath ~/latex/crall-candidacy-2015/ --saveparts --save figures3/genfeatweight.png --figsize=12,3 --dpi=180 --adjust=.15,.15,.1 --diskshow --clipwhite --label genfeatweight --db PZ_MTEST
-
 python -m ibeis.scripts.specialdraw featweight_fig --db PZ_MTEST --aid=1 \
 --dpath ~/latex/crall-thesis-2017/ --save figures3/fgweight.png \
 --figsize=12,3 --dpi=300 --saveparts --diskshow 
@@ -90,29 +88,21 @@ shows the weighted sum of the intensity under each feature is used as that featu
 
 
 \begin{comment}
-python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 1062 --usetex --texknormplot --show 
-
-python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 1062 --usetex --texknormplot --diskshow --saveparts --save figures3/knorm.png --dpi=256 --figsize 30 40  --dpath ~/latex/crall-candidacy-2015/ --hspace .1 --labelsize=42 --reshape 2
-
-879?
-%python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 'special' --usetex --texknormplot --show 
-python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db testdb1  --show --qfx 1 
-
-python -m ibeis.viz.interact.interact_matches --test-testdata_match_interact --show --db PZ_MTEST --qaid 3
+python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db PZ_MTEST --qaid 3 --qfx 1062 --usetex --texknormplot --diskshow --saveparts --save figures3/knorm.jpg --dpi=300 --figsize 5 8  --dpath ~/latex/crall-thesis-2017/ --hspace .8 --top=1.0 --labelsize=12 --reshape 8 --show
 \end{comment}
 \newcommand{\knorm}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormA.png}\caption{}\label{sub:knorma}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormC.png}\caption{}\label{sub:knormb}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormE.png}\caption{}\label{sub:knormc}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormG.png}\caption{}\label{sub:knormd}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormI.png}\caption{}\label{sub:knorme}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormB.png}\caption{}\label{sub:knormf}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormD.png}\caption{}\label{sub:knormg}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormF.png}\caption{}\label{sub:knormh}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormH.png}\caption{}\label{sub:knormi}\end{subfigure}
-\begin{subfigure}[h]{0.18\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormJ.png}\caption{}\label{sub:knormj}\end{subfigure}
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormA.jpg}\caption{}\label{sub:knorma}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormC.jpg}\caption{}\label{sub:knormb}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormE.jpg}\caption{}\label{sub:knormc}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormG.jpg}\caption{}\label{sub:knormd}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[width=\textwidth]{figures3/knormI.jpg}\caption{}\label{sub:knorme}\end{subfigure}
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormB.jpg}\caption{}\label{sub:knormf}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormD.jpg}\caption{}\label{sub:knormg}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormF.jpg}\caption{}\label{sub:knormh}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormH.jpg}\caption{}\label{sub:knormi}\end{subfigure}%
+\begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormJ.jpg}\caption{}\label{sub:knormj}\end{subfigure}
 \caption[\caplbl{knorm}LNBNN feature correspondence scoring]{
 % ---
 \caplbl{knorm} The four nearest neighbors of a distinctive query feature~\cref{sub:knormf}. The bottom row shows
@@ -484,112 +474,127 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 
 % --- VIEWPOINT
 \begin{comment}
-python -m ibeis draw_match_cases --db GZ_Master1 --qaid 2787  -a timectrl -t best --filt :fail=True,sortdsc=gtscore --show --verbose
-python -m ibeis draw_match_cases --db GZ_Master1 --qaid 2787  -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore \
-
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Viewpoint,sortdsc=gtscore --db GZ_Master1  --qaid 2787 \
-    --hargv=match --render  --cmdaug="FailViewpoint" \
-
-    --overwrite
-%--qaid 2660 \
+python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,sortdsc=gtscore --show  --qaid=1223 \
+    --annotmodes=[3] --noshow_truth --dpi=300 --dpath ~/latex/crall-thesis-2017 --save figuresC/failview.jpg --diskshow  --saveparts
 \end{comment}
-\SingleImageCommand{FailViewpoint}{1}{
-Unaligned failure case
-}{
+\newcommand{\FailViewpoint}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=250pt]{figuresC/failviewA.jpg}\caption{}\label{sub:failviewA}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=250pt]{figuresC/failviewB.jpg}\caption{}\label{sub:failviewB}\end{subfigure}
+\caption[Unaligned failure case]{\caplbl{FailViewpoint}
 % ---
-Due to pose and viewpoint variations, the correctly matching pair of annotations (on the right) is returned at
-  rank $2$ while the incorrect pair of annotations (on the left) is returned at rank $1$.
+Due to pose and viewpoint variations, the correctly matching pair of annotations \cref{sub:failviewB} is returned
+  at rank $22$ while the incorrect pair of annotations \cref{sub:failviewA} is returned at rank $1$.
 In the correct pair, the features on the front leg are not aligned and failed to match.
-In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
-  that are distinctive by coincidence.
+%In the incorrect pair, the heads of the animals are in a similar pose and thus creating several correspondences
+%  that are distinctive by coincidence.
 % ---
-}{figuresC/case_FailViewpoint.png}
+}
+\label{fig:FailViewpoint}
+\end{figure}
+}
 
 
-% --- Photobomb
+% --- OCCLUSION
+\begin{comment}
+python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,sortdsc=gfscore --db PZ_Master1 --show --qaid=17190 \
+    --annotmodes=[3] --noshow_truth --dpi=300 --dpath ~/latex/crall-thesis-2017 --save figuresC/failocclu.jpg --diskshow  --saveparts
+\end{comment}
+\newcommand{\FailOcclusion}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=260pt]{figuresC/failoccluA.jpg}\caption{}\label{sub:failoccluA}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=260pt]{figuresC/failoccluB.jpg}\caption{}\label{sub:failoccluB}\end{subfigure}
+\caption[Occlusion failure case]{\caplbl{FailOcclusion}
+% ---
+The plants in the query annotation inhibit the creation of feature correspondences,
+causing the correct pair of annotations \cref{sub:failoccluB} to be returned at rank $2$.
+%This is exacerbated by pose and viewpoint variations.
+The incorrect pair of annotations \cref{sub:failoccluA} at rank $1$ are not the same individual even though they share similar features.
+% ---
+}
+\label{fig:FailOcclusion}
+\end{figure}
+}
+
+
+% --- QUALITY
 
 \begin{comment}
-python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  --show --verbose
+python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,sortdsc=gfscore --db GIRM_Master1 --qaid=336 --show \
+    --annotmodes=[3] --noshow_truth --dpi=300 --dpath ~/latex/crall-thesis-2017 --save figuresC/failquality.jpg --diskshow  --saveparts
 
-python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  \
-
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore  \
---qaid=3727 --cmdaug="FailPhotobomb" --hargv=match --render
+python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,with_tag=Quality,sortdsc=gfscore --db GIRM_Master1 --qaid 639 \
+    --hargv=match --render --cmdaug="FailQuality" --vert=False
 \end{comment}
-\SingleImageCommand{FailPhotobomb}{1}{
-    Photobomb failure case
-}{
+\newcommand{\FailQuality}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failqualityA.jpg}\caption{}\label{sub:failqualityA}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failqualityB.jpg}\caption{}\label{sub:failqualityB}\end{subfigure}
+\caption[Quality failure case]{\caplbl{FailQuality}
 % ---
-A photobombing animal in the background of the query annotation cause LNBNN to return the incorrect result (on
-  the left) at rank $1$.
-The correct match (on the right), has a significant number of matches, but there is a difference of $1$ day
-  between the pair.
-On the other hand, the annotations in the photobomb pair were taken within minutes of each other and therefore
-  have much higher visual similarity.
-% ---
-}{figuresC/case_FailPhotobomb.png}
+The low resolution of the database annotation causes the correct pair of annotations \cref{sub:failqualityB} to
+  be returned at rank $43$.
+The incorrect pair of annotation \cref{sub:failqualityA} did not recieve a particularly high score, but it was
+  returned at rank $1$ because no feature correspondences were established to the correct match.
+% ----
+}
+\label{fig:FailQuality}
+\end{figure}
+}
 
 
 % --- Scenery Match
 
 \begin{comment}
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 \
-    --qaid 1988 \
-    --hargv=match --render  --cmdaug="FailScenery" \
-    --cappref="Failure case due to a scenery match. Most scenery match cases have small timedeltas between the images."
-
-# 2811
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
-
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
-python -m ibeis.dev -e draw_cases -a timectrl -t best:sv_on=False --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
-python -m ibeis.dev -e draw_cases -a timectrl -t best:sv_on=False,AI=False --filt :fail=True,with_tag=SceneryMatch,sortdsc=gfscore --db GZ_Master1 --qaid 1988 --show
+python -m ibeis draw_match_cases -a timectrl -t best:fg_on=False --filt :fail=True,sortdsc=gfscore --db GZ_Master1 --show --qaid=2317 \
+    --annotmodes=[3] --noshow_truth --dpi=300 --dpath ~/latex/crall-thesis-2017 --save figuresC/failscenery.jpg --diskshow  --saveparts
 \end{comment}
-\SingleImageCommand{FailScenery}{1}{
-    Scenery failure case
-}{
+\newcommand{\FailScenery}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failsceneryA.jpg}\caption{}\label{sub:failsceneryA}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failsceneryB.jpg}\caption{}\label{sub:failsceneryB}\end{subfigure}
+\caption[Scenery failure case]{\caplbl{FailScenery}
 % ---
-The incorrect pair of annotations (on the left) was returned at rank $1$ because of strong matches in the
-  background scenery.
-The correct pair was returned at rank $2$ and did not produce matches in the front leg due to pose variations.
-The annotations in the scenery match pair were taken $8$ seconds appart in the same location causing their
+The incorrect pair of annotations \cref{sub:failsceneryA} was returned at rank $1$ because of strong matches in
+  the background scenery.
+The correct pair \cref{sub:failsceneryB} was returned at rank $2$ and did not produce matches in the front leg
+  due to pose variations.
+The annotations in the scenery match pair were taken seconds appart in the same location causing their
   backgrounds to be near duplicates.
 The foregroundness measure was disabled to produce this example, enabling it addresses nearly all scenery match
   cases.
 % ---
-}{figuresC/case_FailScenery.png}
+}
+\label{fig:FailScenery}
+\end{figure}
+}
 
-% --- QUALITY
 
+% --- Photobomb
 \begin{comment}
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Quality,sortdsc=gfscore --db GIRM_Master1 --qaid 639 \
-    --hargv=match --render --cmdaug="FailQuality" --vert=False
+python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fail=True,with_tag=Photobomb,sortdsc=gfscore --qaid=6944 \
+    --annotmodes=[3] --noshow_truth --dpi=300 --dpath ~/latex/crall-thesis-2017 --save figuresC/failpb.jpg --diskshow  --saveparts
 \end{comment}
-\SingleImageCommand{FailQuality}{1}{
-Quality failure case
-}{
+\newcommand{\FailPhotobomb}{
+\begin{figure}[ht!]
+\centering
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=300pt]{figuresC/failpbA.jpg}\caption{}\label{sub:failpbA}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=300pt]{figuresC/failpbB.jpg}\caption{}\label{sub:failpbB}\end{subfigure}
+\caption[Photobomb failure case]{\caplbl{FailPhotobomb}
 % ---
-The low resolution of the query annotation and the overall viewpoint difference causes the correct pair of
-  annotations (on the right) to be returned at rank $75$.
-The incorrect pair of annotation (on the left) did not recieve a particularly high score, but it was returned at
-  rank $1$ because there were no feature correspondences established to the correct match.
+A photobombing animal in the foreground of the database annotation causes LNBNN to return the incorrect result \cref{sub:failpbA} at rank $1$.
+The correct match \cref{sub:failpbB}, has a significant number of matches, but there is a difference of $1$ day
+  between the pair.
+On the other hand, the annotations in the photobomb pair were taken within seconds of each other and therefore
+  have much higher visual similarity.
 % ---
-}{figuresC/case_FailQuality.png}
+}
+\label{fig:FailPhotobomb}
+\end{figure}
+}
 
 
-% --- OCCLUSION
-\begin{comment}
-python -m ibeis.dev -e draw_cases -a timectrl -t best --filt :fail=True,with_tag=Occlusion,sortdsc=gfscore --db PZ_Master1 --qaid 3812 \
-    --hargv=match --render  --cmdaug="Occlusion" \
-    --cappref="Failure case due to occlusion. "
-\end{comment}
-\SingleImageCommand{FailOcclusion}{1}{
-Occlusion failure case
-}{
-% ---
-The plants occluding both the query and database annotations inhibit the creation of feature correspondences,
-  causing the correct pair of annotations (on the right) to be returned at rank $2$.
-This is exacerbated by pose and viewpoint variations.
-The incorrect pair of annotation (on the left) at rank $1$ are relatively distinctive by coincidence.
-% ---
-}{figuresC/case_Occlusion.png}

@@ -628,13 +628,15 @@
 
     \subsection{Homography refinement}
         Matches that are inliers to the best hypothesis affine transformation, $\HypothAffMat$, are used in the
-        least squares refinement step. This step is only executed if there are at least $4$ inliers to
-        $\HypothAffMat$, otherwise all correspondences between features in query annotation $\annotI$ to features
-        in database annotation $\annotII$ are removed. The refinement step estimates a projective transform from
-        $\annotI$ to  $\annotII$. To avoid numerical errors the $xy$-locations of the correspondence are normalized
-        to have a mean of $0$ and a standard deviation of $1$ prior to estimation. A more comprehensive explanation
-        of estimating projective transformations using point correspondences can be found
-        in~\cite[311--320]{szeliski_computer_2010}.
+          least squares refinement step.
+        This step is only executed if there are at least $4$ inliers to $\HypothAffMat$, otherwise all
+          correspondences between features in query annotation $\annotI$ to features in database annotation
+          $\annotII$ are removed.
+        The refinement step estimates a projective transform from $\annotI$ to  $\annotII$.
+        To avoid numerical errors the $xy$-locations of the correspondence are normalized to have a mean of $0$
+          and a standard deviation of $1$ prior to estimation.
+        A more comprehensive explanation of estimating projective transformations using point correspondences can
+          be found in~\cite[311--320]{szeliski_computer_2010}.
 
         Unlike in the affine hypothesis estimation where many transformations are generated, only one homography
         transformation is computed. Given a set of inliers to the affine hypothesis transform
