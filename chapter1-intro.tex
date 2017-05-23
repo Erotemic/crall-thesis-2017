@@ -1,6 +1,6 @@
 \begin{comment}
     ./texfix.py --outline --fpaths chapter1-intro.tex
-    ./texfix.py --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999  -w
+    fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --shortcite
     ./texfix.py --grep "\\\\[A-Za-z]*[^{a-zA-Z]"
     ./texfix.py --reformat --fpaths figdef1.tex
 \end{comment}
@@ -49,11 +49,12 @@
 
 \section{Challenges of animal identification}\label{sec:challenges}
 
-    In animal identification we are given a database of images. This database may initially be empty. Each image is
-    cropped to a bounding box around an animal of interest and labeled with that animal's identity. For a new query
-    image, the goal is to determine whether or not any other images of the individual are in the database. If the
-    query is matched, it is added to the database as a resighting of that individual. If the query is not matched,
-    then it is added as a new individual.
+    In animal identification we are given a database of images.
+    This database may initially be empty.
+    Each image is cropped to a bounding box around an animal of interest and labeled with that animal's identity.
+    For a new query image, the goal is to determine if any other images of the individual are in the database.
+    If the query is matched, it is added to the database as a resighting of that individual.
+    If the query is not matched, then it is added as a new individual.
 
     In this work we focus on identifying individuals of species with distinguishing textures. Examples include
     zebras, giraffes, humpback whales, lionfish, nautiluses, hyenas, whale sharks, wildebeest, wild dogs, jaguars,
@@ -220,7 +221,7 @@
             One benefit is that an \occurrence{} can be used as a semantic processing unit to distribute
               manageable chunks of work to users of the system.
             Another is that \occurrences{} can be used to improve the results of identification.
-            Typically there will be only a small number of individuals within an \occurrence{}, and it is not
+            Typically, there will be only a small number of individuals within an \occurrence{}, and it is not
               uncommon for each individual to photographed multiple times and from multiple viewpoints.
             This redundancy in images will be exploited in \Cref{chap:graphid}.
 
@@ -274,10 +275,10 @@
 
             In an effort to ensure that all \annots{} used in the \GZC{} were comparable, we did not include any
             \annot{} that had junk or poor qualities. We also did not include \annots{} not labeled with a left or
-            frontleft viewpoint to account for limitations in the initial ranking algorithm. All labelings of viewpoint
-            and quality were generated manually. Since then we have trained viewpoint and quality classifiers using this
-            manual data. Automatic detection of quality and viewpoint is discussed in Jason Parham's
-            work~\cite{parham_photographic_2015}.
+            frontleft viewpoint to account for limitations in the initial ranking algorithm. All labelings of
+            viewpoint and quality were generated manually. Since then, we have trained viewpoint and quality
+            classifiers using this manual data. Automatic detection of quality and viewpoint is discussed in Jason
+            Parham's work~\cite{parham_photographic_2015}.
 
         \subsubsection{Matching within each \occurrence{}} %
             Animals often have multiple redundant views within an \occurrence{}, each of which can be the same,
@@ -307,10 +308,11 @@
             \exemplars{} are indexed using a search data structure.
 
             After the \masterdatabase{} has been prepared, the ranking algorithm is able to issue a subset of the
-            \encounter{}'s \annots{} as a query. The result is a ranked list of \exemplars{} that are visually similar
-            to the \encounter{}. The top \exemplars{} in the ranked list are used as candidate matches. The candidate
-            matches are reviewed, and the \encounter{} is either merged into an existing \mastername{} or added to the
-            \masterdatabase{} as a new \mastername{}.
+              \encounter{}'s \annots{} as a query.
+            The result is a ranked list of \exemplars{} that are visually similar to the \encounter{}.
+            The top \exemplars{} in the ranked list are used as candidate matches.
+            Then, the candidate matches are reviewed, and the \encounter{} is either merged into an existing
+              \mastername{} or added to the \masterdatabase{} as a new \mastername{}.
 
         \subsubsection{Consistency checks}
             When merging \encounters{} into the \masterdatabase{} it is possible that mistakes were made.  Two
@@ -320,7 +322,7 @@
             \item  A \glossterm{split case} occurs when a set of \annots{} from two or more different animals is
             incorrectly labeled with the same \name{}.  The main cause of this error is when distracting features are
             matched causing the \annots{} to appear visually similar.
-            %%%
+            %%/
             \item A \glossterm{merge case} occurs when two sets of \annots{} from the same animal are incorrectly
             labeled with different \names{}.  This is caused by an algorithm or human error where a query \encounter{}
             was not correctly matched to the database \exemplars{}.
@@ -346,12 +348,14 @@
             reviewed. More sophisticated error detection and recovery will be discussed in \Cref{sec:incon}.
 
         \subsubsection{Population estimation}
-            The final step for the \GZC{} workflow was to estimate the number of animals in the park.  Using the
-            identification algorithm we defined which \annots{} were sightings and which were resightings. Because we
-            were using a preliminary version of the system we were conservative in defining when an animal was sighted
-            by only using the left and frontleft \annots{} with quality labels of ok, good, or excellent.  Each
-            individual that met this criteria was counted as a sighting.  If a sighted individual had an \annot{} from
-            both days, then we counted that individual as resighted.
+            The final step for the \GZC{} workflow was to estimate the number of animals in the park.
+            Using the identification algorithm we defined which \annots{} were sightings and which were
+              resightings.
+            Because we were using a preliminary version of the system we were conservative in defining when an
+              animal was sighted by only using the left and frontleft \annots{} with quality labels of ok, good, or
+              excellent.
+            Each individual that met these criteria was counted as a sighting.
+            If a sighted individual had an \annot{} from both days, then we counted that individual as resighted.
 
     \subsection{Processing challenges}
         Our experience with the Great Zebra Count has highlighted a number of challenges that must be addressed if this
@@ -435,7 +439,7 @@
     We want to label each \annot{} with a \glossterm{\name{}} that uniquely identifies the individual.
     In other words, our task is to label all \annots{} from the same individual with the same \name{} and give
       \annots{} from different individuals different \names{}.
-    Once this is complete the resulting database will contain the information needed to estimate the size of the
+    After this is complete the resulting database will contain the information needed to estimate the size of the
       population using techniques from sight-resight statistics.
 
     The first step of the identification process is a ranking algorithm. The inputs to the algorithm are a single query
@@ -446,10 +450,11 @@
     to the foreground. Matches are combined across multiple \exemplar{} \annots{} to produce a matching score for each
     \name{} in the database, resulting in a ranked list of results for each query.
 
-    We then extend ranking algorithm by developing a classifier able to automatically review its results. We construct a
-    pairwise feature that captures relationships between two annotations using local feature correspondence and global
-    properties such as time and GPS. We learn a classifier to predict if a pair of annotations --- \ie{} a result in the
-    ranked list --- is correct or incorrect.
+    We then extend ranking algorithm by developing a classifier able to automatically review its results.
+    First, we construct a pairwise feature that captures relationships between two annotations using local
+      feature correspondence and global properties such as time and GPS.
+    Then, we learn a classifier to predict if a pair of annotations --- \ie{} a result in the ranked list --- is
+      correct or incorrect.
 
     In the final part of our approach, we place the problem of animal identification in a graph framework able to
     systematically guide the identification process. This is done by placing each annotation in a graph as a vertex and
@@ -515,6 +520,6 @@
       algorithm.
     %
     \Cref{chap:graphid} combines the ranking and verification algorithm into a semi-automatic framework that
-      detects and corrects errors while reducing the number of manual reviews .
+      detects and corrects errors while reducing the number of manual reviews.
     %
     \Cref{chap:conclusion} concludes this \thesis{} and summarizes its contributions.

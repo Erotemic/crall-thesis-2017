@@ -1,21 +1,22 @@
 
 \begin{comment}
-texfix.py --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 
+fixtex --reformat --fpaths chapter4-pairclf.tex --print
+fixtex --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 
+
+https://www.languagetool.org/
 \end{comment}
 
 \newcommand{\nan}{\text{nan}}
 
 \chapter{Pairwise classification}\label{chap:pairclf}
 
-In this chapter we consider the problem of verifying whether or not two annotations are from the same animal or
-  from different animals.
-By addressing this problem we improve upon the ranking algorithm from \cref{chap:ranking} --- which ranks the
-  \names{} in a database based on similarity to a query --- by making semi-automatic decisions about results
-  returned in the ranked lists.
-The algorithms introduced in this chapter will assign a confidence to results in the ranked list, and any pair
-  above a confidence threshold can be automatically reviewed.
-We will demonstrate that our decision algorithms can significantly reduce the number of manual interactions
-  required to identify all individuals in an unlabeled set of annotations.
+In this chapter we consider the problem of verifying if two annotations are from the same animal or from different
+animals. By addressing this problem we improve upon the ranking algorithm from \cref{chap:ranking} --- which ranks
+the \names{} in a database based on similarity to a query --- by making semi-automatic decisions about results
+returned in the ranked lists. The algorithms introduced in this chapter will assign a confidence to results in the
+ranked list, and any pair above a confidence threshold can be automatically reviewed. We will demonstrate that our
+decision algorithms can significantly reduce the number of manual interactions required to identify all individuals
+in an unlabeled set of annotations.
 
 To make semi-automatic decisions up to a specified confidence we develop a \emph{pairwise probabilistic
   classifier} that predicts a probability distribution over a set of events given two annotations (typically a
@@ -80,7 +81,7 @@ However, because photobombs are inherently a pairwise property between annotatio
 Therefore, we also learn a photobomb classifier using the same sort of pairwise feature vector and random forest
   classifier.
 This supporting classifier will allow us to increase the accuracy of our identification by restricting automatic
-  classification to pairs where where the decision is straightforward.
+  classification to pairs where the decision is straightforward.
 
 
 This outline of this chapter is as follows.
@@ -129,8 +130,8 @@ The global feature vector is derived from the following attributes extracted fro
 
     \item Quality classification label, represented as a categorical integer ranging from $1$ to $5$.
 \end{enumln}
-The GPS and timestamp attributes are gathered from image EXIF data, and the viewpoint and quality labels are
-  outputs of the deep classifiers discussed in \cref{subsec:introdataprocess}.
+We gather the GPS and timestamp attributes from image EXIF data, and the viewpoint and quality labels are outputs
+  of the deep classifiers discussed in \cref{subsec:introdataprocess}.
 The GPS and timestamp attribute inform the classifier of when its not possible for two annotations to match
   (\eg{} when a pair of annotations is close in time but far in space).
 The viewpoint and quality attributes should help the classifier predict when pairs of annotations are not
@@ -142,7 +143,7 @@ An example illustrating such a case where two annotations with different viewpoi
 \LeftRightFace{}
 
 These four ``unary'' attributes are gathered for each annotation.
-Thus for each attribute we have two measurements, but we do not use them directly because the ordering of the
+Thus, for each attribute we have two measurements, but we do not use them directly because the ordering of the
   annotations in each pair is arbitrary.
 For each unary attribute, we either ignore it (as in the case of GPS and time) or record the minimum of the two
   values one feature dimension and the maximum in another (as is done with viewpoint and quality).
@@ -162,16 +163,18 @@ several methods for doing this in~\cite{ding_investigation_2010}, and they concl
 application dependent. For our application we choose the ``separate class'' method because it is simple and in
 their experiments it performs the best when \nan{} values are in both the training and testing data.
 
-The separate class method simply replaces all \nan{} measurements with an extremely large number. This means that
-whenever a decision node applies its test to a \nan{} value, the result will always be the same. In this way the
-\nan{} values are essentially treated as a separate category because a test can always be chosen that separates the
-measured and unmeasured data. In the case that a \nan{} measurement in a feature dimension is informative (\eg{} if
-images without timestamps are less likely to match other annotations), the random forest can take advantage of that
-dimension. In the more likely case that the same \nan{} measurement is uninformative, the dimension can still be
-used, but it is penalized proportional to the fraction of samples where it takes a \nan{} value. This captures the
-idea that a feature dimension is less likely to be informative if it cannot be measured reliably. However, if that
-feature dimension is highly informative for samples where it has a numeric value, then the random forest can still
-make use of it, and the samples with \nan{} values can be split by later nodes.
+The separate class method simply replaces all \nan{} measurements with an extremely large number.
+This means that whenever a decision node applies its test to a \nan{} value, the result will always be the same.
+In this way the \nan{} values are essentially treated as a separate category because a test can always be chosen
+  that separates the measured and unmeasured data.
+In the case that a \nan{} measurement in a feature dimension is informative (\eg{} if images without timestamps
+  are less likely to match other annotations), the random forest can take advantage of that dimension.
+However, in the more likely case that the same \nan{} measurement is uninformative, the dimension can still be
+  used, but it is penalized proportional to the fraction of samples where it takes a \nan{} value.
+This captures the idea that a feature dimension is less likely to be informative if it cannot be measured
+  reliably.
+However, if that feature dimension is highly informative for samples where it has a numeric value, then the
+  random forest can still make use of it, and the samples with \nan{} values can be split by later nodes.
 
 \subsection{The local feature vector}
 The local feature vector distills two orderless bag-of-features representations into a fixed length vector
@@ -180,7 +183,7 @@ Three steps are needed to construct the local feature vector.
 First we determine feature correspondences between the two annotations.
 Then for each correspondence we make several measurements (\eg{} descriptor distance and spatial position).
 Then we aggregate these measurements over all correspondences using summary statistics (\eg{} mean, sum, std).
-Thus the total length of the feature vector is the number of measurements times the number of summary statistics
+Thus, the total length of the feature vector is the number of measurements times the number of summary statistics
   used.
 
 To determine feature correspondences between two annotations, $\qaid$ and $\daid$, we use what we refer to as a
@@ -212,7 +215,7 @@ For a feature correspondence between two features $i$ and $j$ with descriptors $
     \item Normalizer distance:
     This distance between the first descriptor and the normalizing descriptor, %
         $\elltwo{\desc_i - \descnorm} / Z$.
-        This serves as a measure of visual distinctivness of the features.
+        This serves as a measure of visual distinctiveness of the features.
 
     \item Ratio score:
     This is the ratio between the distance between the correspondence, and the distance to the normalizer, %
@@ -290,8 +293,8 @@ In recent versions of our system, this ground-truth label is stored along with e
   explicit three state label.
 Therefore we must make use of data contained in previous versions of the system that simply assign a name label
   to each annotation.
-This allows us to determine if a pair of annotation is the same or different, but it does not provide information
-  about whether or not two annotations are comparable.
+This allows us to determine if an annotation pair are the same or different animals, but it does not allow us to
+  determine if the pair is comparable.
 To account for this we use heuristics to assign the incomparable label using the viewpoints, and if either
   annotation is not assigned a viewpoint it is assumed that they are comparable.
 Thus, training labels are assigned to a pair as follows:
@@ -351,19 +354,19 @@ If this was not the case, then we would include an additional partition for inco
     positive from negative matching states.
 
     For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}. Each pair is
-    associated with a ground-truth matching state label of either positive, negative, or incomparable. Additionally
-    each pair is also labeled as either a photobomb or not a photobomb. For each pair we construct a pairwise
-    feature vector as described in \cref{sec:pairfeat}. We have found that, for plains zebras, it is important to
-    use orientation augmentation when computing one-vs-one matches. In this case we should not use the second
-    nearest neighbor as the normalizer for the ratio test, because the augmented keypoints will have similar
+    associated with a ground-truth matching state label of either positive, negative, or incomparable.
+    Additionally, each pair is also labeled as either a photobomb or not a photobomb. For each pair we construct a
+    pairwise feature vector as described in \cref{sec:pairfeat}. We have found that, for plains zebras, it is
+    important to use orientation augmentation when computing one-vs-one matches. In this case we should not use the
+    second nearest neighbor as the normalizer for the ratio test, because the augmented keypoints will have similar
     descriptors. We account for this by using the 3rd nearest neighbor as the normalizer instead.
 
-    We split this dataset of labeled annotation pairs into into multiple disjoint training and testing sets using
+    We split this dataset of labeled annotation pairs into multiple disjoint training and testing sets using
     grouped stratified $k$-fold cross validation (we use $3$ folds). First, we enforce that each sample (a pair of
     annotations) within the same name or between the same two names must be placed in the same group. Then, the
-    cross validation is constrained such that all samples in a group are either in the training or testing set for each
-    split. In other words, this means that a specific individual cannot appear in both the training and testing
-    set, which helps ensures that our results will generalize to new individuals.
+    cross validation is constrained such that all samples in a group are either in the training or testing set for
+    each split. In other words, this means that a specific individual cannot appear in both the training and
+    testing set, which helps ensure that our results will generalize to new individuals.
 
     For each cross validation split, we train the matching state and photobomb-state classifier on the training set
     and then predict probabilities on each sample in the testing set. Because the cross validation is $k$-fold and
@@ -500,9 +503,9 @@ If this was not the case, then we would include an additional partition for inco
           rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
           when taking images of several animals in a small time period.
         The classifier also makes use of the spatial position of the feature correspondences, which can be
-          indicative of a photobomb (\eg{} when all of the matches are in the top left corner of an annotation).
-        This suggests that that with more training data the classifier could be trained reliably used to predict
-          when a match is a photobomb.
+          indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
+        This suggests that with more training data the classifier could be trained reliably used to predict when
+          a match is a photobomb.
 
         \ConfusionPhotobomb{}
 
@@ -527,7 +530,7 @@ If this was not the case, then we would include an additional partition for inco
           able to correctly re-rank results of the ranking algorithm, where the correct match was ranked in highly
           but not rank $1$.
         Lastly, because the classifier predicts probabilities independent of their position in the ranked list,
-          it can used to determine when a query individual is new --- \ie{} does not have a correct match in the
+          it can be used to determine when a query individual is new --- \ie{} does not have a correct match in the
           database.
 
         The performance of secondary photobomb classifier is weaker, but this is likely due to a small amount of
@@ -542,23 +545,18 @@ If this was not the case, then we would include an additional partition for inco
 \section{Summary of pairwise classification}\label{sec:pairconclusion}
 
     In this chapter we have constructed a verification mechanism that can predict the probability that a pair of
-      annotations is positive, negative, or incomparable.
-    We have also constructed a secondary classifier that can predict when --- namely in the case of photobombs
-      --- a pair of annotations might confuse the primary match-state classifier.
-    This was done by constructing a feature vector that contains matching information about a pair of
-      annotations.
-    We have constructed a representative training set by selecting hard, moderate, and easy training examples.
-    Our classifiers were learned using the random forest learning algorithm.
-    Our experiments demonstrate that the match-state classifier is able to strongly separate positive and
-      negative cases.
-    The performance of the photobomb classifier was weaker, but could likely be improved with more training data.
+    annotations is positive, negative, or incomparable. We have also constructed a secondary classifier that can
+    predict when --- namely in the case of photobombs --- a pair of annotations might confuse the primary
+    match-state classifier. This was done by constructing a feature vector that contains matching information about
+    a pair of annotations. We have constructed a representative training set by selecting hard, moderate, and easy
+    training examples. Our classifiers were learned using the random forest learning algorithm. Our experiments
+    demonstrate that the match-state classifier is able to strongly separate positive and negative cases. The
+    performance of the photobomb classifier was weaker, but could likely be improved with more training data.
 
     Based on our experiments, it is clear that the ranking algorithm is improved by an automatic verifier, but by
-      themselves ranking and verification are not enough to robustly address animal identification.
-    There is no mechanism for error recovery, nor is there a mechanism for determining when identification is
-      complete.
-    This means the automatic review threshold must conservatively resulting in more work for a manual reviewer.
-    These issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification
-      process.
+    themselves ranking and verification are not enough to robustly address animal identification. There is no
+    mechanism for error recovery, nor is there a mechanism for determining when identification is complete. This
+    means the automatic review threshold must conservatively resulting in more work for a manual reviewer. These
+    issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification process.
     This framework will detect when errors have occurred, recover from the errors, and stop the identification
       process in a timely manner.

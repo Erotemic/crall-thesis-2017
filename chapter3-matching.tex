@@ -4,6 +4,8 @@
     ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
     ./texfix.py --fpaths chapter3-matching.tex --reformat 
     # http://jaxedit.com/mark/
+
+    fixtex --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 --shortcite
 \end{comment}
 
 \chapter{Identification using a ranking algorithm}\label{chap:ranking}
@@ -276,7 +278,7 @@
             The selection process described in the original formulation of LNBNN is to simply choose the %
             $\K + 1\th{}$ nearest neighbor, which amounts to setting $\Knorm=1$. The authors of LNBNN find that there is
             no benefit to using a higher value of $\Knorm$~\cite{mccann_local_2012}. However, this does not account
-            for the case when some or all of the $\K + 1\th{}$ nearest neighbor belongs to the same class as one of
+            for the case when some or all the $\K + 1\th{}$ nearest neighbor belongs to the same class as one of
             the nearest $\K$ neighbors. Therefore, we employ a slightly different selection process. To motivate
             our selection process, consider the case when there are more than $\K$ images of the same individual
             from the same viewpoint in the database and a distinctive feature from a new annotation of that
@@ -394,7 +396,7 @@
             %
             $\Matches_{\daid} \eqv \curly{(i, j) \in \Matches \where \daid_j = \daid}$
             %
-            denote all of the correspondences to a particular database annotation.
+            denote all the correspondences to a particular database annotation.
             The \annotscore{} between the query annotation $\qaid$ and database annotation $\daid$ is:
             \begin{equation}
                 \annotscoreop(\qaid, \daid) \eqv \sum_{(i, j) \in \Matches_{\daid}} \fs_{i, j}
@@ -462,7 +464,7 @@
             \end{equation}
 
             Let $\Matches_{\nid} \eqv \{(i, j) \in \Matches \where
-              \nid_j = \nid\}$ denote all of the correspondences to a particular
+              \nid_j = \nid\}$ denote all the correspondences to a particular
               \name{}.
             The \nscore{} of \aan{\name{}} is:
             \begin{equation}
@@ -482,7 +484,7 @@
     initial feature correspondences will be spatially inconsistent. Spatial verification removes these spatially
     inconsistent feature correspondences. Determining which features are inconsistent is done by first estimating
     an affine transform between the two annotations. Then a projective transform is estimated using the inliers to
-    the affine transform. Finally any correspondences that do not agree with the projective transform
+    the affine transform. Finally, any correspondences that do not agree with the projective transform
     transformation are removed~\cite{fischler_random_1981, philbin_object_2007}. This process is illustrated in
     \cref{fig:sver}. We have reviewed related work in spatial verification in~\cref{subsec:sverreview}.
 
@@ -498,7 +500,7 @@
 
     \subsection{Shortlist selection}
         Standard methods for spatial verification are defined on the feature correspondences between two
-        annotations (images). Normally, a shortlist of the top ranked annotations are passed onto spatial
+        annotations (images). Normally, a shortlist of the top ranked annotations is passed onto spatial
         verification. However, in our application we rank \names{}, which may have multiple annotations. In our
         baseline approach we simply apply spatial verification to the top $N_{\tt{nameSL}}=40$ \names{} and the top
         $N_{\tt{annotSL}}=3$ annotations within those \names{}.
@@ -773,7 +775,7 @@
 
     \subsection{Datasets}\label{sub:datasets}
 
-        All of the images in the datasets used in these experiments were taken by photographers in the field. Each
+        All the images in the datasets used in these experiments were taken by photographers in the field. Each
         dataset is labeled with groundtruth in the form of annotations with name labels. Annotations (bounding
         boxes) have been drawn to localize animals within the image. A unique \name{} label has been assigned to
         all annotations with the same identity. Some of this groundtruth labeling was generated independently.
@@ -931,9 +933,9 @@
 
         The accuracy of the foregroundness is illustrated in~\cref{fig:FGIntraExpt}. The results show that using
         foregroundness weights improves the number of correct results at rank $1$ by a significant margin for both
-        species. In the higher ranks using using the \pvar{fg=T} line occasionally dips below the \pvar{fg=F} line
+        species. In the higher ranks using the \pvar{fg=T} line occasionally dips below the \pvar{fg=F} line
         because sometimes the foregroundness mask covers distinguishing keypoints, but this is neither significant
-        nor common. Therefore we find it beneficial to always include foregroundness when a trained estimator is
+        nor common. Therefore, we find it beneficial to always include foregroundness when a trained estimator is
         available.
 
         %\ForegroundExpt{}
@@ -1005,7 +1007,7 @@
         %
         The results for Grévy's zebras demonstrate similar levels of accuracy for \AIAlone{} and \QRHEll{}. Affine
         invariance seems to be the most important setting for matching Grévy's zebras. The distinctive details on
-        Grévy's zebras are finer then plains zebras and are well captured by affine keypoints. While the QRH does
+        Grévy's zebras are finer than plains zebras and are well captured by affine keypoints. While the QRH does
         improve accuracy for Grévy's zebras the density of the distinctive keypoints means that it is less
         important because it is more likely two annotations will have at least one distinctive region aligned and
         in common.
@@ -1062,22 +1064,23 @@
         % Introduce varied parameters
         In this experiment we investigate the effect of $\K$ (the number of nearest neighbors used in establishing
         feature correspondences, which was discussed in~\cref{sub:featmatch}) on identification accuracy. We vary
-        $\K$ between the values $1, 2, 4$, and $6$. In all of these experiments we set the number of normalizing
+        $\K$ between the values $1, 2, 4$, and $6$. In all these experiments we set the number of normalizing
         neighbors to be $\Knorm=1$.
 
         Two database factors that may influence the best choice of $\K$ are the number of annotations in the
         database and the number of annotations per name in the database. If there are more correct matches for a
         query annotation it would be beneficial to allow it to match more annotations. Likewise, if there are more
-        overall annotation in the database, then it might be beneficial to search deeper into all of the database
+        overall annotation in the database, then it might be beneficial to search deeper into all the database
         descriptors to find the correct matches. Therefore, in addition to varying $\K$ we also vary the number
         exemplars per name (\pvar{dpername}) and the overall number of annotations in the database (\pvar{dsize})
 
-        We use a protocol similar to the one used in the scoring mechanism experiment to sample databases. The
-        difference is that we use the extra confusers annotations to vary the total number of annotations in the
-        database. However, controlling for these factors constrains the number of annotations we can use. For
-        Grévy's, we can vary the total database size between $476$ and $774$. For plains we have more confuser
-        annotations allowing us to test database sizes of $578$ and $1650$. We vary the number of \exemplars{} per
-        name between $1$ and $2$.
+        We use a protocol similar to the one used in the scoring mechanism experiment to sample databases.
+        The difference is that we use the extra confusers annotations to vary the total number of annotations in
+          the database.
+        However, controlling for these factors constrains the number of annotations we can use.
+        For Grévy's, we can vary the total database size between $476$ and $774$.
+        For plains, we have more confuser annotations allowing us to test database sizes of $578$ and $1650$.
+        We vary the number of \exemplars{} per name between $1$ and $2$.
 
         The results of this experiment are illustrated in ~\cref{fig:KExptA,fig:KExptB}. Similarly to the previous
         experiment, the number of exemplars per name is the most significant variable impacting accuracy.
@@ -1085,7 +1088,7 @@
         significant. The results also show that accuracy does slightly decrease when the database becomes larger,
         but magnitude of the decrease is between $1\percent$ and $3\percent$. Interesting the optimal choice of
         $\K$ is not consistent between species when there is only one exemplar per name. For Grévy's zebras using a
-        lower $\K$ results in better results, but for plains zebras there is a signifiant loss when $\K=1$ and the
+        lower $\K$ results in better results, but for plains zebras there is a significant loss when $\K=1$ and the
         database size is large. This is likely due to the nature of the distinguishing patterns on the different
         zebras. When matching the detailed patterns of the Grévy's zebras, it is better to use a low $\K$ to reduce
         noise, but for coarser plains zebras patterns a low $\K$ might not find a correct match immediately. Thus,
@@ -1166,7 +1169,7 @@
             landscape. Both cases are most commonly caused by pairs of annotations with the same occurrence, but
             photobombs can occur over larger time deltas. The example in~\cref{fig:FailPhotobomb} illustrates a
             failure case due to a photobombing background animal, and \cref{fig:FailScenery} illustrates a scenery
-            match. For plains and Grévy's zebras, most scenery matches are be eliminated using the foregroundness
+            match. For plains and Grévy's zebras, most scenery matches are eliminated using the foregroundness
             measure, but the problem remains in databases without a trained foregroundness estimator. Accounting
             for photobombs is a more challenging problem because a simple patch based classifier cannot distinguish
             a primary feature from a  secondary feature without having information about the animal identity.
@@ -1184,11 +1187,14 @@
         restrictive conditions to control for the effect of time, database size, and number of exemplars. Based on
         the results of these experiments we are able to make several observations and conclusions.
 
-        Our experiments with comparing the SMK and LNBNN ranking algorithm demonstrated that LNBNN achieved better
-        ranking accuracy. LNBNN does not quantize descriptor and therefore it is able to distinguish more subtle
-        descriptor details. Because LNBNN does not require an expensive pre-training phase it makes it make it
-        ideal to rank the databases on the scales considered in this thesis. However, we note that SMK is more
-        efficient on larger scales, and it may be necessary to consider when databases become very large.
+        Our experiments with comparing the SMK and LNBNN ranking algorithm demonstrated that LNBNN achieved
+          better ranking accuracy.
+        LNBNN does not quantize descriptor and therefore it is able to distinguish more subtle descriptor
+          details.
+        Because LNBNN does not require an expensive pre-training phase, it makes it make it ideal to rank the
+          databases on the scales considered in this thesis.
+        However, we note that SMK is more efficient on larger scales, and it may be necessary to consider when
+          databases become very large.
 
         % NUM EXEMPLARS MATTERS
         In most experiments we evaluated our ranking algorithm as if it were addressing a single-shot
@@ -1232,7 +1238,7 @@
     While we have demonstrated that the ranking algorithm accurately ranks correct matches when they exist, there
       are several limitations to this approach.
     \begin{enumln}
-        \item All results must be manually verified, which can be time consuming.
+        \item All results must be manually verified, which can be time-consuming.
             %process for large datasets.
             %We introduced a mechanism for ranking the individuals in a database
             %based similarity to a single query, but provided no means of verifying

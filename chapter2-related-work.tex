@@ -2,7 +2,7 @@
     ./texfix.py --fixcap --dryrun
     ./texfix.py --findcite --unused-important
     ./texfix.py --findcite --close-keys
-    ./texfix.py --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 -w
+    fixtex --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 --shortcite
 \end{comment}
 
 \chapter{Related work}\label{chap:relatedwork} 
@@ -41,7 +41,7 @@
     Before an image can be analyzed, it must be broken down into smaller components. An image's visual appearance
     can be captured using a combination of local image patterns --- \glossterm{patch based features}. The most
     informative patch based features are typically centered on simple image structures such as junctions, corners,
-    edges, and blobs~\cite{tuytelaars_local_2007}. If these features be can be reliably detected, localized, and
+    edges, and blobs~\cite{tuytelaars_local_2007}. If these features can be reliably detected, localized, and
     described then image matching can be posed as a problem in matching sets of features. This section describes
     work related to detecting features in an image, and~\cref{sec:featuredescribe} will discuss how detected
     features are then described.
@@ -55,7 +55,7 @@
     account for changes in viewpoint and pose, it is also common to augment features with an orientation and shape.
     Adding these properties is said to add invariance to the feature. Invariant features can provide similar
     descriptions of the same semantic image region under different viewing conditions. However, adding invariance
-    can causes features to lose distinguishing information~\cite{mikolajczyk_comparison_2005,
+    can cause features to lose distinguishing information~\cite{mikolajczyk_comparison_2005,
     tuytelaars_local_2007, perdoch_efficient_2009, lowe_distinctive_2004}.
 
     Many detectors have been developed to detect patch based feature keypoints~\cite{mikolajczyk_comparison_2005,
@@ -440,12 +440,12 @@
         in~\cite{winder_picking_2009} and achieves an error of $15.16\percent$ on the buildings datasets.
         In~\cite{simonyan_learning_2014}, large scale non-convex optimization is used to learn a spatial pooling
         configuration of log-polar bins, a dimensionality reduction matrix, and a distance metric to further reduce
-        the FPR95 error to $10.98\percent$. The current state of the art error of $4.56\percent$ on the buildings
+        the FPR95 error to $10.98\percent$. The current state-of-the-art error of $4.56\percent$ on the buildings
         dataset is achieved using a convolutional neural network~\cite{zagoruyko_learning_2015}.
 
     \subsection{Discussion --- descriptor choices}
         In our application we use the SIFT~\cite{lowe_distinctive_2004} as our
-        baseline descriptor because it is one of the most widely used and well known descriptors. SIFT describes
+        baseline descriptor because it is one of the most widely used and well-known descriptors. SIFT describes
         images patches in such a way that small localization errors do not significantly impact the resulting
         representation. Exploration of alternative convolutional descriptors is discussed later in~\cref{sec:dcnn}.
 
@@ -459,7 +459,7 @@
     Thus, finding matching descriptor vectors is often framed as a nearest neighbor search
     problem~\cite{lowe_distinctive_2004}. It becomes prohibitively expensive to perform exact nearest neighbor
     search as the size of the database increases. Therefore, approximate algorithms --- which can trade off a small
-    amount of accuracy for substantial speed ups --- can be used instead.
+    amount of accuracy for substantial speed-ups --- can be used instead.
 
     \subsection{Kd-tree}
 
@@ -497,7 +497,7 @@
         data. Using a random rotation preserves distances between rotated vectors but does not preserve the
         dimension of maximum variance. This means that each of the $m$ kd-trees yields a different partitioning of
         the data, although it is not guaranteed to be independent. When searching multiple random kd-trees a single
-        priority queue keeps track of the next nearest bin boundaries to search over all of the trees.
+        priority queue keeps track of the next nearest bin boundaries to search over all the trees.
 
     \subsection{Hierarchical k-means}
         Another tree-based method for approximate nearest neighbor search is the hierarchical k-means. Each level
@@ -619,7 +619,7 @@
 
     \subsection{Bag-of-words instance recognition}\label{subsec:bow}
 
-        One of the most well known techniques in instance recognition is the \glossterm{bag-of-words} model
+        One of the most well-known techniques in instance recognition is the \glossterm{bag-of-words} model
         introduced to computer vision by Sivic and Zisserman~\cite{sivic_video_2003, sivic_efficient_2009}. The
         bag-of-words model addresses instance recognition using techniques from text-retrieval. An image is cast as
         a text document where the image patches (detected at keypoints and described with SIFT) are the words. The
@@ -653,7 +653,7 @@
             the word. Therefore, when a feature in a new query image is quantized the inverted index looks up all
             of the database features that it matches to. A new feature correspondence is created for each database
             feature the inverted index maps to. For each correspondence a feature matching score is computed.
-            Because all of the word assignments and feature correspondences are known, the scores of all matching
+            Because all the word assignments and feature correspondences are known, the scores of all matching
             images can be efficiently computed by summing the scores of their respective feature correspondences.
 
         \paragraph{Vocabulary tf-idf weighting}
@@ -820,14 +820,14 @@
 
         A vocabulary adaptation scheme is also introduced in~\cite{arandjelovic_all_2013}. The vocabulary is
         updated when a new image is added to the VLAD inverted index. This is performed by updating any word
-        centroid $\c$ to $\c'$, where $\c'$ is the average of all of the descriptors currently assigned to that
+        centroid $\c$ to $\c'$, where $\c'$ is the average of all the descriptors currently assigned to that
         word. The residuals of the affected words are recomputed and re-aggregated into updated VLAD descriptors.
 
         Recently, NetVLAD --- a convolutional variant of the VLAD descriptor --- has been
         introduced~\cite{arandjelovic_netvlad_2016,radenovic_cnn_2016}. NetVLAD uses deep learning with a triplet
         loss function to simultaneously learn both the patch-based descriptors and the vocabulary. This
         convolutional approach shows large improvements (a $19\percent$ improvement on Oxford 5k) over previous
-        state-of-the art image retrieval techniques.
+        state-of-the-art image retrieval techniques.
 
     \subsection{SMK --- the selective match kernel}\label{sec:smk}
         The selective match kernel (SMK) encapsulates the vocabulary based techniques such as bag-of-words, Hamming
@@ -896,7 +896,7 @@
         Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of $N$
         individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
         each facial landmark, $k$ Tom-vs-Pete classifiers are computed. A single Tom-vs-Pete classifier is a linear
-        SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all of the nose
+        SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all the nose
         descriptors from class $T$ and class $P$ make up the SVM training data, and the learned SVM classifies a
         new nose feature as $T$-ish or $P$-ish. A descriptor vector for a single face is be made by selecting
         $5000$ out of the total $k\binom{N}{2}$ classifiers and concatenating the signed distances from all the
@@ -906,40 +906,50 @@
         descriptor vectors. Then this new vector is classified using a radial basis function SVM{}.
 
         One of the most recent advances in face verification and recognition is the DeepFace
-        system~\cite{taigman_deepface_2014}. The DeepFace system implements face verification using the following
-        pipeline: detect \rpipe{} align \rpipe{} represent \rpipe{} classify. Specialized facial point detectors
-        and a 3D face model are used to register a 3D affine camera to an RGB-image. The image is then warped into
-        a ``frontalized'' view using a piecewise affine transform. A face is represented as the $4096$ dimensional
-        output of a deep $7$ layer convolutional neural network that exploits the aligned nature input images. An
-        $8$\th layer is used in supervised training where each output unit corresponds to a specific individual. At
-        test time the L2-normalized output of the network is used as the feature representation. In a supervised
-        setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset using the descriptor
-        vectors produced by the network. In an unsupervised setting an ensemble of classifiers is used. The
-        ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} as well as several
-        non-linear SVM classifiers with different inputs. The inputs are deep representations --- the activations
-        of a deep neural network's output layer --- of the 3D aligned RGB-image, the 2D aligned RGB-image
-        (generated using a simpler model based on similarity transforms), and an image comprised of intensity,
-        magnitude, and orientation channels. Each input was fed through four deep networks each with different
-        initialization seeds. DeepFace achieves an accuracy of $0.9735$ on the Labeled Faces in the Wild
-        dataset~\cite{huang_labeled_2007}, which is comparable to the human performance measured at $0.975$. When
-        using unaligned faces the ROC score drops to $0.879$. This demonstrates that alignment is very important
-        for handling the problem of viewpoint in face verification.
+          system~\cite{taigman_deepface_2014}.
+        The DeepFace system implements face verification using the following pipeline:
+        detect \rpipe{} align \rpipe{} represent \rpipe{} classify.
+        Specialized facial point detectors and a 3D face model are used to register a 3D affine camera to an
+          RGB-image.
+        The image is then warped into a ``frontalized'' view using a piecewise affine transform.
+        A face is represented as the $4096$ dimensional output of a deep $7$ layer convolutional neural network
+          that exploits the aligned nature input images.
+        An $8$\th layer is used in supervised training where each output unit corresponds to a specific
+          individual.
+        At test time the L2-normalized output of the network is used as the feature representation.
+        In a supervised setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset
+          using the descriptor vectors produced by the network.
+        In an unsupervised setting an ensemble of classifiers is used.
+        The ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} and 
+          several non-linear SVM classifiers with different inputs.
+        The inputs are deep representations --- the activations of a deep neural network's output layer --- of
+          the 3D aligned RGB-image, the 2D aligned RGB-image (generated using a simpler model based on similarity
+          transforms), and an image comprised of intensity, magnitude, and orientation channels.
+        Each input was fed through four deep networks each with different initialization seeds.
+        DeepFace achieves an accuracy of $0.9735$ on the Labeled Faces in the Wild
+          dataset~\cite{huang_labeled_2007}, which is comparable to the human performance measured at $0.975$.
+        When using unaligned faces the ROC score drops to $0.879$, which demonstrates that alignment is very
+          important for handling the problem of viewpoint in face verification.
 
     \subsection{Person re-identification}
         %Radke dictionary learning ICCV \cite{karanam_person_2015}
         %Radke pose priors TPAMI \cite{wu_viewpoint_2015}
         %Deep model of person re-id \cite{shi_embedding_2016}.
-        The person re-identification problem is typically posed in the context of locating the same person within a
-        few minutes or hours from low-resolution surveillance
-        video~\cite{hirzer_relaxed_2012,karanam_person_2015,wu_viewpoint_2015,shi_embedding_2016}. Common
-        approaches to person re-identification typically transform images into a fixed length mid-level vector
-        representation and a learned distance metric is used to compare representations. Mid-level representations
-        can be built from color and texture histograms or extracted using a convolutional neural network. The
-        distance metric is commonly learned as a Mahalanobis distance using linear discriminant
-        analysis~\cite{hirzer_relaxed_2012}. Although alternative approaches using dictionary learning
-        ~\cite{karanam_person_2015} have also been shown to work well. Improvements to baseline can be achieved by
-        conditioning person descriptors on viewpoint and pose~\cite{wu_viewpoint_2015}. Recently both features and
-        distance metric have been learned using neural networks~\cite{shi_embedding_2016}.
+        The person re-identification problem is typically posed in the context of locating the same person within
+          a few minutes or hours from low-resolution surveillance
+          video~\cite{hirzer_relaxed_2012,karanam_person_2015,wu_viewpoint_2015,shi_embedding_2016}.
+        Common approaches to person re-identification typically transform images into a fixed length mid-level
+          vector representation and a learned distance metric is used to compare representations.
+        Mid-level representations can be built from color and texture histograms or extracted using a
+          convolutional neural network.
+        The distance metric is commonly learned as a Mahalanobis distance using linear discriminant
+          analysis~\cite{hirzer_relaxed_2012}.
+        However, alternative approaches using dictionary learning ~\cite{karanam_person_2015} have also been
+          shown to work well.
+        Improvements to baseline can be achieved by conditioning person descriptors on viewpoint and
+          pose~\cite{wu_viewpoint_2015}.
+        Recently both features and distance metric have been learned using neural
+          networks~\cite{shi_embedding_2016}.
         %The data for person re-identification typically is composed of
         %  low-resolution image captured by surveillance cameras.
         %The goal is often to identify images of people taken within minutes or
@@ -1120,7 +1130,7 @@
         application, therefore we do not investigate most of the techniques in this section. However, the
         LNBNN~\cite{mccann_local_2012} approach is interesting to us because it is a simple algorithm that does not
         suffer from quantization artifacts. NBNN and LNBNN~\cite{boiman_defense_2008,mccann_local_2012} never
-        achieved state of the art performance in image classification, however they have produced competitive
+        achieved state-of-the-art performance in image classification, however they have produced competitive
         results using simple techniques.
 
         The simplicity of the techniques allowed for the authors to gain insight into visual recognition. Due to
@@ -1147,7 +1157,7 @@
     recognition~\cite{catherine_wah_similarity_2014, branson_bird_2014, zongyuan_ge_modelling_2015,
     zhang_weakly_2015, xiao_application_2015}.
 
-    \subsection{Discussion --- fine grained recognition}
+    \subsection{Discussion --- fine-grained recognition}
         The goal of fine-grained recognition is somewhat similar to animal identification. Fine-grained recognition
         localizes subtle information to distinguish between two similar species, whereas animal identification
         localizes subtle information to distinguish between two similar individuals. However, the domains of
@@ -1217,14 +1227,18 @@
     and then fully connected layers learn decision boundaries between these
     features~\cite{zeiler_visualizing_2014}.
 
-    Because of weight sharing convolutional networks must learn significantly fewer parameters than fully connected
-    networks. This allows convolutional networks to be trained much faster. Fewer weights also acts as a form of
-    regularization for the network. Intuitively learned convolutional filters are similar to Gabor
-    filters~\cite{gabor_theory_1946}, which are a naturally suited for extracting features from images. Even
-    without learning weights, convolutions can be used to extract powerful features for
-    matching~\cite{revaud_deep_2015}. The popular SIFT and HoG features~\cite{mahendran_understanding_2014} can
-    even be implemented as convolutional networks. Despite the lack of hard theoretical insight into the inner
-    workings of these networks, their empirical performance cannot be denied.
+    Because of weight sharing, convolutional networks must learn significantly fewer parameters than fully
+      connected networks.
+    This allows convolutional networks to be trained much faster.
+    Fewer weights also acts as a form of regularization for the network.
+    Intuitively learned convolutional filters are similar to Gabor filters~\cite{gabor_theory_1946}, which are a
+      naturally suited for extracting features from images.
+    Even without learning weights, convolutions can be used to extract powerful features for
+      matching~\cite{revaud_deep_2015}.
+    The popular SIFT and HoG features~\cite{mahendran_understanding_2014} can even be implemented as
+      convolutional networks.
+    Despite the lack of hard theoretical insight into the inner workings of these networks, their empirical
+      performance cannot be denied.
 
   \subsection{Discussion --- deep convolutional neural networks}\label{subsec:dcnndiscuss}
         Because of the astounding success of convolutional networks in almost every area in computer vision, we have
@@ -1244,10 +1258,12 @@
         face verification. However, without the large training datasets and specialized alignment procedures used
         in Deep Face, we were unable to produce promising results.
         
-        Due to these issues, this \thesis{} does not further pursue techniques based on DCNNs. We include this
-        discussion to note the potential of deep learning applied to animal identification and to strongly suggest
-        further investigation of these techniques in the future research. Of particular interest for future
-        research is the matching technique presented in \cite{rocco_convolutional_2017}. This method is
-        particularly promising because it learns to match and align images by mimicking a classic computer vision
-        pipeline while using only synthetic training data. This may be able to overcome the issues mentioned above,
+        Due to these issues, this \thesis{} does not further pursue techniques based on DCNNs.
+        We include this discussion to note the potential of deep learning applied to animal identification and to
+          strongly suggest further investigation of these techniques in the future research.
+        Of particular interest for future research is the matching technique presented in
+          \cite{rocco_convolutional_2017}.
+        This method is particularly interesting because it learns to match and align images by mimicking a
+          classic computer vision pipeline while using only synthetic training data.
+        This may be able to overcome the issues mentioned above,
         however further investigation is needed.
