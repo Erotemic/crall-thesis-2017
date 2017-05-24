@@ -68,6 +68,7 @@ We choose to use a random forest classifier, in part because they are fast to tr
   naturally output probabilities in a multiclass setting, and in part because they can handle (and potentially take
   advantage of) missing data --- \ie{} \nan{} values in feature vectors --- using the ``separate class''
   method~\cite{ding_investigation_2010}.
+We use the random forest implementation in Scikit Learn~\cite{pedregosa_scikit_learn_2011}.
   
 
 A final concern investigated in this chapter is the issue of image challenges that may confound the match-state
@@ -271,11 +272,23 @@ In practice the pairwise feature vectors include many more dimensions.
 \end{figure}
 
 The pairwise feature vector is constructed by concatenating the local and the global vector.
+The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
 This results in a final descriptor vector that can be quite large (thousands of dimensions) and some of the
   dimensions might not be useful.
 Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
-This is done by considering the importance of each feature dimension as reported by the random forest classifier.
-The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
+This is done by considering the importance of each feature dimension as measured using the using the ``mean
+  decrease impurity'' (MDI)~\cite{louppe2014understanding}.
+
+The MDI is a measure of feature importance that is computed during the training phase.
+As a decision tree is grown, the number of training samples of each class that reach a particular node are
+  recorded.
+This is used to compute the impurity of each node, which is the entropy of class labels.
+The fraction of total samples that reach a node is its weight.
+The weighted impurity decrease of a node is its weighted impurity minus the weighted sum of its children's
+  impurity.
+The MDI for a single feature dimension in a single tree is computed as the weighted impurity decrease of all
+  nodes using that feature.
+The overall MDI for the forest is obtained by averaging over all trees.
 
 
 \section{Learning the match-state classifier}\label{sec:learnclf}
@@ -296,7 +309,8 @@ Therefore we must make use of data contained in previous versions of the system 
 This allows us to determine if an annotation pair are the same or different animals, but it does not allow us to
   determine if the pair is comparable.
 To account for this we use heuristics to assign the incomparable label using the viewpoints, and if either
-  annotation is not assigned a viewpoint it is assumed that they are comparable.
+  annotation is not assigned a viewpoint it is assumed that they are comparable because most images in our datasets
+  are taken from a consistent viewpoint (\ie{} collection events were designed to reduce incomparability).
 Thus, training labels are assigned to a pair as follows:
 use the explicit labels if they exist, otherwise heuristically decide if the pair is comparable based on
   viewpoint information, if not then return incomparable, otherwise return positive if the annotations share a name
@@ -347,11 +361,12 @@ If this was not the case, then we would include an additional partition for inco
 \section{Pairwise classification experiments}\label{sec:pairexpt}
 
     We evaluate the pairwise classifiers on two datasets, one of plains zebras and the other of Grévy's zebras.
-    These datasets were previously described in \cref{sub:datasets}. When interpreting the results of these
-    experiments it is important to note that the plains zebra dataset contains only $233$ labeled incomparable
-    cases and $285$ labeled photobombs. Our Grévy's zebra dataset contains $1$ labeled incomparable cases and $85$
-    labeled photobombs. Therefore, our experiments will primarily focus on the important question of separating
-    positive from negative matching states.
+    These datasets were previously described in \cref{sub:datasets}.
+    When interpreting the results of these experiments it is important to note that the plains zebra dataset
+      contains only $233$ labeled incomparable cases and $285$ labeled photobombs, while the Grévy's zebra dataset
+      contains $1$ labeled incomparable cases and $85$ labeled photobombs.
+    Therefore, our experiments will primarily focus on the important question of separating positive from
+      negative matching states.
 
     For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}. Each pair is
     associated with a ground-truth matching state label of either positive, negative, or incomparable.
@@ -383,12 +398,27 @@ If this was not the case, then we would include an additional partition for inco
       score of zero.
 
     We have now predicted match-state probabilities, photobomb-state probabilities, and one-vs-many LNBNN scores
-    for each pair in our dataset. We now analyze the results for each classifier in the following subsections. Our
-    tests will directly compare the match-state classifier with the direct use of LNBNN as a verification
-    mechanism. Additionally, for each classifier we will measure the number of classification errors and success in
-    a confusion matrix. We also inspect the importance of each feature dimension of our pairwise feature vector.
+      for each pair in our dataset.
+    We now analyze the results for each classifier in the following subsections.
+    Our tests will compare the match-state classifier and the LNBNN ranking algorithm.
+    However, note that the scores from the LNBNN ranking algorithm can only be used to distinguish positive cases
+      from non-positive pairs.
+    Unlike the match-state classifier, the LNBNN scores cannot be used to tell if a non-positive case is negative
+      or incomparable.
+    Later in \cref{chap:graphid} it will be vitally important to distinguish these cases, but for now, in order
+      to fairly compare the two algorithms, we only consider positive probabilities from the match-state
+      classifier.
+
+    Our first test will compare the ability of each algorithm to predict if a pair is positive or not.
+    We will look at the distribution of positive and non-positive scores as well as the ROC curves.
+    The second test will compare the original LNBNN ranking against a re-ranking using the positive
+      probabilities.
+    %We will 
+    Additionally, for each classifier we will measure the number of classification errors and success in a
+      confusion matrix.
+    We also inspect the importance of each feature dimension of our pairwise feature vector.
     Finally, we will present the several examples of failure cases to illustrate where improvements are can be
-    made.
+      made.
 
     \subsection{Matching state}
 
@@ -402,7 +432,7 @@ If this was not the case, then we would include an additional partition for inco
 
         Using this confusion matrix we compute the average precision, recall, and Matthews correlation
           coefficient (MCC)~\cite{powers_evaluation_2011} for each class.
-        These number are reported in \cref{tbl:EvalMetricsMatch}.
+        These numbers are reported in \cref{tbl:EvalMetricsMatch}.
         The MCC provides a measurement of overall multiclass classification performance unbiased by class
           distribution.
         An MCC ranges from $+1$, indicating perfect predictions, to $-1$, indicates pathological inverse
@@ -439,10 +469,7 @@ If this was not the case, then we would include an additional partition for inco
 
 
         \paragraph{Feature importance}
-        %The most important features for the zebra datasets are illustrated in
-        %\Cref{fig:MatchWordCloud} and the top $5$ are given in \cref{tbl:ImportantMatchFeat}.
-        To see what the classifier is using to make its predictions we measure the importance of each dimension
-          in our feature vector using <TODO insert name of RF importance method>.
+
         To gain an intuition for which features are most important we create a word cloud where the size of the
           text is proportional to the importance of the feature.
         The word cloud is illustrated in \cref{fig:MatchWordCloud}.
@@ -554,9 +581,12 @@ If this was not the case, then we would include an additional partition for inco
     performance of the photobomb classifier was weaker, but could likely be improved with more training data.
 
     Based on our experiments, it is clear that the ranking algorithm is improved by an automatic verifier, but by
-    themselves ranking and verification are not enough to robustly address animal identification. There is no
-    mechanism for error recovery, nor is there a mechanism for determining when identification is complete. This
-    means the automatic review threshold must conservatively resulting in more work for a manual reviewer. These
-    issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification process.
+      themselves ranking and verification are not enough to robustly address animal identification.
+    There is no mechanism for error recovery, nor is there a mechanism for determining when identification is
+      complete.
+    This means, the automatic review threshold must be set conservatively to avoid any errors, which results in
+      more work for a human reviewer.
+    These issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification
+      process.
     This framework will detect when errors have occurred, recover from the errors, and stop the identification
       process in a timely manner.

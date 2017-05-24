@@ -11,22 +11,25 @@
 \section{Image based identification applied to population ecology}
 
     Population ecology relies on estimating the number of individual animals that inhabit an
-    area~\cite{krebs_ecological_1999}. Estimating a population size is done in two phases: data collection and
-    analysis. Data are collected as sets of \glossterm{sighting} and \glossterm{resighting} observations. A
-    sighting is the first observation of an individual, and a resighting is a subsequent observation of a
-    previously sighted individual. The observed data are then analyzed using software such as program
-    MARK~\cite{white_program_1999, schwarz_jolly_seber_2006} or Wildbook that applies statistical models such as
-    the Lincoln-Petersen index~\cite{seber_estimation_1982}, Jolly-Seber model,~\cite{jolly_explicit_1965,
-    seber_note_1965}, or other related models~\cite{cormack_estimates_1964,
-    chao_estimating_1987,kenneth._h._pollock_statistical_1990}. For an ecologist recording that an individual has
-    been observed is simple, but determining if that observation is a sighting or a resighting can be challenging.
-    This requires the ecologist to identify the individual by comparing against all other observations in the data
-    set.
+      area~\cite{krebs_ecological_1999}.
+    Estimating a population size is done in two phases:
+    data collection and analysis.
+    Data are collected as sets of \glossterm{sighting} and \glossterm{resighting} observations.
+    A sighting is the first observation of an individual, and a resighting is a subsequent observation of a
+      previously sighted individual.
+    The observed data are then analyzed using software such as program MARK~\cite{white_program_1999,
+      schwarz_jolly_seber_2006} or Wildbook that applies statistical models such as the Lincoln-Petersen
+      index~\cite{seber_estimation_1982}, Jolly-Seber model~\cite{jolly_explicit_1965, seber_note_1965}, or other
+      related models~\cite{cormack_estimates_1964, chao_estimating_1987,kenneth._h._pollock_statistical_1990}.
+    For an ecologist recording that an individual has been observed is simple, but determining if that
+      observation is a sighting or a resighting can be challenging.
+    This requires the ecologist to identify the individual by comparing against all other observations in the
+      data set.
 
     Current methods to estimate a population size are limited by the data collection
     phase~\cite{sundaresan_network_2007, rubenstein_ecology_2010}. The statistical population models require an
     observation sample size that grows with the size of the population being studied~\cite{seber_estimation_1982}.
-    As the number of observations increases so does the difficulty of determining identity. Thus the scope of a
+    As the number of observations increases so does the difficulty of determining identity. Thus, the scope of a
     population study is limited by the number of raw observations that can be made, and by the rate of determining
     the individual identity within a set of observations. Overcoming these limitations is of particular importance
     to wildlife preservation because population statistics are necessary to guide conservation
@@ -41,11 +44,13 @@
     individuals in the images remains. Manual methods are infeasible due to the rapid rate at which images can be
     collected. Therefore, we must turn towards computer vision based methods.
 
-    This \thesis{} develops the foundation of the image analysis component the ``Image Based Ecological Information
-    System'' (IBEIS). The purpose of this system is to gain ecological insight from images using computer vision.
-    We focus on estimating the size of a population of animals as just one example of ecological insight that might
-    be gained from images. Thus we come to the core problem addressed in this \thesis{}: image based identification
-    of individual animals.
+    This \thesis{} develops the foundation of the image analysis component the ``Image Based Ecological
+      Information System'' (IBEIS).
+    The purpose of this system is to gain ecological insight from images using computer vision.
+    We focus on estimating the size of a population of animals as just one example of ecological insight that
+      might be gained from images.
+    Thus, we come to the core problem addressed in this \thesis{}:
+    image based identification of individual animals.
 
 \section{Challenges of animal identification}\label{sec:challenges}
 
@@ -381,7 +386,7 @@
         Reviews of results were also done in order of matching scores
           regardless of previous decisions, causing the manual reviewer to
           inefficiently review redundant results between the same individual.
-        Additionally no stopping criteria for reviews was defined resulting in
+        Additionally, no stopping criteria for reviews was defined resulting in
           an ad-hoc approach to determining when all matches were found.
 
         Motivated by these observations we seek to develop a semi-automatic approach to animal identification. This
@@ -439,8 +444,8 @@
     We want to label each \annot{} with a \glossterm{\name{}} that uniquely identifies the individual.
     In other words, our task is to label all \annots{} from the same individual with the same \name{} and give
       \annots{} from different individuals different \names{}.
-    After this is complete the resulting database will contain the information needed to estimate the size of the
-      population using techniques from sight-resight statistics.
+    After this is complete, the resulting database will contain the information needed to estimate the size of
+      the population using techniques from sight-resight statistics.
 
     The first step of the identification process is a ranking algorithm. The inputs to the algorithm are a single query
     \annot{} and a set of database \annots{}. Sparse patch-based features are localized in all \annots{}, and a
@@ -493,7 +498,7 @@
     %We will learn the probability of matching given two \annots{} as well as a
     %  confidence in that estimate.
     %We will use this information build a weighted graph of potential matches.
-    %To perform inference on this graph we propose to to develop a decision
+    %To perform inference on this graph we propose to develop a decision
     %  mechanism that will make probabilistic decisions about \intraoccurrence{}
     %  matching, \vsexemplar{} matching, and consistency checks.
 
