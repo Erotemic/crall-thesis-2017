@@ -33,6 +33,7 @@ figures/*
 figures[1-9]/*
 figures[A-Z]/*
 _oldfigures
+unused_figures
 
 lat.bib
 latexSuiteTemp0.tex

@@ -1,13 +1,13 @@
 
 \begin{comment}
 python -m ibeis.scripts.specialdraw draw_graph_id \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/decisiongraph.jpg" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/decisiongraph.jpg" \
     --figsize=12,8 --clipwhite --dpi=300 --diskshow
 \end{comment}
 \newcommand{\decisiongraph}{
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figures_graph/decisiongraph.jpg}
+\includegraphics[width=\textwidth]{figures5/decisiongraph.jpg}
 \caption[A synthetic decision graph]{\caplbl{decisiongraph}
 % ---
 An example of a consistent synthetic decision graph with positive,
@@ -27,17 +27,17 @@ The color of each node represents the positive connected compoment (PCC)
 \begin{comment}
 python -m ibeis.scripts.specialdraw draw_inconsistent_pcc --show
 python -m ibeis.scripts.specialdraw draw_inconsistent_pcc \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/inconpcc.jpg" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/inconpcc.jpg" \
     --figsize=15,10 --clipwhite --dpi=300 --diskshow --saveparts
 \end{comment}
 %\MultiImageCommandII{inconpcc}{.4}{inconpcc}{
-%}{figures_graph/inconpccA.jpg}{figures_graph/inconpccB.jpg}
+%}{figures5/inconpccA.jpg}{figures5/inconpccB.jpg}
 \newcommand{\inconpcc}{
 \begin{figure}[ht!]
 \centering
-\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/inconpccA.jpg}\caption{}\label{sub:inconpccA}\end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures5/inconpccA.jpg}\caption{}\label{sub:inconpccA}\end{subfigure}
 ~~% --
-\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/inconpccB.jpg}\caption{}\label{sub:inconpccB}\end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures5/inconpccB.jpg}\caption{}\label{sub:inconpccB}\end{subfigure}
 \caption[An inconsistent PCC]{\caplbl{inconpcc}
 % ---
 Any PCC containing at least one negative edge is inconsistent.
@@ -58,23 +58,23 @@ errors are highlighted.
 \begin{comment}
 python -m ibeis.scripts.specialdraw redun_demo2 --show
 python -m ibeis.scripts.specialdraw redun_demo2 \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/kredun.jpg" \
-    --figsize=10,5 --clipwhite --dpi=300 --saveparts
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/kredun.jpg" \
+    --figsize=10,5 --clipwhite --dpi=300 --saveparts --diskshow
 \end{comment}
 \newcommand{\kredun}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunA.jpg}\caption{}\label{sub:kredunA}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunA.jpg}\caption{}\label{sub:kredunA}\end{subfigure}
 ~~% --
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunB.jpg}\caption{}\label{sub:kredunB}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunB.jpg}\caption{}\label{sub:kredunB}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunC.jpg}\caption{}\label{sub:kredunC}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunC.jpg}\caption{}\label{sub:kredunC}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunD.jpg}\caption{}\label{sub:kredunD}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunD.jpg}\caption{}\label{sub:kredunD}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunE.jpg}\caption{}\label{sub:kredunE}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunE.jpg}\caption{}\label{sub:kredunE}\end{subfigure}
 ~~%--
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures_graph/kredunF.jpg}\caption{}\label{sub:kredunF}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunF.jpg}\caption{}\label{sub:kredunF}\end{subfigure}
 \caption[Examples of $k$-redundant PCCs]{\caplbl{kredun}
 %--%
 Examples of positive (top) and negative (bottom) redundancy.
@@ -91,11 +91,11 @@ Choosing the level of redundancy is a tradeoff between the number of required
 
 \begin{comment}
 python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 --match \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/PhotobombExampleC.jpg" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExampleC.jpg" \
     --figsize=9,4 --clipwhite --dpi=180 --save
 
 python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_graph/PhotobombExample.jpg" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExample.jpg" \
     --figsize=9,4 --clipwhite --dpi=300 --saveparts
 
 python -m ibeis.core_annots --test-compute_one_vs_one --show
@@ -105,8 +105,8 @@ python -m ibeis.core_annots --test-compute_one_vs_one --show
 \newcommand{\PhotobombExample}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures_graph/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA} \end{subfigure}
-\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures_graph/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB} \end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures5/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA} \end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures5/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB} \end{subfigure}
 %\begin{subfigure}[h]{0.5\textwidth}
 %\centering
 %\includegraphics[height=60pt]{figures/PhotobombExampleC.jpg}\caption{}\label{sub:PhotobombExampleC}

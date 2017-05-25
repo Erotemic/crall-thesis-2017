@@ -210,11 +210,14 @@
 
 
 \usepackage[inline]{enumitem}
-\newlist{itemln}{itemize}{2}
+\newlist{itemln}{itemize}{3}
 \setlist[itemln]{label=\textbullet,noitemsep,nolistsep}
-\newlist{enumln}{enumerate}{2}
-\setlist[enumln]{label=(\arabic*),noitemsep,nolistsep}
-%\setlist[enumln]{label=(\arabic*)}
+
+\newlist{enumln}{enumerate}{3}
+\setlist[enumln,1]{label=(\arabic*),noitemsep,nolistsep}
+\setlist[enumln,2]{label=(\arabic{enumlni}.\arabic*),noitemsep,nolistsep}
+\setlist[enumln,3]{label=(\arabic{enumlni}.\arabic{enumlnii}.\arabic*),noitemsep,nolistsep}
+
 \newlist{enumin}{enumerate*}{2}
 \setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
 

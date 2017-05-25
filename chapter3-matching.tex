@@ -57,7 +57,7 @@
     as a \glossterm{chip}.
     % Feat Detect
     Then, a set of features ---  a keypoint and descriptor pair --- is computed. Keypoints are detected at multiple
-    locations and scales within the chip, and a texture based descriptor vector is extracted at each keypoint.
+    locations and scales within the chip, and a texture-based descriptor vector is extracted at each keypoint.
     % Featweight
     Finally, each feature is assigned a probabilistic weight using a foregroundness classifier. This helps remove
     the influence of background features.
@@ -876,7 +876,7 @@
 
         Before we investigate the parameter choices of the LNBNN ranking algorithm, we briefly evaluate the
         performance of an alternative ranking algorithm, namely VLAD-flavored SMK. The SMK algorithm is a
-        vocabulary based algorithm that is representative of more traditional approaches to instance recognition
+        vocabulary-based algorithm that is representative of more traditional approaches to instance recognition
         problems. In contrast to the raw descriptors used in LNBNN, SMK assigns each descriptor to a visual word
         and builds a weighted histogram of visual words (accumulated residual vectors in the case of VLAD) to
         represent each annotation as a sparse fixed length vector. We have experimented with several configurations
@@ -1171,7 +1171,7 @@
             failure case due to a photobombing background animal, and \cref{fig:FailScenery} illustrates a scenery
             match. For plains and Grévy's zebras, most scenery matches are eliminated using the foregroundness
             measure, but the problem remains in databases without a trained foregroundness estimator. Accounting
-            for photobombs is a more challenging problem because a simple patch based classifier cannot distinguish
+            for photobombs is a more challenging problem because a simple patch-based classifier cannot distinguish
             a primary feature from a  secondary feature without having information about the animal identity.
             However, there are some patterns that photobomb matches present that we seek to take advantage of later
             in \cref{sec:learnpb}.
