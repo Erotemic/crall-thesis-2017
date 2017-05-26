@@ -253,8 +253,6 @@ This softens the impact of its binary threshold and adds robustness to viewpoint
 \FloatBarrier{}
 \subsection{The final pairwise feature vector}
 
-\PairFeatVec{}
-
 The pairwise feature vector is constructed by concatenating the local and the global vector.
 The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
 This results in a final descriptor vector that can be quite large (thousands of dimensions) and some dimensions
@@ -262,6 +260,25 @@ This results in a final descriptor vector that can be quite large (thousands of 
 Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
 This is done by considering the importance of each feature dimension as measured using the ``mean decrease
   impurity'' (MDI)~\cite{louppe2014understanding}.
+
+%\PairFeatVec{}
+\begin{figure}
+\begin{minted}[gobble=4]{python}
+    OrderedDict([('global(qual_min)',    3),
+                 ('global(qual_max)',    nan),
+                 ('global(qual_delta)',  nan),
+                 ('global(gps_delta)',   5.79),
+                 ('len(matches)',        20),
+                 ('sum(ratio)',          10.05),
+                 ('mean(ratio)',         0.50),
+                 ('std(ratio)',          0.09)])
+\end{minted}
+\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
+Example of a small pairwise feature vector containing local and global information.
+In practice the pairwise feature vectors include many more dimensions.
+}
+\label{fig:PairFeatVec}
+\end{figure}
 
 The MDI is a measure of feature importance that is computed during the training phase.
 As a decision tree is grown, the number of training samples of each class that reach a particular node are

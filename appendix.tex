@@ -1,3 +1,7 @@
+\begin{comment}
+fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_appendix.md
+\end{comment}
+
 \begin{appendices}
 %\chapter{Appendix}
 
@@ -17,7 +21,7 @@
     \paragraph{Space-time image distance}
     To compute occurrences we define a space-time feature $\g_i$ for each image $i$, and a pairwise distance,
       $\Delta(\g_i, \g_j)$, between these features.
-    This feature will a two dimensional feature tuple, %
+    This feature will a two-dimensional feature tuple, %
     $\g_i = \paren{\time_i, \gps_i}$, where the first component is the POSIX timestamp $\time_i$, and the second
       component is a GPS coordinate %
     $\gps_i = \brak{\lat_i, \lon_i}^{T}$, where the angles of latitude and longitude are measured in radians.
@@ -80,45 +84,64 @@
     %  \wquest{who else} is an animal with, and \wquest{where else} have these animals been seen, the \annots{} in
     %  the occurrence must be grouped into individual \encounters{} and then matched against the \masterdatabase{}.
 
+
+\begin{comment}
 \chapter{Converting existing datasets to decision graphs}\label{sec:rename}
+
 In this section we briefly discuss the problem of applying graph identification from~\cref{chap:graphid} to
-existing databases. Most datasets used in practice ignore detailed connectivity information and simply associate a
-name label with a database of cropped (or sometimes un-cropped) images. Because graph identification relies on this
-detailed connectivity, we must reconstruct it before new images can be added.
+  existing databases.
+Most datasets used in practice ignore detailed connectivity information and simply associate a name label with a
+  database of cropped (or sometimes un-cropped) images.
+Because graph identification relies on this detailed connectivity, we must reconstruct it before new images can
+  be added.
 
-To apply graph identification to a previously existing dataset where annotations have been assigned name labels and
-connectivity between the annotations is unknown we follow the following process. First we compute the pairwise
-probabilities between each pair of annotations labeled with the same name. We automatically review any edge above a
-threshold as positive, negative, or incomparable (these may potentially result in inconsistencies). For any
-unconnected PCC we compute an edge augmentation to connect the PCC
-\cite{eswaran_augmentation_1976,khuller_approximation_1993}, and insert these edges into the graph labeling them as
-positive but assigning them the confidence of guessing.
+To apply graph identification to a previously existing dataset where annotations have been assigned name labels
+  and connectivity between the annotations is unknown use follow the following process.
+First we compute the pairwise probabilities between each pair of annotations labeled with the same name.
+Then, we automatically classify any edge above a threshold as positive, negative, or incomparable.
+For any set of nodes originally labeled with the same name, we compute an edge augmentation to connect the PCC as
+  detailed in~\cref{subsec:augredun} and insert these edges into the graph, labeling them as positive but assigning
+  them the confidence of guessing.
+Note that any edge labeled as negative in the classification step will result in an inconsistency because it will
+  be a negative inside a PCC.
 
-It will be common for such datasets to contain errors, we resolve any inconsistent PCCs as normal, but then we
-search for additional split cases using the pairwise classifier. In the case that a pairwise classifier does not
-exist, the temporary edges defined by the maximum spanning trees can be used to construct one. The main idea is to
-re-review all edges where the pairwise classifier prediction disagrees with its assigned match-state. Edges are
-sorted by the magnitude of the disagreement, but any edge with a confidence of absolutely-sure is ignored. This
-will present edges labeled as guessing for the user to re-review. At this point the dataset is in a legal state,
-where the name labels correspond to PCCs. The final step is to execute normal graph review in order to find any
-merge cases and explicitly label hard negative edges.
+It will be common for such datasets to contain errors, we resolve any inconsistent PCCs using the algorithm
+  from~\cref{sec:incon}, but then we search for additional split cases using the pairwise classifier.
+The main idea is to re-review all edges where the pairwise classifier prediction disagrees with its assigned
+  match-state.
+Edges are sorted by the magnitude of the disagreement, but any edge with a confidence of absolutely-sure is
+  ignored.
+This will present edges labeled as guessing for the user to re-review.
+At this point the dataset is in a legal state, where the name labels correspond to PCCs.
+The final step is to execute normal graph review in order to find any merge cases and explicitly label hard
+  negative edges.
+In the case that a pairwise classifier does not exist, then one can be trained using the temporary edges defined
+  by the maximum spanning trees of the PCCs.
 
 It is sometimes desirable new PCCs to keep the old name labels from the original database (\eg{} sometimes
-ecologists encoded information in these names). This is a simple matter when the original database contained no
-mistakes, but when the original database contains errors care must be taken. We address this problem by seeking to
-minimize the number of annotations that have their name label changed from the original dataset. This can be
-computing by finding a maximum linear sum assignment using the Munkres algorithm implemented in
-SciPy~\cite{eric_jones_scipy_2001}. We create a matrix where each row represents a group of annotations in the same
-PCC and each column represents an original name. If there are more PCCs than original names the columns are padded
-with extra values. The matrix is first initialized to be negative infinity representing impossible assignments.
-Then for each column representing a padded name, we set we its value to $1$ indicating that each new name could be
-assigned to a padded name for some small profit. Finally, we encode both the profit of assigning a new name with an
-original name and the extra one ensures that these original names are always preferred over padded names. Let
-$f_{rc}$ be the number of annotations in row $r$ with an original name of $c$, and set matrix value %
-$(r, c)$ to $f_{rc} + 1$ if $f_{rc} > 0$. The maximum linear sum assignment of this matrix results in the optimal
-consistent assignment of PCCs to original name labels.
-  
+  ecologists encoded information in these names).
+This is a simple matter when the original database contained no mistakes, but when the original database contains
+  errors care must be taken.
+We address this problem by seeking to minimize the number of annotations that have their name label changed from
+  the original dataset.
+This can be computing by finding a maximum linear sum assignment using the Munkres algorithm implemented in
+  SciPy~\cite{eric_jones_scipy_2001}.
+We create a matrix where each row represents a group of annotations in the same PCC and each column represents an
+  original name.
+If there are more PCCs than original names, then the columns are padded with extra values.
+The matrix is first initialized to be negative infinity representing impossible assignments.
+Then for each column representing a padded name, we set we its value to $1$ indicating that each new name could
+  be assigned to a padded name for some small profit.
+Finally, we encode both the profit of assigning a new name with an original name and the extra one ensures that
+  these original names are always preferred over padded names.
+Let $f_{rc}$ be the number of annotations in row $r$ with an original name of $c$, and set matrix value %
+$(r, c)$ to $f_{rc} + 1$ if $f_{rc} > 0$.
+The maximum linear sum assignment of this matrix results in the optimal consistent assignment of PCCs to original
+  name labels.
+\end{comment}
 
+
+\begin{comment}
 \chapter{Sight-resight analysis with incomparability}\label{app:markrecapincomp}
 
 Given a completed decision graph, each PCC corresponds to an individual, and each pair of PCCs is either known to
@@ -144,12 +167,29 @@ Now, in the original graph there is no PCC that is incomparable with any other, 
   two nodes in the independent set that had an edge between them, which is a contradiction.
 Even though finding the largest independent set would use the most data, any independent set will do.
 Thus, sight-resight statistics can now be performed on this graph.
+\end{comment}
 
 
 \chapter{Properties of the graph algorithm}\label{app:graphprop}
 
 
 \begin{enumln}
+
+\item Finding the largest set of comparable PCCs is a generalization to the independent set problem.
+Using the meta-graph where PCCs are nodes, and an edge is drawn between any PCCs known to have no comparable
+  pairs of annotations, any independent set of PCCs will all be comparable to one another.
+The largest independent set will be the largest set of comparable PCCs.
+
+\item The graph identification procedure is agnostic to the underlying computer vision algorithms.
+    Any ranking and verification algorithm can be substituted in.
+
+\item The graph identification procedure can be used without computer vision algorithms to facilitate a more
+  efficient brute-force search, which can be useful to label small datasets.
+This is done by using all edges as candidate edges, and each edge is given a priority of $0$.
+The refresh criterion is not used, and the algorithm stops when the queue is empty.
+The positive and negative redundancy criteria will remove edges from the queue, so less than $|V|^2$ manual
+  reviews will have to be done.
+
 \item When $k=2$ and edges are only added to the graph exactly to the specifications of the graph algorithm, it
   is impossible for a PCC to contain more than one negative edge at any time.
 

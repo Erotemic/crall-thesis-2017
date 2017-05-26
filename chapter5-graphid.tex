@@ -3,7 +3,7 @@ fixtex --fpaths chapter5-graphid.tex --outline --asmarkdown --numlines=999 --sho
 
 fixtex --fpaths chapter5-graphid.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter5-graphid.md
 
-    fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter1-intro.md
+fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter1-intro.md
 \end{comment}
 
 % TODO: relate back to GZC, and talk about non-rally scenarios
@@ -31,18 +31,43 @@ Removing the assumption that all edges are correctly labeled, we call a decision
 Therefore, stated abstractly, goal of graph identification is to determine a correct, consistent set of edges in
   the decision graph.
 
+
+In the most general case, the decision graph is initialized with an empty set of edges.
+This captures the challenge posed by events like the \GZC{} from~\cref{sec:introgzc}, where we are given a set of
+  annotations without name labels.
+In essence, each annotation starts by itself as an individual animal, but because there are no negative edges, we
+  cannot be sure that this is the correct name labeling.
+In order to refine the name labeling, we add edges to the decision graph, gradually moving from a state of zero
+  confidence that the name labelings are correct to a state of high confidence.
+However, it is important to note that the graph algorithm does not require that we start in an empty state.
+Given a known set of annotations with name labels and one or more new annotations with unknown name labels, we
+  can add these new annotations to the existing database simply by labeling the graph with edges that captures our
+  current knowledge.
+Simply put, this means each known individual is a PCC, there is one negative edge between each pair of PCCs, and
+  the new annotations are added as nodes without any edges.
+Regardless of the initial state, graph identification proceeds to complete the decision graph.
+For the remainder of this chapter, without loss of generality, we can assume that the graph starts in an empty
+  state.
+
+%The name labelings --- \ie{} the set of PCCs --- are refined as new edges are added to the graph.
+
+%Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with an over-segmentation of an image,
+%  the identification graph starts with an empty set of edges, $G = (V, \{ \})$, so in essence each annotation
+%  starts by itself as an individual animal.
 %we must discard all of those PCCs except those in an independent
 %set of a meta-graph where the PCCs are nodes and edges are formed between incomparable PCCs.
 
 To construct the decision graph, we develop a semi-automatic review procedure that combines the ranking and
-verification algorithms presented in \cref{chap:ranking,chap:pairclf}. The ranking algorithm will be used to
-suggest candidate edges to be placed in the graph, and the verification algorithm will be used to automatically
-review as many edges as possible. The key reason for combining these algorithms with a decision graph is to take
-advantage of its connectivity information. Connectivity not only identifies the individuals, but it can also be
-used to develop graph measures of \emph{redundancy}, \emph{completeness}, \emph{consistency}, and
-\emph{convergence}. By combining these graph measures with the ranking and verification algorithms we can
-prioritize edges for review based on both their pairwise probabilities and their ability to affect the consistency
-of the graph, which in turn allows us to:
+  verification algorithms presented in \cref{chap:ranking,chap:pairclf}.
+The ranking algorithm will be used to suggest candidate edges to be placed in the graph, and the verification
+  algorithm will be used to automatically review as many edges as possible.
+The key reason for combining these algorithms with a decision graph is to take advantage of its connectivity
+  information.
+Connectivity not only identifies the individuals, but it can also be used to develop graph measures of
+  \emph{redundancy}, \emph{completeness}, \emph{consistency}, and \emph{convergence}.
+By combining these graph measures with the ranking and verification algorithms we can prioritize edges for review
+  based on both their pairwise probabilities and their ability to affect the consistency of the graph, which in
+  turn allows us to:
 \begin{enumin}
 \item increase confidence that the identifications are correct, %
 \item reduce the number of manual reviews,  % 
@@ -50,22 +75,24 @@ of the graph, which in turn allows us to:
 \item determine when identification is complete. %
 \end{enumin}
 
-Another important property of the graph identification framework is that it is agnostic to the underlying computer
-vision procedures, which are abstracted into three components:
+An important property of the graph identification framework is that it is agnostic to the underlying computer
+  vision procedures, which are abstracted into three components:
 \begin{enumin}
 \item a ranking algorithm used to search for candidate positive edges, %
 \item a verification algorithm used to automatically review edges, and %
 \item a probability algorithm used assign probabilities to edges (note this is typically a by-product of the
-ranking or verification algorithm).
+  ranking or verification algorithm).
 \end{enumin}
 In this thesis we use ranking algorithm from \cref{chap:ranking}, and the verification algorithm from
-\cref{chap:pairclf} to define these components because these are suitable for identifying textured species.
-However, while graph identification benefits from accurate computer vision subroutines, it can stand alone without
-them.  This means that existing identification algorithms that only define a subset of these procedures (\eg{}
-contour-based rank-only identification of humpback whales and bottlenose dolphins) could be seamlessly incorporated
-into our framework and realize the benefits of graph identification (\eg{} a reduced number of manual reviews and
-error recovery mechanisms).  Furthermore, because pairwise decisions are gathered and maintained by this framework,
-verification algorithms can be retrained and improved, moving closer to a fully-automatic algorithm.
+  \cref{chap:pairclf} to define these components because these are suitable for identifying textured species.
+However, while graph identification benefits from accurate computer vision subroutines, it can stand alone
+  without them.
+This means that existing identification algorithms that only define a subset of these procedures (\eg{}
+  contour-based rank-only identification of humpback whales and bottlenose dolphins) could be seamlessly
+  incorporated into our framework and realize the benefits of graph identification (\eg{} a reduced number of
+  manual reviews and error recovery mechanisms).
+Furthermore, because pairwise decisions are gathered and maintained by this framework, verification algorithms
+  can be retrained and improved, moving closer to a fully-automatic algorithm.
 
 
 The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the decision graph and summarizes the
@@ -73,8 +100,6 @@ The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the deci
 This provides an overview of each component of the processes.
 Each of these components are then discussed in further detail
   in~\cref{sec:redun,sec:incon,sec:cand,sec:decision,sec:converge}.
-%Then, \Cref{sec:rename} describes how existing database can be ported into this framework without extensive
-%  re-review.
 \Cref{sec:graphexpt} experimentally demonstrates that ability of the graph identification algorithm to reduce the
   number of manual reviews and recover from decision errors.
 \Cref{sec:graphconclusion} concludes and summarizes the chapter.
@@ -139,8 +164,8 @@ In the case where all edges between two PCCs are incomparable and those PCCs are
 In our datasets most images were taken to reduce the number of incomparable PCCs in order to simplify the
   sight-resight analysis, where all PCCs must be comparable to each other, but incomparable cases do exist.
 Thus, in our context incomparable edges play a minor but necessary role.
-Note that sight resight analysis can be accomplished on sets with incomparable edges using the algorithm
-  in~\cref{app:markrecapincomp}.
+%Note that sight resight analysis can be accomplished on sets with incomparable edges using the algorithm
+%  in~\cref{app:markrecapincomp}.
 
 
 %datasets where 
@@ -148,7 +173,7 @@ Note that sight resight analysis can be accomplished on sets with incomparable e
 
 Using the connectivity of these edges, we can reduce the number of manual reviews needed.
 %Assuming that each edge is correctly labeled and, 
-We now make several observations assuming that each edge is reviewed correctly and 
+We now make several observations assuming that each edge is reviewed correctly and
 
 To reduce the number of potential reviews, notice, that once a group of nodes is connected by (a tree of)
   positive edges, all those nodes in that PCC can be inferred to belong to the same individual, and it is not
@@ -195,9 +220,18 @@ We address this concern in~\cref{sec:converge} using a probabilistic termination
 The review algorithm that produces the edges of a decision graph is outlined in Algorithm~\ref{alg:AlgoOverview}.
 Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with an over-segmentation of an image,
   the identification graph starts with an empty set of edges, $G = (V, \{ \})$, so in essence each annotation
-  starts by itself as an individual animal.
+  starts by itself as an individual animal, but because there are no negative edges we cannot be confident that any
+  pair of annotations should indeed be given different labels.
+Therefore, the algorithm proceeds prioritize and add positive edges that merge multiple annotations into the same
+  PCC, negative edges that indicate that two annotations are different individuals, and incomparable edges that
+  prevent two annotations from being labeled as positive or negative.
 Throughout the main algorithm, the graph is maintained in a \emph{consistent} state, which means that each PCC
   has no internal negative edges.
+Note, that while we describe the algorithm starting from an empty graph, without loss of generality, the edges in
+  the graph can be initialized to reflect a previously known labeling.
+Thus, the algorithm can address the case where nothing is known, new images are being added to an existing
+  dataset, or multiple datasets are being combine.
+
 
 \begin{algorithm}
         While the graph has not converged:
@@ -617,8 +651,8 @@ This alternation between hypothesis generation and user review repeats until the
 
 Fixing inconsistencies can result in splitting $C$ into multiple PCCs.
 This may invalidate implicit reviews inferred from redundancy either within or incident to this subgraph.
-Therefore, we recompute positive-redundancy within each new PCC, implicitly reviewing edges where the criterion is
-  satisfied and re-prioritizing unreviewed edges where it is no longer valid.
+Therefore, we recompute positive-redundancy within each new PCC, ignoring edges where the criterion is satisfied
+  and re-prioritizing unreviewed edges where it is no longer valid.
 A similar process happens for negative-redundancy between each pair of new PCCs as well as between each new PCC
   and all other PCCs previously negative-redundant with $C$.
 
@@ -778,18 +812,22 @@ periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop
 refresh or terminate.
 
 To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
-$M_i$ must follow a uniform distribution. This would be true if the edges were reviewed in a random order. However,
-the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right skewed long
-tail distribution and violate Poisson assumptions. Even so, the use of a Poisson model can be both justified by
-considering a sliding window along the distribution of $M_i$. Recall that we only need to make predictions about
-the next $a$ reviews in the future, thus we are only concerned with a small window to the right on the
-distribution. Because the long-tailed distribution is monotonic decreasing, we can use a small window in the past
-to estimate an upper bound on probability of $T\teq1$ in the future. As the window moves to the right, the interval
-on the distribution becomes increasingly approximately uniform and the tightness of the bound improves and
-eventually becomes tight. This is because once the prioritization algorithm cannot distinguish positive from
-negative cases, the order of the remaining reviews becomes random and the Poisson model becomes exactly
-appropriate. Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on
-$\Pr{T\teq1}$, and the smaller $\Pr{T\teq1}$ is, the more accurate our estimate will be.
+  $M_i$ must follow a uniform distribution.
+This would be true if the edges were reviewed in a random order.
+However, the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right
+  skewed long tail distribution and violate Poisson assumptions.
+Even so, the use of a Poisson model can be justified by considering a sliding window along the distribution of
+  $M_i$.
+Recall that we only need to make predictions about the next $a$ reviews in the future, thus we are only concerned
+  with a small window to the right on the distribution.
+Because the long-tailed distribution is monotonic decreasing, we can use a small window in the past to estimate
+  an upper bound on probability of $T\teq1$ in the future.
+As the window moves to the right, the interval on the distribution becomes increasingly approximately uniform and
+  the tightness of the bound improves and eventually becomes tight.
+This is because once the prioritization algorithm cannot distinguish positive from negative cases, the order of
+  the remaining reviews becomes random and the Poisson model becomes exactly appropriate.
+Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on $\Pr{T\teq1}$,
+  and the smaller $\Pr{T\teq1}$ is, the more accurate our estimate will be.
 
 
 \subsection{Details of Poisson convergence}
@@ -849,7 +887,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       time, making errors $2\percent$ of the time uniformly at random.
     This accuracy assumption is simplistic and may be too low for an expert reviewer, but it will serve to
       demonstrate our graph algorithm's ability to recover from errors.
-    We will measure the accuracy of and error as a function of the number of manual reviews.
+    We will measure the accuracy and error as a function of the number of manual reviews.
 
     For this experiment, we will use the plains and Grévy's zebras datasets previously described in
       \cref{sub:datasets}.
@@ -857,13 +895,21 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       set each containing half of the names.
     The training dataset is further split into learning and validation sets as needed.
 
-    This experiment will compare the three main algorithms described in this thesis.
+    This experiment will compare the three different methods of determining the identifies of annotations based
+      on the algorithms in this \thesis{}.
+    The first uses just the ranking algorithm from 
     We denote these algorithms as:
     These algorithms are:
     \begin{enumin}
-    \item \pvar{ranking} --- the ranking algorithm from \cref{chap:ranking},
-    \item \pvar{rank+clf} --- the same ranking algorithm but augmented with the automatic classification algorithm from \cref{chap:pairclf}, and finally
+
+    \item \pvar{ranking} --- the ranking algorithm from \cref{chap:ranking}, 
+
+    \item \pvar{rank+clf} --- the same
+        ranking algorithm but augmented with the automatic classification algorithm from \cref{chap:pairclf}, and
+        finally
+
     \item \pvar{graph} --- the graph identification algorithm introduced in this chapter.
+
     \end{enumin}
     In the case \pvar{graph}, the procedure from~\cref{sub:graphalgo} can be directly applied.
     However, \pvar{ranking} and \pvar{rank+clf} must first be adapted with a protocol defining the order of
