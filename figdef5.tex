@@ -12,7 +12,7 @@ python -m ibeis.scripts.specialdraw draw_graph_id \
 % ---
 An example of a consistent synthetic decision graph with positive,
   negative, and incomparable edges.
-The color of each node represents the positive connected compoment (PCC)
+The color of each node represents the positive connected component (PCC)
   it belongs to.
 % ---
 }
@@ -79,7 +79,7 @@ python -m ibeis.scripts.specialdraw redun_demo2 \
 %--%
 Examples of positive (top) and negative (bottom) redundancy.
 The positive edges are colored blue and the negative edges are colored red.
-Choosing the level of redundancy is a tradeoff between the number of required
+Choosing the level of redundancy is a trade-off between the number of required
   reviews and the confidence that the reviews are correct.
 %In our current implementation we use $2$-redundancy.
 %
@@ -139,7 +139,7 @@ python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --
     The red line indicates the fraction of meaningful reviews that remain undiscovered.
     The blue line is the probability that at least one of the next $20$ reviews will be meaningful.
     Notice that the blue line dips when the red line flattens.
-    The process terminates once this probability drops below a thresold,
+    The process terminates once this probability drops below a threshold,
     denoted by the green dotted line.
     %--
 } \label{fig:poisson}
@@ -163,7 +163,7 @@ python -m ibeis Chap5.draw_simulation --db GZ_Master1 --diskshow
 \caption[\caplbl{Simulation}Simulation experiment]{\caplbl{Simulation}
 % ---
 The user simulation experiment compares the three identification algorithms defined in this \thesis{}.
-On the left indicates the identifiation accuracy using the number of remaining merges and the right counts the
+On the left indicates the identification accuracy using the number of remaining merges and the right counts the
   number of errors made (lower is better in both cases).
 The best results are clearly achieved by \pvar{graph}.
 % ---
@@ -188,8 +188,8 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 The measured refresh and termination criteria.
 The probability that the next reviews will be meaningful ($\Pr{T\teq1}$) is high while new merges are discovered.
 Once the probability falls under the threshold, positive redundancy is enforced (the flat areas) on existing
-  PCCs, and then candidated edges are recomputed.
-After an iteration with no meaningful reviews the process terminates.
+  PCCs, and then candidate edges are recomputed.
+After an iteration with no meaningful reviews, the process terminates.
 Identification converges in $3$ iterations for plains zebras and $3$ for Grevy's.
 % ---
 }

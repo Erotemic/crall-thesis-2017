@@ -3,6 +3,7 @@
 fixtex --reformat --fpaths chapter4-pairclf.tex --print
 fixtex --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 
 
+fixtex --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter4-pairclf.md
 https://www.languagetool.org/
 \end{comment}
 
@@ -42,7 +43,6 @@ The multi-label classifier then predicts the probability of each of the three st
 To construct a pairwise probabilistic classifier we turn towards supervised machine learning, which requires that
   we:
 \begin{enumin}
-
     \item determine a set of labeled annotation pairs for training, 
 
     \item construct a fixed-length feature vector to represent a pair of annotations,  and
@@ -253,31 +253,15 @@ This softens the impact of its binary threshold and adds robustness to viewpoint
 \FloatBarrier{}
 \subsection{The final pairwise feature vector}
 
-\begin{figure}
-\begin{minted}[gobble=4]{python}
-    OrderedDict([('global(qual_min)',    3),
-                 ('global(qual_max)',    nan),
-                 ('global(qual_delta)',  nan),
-                 ('global(gps_delta)',   5.79),
-                 ('len(matches)',        20),
-                 ('sum(ratio)',          10.05),
-                 ('mean(ratio)',         0.50),
-                 ('std(ratio)',          0.09)])
-\end{minted}
-\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
-Example of a small pairwise feature vector containing local and global information.
-In practice the pairwise feature vectors include many more dimensions.
-}
-\label{fig:PairFeatVec}
-\end{figure}
+\PairFeatVec{}
 
 The pairwise feature vector is constructed by concatenating the local and the global vector.
 The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
-This results in a final descriptor vector that can be quite large (thousands of dimensions) and some of the
-  dimensions might not be useful.
+This results in a final descriptor vector that can be quite large (thousands of dimensions) and some dimensions
+  might not be useful.
 Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
-This is done by considering the importance of each feature dimension as measured using the using the ``mean
-  decrease impurity'' (MDI)~\cite{louppe2014understanding}.
+This is done by considering the importance of each feature dimension as measured using the ``mean decrease
+  impurity'' (MDI)~\cite{louppe2014understanding}.
 
 The MDI is a measure of feature importance that is computed during the training phase.
 As a decision tree is grown, the number of training samples of each class that reach a particular node are
@@ -303,8 +287,8 @@ positive, negative and incomparable.
 Given a pair of annotations we need to assign one of these three labels using ground-truth data.
 In recent versions of our system, this ground-truth label is stored along with each unordered pair of annotations
   that has been manually reviewed, but because this is a new feature there does not exist many pairs with the
-  explicit three state label.
-Therefore we must make use of data contained in previous versions of the system that simply assign a name label
+  explicit three-state label.
+Therefore, we must make use of data contained in previous versions of the system that simply assign a name label
   to each annotation.
 This allows us to determine if an annotation pair are the same or different animals, but it does not allow us to
   determine if the pair is comparable.
@@ -415,7 +399,7 @@ If this was not the case, then we would include an additional partition for inco
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
     Second, we will compare the ability of each algorithm to predict if a pair is positive or not.
     We will look at the distribution of positive and non-positive scores as well as the ROC curves.
-    After comparing to LNBNN we inspect the importance of each feature dimension of our pairwise feature vector.
+    After comparing to LNBNN, we inspect the importance of each feature dimension of our pairwise feature vector.
     Finally, we will present the several examples of failure cases to illustrate where improvements are can be
       made.
 

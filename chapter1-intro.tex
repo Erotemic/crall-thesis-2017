@@ -1,6 +1,8 @@
 \begin{comment}
     ./texfix.py --outline --fpaths chapter1-intro.tex
-    fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --shortcite
+
+    fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter1-intro.md
+
     ./texfix.py --grep "\\\\[A-Za-z]*[^{a-zA-Z]"
     ./texfix.py --reformat --fpaths figdef1.tex
 \end{comment}
@@ -142,12 +144,12 @@
 
     \FloatBarrier{}
     \subsection{Image quality}
-        Image quality is influenced by lighting, shadows, the camera used, image resolution, and the size of the animal
-        in the image. Outdoor images will naturally have large variations in illumination. Different cameras can produce
-        visual differences between images of an object. Images taken out of focus, from far away, or with a non-steady
-        camera can cause animals to appear blurred. The effects of outdoor shadow and illumination are illustrated
-        in~\cref{fig:IlluminationFigure}. \Cref{fig:QualityFigure} illustrates five categories of image quality that
-        will be described later in~\cref{sub:viewqual}.
+        Image quality is influenced by lighting, shadows, the camera used, image resolution, and the size of the
+        animal in the image. Outdoor images will naturally have large variations in illumination. Different cameras
+        can produce visual differences between images of an object. Images taken out of focus, from far away, or
+        with a non-steady camera can cause animals to appear blurred. The effects of outdoor shadow and
+        illumination are illustrated in~\cref{fig:IlluminationFigure}. \Cref{fig:QualityFigure} illustrates five
+        categories of image quality that will be described later in~\cref{sub:viewqual}.
 
         \IlluminationFigure{}
 
@@ -226,8 +228,8 @@
             One benefit is that an \occurrence{} can be used as a semantic processing unit to distribute
               manageable chunks of work to users of the system.
             Another is that \occurrences{} can be used to improve the results of identification.
-            Typically, there will be only a small number of individuals within an \occurrence{}, and it is not
-              uncommon for each individual to photographed multiple times and from multiple viewpoints.
+            Typically, there will be only a few individuals within an \occurrence{}, and it is not uncommon for
+              each individual to photographed multiple times and from multiple viewpoints.
             This redundancy in images will be exploited in \Cref{chap:graphid}.
 
         \subsubsection{Animal detection}
@@ -367,31 +369,27 @@
         system is to be applied in future events. These challenges include the number of manual reviews required, the
         detection of and recovery from manual errors, and the overall lack of a systematic identification framework.
 
-        Perhaps the greatest challenge faced during the \GZC{} was the
-          considerable amount time that was required to manually verify
-          identification results.
-        It can take several seconds to manually verify if a pair of \annots{}
-          is a correct match even if the results are presented in a ranked list.
+        Perhaps the greatest challenge faced during the \GZC{} was the considerable amount time that was required
+          to manually verify identification results.
+        It can take several seconds to manually verify if a pair of \annots{} is a correct match even if the
+          results are presented in a ranked list.
         This task is illustrated in~\cref{fig:RankFigure}.
-        Requiring the manual verification of each result is untenable for a
-          system that accepts thousands of new images a day.
-        The lack of a systematic approach for identification meant that
-          whenever two \annots{} were matched, the name labels of all
-          annotations of those names were changed.
+        Requiring the manual verification of each result is untenable for a system that accepts thousands of new
+          images a day.
+        The lack of a systematic approach for identification meant that whenever two \annots{} were matched, the
+          name labels of all annotations of those names were changed.
         This made it difficult to tease apart errors when they occurred.
-        Furthermore, manual errors (likely caused by fatigue from the large
-          number of manual reviews) resulted in numerous identification errors
-          cases that were not able to be detected and resolved until the end of
-          the process.
-        Reviews of results were also done in order of matching scores
-          regardless of previous decisions, causing the manual reviewer to
-          inefficiently review redundant results between the same individual.
-        Additionally, no stopping criteria for reviews was defined resulting in
-          an ad-hoc approach to determining when all matches were found.
+        Furthermore, manual errors (likely caused by fatigue from the large number of manual reviews) resulted in
+          numerous identification errors cases that were not able to be detected and resolved until the end of the
+          process.
+        Reviews of results were also done in order of matching scores regardless of previous decisions, causing
+          the manual reviewer to inefficiently review redundant results between the same individual.
+        Additionally, no stopping criterion for reviews was defined resulting in an ad hoc approach to
+          determining when all matches were found.
 
-        Motivated by these observations we seek to develop a semi-automatic approach to animal identification. This
-        approach will should be governed by a system that reduces the number of manual reviews and is able to detect and
-        recover from errors, and determine when to stop searching for new matches.
+        Motivated by these observations we seek to develop a semi-automatic approach to animal identification.
+        This approach will should be governed by a system that reduces the number of manual reviews and is able
+          to detect and recover from errors, and determine when to stop searching for new matches.
 
         %Furthermore, as new \exemplars{} are added to the system the search
         %  data structure must be updated before additional queries can be made.

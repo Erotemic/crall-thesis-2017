@@ -3,7 +3,7 @@
     ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
     ./texfix.py --fpaths chapter3-matching.tex --reformat 
     # http://jaxedit.com/mark/
-    fixtex --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 --shortcite
+    fixtex --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter3-matching.md
 \end{comment}
 
 \chapter{Identification using a ranking algorithm}\label{chap:ranking}
@@ -20,18 +20,23 @@
     label to an unknown annotation either as (1) the \name{} label of a matched database annotation or (2) a new
     \name{} label if no matches are found.
 
-    The ranking algorithm is based on the feature correspondences between a query annotation and a set of database
-    annotations. In each annotation a set of patch-based features is detected at keypoint locations. Then the
-    visual appearance of each patch is described using SIFT~\cite{lowe_distinctive_2004}. A nearest neighbor
-    algorithm establishes a set of feature correspondences between query and annotations in database. A scoring
-    mechanism based on local \naive{} Bayes nearest neighbor (LNBNN)~\cite{mccann_local_2012} produces a score for
-    each feature correspondence. These scores are then aggregated into a single score for each \name{} in the
-    database, producing a ranked list of \names{}. Identification is performed by applying a classifier (decision
-    algorithm) to the scores in this ranked list. If the top ranked \name{} has a ``high'' score it is likely to be
-    the same individual depicted in the query annotation. If the top ranked \name{} has a ``low'' score it is
-    likely that the query individual is not depicted in any database annotation. An example ranked list returned by
-    the algorithm is illustrated in~\cref{fig:rankedmatches}. In the baseline algorithm this identification
-    decision is left to a user.
+    The ranking algorithm is based on the feature correspondences between a query annotation and a set of
+      database annotations.
+    In each annotation a set of patch-based features is detected at keypoint locations.
+    Then the visual appearance of each patch is described using SIFT~\cite{lowe_distinctive_2004}.
+    A nearest neighbor algorithm establishes a set of feature correspondences between query and annotations in
+      database.
+    A scoring mechanism based on local \naive{} Bayes nearest neighbor (LNBNN)~\cite{mccann_local_2012} produces
+      a score for each feature correspondence.
+    These scores are then aggregated into a single score for each \name{} in the database, producing a ranked
+      list of \names{}.
+    Identification is performed by applying a classifier (decision algorithm) to the scores in this ranked list.
+    If the top ranked \name{} has a ``high'' score, then it is likely to be the same individual depicted in the
+      query annotation.
+    If the top ranked \name{} has a ``low'' score, then it is likely that the query individual is not depicted in
+      any database annotation.
+    An example ranked list returned by the algorithm is illustrated in~\cref{fig:rankedmatches}.
+    In the baseline algorithm this identification decision is left to a user.
 
     The outline of this chapter is as follows: \Cref{sec:annotrepr} discusses the initial processing of an
     annotation which involves image normalization, feature extraction, and feature weighting.
@@ -67,7 +72,7 @@
         and giraffes, the orientation of the chip is chosen such that the top of the bounding box is roughly
         parallel to the back of the animal.
 
-        A chip is a extracted by jointly rotating, scaling, and cropping an annotation's parent image using Lanczos
+        A chip is extracted by jointly rotating, scaling, and cropping an annotation's parent image using Lanczos
         resampling~\cite{lanczos_applied_1988}. The scaling resizes the image such that the cropped chip has
         approximately $450^2$ pixels and it maintains the aspect ratio of the bounding box. If specified in the
         pipeline configuration, adaptive histogram equalization~\cite{pizer_adaptive_1987} is applied to the chip,
@@ -84,7 +89,7 @@
 
         We choose a baseline feature detection algorithm that produces affine invariant keypoints with the gravity
         vector. Affine invariant (\ie{} shape adapted) keypoints detect elliptical patches instead of circular
-        ones. We choose affine invariant keypoints because the animals we identify will be seen from many different
+        ones. We choose affine invariant keypoints because the animals we identify will be seen from many
         viewpoints. Because all chips have been rotated into an upright position, we assign all keypoints a
         constant orientation --- this is the gravity vector assumption~\cite{perdoch_efficient_2009}. However,
         these baseline settings may not be appropriate for all species.
@@ -178,7 +183,7 @@
         \paragraph{Extracting keypoint parameters from an affine matrix}
         During the spatial verification step, described in~\cref{sec:sver}, keypoints are warped from one image
         into the space of another. It will be useful to extract the keypoint parameters from an arbitrary keypoint
-        matrix. This will allows us to directly compare properties of corresponding right side
+        matrix. This will allow us to directly compare properties of corresponding right side
         of~\cref{eqn:invTVRConstruct}. Given an arbitrary affine matrix $\inv{\rvmat}$ representing keypoint $\kp$,
         we show how the individual parameters $(\pt, \scale, \ori)$ can be extracted. First consider the components
         of $\inv{\rvmat}$ by simplifying the right side of~\cref{eqn:invTVRConstruct}.
@@ -335,9 +340,9 @@
             All descriptors used in this calculation are L2-normalized to unit length --- \ie{} to sit on the
             surface of a unit hypersphere. The $Z$ term normalizes the score to ensure that it is in the range
             $\rangeinin{0, 1}$. If descriptor vectors have only non-negative components (as in the case of
-            SIFT~\cite{lowe_distinctive_2004}) then the maximum distance between any two L2-normalized descriptors
+            SIFT~\cite{lowe_distinctive_2004}), then the maximum distance between any two L2-normalized descriptors
             is $Z\tighteq\sqrt{2}$. If descriptors vectors have negative components (like those that might
-            extracted from a deep convolutional neural network~\cite{zagoruyko_learning_2015}) then the maximum
+            extracted from a deep convolutional neural network~\cite{zagoruyko_learning_2015}), then the maximum
             distance between is $Z\tighteq2$.
 
         \paragraph{Foregroundness score}
@@ -350,8 +355,8 @@
             \end{equation}
 
         \paragraph{Final feature correspondence score}
-            The final score of the correspondence $(i, j)$ captures both the distinctiveness of the match as well
-            as the likelihood that the match is part of the foreground.
+            The final score of the correspondence $(i, j)$ captures both the distinctiveness of the match and the
+            likelihood that the match is part of the foreground.
               \begin{equation}\label{eqn:featscore}
                   \fs_{i,j} \eqv \fs_{{\tt fg}} \fs_{\LNBNN} 
               \end{equation}
@@ -696,7 +701,7 @@
         \end{equation}
 
         \subsubsection{Homography inliers}
-        The rest of homography inlier estimation is no different than affine inlier estimation.
+        The rest of homography inlier estimation is no different from affine inlier estimation.
         \Cref{eqn:inlierdelta} is used to compute the errors $( %
         \Delta \pt_{\idxI, \idxII}, %
         \Delta \scale_{\idxI, \idxII}, %
@@ -721,9 +726,9 @@
     To scale one-vs-many matching to larger databases and to allow the LNBNN mechanism to find appropriate
     normalizers we restrict the number of examples of each individual in the database to a set of exemplars.
 
-    Exemplars that represent a wide range of viewpoints and poses are automatically chosen using a modified version
-    of the technique presented in~\cite{oddone_mobile_2016}. The idea is to treat exemplar selection as a maximum
-    weight set cover problem. For each individual, the input is a set of annotations. A similarity score is
+    Exemplars that represent a wide range of viewpoints and poses are automatically chosen by using a modified
+    version of the technique presented in~\cite{oddone_mobile_2016}. The idea is to treat exemplar selection as a
+    maximum weight set cover problem. For each individual, the input is a set of annotations. A similarity score is
     computed between pairs of annotations. To compute covering sets we first choose a threshold, each annotation is
     assigned a covering set as itself and the other annotations it matches with a similarity score above that
     threshold. The maximum number of exemplars is restricted by setting a maximum weight. Searching for the optimal
@@ -747,7 +752,7 @@
     The subsets of query and database annotations are carefully chosen to measure the accuracy of the algorithm
       under different conditions and to control for time, quality, and viewpoint.
     The pipeline configuration is a set of parameters --- \eg{} the level of feature invariance, the number of
-      nearest neighbors, and the \namescoring{} mechanism --- given to the identification algorithm.
+      the nearest neighbors, and the \namescoring{} mechanism --- given to the identification algorithm.
     We will vary these pipeline parameters in order to measure their effect on the accuracy of the ranking
       algorithm.
 
@@ -765,7 +770,7 @@
     our algorithm. \Cref{sub:exptfg} tests the effect of the foregroundness weight on identification accuracy.
     \Cref{sub:exptinvar} investigates the effect of the level of feature invariance and viewpoint.
     \Cref{sub:exptscoremech} compares the \csumprefix{} and the \nsumprefix{} \namescoring{} mechanism.
-    \Cref{sub:exptk} varies the $\K$ parameter (the number of nearest neighbors used in establishing feature
+    \Cref{sub:exptk} varies the $\K$ parameter (the number of the nearest neighbors used in establishing feature
     correspondences) and investigates the relationship between $\K$ and database size in terms of both the number
     of annotations and the number of exemplars per name. \Cref{sub:exptfail} discusses the failure cases of our
     ranking algorithm. Finally,~\cref{sub:exptsum} summarizes this section.
@@ -810,8 +815,8 @@
             \item \textbf{Plains zebras}.
             Our plains zebras dataset is an aggregate of several smaller datasets.
             There is variation in how the data was collected and preprocessed.
-            Some of the images are cropped to the flank of the animal, while others are cropped to encompass the
-              entire body.
+            Some images are cropped to the flank of the animal, while others are cropped to encompass the entire
+              body.
             The constituent datasets were collected in Kenya at several locations including Nairobi National
               Park, Sweetwaters, and Ol Pejeta.
             More than $90\percent$ of the groundtruth generated for this dataset was assisted using the matching
@@ -829,14 +834,14 @@
               however the matching algorithm revealed several groundtruth errors that have since been corrected.
             The Grévy's dataset was collected in Mpala, Kenya.
             Most of the annotations in this database have been cropped to the animal's flank.
-            This dataset contains a moderate degree of pose and viewpoint variation as well as occlusion.
+            This dataset contains a moderate degree of pose and viewpoint variation and occlusion.
             This data was collected between 2003 and 2012, but the majority was collected in 2011 and 2012.
 
             \item \textbf{Masai giraffes}.
             These images of Masai giraffes were all taken in Nairobi National Park during the \GZC{} between
-              February 20, 2015 and March 2, 2015.
+              February $20$, $2015$ and March $2$, $2015$.
             All groundtruth was established using the matching algorithm followed by manual verification.
-            This dataset contains a high degree of pose and viewpoint variation, as well as occlusion.
+            This dataset contains a high degree of pose and viewpoint variation, and occlusion.
             Because of their long necks, it is difficult to ensure that only a single giraffe appears in each
               annotation.
             This results in many \glossterm{photobombs} --- pairs of annotations where a background animal in one
@@ -881,7 +886,7 @@
         The results of this baseline experiment demonstrates that our algorithm is able to reliably find matching
         annotations in a database with many other images. The accuracy is over $60\percent$ for all species
         considered. Subsequent experiments will restrict our focus to Grévy's and plains zebras in order to
-        investigate detailed parameter choices of the ranking algorithm as well as alternative ranking algorithms.
+        investigate detailed parameter choices of the ranking algorithm and alternative ranking algorithms.
       
         \BaselineExpt{}
 
@@ -1010,21 +1015,26 @@
 
         % Invar Conclusions
         The example in~\cref{fig:kptstype} illustrates the difference between \AIAlone{} and \QRHCirc{} features
-        for plains and Grévy's zebras. The accuracy of the invariance experiment is shown in~\cref{fig:InvarExpt}.
+          for plains and Grévy's zebras.
+        The accuracy of the invariance experiment is shown in~\cref{fig:InvarExpt}.
         For plains zebras, the \QRHCirc{} scores are significantly better than all other invariance settings.
         Interesting, affine invariance results in worse performance when QRH is on, but if the QRH is off then
-        affine invariance improves accuracy. This suggests that the QRH better handles matching the coarse patterns
-        seen on the plains zebras across pose and viewpoint variations than using affine invariance, which can tend
-        to adapt itself around non-distinctive diagonal stripes. Even though affine keypoints provide more precise
-        localization, the area they describe is often smaller than a circular keypoint. It makes sense that affine
-        keypoints would not describe coarse features as well as a circular keypoint covering a larger area.
+          affine invariance improves accuracy.
+        This suggests that the QRH better handles matching the coarse patterns seen on the plains zebras across
+          pose and viewpoint variations than using affine invariance, which can tend to adapt itself around
+          non-distinctive diagonal stripes.
+        Even though affine keypoints provide more precise localization, the area they describe is often smaller
+          than a circular keypoint.
+        It makes sense that affine keypoints would not describe coarse features as well as circular keypoints do,
+          because circular keypoints typically cover a larger area.
         %
-        The results for Grévy's zebras demonstrate similar levels of accuracy for \AIAlone{} and \QRHEll{}. Affine
-        invariance seems to be the most important setting for matching Grévy's zebras. The distinctive details on
-        Grévy's zebras are finer than plains zebras and are well captured by affine keypoints. While the QRH does
-        improve accuracy for Grévy's zebras the density of the distinctive keypoints means that it is less
-        important because it is more likely two annotations will have at least one distinctive region aligned and
-        in common.
+        The results for Grévy's zebras demonstrate similar levels of accuracy for \AIAlone{} and \QRHEll{}.
+        Affine invariance seems to be the most important setting for matching Grévy's zebras.
+        The distinctive details on Grévy's zebras are finer than plains zebras and are well captured by affine
+          keypoints.
+        While the QRH does improve accuracy for Grévy's zebras the density of the distinctive keypoints means
+          that it is less important because it is more likely two annotations will have at least one distinctive
+          region aligned and in common.
 
         \InvarExpt{}
 
@@ -1062,11 +1072,11 @@
         Perhaps the more interesting result of this experiment is the effect of increasing the number of exemplars
         in the database from $1$ to $2$. There is a drastic improvement in ranking accuracies in both species. The
         accuracy of plains zebras increases by $10\percent$ and for Grévy's zebras the gain is almost $20\percent$.
-        It makes sense that this should be the case. If there are more examples of an individual in the database
+        It makes sense that this should be the case. If there are more examples of an individual in the database,
         then the probability that the query is similar to at least one of them should increase as long as there is
         sufficient variation. This suggests that even if a new query new annotation initially fails to rank the
         correct result, subsequent annotations added to the system of the same individual will be more likely to
-        correctly match a previous annotation. As more annotations of that individual are added the likelihood that
+        correctly match a previous annotation. As more annotations of that individual are added, the likelihood that
         the ranking algorithm will make a connection between all instances of that individual will increase.
 
         \NScoreExpt{}
@@ -1076,10 +1086,10 @@
     \subsection{K experiment}\label{sub:exptk}  
 
         % Introduce varied parameters
-        In this experiment we investigate the effect of $\K$ (the number of nearest neighbors used in establishing
-        feature correspondences, which was discussed in~\cref{sub:featmatch}) on identification accuracy. We vary
-        $\K$ between the values $1, 2, 4$, and $6$. In all these experiments we set the number of normalizing
-        neighbors to be $\Knorm=1$.
+        In this experiment we investigate the effect of $\K$ (the number of the nearest neighbors used in
+        establishing feature correspondences, which was discussed in~\cref{sub:featmatch}) on identification
+        accuracy. We vary $\K$ between the values $1, 2, 4$, and $6$. In all these experiments we set the number of
+        normalizing neighbors to be $\Knorm=1$.
 
         Two database factors that may influence the best choice of $\K$ are the number of annotations in the
         database and the number of annotations per name in the database. If there are more correct matches for a
@@ -1096,7 +1106,7 @@
         For plains, we have more confuser annotations allowing us to test database sizes of $578$ and $1650$.
         We vary the number of \exemplars{} per name between $1$ and $2$.
 
-        The results of this experiment are illustrated in ~\cref{fig:KExptA,fig:KExptB}. Similarly to the previous
+        The results of this experiment are illustrated in ~\cref{fig:KExptA,fig:KExptB}. Similar to the previous
         experiment, the number of exemplars per name is the most significant variable impacting accuracy.
         Furthermore, when there are more exemplars in the database the choice of $\K$ starts become less
         significant. The results also show that accuracy does slightly decrease when the database becomes larger,
@@ -1242,7 +1252,7 @@
     applied to individual animal identification and demonstrated that in a majority of cases the correct match is
     ranked first by our algorithm for plains zebras, Grévy's zebras, Masai giraffes, and humpback whales.
 
-    Because we have used the algorithm to curate the groundtruth we do not claim the reported accuracies in our
+    Because we have used the algorithm to curate the groundtruth, we do not claim the reported accuracies in our
     experiments to be quantitatively absolute. However, qualitative evidence for the algorithm's overall success is
     provided by the facts that (1) we were able to use the algorithm to identify a significant number of
     individuals from different species and (2) our approach provides more accurate rankings than standard instance

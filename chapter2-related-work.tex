@@ -2,7 +2,7 @@
     ./texfix.py --fixcap --dryrun
     ./texfix.py --findcite --unused-important
     ./texfix.py --findcite --close-keys
-    fixtex --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 --shortcite
+    fixtex --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter2-related-work.md
 \end{comment}
 
 \chapter{Related work}\label{chap:relatedwork} 
@@ -184,7 +184,7 @@
             interval, its $9$ neighbors in the next interval, and its $9$ neighbors in the previous interval.
 
         \paragraph{Edge filtering}
-            Edge responses are not robust --- \ie{} the same point can not localized reliably in two views of the
+            Edge responses are not robust --- \ie{} the same point can not be localized reliably in two views of the
             same scene --- due to their elongated nature. Because of this, the extrema that appear too edge-like
             are filtered using a threshold $t_{\tt{edge}}$ which is compared to the ratio of the Hessian's squared
             trace and the determinant.
@@ -218,8 +218,8 @@
         iterative technique involving the second moment
         matrix~\cite{lindeberg_shape_adapted_1997,baumberg_reliable_2000,mikolajczyk_comparison_2005}. The affine
         shape matrix transforms an ellipse into a unit circle. Note that because the matrix is lower triangular one
-        of its eigenvectors points in the downward direction. Thus the shape has no influence on the orientation of
-        the keypoint. For each point in scale space the second moment matrix is evaluated as:
+        of its eigenvectors points in the downward direction. Thus, the shape has no influence on the orientation
+        of the keypoint. For each point in scale space the second moment matrix is evaluated as:
         \begin{equation}\label{eqn:secondmoment}
                 \momentmat 
                 \tighteq 
@@ -238,7 +238,7 @@
 
             \item Check if the keypoint shape is stable. A keypoint shape is stable if the eigenvalue ratio of the
             second moment matrix is close to $1$. If the keypoint has been stable for two consecutive iterations,
-            then accept $\vmat^* \leftarrow \vmat_{i}$ and stop iteration. Otherwise if the number of iterations,
+            then accept $\vmat^* \leftarrow \vmat_{i}$ and stop iteration. Otherwise, if the number of iterations,
             $i$, is greater than some threshold, then stop and discard the keypoint.
 
             \item Update the affine shape  using the rule
@@ -248,7 +248,7 @@
 
         The matrix $\vmat$ only defines the transformation from an ellipse to a circle. The standard representation
         of an ellipse is a conic of the form $\mat{E} = \vmat^T\vmat$. This means that $\vmat$ is only defined up
-        to an arbitrary rotation~\cite{mikolajczyk_comparison_2005,perdoch_efficient_2009}. Thus we can freely
+        to an arbitrary rotation~\cite{mikolajczyk_comparison_2005,perdoch_efficient_2009}. Thus, we can freely
         rotate $\vmat$ into a lower triangular matrix. This ensures that one of its eigenvectors is pointing
         downwards --- \ie{} in the direction of the ``gravity vector''~\cite{perdoch_efficient_2009}. Making use of
         the gravity vector removes a dimension of invariance. To allow for the specification of keypoint
@@ -257,7 +257,7 @@
     \subsection{Orientation adaptation}
 
         The keypoint orientation is defined using the parameter $\theta$.
-        By default the orientation of a keypoint can be assumed to be aligned with the ``gravity vector'' ---
+        By default, the orientation of a keypoint can be assumed to be aligned with the ``gravity vector'' ---
           \ie{} $\theta=0$~\cite{perdoch_efficient_2009}.
         Otherwise, an orientation must be computed.
         A common method for determining a keypoint's orientation is to use the dominant gradient orientation.
@@ -357,10 +357,10 @@
         Once voting is completed a SIFT descriptor is normalized to account for lighting differences between
         images. First, the vector is L2-normalized to unit length, which makes the descriptor invariant to linear
         changes in intensity. Then, a heuristic --- that truncates each dimension to a maximum value of $0.2$ ---
-        is applied to increases robustness to non-linear changes in illumination. Finally the vector is
+        is applied to increase robustness to non-linear changes in illumination. Finally, the vector is
         renormalized.
 
-        For storage considerations the resulting $512$-byte floating point (float32) descriptor is typically cast
+        For storage considerations the resulting $512$-byte floating-point (float32) descriptor is typically cast
           as an array of unsigned $8$-bit integers (uint8), resulting in a $128$-byte descriptor.
         To reduce the impact of this quantization a trick is to multiply by $512$ instead of $255$ and then
           truncate values to $255$ before converting from a float to a uint8.
@@ -410,9 +410,9 @@
         individual descriptor~\cite{hassner_sifts_2012}.
 
         %Despite However, domain specific modifications have shown promising results.
-        %The Rotation Invariant Feature Transform (RIFT) descriptor \cite{lazebnik_sparse_2005} uses concentric
+        %The Rotation Invariant Feature Transform (RIFT) descriptor~\cite{lazebnik_sparse_2005} uses concentric
         %  circles to make a similar modification.
-        %The RIFT descriptor are used in texture classification \cite{lazebnik_sparse_2005}.
+        %The RIFT descriptor are used in texture classification~\cite{lazebnik_sparse_2005}.
 
         % SURF
         Efficiency is one area where SIFT has been significantly outperformed.
@@ -496,8 +496,8 @@
         probability of failure. For each kd-tree a random Householder matrix is used to efficiently rotate the
         data. Using a random rotation preserves distances between rotated vectors but does not preserve the
         dimension of maximum variance. This means that each of the $m$ kd-trees yields a different partitioning of
-        the data, although it is not guaranteed to be independent. When searching multiple random kd-trees a single
-        priority queue keeps track of the next nearest bin boundaries to search over all the trees.
+        the data, although it is not guaranteed to be independent. When searching multiple random kd-trees, a
+        single priority queue keeps track of the next nearest bin boundaries to search over all the trees.
 
     \subsection{Hierarchical k-means}
         Another tree-based method for approximate nearest neighbor search is the hierarchical k-means. Each level
@@ -594,7 +594,7 @@
         threshold distance of their corresponding feature). After a certain number of iterations the process stops
         and returns the hypothesized model with the highest score as well as the inliers to that model.
 
-        When RANSAC returns a large enough set of inliers (\wrt{} some threshold) the hypothesis model it is
+        When RANSAC returns a large enough set of inliers (\wrt{} some threshold), the hypothesis model it is
         generally considered to be a ``good fit''. In this case a more complex model --- that may be more sensitive
         to outliers --- can be fit. In spatial verification, it is common to use the RANSAC-inliers to estimate a
         homography transformation~\cite[311--320]{szeliski_computer_2010}. The homography is then used to estimate
@@ -612,7 +612,7 @@
         using the best-bin-first algorithm~\cite{beis_shape_1997}. For a query image, each keypoint is assigned to
         its nearest neighbor as a match. The next nearest neighbor (belonging to a different object) is used as a
         normalizer --- a feature used to measure the distinctiveness of a match. Any match with a ratio of
-        distances to the match and the normalizer greater than threshold $t_{\tt{ratio}}\tighteq.8$ is filtered as
+        distances to the match and the normalizer greater than threshold $t_{\tt{ratio}} \teq 0.8$ is filtered as
         not distinctive. Features likely to belong to the same object are clustered using a Hough Transform, and
         then clusters of features are spatially verified with a RANSAC approach~\cite{fischler_random_1981}.
 
@@ -625,13 +625,13 @@
         a text document where the image patches (detected at keypoints and described with SIFT) are the words. The
         concept of a visual word is formalized using a visual vocabulary. A \glossterm{visual vocabulary} is
         defined by clustering feature descriptors traditionally constructed using k-means~\cite{lloyd_least_1982}
-        (however more recent methods have learned vocabularies using neural networks
-        \cite{arandjelovic_netvlad_2016}). The centroids of the clusters represent the \glossterm{visual words} in
-        the vocabulary. These centroids are used to quantize descriptor space. A feature in an image is assigned
-        (quantized) to the visual word that is the feature's approximate nearest neighbor in the vocabulary. This
-        means that each descriptor vector can be represented using just a single number --- \ie{} its index in the
-        vocabulary. Vocabulary indices are used to construct an inverted index, which allows multiple feature
-        correspondences to be made using a single lookup.
+        (however more recent methods have learned vocabularies using neural
+        networks~\cite{arandjelovic_netvlad_2016}). The centroids of the clusters represent the \glossterm{visual
+        words} in the vocabulary. These centroids are used to quantize descriptor space. A feature in an image is
+        assigned (quantized) to the visual word that is the feature's approximate nearest neighbor in the
+        vocabulary. This means that each descriptor vector can be represented using just a single number --- \ie{}
+        its index in the vocabulary. Vocabulary indices are used to construct an inverted index, which allows
+        multiple feature correspondences to be made using a single lookup.
 
         Given a visual vocabulary, the bag-of-words algorithm consists of two high level steps: (1) an offline
         indexing step and (2) an online search step. The offline step indexes a database of images for fast search.
@@ -651,7 +651,7 @@
             contains only a handful of words from a vocabulary. The sparsity of these vectors allows for efficient
             indexing using an inverted index. An inverted index maps each word to the database images that contain
             the word. Therefore, when a feature in a new query image is quantized the inverted index looks up all
-            of the database features that it matches to. A new feature correspondence is created for each database
+            the database features that it matches to. A new feature correspondence is created for each database
             feature the inverted index maps to. For each correspondence a feature matching score is computed.
             Because all the word assignments and feature correspondences are known, the scores of all matching
             images can be efficiently computed by summing the scores of their respective feature correspondences.
@@ -754,7 +754,7 @@
         quantization by assigning each descriptor a small binary vector~\cite{jegou_hamming_2008,
         jegou_burstiness_2009, jegou_improving_2010}. Each visual word $\c$, is assigned a $d_b \times d$ random
         orthogonal projection matrix $\mat{P}_\c$, where $d$ is the number of descriptor dimensions and $d_b$ is
-        the length of the binary code. A set of $d_b$ thresholds, $\vec{t}_\c \in \Real^{d_b}$, is precomputed for
+        the length of the binary code. A set of $d_b$ thresholds, $\vec{t}_\c \in \Real^{d_b}$, is pre-computed for
         each word using the descriptors used to form the visual word cluster. These descriptors are projected using
         the word's random orthogonal matrix, and the median value of each dimension is chosen as that dimension's
         threshold.
@@ -771,9 +771,9 @@
         scoring. Otherwise, the score is the word's squared idf weight multiplied by a Gaussian falloff based on
         the Hamming distance. Using the inverted index, each image is scored by summing the scores of the
         descriptors that matched that image. The image scores are used to define a ranked list of results.
-        %In \cite{jegou_hamming_2008} only the idf weight is used 
-        %In \cite{jegou_burstiness_2009} squared idf and the Gaussian falloff
-        %In \cite{jegou_improving_2010} squared idf and the probability having a Hamming distance lower than or equal to a.
+        %In~\cite{jegou_hamming_2008} only the idf weight is used 
+        %In~\cite{jegou_burstiness_2009} squared idf and the Gaussian falloff
+        %In~\cite{jegou_improving_2010} squared idf and the probability having a Hamming distance lower than or equal to a.
         %\begin{equation}
         %w_d(h_d) = -\log_2\paren{2^{-d_b} \sum_{i = 0}^{h_d} \binom{i}{d_b}}
         %\end{equation}
@@ -851,11 +851,10 @@
         functions can implement and blend desirable attributes of the aforementioned frameworks. The matching
         function assigns correspondences between query and database descriptors. The choice of the matching
         function determines whether the resulting kernel is aggregated or non-aggregated. The selectivity function
-        weights a correspondence's contribution to image similarity. The selectivity function can apply either
-        power-law like normalization or hard thresholding in order to down weights correspondences with low visual
-        similarity. One advantage of the SMK framework is that the selectivity function can be used in aggregated
-        matching. In this case the selectivity function is applied to all correspondences assigned to a particular
-        word.
+        weights a correspondence's contribution to image similarity. It also can apply either power-law like
+        normalization or hard thresholding in order to down weights correspondences with low visual similarity. One
+        advantage of the SMK framework is that the selectivity function can be used in aggregated matching. In this
+        case the selectivity function is applied to all correspondences assigned to a particular word.
 
     \subsection{Face recognition and verification}
         Face recognition is a specific form of instance recognition with the goal of recognizing individual human
@@ -893,17 +892,17 @@
         very similar to vocabulary-based methods. A codebook, dictionary, and vocabulary all are used to build
         image-level vector representations by quantizing raw features.
 
-        Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of $N$
-        individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
+        Another interesting technique is the Tom-vs-Pete classifier~\cite{berg_tom_vs_pete_2012}. Given a set of
+        $N$ individuals (classes), a set of Tom-vs-Pete classifiers are used for both verification and indexing. At
         each facial landmark, $k$ Tom-vs-Pete classifiers are computed. A single Tom-vs-Pete classifier is a linear
-        SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all the nose
-        descriptors from class $T$ and class $P$ make up the SVM training data, and the learned SVM classifies a
-        new nose feature as $T$-ish or $P$-ish. A descriptor vector for a single face is be made by selecting
-        $5000$ out of the total $k\binom{N}{2}$ classifiers and concatenating the signed distances from all the
-        classifiers' separating hyperplanes. This descriptor facilitates both search and verification. A pair of
-        face descriptor vectors can be verified as either a correct or incorrect match by constructing a new
-        vector. The new vector is constructed by concatenating the element-wise product and difference of the two
-        descriptor vectors. Then this new vector is classified using a radial basis function SVM{}.
+        SVM trained on a single corresponding feature for a single pair of classes. \Eg{} all the nose descriptors
+        from class $T$ and class $P$ make up the SVM training data, and the learned SVM classifies a new nose
+        feature as $T$-ish or $P$-ish. A descriptor vector for a single face is made by selecting $5000$ out of the
+        total $k\binom{N}{2}$ classifiers and concatenating the signed distances from all the classifiers'
+        separating hyperplanes. This descriptor facilitates both search and verification. A pair of face descriptor
+        vectors can be verified as either a correct or incorrect match by constructing a new vector. The new vector
+        is constructed by concatenating the element-wise product and difference of the two descriptor vectors. Then
+        this new vector is classified using a radial basis function SVM{}.
 
         One of the most recent advances in face verification and recognition is the DeepFace
           system~\cite{taigman_deepface_2014}.
@@ -932,9 +931,9 @@
           important for handling the problem of viewpoint in face verification.
 
     \subsection{Person re-identification}
-        %Radke dictionary learning ICCV \cite{karanam_person_2015}
-        %Radke pose priors TPAMI \cite{wu_viewpoint_2015}
-        %Deep model of person re-id \cite{shi_embedding_2016}.
+        %Radke dictionary learning ICCV~\cite{karanam_person_2015}
+        %Radke pose priors TPAMI~\cite{wu_viewpoint_2015}
+        %Deep model of person re-id~\cite{shi_embedding_2016}.
         The person re-identification problem is typically posed in the context of locating the same person within
           a few minutes or hours from low-resolution surveillance
           video~\cite{hirzer_relaxed_2012,karanam_person_2015,wu_viewpoint_2015,shi_embedding_2016}.
@@ -1033,7 +1032,7 @@
 
     \subsection{Vocabulary-based methods for category recognition}
         After vocabulary-based techniques demonstrated success in instance recognition, these techniques were
-        quickly adapted and applied to category recognition~\cite{csurka_visual_2004}. Thus there are many
+        quickly adapted and applied to category recognition~\cite{csurka_visual_2004}. Thus, there are many
         similarities --- and some differences --- in the techniques used to address these two problems. One
         difference is the size of the visual vocabulary. Instance recognition tends to require huge vocabularies
         ($\OnTheOrderOf{5}$ --- $\OnTheOrderOf{7}$ words) to achieve a fine sampling of descriptor
@@ -1068,12 +1067,12 @@
         Generalized coding schemes improve performance over a bag-of-words image encoding. Vocabularies can be seen
         as codebooks or dictionaries in coding-based image classification techniques such as sparse coding and
         locally constrained linear coding~\cite{jurie_creating_2005, yang_linear_2009, yang_supervised_2010,
-        yang_efficient_2010, wang_locality_constrained_2010}. Many coding schemes learn both the centroids as well
-        as the function that quantizes a raw descriptor into a word~\cite{jurie_creating_2005, yang_linear_2009,
+        yang_efficient_2010, wang_locality_constrained_2010}. Many coding schemes learn both the centroids 
+        and the function that quantizes a raw descriptor into a word~\cite{jurie_creating_2005, yang_linear_2009,
         yang_supervised_2010, yang_efficient_2010, wang_locality_constrained_2010, vedaldi_multiple_2009}.
         Techniques other than k-means are used to create vocabularies such as mean
         shift~\cite{jurie_creating_2005}, coordinate descent with the locally constrained linear code
-        criteria~\cite{wang_locality_constrained_2010}, and random forests~\cite{perronnin_fisher_2007}. Fisher
+        criterion~\cite{wang_locality_constrained_2010}, and random forests~\cite{perronnin_fisher_2007}. Fisher
         vectors with linear classifiers have been found to outperform non-linear bag-of-words based SVM classifiers
         by using an L1-based distance measure and careful L2 and power-law normalization of
         descriptors~\cite{perronnin_improving_2010, perronnin_large_scale_2010}.
@@ -1102,9 +1101,9 @@
             C = \argmin{C} \sum_{i=1}^n ||\desc_i - \opname{NN}_C(\desc_i)||^2
         \end{equation}
 
-        This formulation where each descriptor is assigned to only a single nearest neighbor has been shown to be a
-        good approximation to the minimum image-to-class Kullback-Leibler divergence~\cite{boiman_defense_2008} ---
-        a measure of how much information is lost when the query image is used to model the entire class.
+        This formulation where each descriptor is assigned to only the single nearest neighbor has been shown to be
+        a good approximation to the minimum image-to-class Kullback-Leibler divergence~\cite{boiman_defense_2008}
+        --- a measure of how much information is lost when the query image is used to model the entire class.
 
     \subsection{Local \naive{} Bayes nearest neighbor}\label{sec:lnbnn}  
 
@@ -1114,10 +1113,10 @@
         modification searches all database descriptors simultaneously and ignores classes that do not return
         descriptor matches.
         
-        Each descriptor $\desc_i$ in the query image searches for its $K+1$ nearest neighbors, %
+        Each descriptor $\desc_i$ in the query image searches for its nearest $K+1$ neighbors, %
         $\{\desc_1, \ldots, \desc_K, \desc_{K + 1}\}$ over all classes.
         The first $K$ neighbors are used as matches.
-        The last nearest neighbor is used as a normalizing term to weight the query descriptor's distinctiveness.
+        The last neighbor is used as a normalizing term to weight the query descriptor's distinctiveness.
         Let $(\desc_i, \desc_j)$ be a matching descriptor pair, and let $C$ be the class of $\desc_j$.
         The score of each match is computed as the distance to the match subtracted from the distance to the
           normalizer.
@@ -1210,7 +1209,7 @@
     A deep neural network is constructed by stacking several layers of units (neurons) together. Data is used to
     initialize the activations of an input layer, and the information is forward propagated through the network.
     Weights are chosen to optimize a loss function --- \eg{} categorical cross-entropy error or triplet
-    loss~\cite{schroff_facenet_2015} --- which is chosen depending on the application. Optimization of the loss
+    loss~\cite{schroff_facenet_2015} --- which is chosen to depend on the application. Optimization of the loss
     function is performed using back-propagation~\cite{rumelhart_learning_1986} --- typically using mini-batches
     and stochastic gradient descent with momentum~\cite{sutskever_importance_2013}. Traditionally each layer in a
     neural network is fully connected --- each pair of units between the previous layer and the current layer has
@@ -1256,16 +1255,17 @@
         function~\cite{lecun_loss_2005}. Unfortunately, due to issues with the quality and quantity of our training
         data our convolutional replacements for the SIFT descriptor have not been successful.
 
-        The second approach aimed to use Siamese networks to directly compare two images of an animal to determine
-        if they were the same or different, similar to the method used in DeepFace\cite{taigman_deepface_2014} for
-        face verification. However, without the large training datasets and specialized alignment procedures used
-        in Deep Face, we were unable to produce promising results.
+        The second approach aimed to use Siamese networks to directly compare two images of an animal to
+          determine if they were the same or different, similar to the method used in
+          DeepFace~\cite{taigman_deepface_2014} for face verification.
+        However, without the large training datasets and specialized alignment procedures used in DeepFace, we
+          were unable to produce promising results.
         
         Due to these issues, this \thesis{} does not further pursue techniques based on DCNNs.
         We include this discussion to note the potential of deep learning applied to animal identification and to
           strongly suggest further investigation of these techniques in the future research.
-        Of particular interest for future research is the matching technique presented in
-          \cite{rocco_convolutional_2017}.
+        Of particular interest for future research is the matching technique presented
+          in~\cite{rocco_convolutional_2017}.
         This method is particularly interesting because it learns to match and align images by mimicking a
           classic computer vision pipeline while using only synthetic training data.
         This may be able to overcome the issues mentioned above,

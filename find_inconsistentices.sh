@@ -15,6 +15,12 @@ grep -Przo "(?s)Invariant *. *Feature" *.tex
 grep -Er "L2" *.tex
 grep -Er "L1" *.tex
 
+grep -ER "[^\\~]\\\\cite" *.tex
+grep -Przo "(?s)Deep *. *Face" *.tex
+
+grep -ER "tradeoff" *.tex
+grep -ER "precomputed" *.tex
+
 Gradient Location-Orientation Histogram
 Gradient Location-Orientation Histogram
 Speeded Up Robust Features

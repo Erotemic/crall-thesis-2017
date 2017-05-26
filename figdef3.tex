@@ -105,11 +105,11 @@ python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db
 \begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormJ.jpg}\caption{}\label{sub:knormj}\end{subfigure}
 \caption[\caplbl{knorm}LNBNN feature correspondence scoring]{
 % ---
-\caplbl{knorm} The four nearest neighbors of a distinctive query feature~\cref{sub:knormf}. The bottom row shows
+\caplbl{knorm} The nearest four neighbors of a distinctive query feature~\cref{sub:knormf}. The bottom row shows
 the warped and normalized features with their SIFT descriptors overlaid. The top row shows the annotation from
 which each feature was extracted. The first two neighbors~\cref{sub:knormg,sub:knormh} are correct matches, the
 third neighbor~\cref{sub:knormi} is an incorrect match, and the fourth neighbor~\cref{sub:knormj} is used as an
-LNBNN normalizer to score the first three matches. 
+LNBNN normalizer to score the first three matches.
 % ---
 }
 \label{fig:knorm}
@@ -128,16 +128,32 @@ python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 3 --dpa
 python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 4 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
 --verbose 
 \end{comment}
-\SingleImageCommand{namematch}{1}{Name scoring}{
-    % ---
-    \Nsumprefix{} \namescoring{}.
-    The query annotation is at the top left.
-    Each query feature matches at most one feature in the exemplars for a name.
-    Each line denotes a feature correspondence colored by its matching score.
-    In the top right of each database annotation is its annotation score.
-    Feature scores from multiple views are combined into a name score shown on top.
-    % ---
-}{figures3/namematch.jpg}
+%\SingleImageCommand{namematch}{1}{Name scoring}{
+%    % ---
+%    \Nsumprefix{} \namescoring{}.
+%    The query annotation is at the top left.
+%    Each query feature matches at most one feature in the exemplars for a name.
+%    Each line denotes a feature correspondence colored by its matching score.
+%    In the top right of each database annotation is its annotation score.
+%    Feature scores from multiple views are combined into a name score shown on top.
+%    % ---
+%}{figures3/namematch.jpg}
+\newcommand{\namematch}{
+\begin{figure}[ht!]
+\centering\includegraphics[width=\textwidth]{figures3/namematch.jpg}
+\caption[\caplbl{namematch}\Nsumprefix{} \namescoring{}]{
+% ---
+\Nsumprefix{} \namescoring{}.
+The query annotation is at the top left.
+Each query feature matches at most one feature in the exemplars for a name.
+Each line denotes a feature correspondence colored by its matching score.
+In the top right of each database annotation is its annotation score.
+Feature scores from multiple views are combined into a name score shown on top.
+% ---
+}
+\label{fig:namematch}
+\end{figure}
+}
 
 
 \begin{comment}
@@ -318,7 +334,7 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
             % ---
             Applying foregroundness weights to feature correspondences improves the identification accuracy at
               the top rank by filtering matches in scenery.
-            This experiment was performed by matching annotations within serveral occurrences.
+            This experiment was performed by matching annotations within several occurrences.
             Thus, in this experiment \pvar{qsize} is a sum and \pvar{dsize} is an average.
             % ---
         }
@@ -537,7 +553,7 @@ python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,with_tag=
 % ---
 The low resolution of the database annotation causes the correct pair of annotations \cref{sub:failqualityB} to
   be returned at rank $43$.
-The incorrect pair of annotation \cref{sub:failqualityA} did not recieve a particularly high score, but it was
+The incorrect pair of annotation \cref{sub:failqualityA} did not receive a particularly high score, but it was
   returned at rank $1$ because no feature correspondences were established to the correct match.
 % ----
 }
@@ -563,7 +579,7 @@ The incorrect pair of annotations \cref{sub:failsceneryA} was returned at rank $
   the background scenery.
 The correct pair \cref{sub:failsceneryB} was returned at rank $2$ and did not produce matches in the front leg
   due to pose variations.
-The annotations in the scenery match pair were taken seconds appart in the same location causing their
+The annotations in the scenery match pair were taken seconds apart in the same location causing their
   backgrounds to be near duplicates.
 The foregroundness measure was disabled to produce this example, enabling it addresses nearly all scenery match
   cases.
