@@ -2,6 +2,8 @@
 fixtex --fpaths chapter5-graphid.tex --outline --asmarkdown --numlines=999 --shortcite
 \end{comment}
 
+% TODO: relate back to GZC, and talk about non-rally scinareos
+
 
 \chapter{Animal identification using connectivity in a decision graph}\label{chap:graphid}
 \newcommand{\nT}{N}
@@ -418,97 +420,31 @@ Note, that we do not use this algorithm in practice.
 %  \cite{khuller_approximation_1993}.
 
 
-\section{Recovering from inconsistencies}\label{sec:incon}
-
-In the previous section we described a redundancy criteria that exposes errors by introducing inconsistencies.
-In this section we describe an algorithm for fixing these errors and recovering from these inconsistencies.
-
-Whenever a decision is made that either adds a negative edge within a PCC or adds a positive between two PCCs
-  with at least one negative edge between them, the graph becomes inconsistent.
-In both cases the result is a single PCC $C$ with internal negative edges.
-The goal of inconsistency recovery mode is to change the labels of edges in order to make $C$ consistent.
-An inconsistency implies that a mistake was made, but does not necessarily determine which edge contains the
-  mistake.
-Therefore, we develop an algorithm to hypothesize the edge(s) most likely to contain the mistake(s) using a
-  minimum cut.
-An example of an inconsistent PCC with hypothesis edges is illustrated in \cref{fig:inconpcc}.
-
-\inconpcc{}
-
-For simplicity we only describe the case where $C$ contains exactly one negative edge, but the general case is
-  the same except multicut is used in place of minimum $s$-$t$-cut~\cite{vazirani_approximation_2013}.
-The procedure alternates between steps of generating ``mistake hypothesis'' edges, and presenting these to the
-  user for review.
-The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which if
-  re-labeled as positive or negative respectively would cause $C$ to become consistent.
-The algorithm starts by creating an instance of min-cut using the subgraph of $C$ containing only positive edges
-  and the endpoints of the negative edge as the terminal nodes.
-The weight of edge is the sum of its initial priority, the number of times that edge was manually reviewed, and
-  an integer indicating the confidence of the most recent review (which will be discussed in \cref{sec:decision}).
-The minimum cut returns a set of edges that disconnects the terminal nodes.
-We compare the total weight of cut positive edges with the weight of the terminal negative edge (weighted using
-  the same scheme).
-If the positive weight is smaller, the algorithm suggests that the cut positive edges should be relabeled as
-  negative.
-Otherwise, it suggests that the negative edge should become positive.
-
-The user reviews each edge and the algorithm changes the label of the edge until either the reviewer disagrees
-  with the algorithm's suggestion or the review set is empty.
-If consistency has not been restored, the algorithm must be repeated.
-When this happens, the weights of the re-reviewed edges are increased by $1$, forcing the algorithm to look
-  elsewhere for a cut.
-This repeats until all inconsistencies are eliminated.
-
-%If this results in splitting one PCC into two or more, then the
-%positive-redundancy and negative-redundancy tests must be repeated, potentially
-%re-adding edges to the priority queue.
-
-Fixing inconsistencies can result in splitting $C$ into multiple PCCs.
-This may invalidate implicit reviews inferred from redundancy either within or incident to this subgraph.
-Therefore, we recompute positive-redundancy within each new PCC, implicitly reviewing edges where the criteria is
-  satisfied and re-prioritizing unreviewed edges where it is no longer valid.
-A similar process happens for negative-redundancy between each pair of new PCCs as well as between each new PCC
-  and all other PCCs previously negative-redundant with $C$.
-
-
-%The algorithm starts by creating an instance of the multicut~\cite{vazirani_approximation_2013} using the
-  %subgraph of $C$ containing only positive edges.
-%Each edge is weighted by its assigned positive pairwise probability plus the number of times that edge was
-  %manually reviewed.
-%The terminal pairs are the negative edges.
-%A feasible multicut returns a subset of  that disconnects all terminal pairs.
-%Multicut is NP-hard, but it can be approximated by taking the union of min-cuts between each terminal pair.
-%To transform the multicut into a mistake hypothesis, we compare the total weight of cut positive edges with the
-  %total weight of the terminal negative edges (weighted using the same scheme).
-%If positive weight is smaller we suggest that the cut positive edges should be relabeled as negative.
-%Otherwise, we suggest the negative edges should be relabeled as positive.
-
-%Inconsistency recovery proceeds as follows.
-%Generate a mistake hypothesis, and order the edges by positive probability.
-%Present each edge hypothesis to the user in order.
-%If the user agrees with the hypothesis, then change the edge label, increment its review count, and continue.
-%If the user disagrees, then generate a new hypothesis (using new weights and labels) and restart.
-%It can be shown that this process is guaranteed to converge on a consistent graph state.
-%Once $C$ is consistent, re-add it to $G$ and return to the main loop.
-
-
 \section{Candidate edge generation and priorities}\label{sec:cand}
 
 In this section we describe the first step of the algorithm where candidate edges are generated and then
   prioritized for review.
-To generate candidate edges that may merge existing PCCs, we issue each annotation as a query to the ranking
-  algorithm (the LNBNN algorithm from \cref{chap:ranking}), and form edges from the top results of the ranked
-  lists.
-In addition, we can use the positive PCC augmentation algorithm from~\cref{subsec:augredun} to generate edges
-  that would ensure all PCCs are positive redundant.
-In practice, we alternate between these two modes in each iteration of the outer loop, first searching for
-  merges, and then ensuring redundancy.
+There many ways that candidate edges can be generated.
+Different sets and orderings of candidate edges will impact different properties of the graph at different rates.
+Therefore we choose candidate edges depending on what properties of the graph we want to manipulate.
+In the context of identifying individual animals, the most obvious property to manipulate is reduce the number of
+  PCCs in the graph by adding positive edges between existing PCCs, thus merging them into one.
+A less obvious property that we can manipulate is the fraction of PCCs that are positive redundant.
+By increasing this fraction to $1$, we discover mistakes that have been made, which can be fixed using the
+  algorithm in~\cref{sec:incon}.
+This ultimately decreases the likelihood that any PCC contains a mislabeled positive edge.
+In each iteration outer loop of our main algorithm, we alternate between first generating candidate to merge
+  PCCs, and then generating edges to ensure that all PCCs are positive redundant.
 
+To generate candidate edges that may merge existing PCCs we use the LNBNN ranking algorithm
+  from~\cref{chap:ranking}.
+We issue each annotation as a query to the ranking algorithm, and form edges from the top results of the ranked
+  lists.
 We then assign a priority to each new candidate edge.
 We use the pairwise algorithm from~\cref{chap:pairclf} to estimate the positive, negative, and incomparable
   probabilities of each edge.
-Any edge whose maximum probability is above the threshold for automatic decision making is ranked according to
-  this probability.
+Any edge whose maximum positive, negative, or incomparable probability is above the threshold for automatic
+  decision making is ranked according to this probability.
 All other edges are ordered by their positive probability.
 This ensures automatic decision making is first, followed by an ordering of the edges needed for manual review
   that are most likely to be positive and therefore add the most information to the graph.
@@ -517,33 +453,33 @@ It is desirable to add positive decisions to the graph first because
 (2) larger PCCs increase the number of edges that can be invalided by positive and negative reviews using the
   redundancy criteria.
 
-%As edges are popped from the priority queue, we  of the queue
+The first iteration of the outer loop the algorithm generates edges using the ranking algorithm.
+Review of these edges continues until the priority queue is empty, or we determine that the candidate edges
+  should be refreshed using the algorithm we will describe in~\cref{sec:converge}.
+This ends the current inner loop, and as long as the algorithm has not converged, it proceeds to the next
+  iteration of the outer loop.
+In this next iteration, we generate candidate edges to ensure that all PCCs are positive redundant.
 
-%  local-edge-connectivity \cite{esfahanian_connectivity_2017}
+To generate candidate edges that will make PCCs positive redundant, we use the positive-augmentation algorithm
+  from~\cref{subsec:augredun} to generate edges.
+These edges are assigned prioritized in the same way, however in this iteration the refresh criteria is disabled.
+This enforces that if each edges is reviewed as positive, then all PCCs will be positive-redundant at the end of
+  this inner loop.
+However, sometimes an edge will not be reviewed as positive.
+If it is reviewed as negative, then it will introduce an inconsistency and be handled by the algorithm
+  in~\cref{sec:incon}.
+If it is reviewed as incomparable, then the PCC will only be positive-redundant if all edges between the nodes in
+  the PCC have been reviewed.
+Because we want to ensure that all PCCs are positive-redundant, we simply regenerate candidate edges using the
+  positive-augmentation algorithm in the next iteration of the outer loop until all PCCs are positive-redundant.
+Therefore, at the end of this process all PCCs are positive-redundant by construction.
 
-%In the case where the positive-redundancy criteria specifies $k=1$, the order positive edges are added in does
-%  not matter because all PCCs will be trees and all trees with $n$ vertices have $n-1$ edges.
-%Therefore, the optimal priority scheme simply orders manually reviewed edges by positive probability.
-%However, if $k>1$ the priority scheme that minimizes the number of reviews is unclear and is an open question.
-%This is partially because edge-augmentation where some edges may not be feasible is NP-hard
-%  \cite{khuller_approximation_1993}.
-%Even so, if the PCCs were known ahead of time approximation algorithms could be used, but the fact that they are
-%  not makes this problem difficult and an interesting topic for future research.
-%One possible solution might involve prioritizing edges based on a combination of their probability and current
-%  positive degree.
-%Another might attempt to review edges to achieve $1$-positive-redundancy and establish the PCCs while preferring
-%  to add positive edges to existing chains, then once $1$-positive-redundancy was achieved the algorithm could
-%  increase $k$ and find candidate edges using augmentation approximation algorithms.
+After we have ensure positive-redundancy the outer loop alternates back to generating candidate edges using the
+  ranking algorithm.
+In this way our algorithm alternates between two modes, first searching for merges, and then ensuring redundancy.
+This continues until the termination criteria that we will describe in~\cref{sec:converge} is satisfied.
+At the end of this process it is guaranteed that all PCCs are consistent and positive-redundant.
 
-
-%Whenever the refresh criteria triggers we perform another loop to complete the positive redundancy of all PCCs.
-%This is done to discover split cases before the ranking algorithm is re-executed.
-%In this loop the candidate edges are generated by computing an edge-connected augmentation on each PCC.
-%If the PCC only contains positive edges, edge augmentation with the fewest edges can be computed in linear time
-%  using \cite{eswaran_augmentation_1976}.
-%However, if some edges in the complement of the positive PCC edges are incomparable then we must compute a
-%  minimum weight edge augmentation (which is NP-hard) using a $2$-approximation algorithm
-%  \cite{khuller_approximation_1993}.
 
 \section{Making decisions}\label{sec:decision}
 
@@ -557,7 +493,7 @@ If the edge cannot be automatically reviewed we issue a request for user feedbac
 Once we have obtained feedback for an edge --- either automatically or manually --- the edge is added to the
   appropriate edge set.
 After the new edge is added, we update candidate edge priorities discussed in~\cref{sec:redun}.
-If the new edge causes an inconsistency we drop into inconsistency mode as discussed in~\cref{sec:incon}.
+If the new edge causes an inconsistency we drop into inconsistency mode we will discuss in~\cref{sec:incon}.
 
 For each decision we record a user-id to identify the reviewer or algorithm making the decision.
 We also follow the approach of~\cite{branson_visual_2010} and store a user-specified categorical confidence value
@@ -567,6 +503,131 @@ The user-id maintains data provenance allows us to check the automatic verificat
   directly used in this algorithm description.
 However, the user confidence contributes to the edges weights in the error detection and recovery algorithm
   from~\cref{sec:incon}.
+
+
+\section{Recovering from inconsistencies}\label{sec:incon}
+
+In~\cref{sec:redun} we described a redundancy criteria that exposes errors by introducing inconsistencies.
+In this section we describe an algorithm for fixing these errors and recovering from these inconsistencies.
+
+Whenever a decision is made that either adds a negative edge within a PCC or adds a positive between two PCCs
+  with at least one negative edge between them, the graph becomes inconsistent.
+In both cases the result is a single PCC $C$ with internal negative edges.
+The goal of inconsistency recovery mode is to change the labels of edges in order to make the subgraph formed by
+  the nodes of $C$ and all of their edges.
+An inconsistency implies that a mistake was made, but does not necessarily determine which edge has the wrong
+  label.
+Therefore, we develop an algorithm to hypothesize the edge(s) most likely to contain the mistake(s) using a
+  minimum cut.
+If the hypothesis is correct, and all the labels on these edges were changed, then we show that the PCC would
+  either become consistent or be split into multiple consistent PCCs.
+Because the hypothesis might not be correct, we then present these edges to a user for manual review, and if the
+  user agrees with the hypothesis, the algorithm completes.
+Otherwise, the new information received by the user it taken into account, and the hypothesis is recomputed.
+An example of an inconsistent PCC with hypothesized edges is illustrated in \cref{fig:inconpcc}.
+
+\inconpcc{}
+
+\paragraph{Hypothesis generation}
+The procedure alternates between steps of generating ``mistake hypothesis'' edges, and presenting these to the
+  user for review.
+The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which if
+  re-labeled as positive or negative respectively would cause $C$ to become consistent.
+For simplicity we focus first the case where $C$ contains exactly one negative edge, but it will not be hard to
+  extend to the general case.
+
+
+First consider a cut of $C$ that disconnects the endpoints of the negative edge.
+If the labels on these edges were changed from positive to negative or incomparable, then the inconsistent PCC
+  would be split into multiple consistent PCCs.
+Alternatively, if the label on the negative edge was change to positive or incomparable, the PCC would no longer
+  be inconsistent.
+Therefore, the algorithm starts by creating a minimum $s$-$t$-cut using the subgraph of $C$ containing only
+  positive edges.
+The endpoints of the single negative edge are the terminal nodes $s$ and $t$.
+Unlike in our preceding discussion where the edges only have positive/negative/incomparable labels the edges will
+  now have weights that reflect a measure of confidence in their current label.
+In the case where the negative edge is correct, this will encourage the minimum cut to return the edges that are
+  most likely to be mislabeled.
+
+The weight of edge in this cut problem is the sum of three values:
+\begin{enumln}
+    \item its positive probability previously computed using the pairwise classifier,
+
+    \item the number of consecutive times that edge was manually reviewed with
+        its current label, and
+
+    \item an integer ranging from $0$ to $4$ indicating the confidence of the most recent review (which will be
+      discussed in \cref{sec:decision}).
+\end{enumln}
+Because we are using a minimum cut, the algorithm will find the lowest confidence of these edges.
+The higher each of these values is, the more likely that the edge is correctly labeled.
+The positive probability offers a baseline estimate of this confidence.
+Using the number of manual reviews means that if a user disagrees with a hypothesis, the weight on that edge will
+  be increased and the algorithm will be encouraged to select a different edge.
+The confidence performs a similar role, speeding up the pace at which the algorithm tries different edges.
+
+Using this weighting scheme we find the minimum $s$-$t$-cut, which returns a cut set of positive edges.
+We now need to decide if it is more likely that the positive cut-edges should be relabeled, or the negative edge
+  should be relabeled.
+We compare the total weight of cut positive edges with the weight of the terminal negative edge (weighted using
+  the same scheme).
+If the positive weight is smaller, the algorithm suggests that the cut positive edges should be relabeled as
+  negative.
+Otherwise, it suggests that the negative edge should become positive.
+%The minimum cut returns a set of edges that disconnects the terminal nodes.
+%In other words, if the label on these edges is changed from positive to negative or incomparable, then $s$ and
+%  $t$ would no longer be part of the same PCC and the inconsistency would be removed.
+
+\paragraph{Generalization}
+In a restricted scenario where each edge is reviewed exactly to the specifications of the algorithm, then it is
+  only possible for one negative edge to exist in a PCC when $k=2$.
+However, in practice it is possible for edges to be added outside of these constraints.
+In this case we can slightly modify inconsistency recovery to apply to the case when there are any number of
+  negative edges between the nodes of a PCC.
+The modification is simple.
+Instead of using a minimum $s$-$t$-cut, we use a multicut to disconnect the endpoints in all pairs of negative
+  edges.
+Multicut is NP-hard, but a simple approximation algorithm is to perform a minimum $s$-$t$-cut for each set of
+  terminal nodes, and then take the union of the resulting cut~\cite{vazirani_approximation_2013}.
+When considering which edges to return we consider all negative edges together, comparing the sum of their
+  weights to the sum of the positive edge weights.
+
+\paragraph{Hypothesis review}
+The user iterates through each hypothesis edge and chooses
+(1) to agree with the hypothesis and change the label of the edge, or
+(2) to disagree with the hypothesis and keep the edge label.
+In the case where the user agrees that a positive label should be changed, it does not matter if the label is
+  changed to negative or incomparable, it will still remove the positive connection.
+A similar argument is true when the user agrees to change a negative label to either positive or incomparable;
+  either way, the negative edge between the nodes in the PCC is removed.
+As long as the user agrees with the hypothesis and the hypothesis set is non-empty, the iteration continues.
+If there are no more hypothesis edges, then either all inconsistencies were removed or all PCCs were split into
+  multiple consistent PCCs.
+In the case where the reviewer disagrees with the algorithm, the new review is recorded and we generate a new set
+  of hypothesis errors.
+Because reviewing the edge increases its weight, the algorithm will be forced to look elsewhere for a cut.
+This alternation between hypothesis generation and user review repeats until there the reviewer agrees with all
+  hypothesis edges, which means that all inconsistencies have been eliminated
+
+Fixing inconsistencies can result in splitting $C$ into multiple PCCs.
+This may invalidate implicit reviews inferred from redundancy either within or incident to this subgraph.
+Therefore, we recompute positive-redundancy within each new PCC, implicitly reviewing edges where the criteria is
+  satisfied and re-prioritizing unreviewed edges where it is no longer valid.
+A similar process happens for negative-redundancy between each pair of new PCCs as well as between each new PCC
+  and all other PCCs previously negative-redundant with $C$.
+
+\paragraph{Implementation details}
+While it might be conceptually simpler to think of inconsistency recovery as a separate mode, in practice it is
+  actually integrated as part of the algorithm's inner loop.
+The algorithm dynamically maintains a list of all PCCs that contains errors.
+We disable redundancy checks for any PCCs that contain errors.
+Hypothesis edges are computed whenever a new inconsistency is created, and these edges are entered into the queue
+  with their normal priority plus $10$ to ensure they are reviewed first.
+It can be shown that as long as the user agrees with the current hypothesis edges computed so far, recomputing
+  the new hypothesis edges will always be the same as the remaining hypothesis edges.
+This implementation is important first step for generalizing the graph algorithm into a distributed setting with
+  multiple reviewers.
 
 
 %\section{Refreshing candidate edges}\label{sec:refresh}
@@ -619,22 +680,37 @@ In this section we discuss the criteria we use for both determining when to refr
   stop the algorithm altogether.
 We first consider the need for a refresh criteria.
 As the review algorithm proceeds, we should only continue manually review as long as the algorithm is
-  consistently generating edges that --- once reviewed (typically as positive) --- change the PCCs.
+  consistently generating edges that --- once reviewed --- change the PCCs.
+This happens whenever a review merges two PCCs into one, or splits one PCC into two.
+Because splits only happen during inconsistency recovery, we are primarily concerned with searching for new
+  positive edges.
 However, at some point the candidate edges may no longer contain positive results, but undiscovered positive
   matches may still exist.
 This is because LNBNN, working initially with each annotation having a separate label, can miss more subtle but
   correct matches, especially when there are several annotations for an animal and subtle viewpoints.
-As the labeling improves, so does the reliability of the LNBNN.
-This issue can be addressed by predicting if none of the remaining edges would change the PCCs, and then
-  recomputing candidate edges when this happens.
+As the labeling improves, so does the reliability of LNBNN.
+Recall that the verification algorithm is only run after candidate edges are generated.
+If the edges required to complete the underlying real PCCs are missing from the candidate set, then nothing can
+  be done.
+We therefore must develop a ``refresh criteria'' to determine when to stop and update the current priority queue
+  with new LNBNN matches.
+This will be done by predicting if none of the remaining edges would change the PCCs, and then recomputing
+  candidate edges when this happens.
+However, before we describe this process, we consider the problem of termination, which will turn out to have a
+  similar solution.
 
 Similar to the refresh criteria, we must be able to determine when to terminate the algorithm.
-Ideally, the algorithm would terminate only when it was certain that all PCCs have been correctly identified.
-The graph framework can deterministically achieve this by using all $\binom{|V|}{2}$ edges as candidates and then
-  looping until each PCC is positive redundant and each pair of PCCs is negative redundant.
-Unfortunately, this requires $O(|V|^2)$ reviews, which is only feasible if
+To ensure that the identification is perfect, the algorithm would need to use all $\binom{|V|}{2}$ edges as
+  candidates and then terminate using the deterministic convergence criteria explained in the introduction of this
+  chapter.
+Recall that the deterministic convergence criteria only stops the algorithm once each PCC is positive redundant
+  and each pair of PCCs is negative-redundant.
+This essentially results in a brute-force search, that requires $O(|V|^2)$ reviews, and is only feasible if
 (1) the number of annotations is very small, or
-(2) all edges can be automatically reviewed (but even then the cost can be prohibitive).
+(2) all edges can be automatically reviewed.
+However, even if all edges can be automatically reviewed the quadratic computation required to run the
+  verification algorithm on all pairs of annotations might be too computationally expensive for very large
+  databases.
 Therefore, in practical circumstances, we turn towards probabilistic methods to determine when to stop.
 Like, the refresh criteria, this can be determined --- in part --- by predicting if new reviews will change the
   PCCs.

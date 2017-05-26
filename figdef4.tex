@@ -1,14 +1,14 @@
-\edef\pzcode{PZ_PB_RF_TRAIN_2567}
-\edef\gzcode{GZ_Master1_21589}
-%\edef\gzcode{GZ_Master1_222}
+%\edef\pzcode{PZ_PB_RF_TRAIN_2567}
+%\edef\gzcode{GZ_Master1_21589}
+%%\edef\gzcode{GZ_Master1_222}
 
 
 
 \newcommand{\MatchStateExample}{
 \begin{figure}[h] \centering
-\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesC.png}\caption{positive}\label{sub:classesC}\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesA.png}\caption{negative}\label{sub:classesA}\end{subfigure}
-\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures_pairclf/classesB.png}\caption{incomparable}\label{sub:classesB}\end{subfigure}
+\begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=160pt]{figures4/classesC.png}\caption{positive}\label{sub:classesC}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures4/classesA.png}\caption{negative}\label{sub:classesA}\end{subfigure}
+\begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures4/classesB.png}\caption{incomparable}\label{sub:classesB}\end{subfigure}
 \caption[\caplbl{MatchStateExample}Match-state example]{\caplbl{MatchStateExample}
 % ---
 Examples of positive (\ref{sub:classesC}), negative  (\ref{sub:classesA}), and incomparable (\ref{sub:classesB})
@@ -23,7 +23,7 @@ pairs of annotations. Local feature correspondences are superimposed over the pa
 \newcommand{\LeftRightFace}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/custom_match_leftrightface_5245_5161.jpg}
+\includegraphics[width=\textwidth]{figures4/custom_match_leftrightface_5245_5161.jpg}
 \caption[\caplbl{LeftRightFace}A comparable pair with different viewpoints]{\caplbl{LeftRightFace}
 % ---
 Even though this pair has different viewpoints, it is positive and comparable
@@ -38,10 +38,10 @@ because we can establish a distinctive correspondence in the face.
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
 \caption[\caplbl{PositiveHist}Positive score histogram experiment]{\caplbl{PositiveHist}
 % ---
@@ -59,8 +59,8 @@ scores the learned probabilities exhibit better separability.
 \newcommand{\PositiveROC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/roc_match_state.png}\caption{Plains zebra}\label{sub:pos_roc_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/roc_match_state.png}\caption{Grévy's zebra}\label{sub:pos_roc_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/roc_match_state.png}\caption{Plains zebra}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_match_state.png}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{PositiveROC}Positive match-state ROC experiment]{\caplbl{PositiveROC}
 % ---
 The positive match-state ROC for scores computed using the pairwise classifier and the LNBNN ranking algorithm.
@@ -72,12 +72,28 @@ The scores from the pairwise classifier are better at separating out the positiv
 }
 
 
+\newcommand{\ReRank}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/rerank.png}\caption{Plains zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/rerank.png}\caption{Grévy's zebra}\end{subfigure}
+\caption[\caplbl{ReRank}Re-ranking experiment]{\caplbl{ReRank}
+% ---
+Re-ranking the top LNBNN results using the positive probabilities from the match-state classifier improves the
+  number of correct matches at rank $1$ for both plains and Grévy's zebra.
+% ---
+}
+\label{fig:ReRank}
+\end{figure}
+}
+
+
 \begin{comment}
     python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=match_state
     python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=match_state
 \end{comment}
 \newcommand{\ConfusionMatch}{
-\begin{table}
+\begin{table}[b]
     \centering
     \caption[\caplbl{ConfusionMatch}Match-state experiment confusion matrix]{\caplbl{ConfusionMatch}
     % ---
@@ -87,14 +103,14 @@ The scores from the pairwise classifier are better at separating out the positiv
     % ---
     }
     \label{tbl:ConfusionMatch}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_match_state.tex}\caption{Plains zebras match-state confusion}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_match_state.tex}\caption{Grévy zebras match-state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/confusion_match_state.tex}\caption{Plains zebras match-state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy zebras match-state confusion}\end{subtable} %
 \end{table}
 }
 
 
 \newcommand{\EvalMetricsMatch}{
-\begin{table}
+\begin{table}[b]
     \caption[\caplbl{EvalMetricsMatch}Match-state experiment evaluation metrics]{\caplbl{EvalMetricsMatch}
     % ---
     Multiclass match-state evaluation metrics for plains and Grévy's zebras
@@ -103,8 +119,8 @@ The scores from the pairwise classifier are better at separating out the positiv
     }
     \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_match_state.tex}\caption{Grévy zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy zebras match-state metrics}\end{subtable} %
 \end{table}
 }
 
@@ -121,14 +137,14 @@ The scores from the pairwise classifier are better at separating out the positiv
     % ---
     }
     \label{tbl:ConfusionPhotobomb}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
 \end{table}
 }
 
 
 \newcommand{\EvalMetricsPhotobomb}{
-\begin{table}
+\begin{table}[h]
     \caption[\caplbl{EvalMetricsPhotobomb}Photobomb-state experiment evaluation metrics]{\caplbl{EvalMetricsPhotobomb}
     % ---
     The photobomb-state evaluation metrics computed from the confusion matrix.
@@ -136,8 +152,8 @@ The scores from the pairwise classifier are better at separating out the positiv
     }
     \label{tbl:EvalMetricsPhotobomb}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\pzcode/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures_pairclf/\expandafter\gzcode/eval_metrics_photobomb_state.tex}\caption{Grévy zebras photobomb metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy zebras photobomb metrics}\end{subtable} %
 \end{table}
 }
 
@@ -145,19 +161,19 @@ The scores from the pairwise classifier are better at separating out the positiv
 
 \begin{comment}
     python -m ibeis.scripts.script_vsone report_classifier_importance --db PZ_PB_RF_TRAIN \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_pairclf/wc_pz_clipwhite2.png" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures4/wc_pz_clipwhite2.png" \
     --clipwhite --diskshow
 
     python -m ibeis.scripts.script_vsone report_classifier_importance --db GZ_Master1 \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures_pairclf/wc_gz_clipwhite2.png" \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures4/wc_gz_clipwhite2.png" \
     --clipwhite --diskshow
 \end{comment}
 
 \newcommand{\MatchWordCloud}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\gzcode/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
 \caption[\caplbl{MatchWordCloud}Word cloud of important features for match-state prediction]{\caplbl{MatchWordCloud}
 % ---
 Word cloud of important features for predicting match-state.
@@ -172,7 +188,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 
 
 \newcommand{\ImportantMatchFeat}{
-\begin{table}
+\begin{table}[h]
     \centering
     \caption[\caplbl{ImportantMatchFeat}Important features for match-state prediction]{\caplbl{ImportantMatchFeat} 
     % ---
@@ -188,7 +204,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
             \toprule
             dimension & importance\\
             \midrule
-            \input{figures_pairclf/\expandafter\pzcode/feat_importance_match_state.tex}
+            \input{figures4/PZ_PB_RF_TRAIN/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
         \caption{Plains zebra}
@@ -200,7 +216,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
             \toprule
             dimension & importance\\
             \midrule
-            \input{figures_pairclf/\expandafter\gzcode/feat_importance_match_state.tex}
+            \input{figures4/GZ_Master1/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
         \caption{Grévy's zebra}
@@ -210,7 +226,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 
 
 \newcommand{\ImportantPBFeat}{
-    \begin{table}
+    \begin{table}[h]
         \centering
         \caption[\caplbl{ImportantPBFeat}Important features for photobomb-state prediction]{\caplbl{ImportantPBFeat} 
         % ---
@@ -226,7 +242,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
             \begin{tabular}{l c}
                 \toprule dimension & importance\\
                 \midrule
-                \input{figures_pairclf/\expandafter\pzcode/feat_importance_photobomb_state.tex}
+                \input{figures4/PZ_PB_RF_TRAIN/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
             \caption{Plains zebra phototomb importance}
@@ -238,7 +254,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
                 \toprule
                 dimension & importance\\ 
                 \midrule
-                \input{figures_pairclf/\expandafter\gzcode/feat_importance_photobomb_state.tex}
+                \input{figures4/GZ_Master1/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
             \caption{Grévy's zebra phototomb importance}
@@ -253,7 +269,7 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \newcommand{\PairFailIN}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Incomparable_Negative_383_503.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Incomparable_Negative_383_503.jpg}
 \caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
 % ---
 The pair is incomparable, but the classifier predicts negative due to the small amount of incomparable training
@@ -267,7 +283,7 @@ data available.
 \newcommand{\PairFailNP}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Negative_Positive_424_465.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Negative_Positive_424_465.jpg}
 \caption[\caplbl{PairFailNP}Negative pairwise failure case]{\caplbl{PairFailNP}
 % ---
 This pair is negative, but the classifier predicts positive because of
@@ -283,7 +299,7 @@ patterns that do not match.
 \newcommand{\PairFailPN}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures_pairclf/\expandafter\pzcode/cases_match_state/fail_Positive_Negative_63_72.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Positive_Negative_63_72.jpg}
 \caption[\caplbl{PairFailPN}Positive pairwise failure case]{\caplbl{PairFailPN}
 % ---
 The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.

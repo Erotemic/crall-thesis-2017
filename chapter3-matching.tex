@@ -1,10 +1,8 @@
-% +--- CHAPTER --- 
 \begin{comment}
     ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
     ./texfix.py --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 -w
     ./texfix.py --fpaths chapter3-matching.tex --reformat 
     # http://jaxedit.com/mark/
-
     fixtex --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 --shortcite
 \end{comment}
 
@@ -809,30 +807,40 @@
         \FloatBarrier{}
 
         \begin{itemln}
-            \item \textbf{Plains zebras}. Our plains zebras dataset is an aggregate of several smaller datasets.
-            There is variation in how the data was collected and preprocessed. Some of the images are cropped to
-            the flank of the animal, while others are cropped to encompass the entire body. The constituent
-            datasets were collected in Kenya at several locations including Nairobi National Park, Sweetwaters, and
-            Ol Pejeta. More than $90\percent$ of the groundtruth generated for this dataset was assisted using the
-            matching algorithm. This dataset contains many imaging challenges including occlusion, viewpoint, pose,
-            quality, and time variation. There are some annotations in this dataset without quality or viewpoint
-            labelings and some images contain undetected animals. This data was collected between 2006 and 2015,
-            but the majority of the data was collected in 2012--2015.
+            \item \textbf{Plains zebras}.
+            Our plains zebras dataset is an aggregate of several smaller datasets.
+            There is variation in how the data was collected and preprocessed.
+            Some of the images are cropped to the flank of the animal, while others are cropped to encompass the
+              entire body.
+            The constituent datasets were collected in Kenya at several locations including Nairobi National
+              Park, Sweetwaters, and Ol Pejeta.
+            More than $90\percent$ of the groundtruth generated for this dataset was assisted using the matching
+              algorithm.
+            This dataset contains many imaging challenges including occlusion, viewpoint, pose, quality, and time
+              variation.
+            There are some annotations in this dataset without quality or viewpoint labelings and some images
+              contain undetected animals.
+            This data was collected between 2006 and 2015, but the majority of the data was collected in
+              2012--2015.
 
-            \item \textbf{Grévy's zebras}. This is another aggregated dataset. The original groundtruth for this
-            dataset was generated independently of the matching algorithm, however the matching algorithm revealed
-            several groundtruth errors that have since been corrected. The Grévy's dataset was collected in Mpala,
-            Kenya. Most of the annotations in this database have been cropped to the animal's flank. This dataset
-            contains a moderate degree of pose and viewpoint variation as well as occlusion. This data was
-            collected between 2003 and 2012, but the majority was collected in 2011 and 2012.
+            \item \textbf{Grévy's zebras}.
+            This is another aggregated dataset.
+            The original groundtruth for this dataset was generated independently of the matching algorithm,
+              however the matching algorithm revealed several groundtruth errors that have since been corrected.
+            The Grévy's dataset was collected in Mpala, Kenya.
+            Most of the annotations in this database have been cropped to the animal's flank.
+            This dataset contains a moderate degree of pose and viewpoint variation as well as occlusion.
+            This data was collected between 2003 and 2012, but the majority was collected in 2011 and 2012.
 
-            \item \textbf{Masai giraffes}. These images of Masai giraffes were all taken in Nairobi National Park
-            during the \GZC{} between February 20, 2015 and March 2, 2015. All groundtruth was established using
-            the matching algorithm followed by manual verification. This dataset contains a high degree of pose and
-            viewpoint variation, as well as occlusion. Because of their long necks, it is difficult to ensure that
-            only a single giraffe appears in each annotation. This results in many \glossterm{photobombs} --- pairs
-            of annotations where a background animal in one annotation matches the foreground animal in the other
-            --- when matching.
+            \item \textbf{Masai giraffes}.
+            These images of Masai giraffes were all taken in Nairobi National Park during the \GZC{} between
+              February 20, 2015 and March 2, 2015.
+            All groundtruth was established using the matching algorithm followed by manual verification.
+            This dataset contains a high degree of pose and viewpoint variation, as well as occlusion.
+            Because of their long necks, it is difficult to ensure that only a single giraffe appears in each
+              annotation.
+            This results in many \glossterm{photobombs} --- pairs of annotations where a background animal in one
+              annotation matches the foreground animal in the other --- when matching.
 
             \item \textbf{Humpback whales}.
             The humpback dataset was collected by FlukeBook~\cite{levenson_flukebook_2015} over nearly 15 years.
@@ -848,14 +856,20 @@
     \subsection{Baseline experiment}\label{sub:exptbase}
 
         This first experiment determines the accuracy of the identification algorithm using the baseline pipeline
-        configuration. The baseline pipeline configuration uses affine invariant features oriented using the
-        gravity vector, $\K\tighteq4$ as the number of feature correspondences assigned to each query feature, and
-        \nscoring{} (\nsum{}). In this test we control for several biases that may be introduced by carefully
-        selecting a subset of our datasets. We only use annotations that (1) are known (\ie{} have been assigned a
-        name), (2) are comparable to the species primary viewpoint (\eg{} left, front-left, and back-left for
-        plains zebras), (3) have not been assigned a quality of ``junk''. Furthermore, to account for the fact that
-        some \names{} contain more annotations than others, we constrain our data selection such that there is only
-        one correct exemplar in the database for each query annotation.
+          configuration.
+        The baseline pipeline configuration uses affine invariant features oriented using the gravity vector,
+          $\K\tighteq4$ as the number of feature correspondences assigned to each query feature, and \nscoring{}
+          (\nsum{}).
+        In this test we control for several biases that may be introduced by carefully selecting a subset of our
+          datasets.
+        We only use annotations that
+        (1) are known (\ie{} have been assigned a name),
+        (2) are comparable to the species primary viewpoint (\eg{} left, front-left, and back-left for plains
+          zebras),
+        (3) have not been assigned a quality of ``junk''.
+        Furthermore, to account for the fact that some \names{} contain more annotations than others, we
+          constrain our data selection such that there is only one correct exemplar in the database for each query
+          annotation.
 
         Of these annotations, we group them into encounters. For each encounter we sample one annotation with the
         highest quality. Names with only one encounter are added to the database as distractors. For the other

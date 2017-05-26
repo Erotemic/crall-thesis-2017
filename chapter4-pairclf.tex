@@ -409,26 +409,22 @@ If this was not the case, then we would include an additional partition for inco
       to fairly compare the two algorithms, we only consider positive probabilities from the match-state
       classifier.
 
-    Our first test will compare the ability of each algorithm to predict if a pair is positive or not.
+    In our experiments we will measure the raw number of classification errors and success in a confusion matrix,
+      and then summarize these numbers using standard classification metrics.
+    We will then compare our classifier to LNBNN in two ways.
+    First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
+    Second, we will compare the ability of each algorithm to predict if a pair is positive or not.
     We will look at the distribution of positive and non-positive scores as well as the ROC curves.
-    The second test will compare the original LNBNN ranking against a re-ranking using the positive
-      probabilities.
-    %We will 
-    Additionally, for each classifier we will measure the number of classification errors and success in a
-      confusion matrix.
-    We also inspect the importance of each feature dimension of our pairwise feature vector.
+    After comparing to LNBNN we inspect the importance of each feature dimension of our pairwise feature vector.
     Finally, we will present the several examples of failure cases to illustrate where improvements are can be
       made.
 
+    \FloatBarrier{}
     \subsection{Matching state}
 
         The primary classifier predicts the matching state (positive, negative, incomparable) of a pair of
         annotations. To demonstrate the effectiveness of our multiclass classifier we report the confusion matrix
         of class predictions for plains and Grévy's zebras in \cref{tbl:ConfusionMatch}.
-
-        \ConfusionMatch{}
-
-        \EvalMetricsMatch{}
 
         Using this confusion matrix we compute the average precision, recall, and Matthews correlation
           coefficient (MCC)~\cite{powers_evaluation_2011} for each class.
@@ -440,8 +436,29 @@ If this was not the case, then we would include an additional partition for inco
         % FIXME: ensure these numbers match the tables
         The MCC of $0.86$ for Grévy's zebras and $0.91$ for plains zebras, indicating that our classifiers have
           strong predictive power.
+
+        \ConfusionMatch{}
+
+        \EvalMetricsMatch{}
+
+        In addition to being strong predictors of match state, the positive probabilities from our classifiers
+          can be used to re-rank the ranked list produced by LNBNN.
+        Using the procedure from our experiments in~\cref{sec:rankexpt}, we issue each annotation in our testing
+          set as a query and obtain a ranked list.
+        Using the fraction of correct results found at each rank, we construct a cumulative match characteristic
+          (CMC) curve~\cite{decann_relating_2013}.
+        We denote this CMC curve as \pvar{ranking}.
+        Then we take ranked lists and compute match-state probabilities for each pair of query/database
+          annotations.
+        We use the positive probabilities to re-rank the lists and construct another CMC curve denoted as
+          \pvar{rank+clf}.
+        The results of this experiment are illustrated in~\cref{fig:ReRank}, and clearly demonstrate that the
+          number of correct matches returned at rank $1$ is improved by re-ranking with our pairwise classifier.
         
 
+        \ReRank{}
+        
+        \FloatBarrier{}
         \paragraph{Binary positive classification}
         Although the accuracy of multiclass predictions is important, we are most concerned with distinguishing
           positive pairs from the other classes.
@@ -456,8 +473,6 @@ If this was not the case, then we would include an additional partition for inco
         %that the pairwise classifier results in
         %interpretable scores
 
-        \PositiveHist{}
-
         We can make a more direct and precise comparison by considering both LNBNN scores and pairwise
           probabilities as binary classifiers.
         The separability of each method is measured using the area under an ROC curve.
@@ -465,9 +480,12 @@ If this was not the case, then we would include an additional partition for inco
         For plains zebras, the pairwise AUC of $0.96$ is better than the LNBNN AUC of $0.94$.
         For Grévy's zebras the pairwise AUC of $0.99$ is convincingly better than the LNBNN AUC of $0.90$.
 
+        \PositiveHist{}
+
         \PositiveROC{}
 
 
+        \FloatBarrier{}
         \paragraph{Feature importance}
 
         To gain an intuition for which features are most important we create a word cloud where the size of the
@@ -515,6 +533,7 @@ If this was not the case, then we would include an additional partition for inco
 
 
     %---------
+    \FloatBarrier{}
     \subsection{Photobomb state}
         We perform a subset of similar experiments to demonstrate the effectiveness of our photobomb classifier.
         The overall performance is given in the classification confusion matrix illustrated in
