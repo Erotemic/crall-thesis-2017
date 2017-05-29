@@ -253,13 +253,26 @@ This softens the impact of its binary threshold and adds robustness to viewpoint
 \FloatBarrier{}
 \subsection{The final pairwise feature vector}
 
-The pairwise feature vector is constructed by concatenating the local and the global vector.
+The final pairwise feature vector is constructed by concatenating the local and the global vector.
+This results in a $233$ dimensional vector containing information that a learning algorithm can use to predict if
+  a pair of annotations is positive, negative, or incomparable.
 The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
-This results in a final descriptor vector that can be quite large (thousands of dimensions) and some dimensions
-  might not be useful.
-Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
-This is done by considering the importance of each feature dimension as measured using the ``mean decrease
-  impurity'' (MDI)~\cite{louppe2014understanding}.
+
+
+%In the final pairwise feature vector, not all of the dimensions may be informative.
+%It is useful to prune these uninformative dimensions, when using random forest learning.
+%Too many feature dimensions can cause an otherwise informative dimension to be overlooked.
+
+%Because we are using a random forest as the learning algorithm, an excessive number of
+%feature dimensions correlation between feature dimensions
+
+%Correlation between 
+
+%This results in a final descriptor vector where  that can be quite large (thousands of dimensions) and some dimensions
+%  might not be useful.
+%Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
+%This is done by considering the importance of each feature dimension as measured using the ``mean decrease
+%  impurity'' (MDI)~\cite{louppe2014understanding}.
 
 %\PairFeatVec{}
 \begin{figure}
@@ -275,21 +288,23 @@ This is done by considering the importance of each feature dimension as measured
 \end{minted}
 \caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
 Example of a small pairwise feature vector containing local and global information.
-In practice the pairwise feature vectors include many more dimensions.
+In the constructed pairwise feature contains $233$ dimensions.
 }
 \label{fig:PairFeatVec}
 \end{figure}
 
-The MDI is a measure of feature importance that is computed during the training phase.
-As a decision tree is grown, the number of training samples of each class that reach a particular node are
-  recorded.
-This is used to compute the impurity of each node, which is the entropy of class labels.
-The fraction of total samples that reach a node is its weight.
-The weighted impurity decrease of a node is its weighted impurity minus the weighted sum of its children's
-  impurity.
-The MDI for a single feature dimension in a single tree is computed as the weighted impurity decrease of all
-  nodes using that feature.
-The overall MDI for the forest is obtained by averaging over all trees.
+%The importance of each feature dimension is measured using the ``mean decrease
+%  impurity'' (MDI)~\cite{louppe2014understanding}.
+%The MDI is a measure of feature importance that is computed during the training phase.
+%As a decision tree is grown, the number of training samples of each class that reach a particular node are
+%  recorded.
+%This is used to compute the impurity of each node, which is the entropy of class labels.
+%The fraction of total samples that reach a node is its weight.
+%The weighted impurity decrease of a node is its weighted impurity minus the weighted sum of its children's
+%  impurity.
+%The MDI for a single feature dimension in a single tree is computed as the weighted impurity decrease of all
+%  nodes using that feature.
+%The overall MDI for the forest is obtained by averaging over all trees.
 
 
 \section{Learning the match-state classifier}\label{sec:learnclf}
@@ -416,7 +431,7 @@ If this was not the case, then we would include an additional partition for inco
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
     Second, we will compare the ability of each algorithm to predict if a pair is positive or not.
     We will look at the distribution of positive and non-positive scores as well as the ROC curves.
-    After comparing to LNBNN, we inspect the importance of each feature dimension of our pairwise feature vector.
+    %After comparing to LNBNN, we inspect the importance of each feature dimension of our pairwise feature vector.
     Finally, we will present the several examples of failure cases to illustrate where improvements are can be
       made.
 
@@ -486,26 +501,25 @@ If this was not the case, then we would include an additional partition for inco
         \PositiveROC{}
 
 
-        \FloatBarrier{}
-        \paragraph{Feature importance}
+        %\FloatBarrier{}
+        %\paragraph{Feature importance}
 
-        To gain an intuition for which features are most important we create a word cloud where the size of the
-          text is proportional to the importance of the feature.
-        The word cloud is illustrated in \cref{fig:MatchWordCloud}.
-        The numeric importance of the top features is recorded in \cref{tbl:ImportantMatchFeat}.
+        %To gain an intuition for which features are most important we create a word cloud where the size of the
+        %  text is proportional to the importance of the feature.
+        %The word cloud is illustrated in \cref{fig:MatchWordCloud}.
+        %The numeric importance of the top features is recorded in \cref{tbl:ImportantMatchFeat}.
 
-        For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
-          most important features.
-        This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
-          keypoint scale helps determine if matches are being made on a coarse level (\eg{} matching general zebra
-          shapes) or a fine detailed level (\ie{} capturing the smaller features that actually distinguish
-          individuals).
-        For Grévy's zebras, different statistics about the ratio measures dominate.
+        %For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
+        %  most important features.
+        %This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
+        %  keypoint scale helps determine if matches are being made on a coarse level (\eg{} matching general zebra
+        %  shapes) or a fine detailed level (\ie{} capturing the smaller features that actually distinguish
+        %  individuals).
+        %For Grévy's zebras, different statistics about the ratio measures dominate.
 
 
-
-        \MatchWordCloud{}
-        \ImportantMatchFeat{}
+        %\MatchWordCloud{}
+        %\ImportantMatchFeat{}
 
         \paragraph{Failure cases}
 
@@ -546,19 +560,35 @@ If this was not the case, then we would include an additional partition for inco
           power.
         For Grévy's zebras the MCC of $0.31$ demonstrates weak but significant predictive power.
 
-        As the important features in~\cref{tbl:ImportantPBFeat} illustrate, the photobomb classifier seems to
-          rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
-          when taking images of several animals in a small time period.
-        The classifier also makes use of the spatial position of the feature correspondences, which can be
-          indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
-        This suggests that with more training data the classifier could be trained reliably used to predict when
-          a match is a photobomb.
+        While the small number of training examples makes it difficult to draw conclusions, there are two
+          observations we can make.
+        First, plains zebras have more photobomb examples than Grévy's zebras, and the photobomb-state MCC is
+          also much higher for that dataset.
+        This suggests, that with more training data the quality of the classifier could improve considerably.
+        The second observation is that the number of false negatives is lower than both the number of true
+          positives and false positives --- \ie{} the precision of the classifier is high.
+        This means that the classifier correctly flags most photobomb cases it considers.
+        Therefore, it can be used to prevent the match-state classifier from automatically classifying these
+          pairs as positive.
+        However, in its current state, it also incorrectly prevents automatic classification of a significant
+          number of pairs.
+
+        %The overall quality of the secondary classifier is not ideal for both species, but the small amount of
+        %  training data makes it difficult to draw conclusions from these experiments.
+
+        %As the important features in~\cref{tbl:ImportantPBFeat} illustrate, the photobomb classifier seems to
+        %  rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
+        %  when taking images of several animals in a small time period.
+        %The classifier also makes use of the spatial position of the feature correspondences, which can be
+        %  indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
+        %This suggests that with more training data the classifier could be trained reliably used to predict when
+        %  a match is a photobomb.
 
         \ConfusionPhotobomb{}
 
         \EvalMetricsPhotobomb{}
 
-        \ImportantPBFeat{}
+        %\ImportantPBFeat{}
 
     \FloatBarrier{}
     \subsection{Classifier experiment conclusions}
