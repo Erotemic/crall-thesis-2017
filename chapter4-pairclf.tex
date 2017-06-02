@@ -453,19 +453,34 @@ Note the summary statistics in this example are all computed for correspondences
 
     We evaluate the pairwise classifiers on two datasets, one of plains zebras and the other of Grévy's zebras.
     These datasets were previously described in \cref{sub:datasets}.
-    When interpreting the results of these experiments it is important to note that the plains zebra dataset
-      contains only $253$ labeled incomparable cases and $285$ labeled photobombs, while the Grévy's zebra dataset
-      contains $1$ labeled incomparable cases and $85$ labeled photobombs.
-    Therefore, our experiments will primarily focus on the important question of separating positive from
-      negative matching states.
+    We will use these datasets to sample a set of annotation pairs, from which we will train and test our
+      classifiers.
+    The plains zebra dataset has  $1202$ names with $5720$ annotations to sample from, and the Grevy's zebras
+      dataset has $771$ names with $2283$ annotations.
+    For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}.
+    This results in a sample of $47312$ pairs for plains zebras, with $16583$ positive pairs, $30376$ negative
+      pairs, and $353$ incomparable pairs.
+    For Grévy's zebra we sample $18010$ pairs, where $5002$ are positive, $13008$ are negative, and $0$ are
+      incomparable.
+    Because our datasets only have a small number of labeled incomparable and photobomb cases, our experiments
+      will primarily focus on the important question of separating positive from negative matching states.
+    %When interpreting the results of these experiments it is important to note that the plains zebra dataset
+    %  contains only $54$ explicitly labeled incomparable cases and $286$ labeled photobombs, while the Grévy's
+    %  zebra dataset contains $0$ labeled incomparable cases and $79$ labeled photobombs.
+    %For plains zebras we can increase the number of incomparable cases to $353$ using by using viewpoint
+    %  heuristics.
+    %Therefore, our experiments will primarily focus on the important question of separating positive from
+    %  negative matching states.
 
-    For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}. Each pair is
-    associated with a ground-truth matching state label of either positive, negative, or incomparable.
-    Additionally, each pair is also labeled as either a photobomb or not a photobomb. For each pair we construct a
-    pairwise feature vector as described in \cref{sec:pairfeat}. We have found that, for plains zebras, it is
-    important to use orientation augmentation when computing one-vs-one matches. In this case we should not use the
-    second nearest neighbor as the normalizer for the ratio test, because the augmented keypoints will have similar
-    descriptors. We account for this by using the 3rd nearest neighbor as the normalizer instead.
+    After sampling, we have a set of annotation pairs and each is associated with a ground-truth matching state
+      label of either positive, negative, or incomparable.
+    Additionally, each pair is also labeled as either a photobomb or not a photobomb.
+    For each pair we construct a pairwise feature vector as described in \cref{sec:pairfeat}.
+    We have found that, for plains zebras, it is important to use orientation augmentation when computing
+      one-vs-one matches.
+    In this case we should not use the second nearest neighbor as the normalizer for the ratio test, because the
+      augmented keypoints will have similar descriptors.
+    We account for this by using the $3\rd$ nearest neighbor as the normalizer instead.
 
     We split this dataset of labeled annotation pairs into multiple disjoint training and testing sets using
     grouped stratified $k$-fold cross validation (we use $3$ folds). First, we enforce that each sample (a pair of
