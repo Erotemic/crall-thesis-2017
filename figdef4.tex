@@ -73,8 +73,8 @@ because we can establish a distinctive correspondence in the face.
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
@@ -94,7 +94,7 @@ scores the learned probabilities exhibit better separability.
 \newcommand{\PositiveROC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/roc_match_state.png}\caption{Plains zebra}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_match_state.png}\caption{Plains zebra}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_match_state.png}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{PositiveROC}Positive match-state ROC experiment]{\caplbl{PositiveROC}
 % ---
@@ -125,7 +125,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 \begin{comment}
     python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=match_state
-    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=match_state
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_Master1 --task-key=match_state
 \end{comment}
 \newcommand{\ConfusionMatch}{
 \begin{table}[b]
@@ -138,7 +138,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionMatch}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/confusion_match_state.tex}\caption{Plains zebras match-state confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_match_state.tex}\caption{Plains zebras match-state confusion}\end{subtable} %
     \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy zebras match-state confusion}\end{subtable} %
 \end{table}
 }
@@ -154,14 +154,14 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
     \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy zebras match-state metrics}\end{subtable} %
 \end{table}
 }
 
 \begin{comment}
     python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db GZ_Master1 --task-key=photobomb_state
-    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_PB_RF_TRAIN --task-key=photobomb_state
+    python -m ibeis.scripts.thesis ExptChapter4.write_metrics --db PZ_Master1 --task-key=photobomb_state
 \end{comment}
 \newcommand{\ConfusionPhotobomb}{
 \begin{table}[h]
@@ -172,7 +172,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionPhotobomb}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion}\end{subtable} %
     \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion}\end{subtable} %
 \end{table}
 }
@@ -187,7 +187,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsPhotobomb}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_PB_RF_TRAIN/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
     \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy zebras photobomb metrics}\end{subtable} %
 \end{table}
 }
@@ -195,7 +195,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 
 \begin{comment}
-    python -m ibeis.scripts.script_vsone report_classifier_importance --db PZ_PB_RF_TRAIN \
+    python -m ibeis.scripts.script_vsone report_classifier_importance --db PZ_Master1 \
     --dpath ~/latex/crall-thesis-2017/ --save "figures4/wc_pz_clipwhite2.png" \
     --clipwhite --diskshow
 
@@ -207,7 +207,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 \newcommand{\MatchWordCloud}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
 \caption[\caplbl{MatchWordCloud}Word cloud of important features for match-state prediction]{\caplbl{MatchWordCloud}
 % ---
@@ -256,7 +256,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \toprule
             dimension & importance\\
             \midrule
-            \input{figures4/PZ_PB_RF_TRAIN/feat_importance_match_state.tex}
+            \input{figures4/PZ_Master1/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
         \caption{Plains zebra}
@@ -294,7 +294,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \begin{tabular}{l c}
                 \toprule dimension & importance\\
                 \midrule
-                \input{figures4/PZ_PB_RF_TRAIN/feat_importance_photobomb_state.tex}
+                \input{figures4/PZ_Master1/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
             \caption{Plains zebra phototomb importance}
@@ -323,7 +323,7 @@ However, there is a point at which reducing the number of feature dimensions sig
 \newcommand{\PairFailIN}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Incomparable_Negative_383_503.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_383_503.jpg}
 \caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
 % ---
 The pair is incomparable, but the classifier predicts negative due to the small amount of incomparable training
@@ -337,7 +337,7 @@ data available.
 \newcommand{\PairFailNP}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Negative_Positive_424_465.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Negative_Positive_424_465.jpg}
 \caption[\caplbl{PairFailNP}Negative pairwise failure case]{\caplbl{PairFailNP}
 % ---
 This pair is negative, but the classifier predicts positive because of
@@ -353,7 +353,7 @@ patterns that do not match.
 \newcommand{\PairFailPN}{
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/cases_match_state/fail_Positive_Negative_63_72.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_63_72.jpg}
 \caption[\caplbl{PairFailPN}Positive pairwise failure case]{\caplbl{PairFailPN}
 % ---
 The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.

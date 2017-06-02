@@ -217,48 +217,63 @@ Given these definitions, the measurements we consider are:
 \begin{itemln}
 
     \item Foregroundness score:
-    This is the geometric average of the features' foregroundness measures, $\sqrt{w_i w_j}$ along with the
-      individual foregroundness weights $w_i$ and $w_j$.
-    This adds $1$ measurement for each correspondence.
+    This is the geometric average of the features' foregroundness measures, $\sqrt{w_i w_j}$.
+    %along with the individual foregroundness weights $w_i$ and $w_j$.
+    This adds $1$ measurement, denoted as $\tt{fgweight}$, for each correspondence.
 
     \item Correspondence distance:
     This is the Euclidean distance between the feature correspondence, $\elltwo{\desc_i - \desc_j} / Z$.
     This serves as a measure of visual similarity between the features.
     (Recall $Z\tighteq\sqrt{2}$ for SIFT descriptors).
-    This adds $1$ measurement for each correspondence.
+    This adds $1$ measurement, denoted as $\tt{match\_dist}$, for each correspondence.
 
     \item Normalizer distance:
     This distance between a matching descriptor and the normalizing descriptor, %
         $\elltwo{\desc_c - \descnorm_c} / Z$.
         This serves as a measure of visual distinctiveness of the features.
     We also include a weighted version of this measurement by multiplying it with the foregroundness score.
-    This adds $2$ measurements for each correspondence.
+    This adds $2$ measurements, denoted as $\tt{norm\_dist}$ and $\tt{weighted\_norm\_dist}$, for each correspondence.
 
     \item Ratio score:
-    This is the ratio between the distance between the correspondence, and the distance to the normalizer, %
-    $\elltwo{\desc_i - \desc_j} / \elltwo{\desc_c - \descnorm_c}$.
+    This is the one minus the ratio between the distance between the correspondence, and the distance to the
+      normalizer, %
+    $1 - \elltwo{\desc_i - \desc_j} / \elltwo{\desc_c - \descnorm_c}$.
     This weights the similarity against the distinctiveness.
-    Note that this is the same measure used to filter correspondences in the ratio test.
+    Note that this is one minus the measure used to filter correspondences in the ratio test.
+    We subtract the original ratio value from one in order to obtain a score that varies directly with
+      distinctiveness.
     We also include a weighted version of this measurement by multiplying it with the foregroundness score.
-    This adds $2$ measurements for each correspondence.
+    This adds $2$ measurements, denoted as $\tt{ratio\_score}$ and $\tt{weighted\_ratio\_score}$, for each correspondence.
     %Note, we subtract the ratio from one to ensure that larger score are better.
-
-    We also include a weighted version of the ratio and normalizer distance by multiplying this weight by the
-      respective value.
+    %We also include a weighted version of the ratio and normalizer distance by multiplying this weight by the
+    %  respective value.
         
-    \item Spatial verification error: This is the error in location, scale, and orientation, $( %
-        \Delta \pt_{i, j}, %
-        \Delta \scale_{i, j}, %
-        \Delta \ori_{i, j})$, as measured using~\cref{eqn:inlierdelta}.
-    This adds $3$ measurements for each correspondence.
+    \item Spatial verification error:
 
-    \item Keypoint scales: indicating the size of each keypoint in its annotation $\sigma_i$ and $\sigma_j$.
-        This is measured for both features in a correspondence.
-    This adds $2$ measurements for each correspondence.
+        This is the error in location, scale, and orientation, $( %
+            \Delta \pt_{i, j}, %
+            \Delta \scale_{i, j}, %
+            \Delta \ori_{i, j})$, as measured using~\cref{eqn:inlierdelta}.
+            This adds $3$ measurements, denoted as $\tt{sver\_err\_xy}$, $\tt{sver\_err\_scale}$, and
+              $\tt{sver\_err\_ori}$, for each correspondence.
 
-    \item Keypoint relative locations: the xy-locations of the keypoints divided by the width and height of the
-      annotation $x_i / w_{\qaid}, y_i / h_{\qaid}$ and $x_i / w_{\daid}, y_j / h_{\daid}$.
-    This adds $4$ measurements for each correspondence.
+    \item Keypoint relative locations:
+
+        These are the xy-locations of the keypoints divided by the width and height of the annotation  %
+        $x_i / w_{\qaid}, y_i / h_{\qaid}$ and $x_i / w_{\daid}, y_j / h_{\daid}$.
+        This adds $4$ measurements, denoted as $\tt{norm\_x1}$, $\tt{norm\_y1}$, $\tt{norm\_x2}$, and
+          $\tt{norm\_y2}$, for each correspondence.
+        Note that unlike the global quality and viewpoint measures, we do not make an effort to account for the
+          arbitrary ordering of annotations when recording these local features.
+        This is to preserve the association between the spatial dimensions of each annotation.
+        The same is true for the next feature.
+
+    \item Keypoint scales:
+
+        These are the keypoint scale parameters $\sigma_i$ and $\sigma_j$ that indicate the size of each keypoint
+          with respect to its annotation.
+        This adds $2$ measurements, denoted as $\tt{scale1}$ and $\tt{scale2}$, for each correspondence.
+
 \end{itemln}
 
 Once these $15$ measurements have been made for each keypoint correspondence we summarize them using summary
@@ -278,6 +293,8 @@ As previously noted this process is repeated for multiple threshold values of th
 In our implementation we use values of $0.5$, $0.6$, $0.7$, and $0.8$.
 Once we have assigned feature correspondences, we filter these correspondences using the ratio test with the
   maximum value of the ratio threshold.
+Note that these threshold points are with respect to the original ratio values, and not the ratio scores used in
+  the feature vector.
 Then the remaining feature correspondences are spatially verified as normal.
 At this point, we create a group of correspondences for each value of the ratio threshold.
 The member of each group are all correspondences with a ratio score less than that value.
