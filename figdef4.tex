@@ -23,6 +23,28 @@
 %\end{figure}
 %}
 
+\newcommand{\PairDBStats}{
+\begin{table}[b]
+    \centering
+    \caption[\caplbl{PairDBStats}Database statistics for the pairwise experiment]{\caplbl{PairDBStats}
+    % ---
+    Database statistics for the pairwise experiment.
+    Starting with a database of annotations with name labels, we sample a set of annotation pairs to evaluate our
+      pairwise classifiers with.
+    % ---
+    }
+    \label{tbl:PairDBStats}
+    \begin{tabular}{lrrrrrr}
+    \toprule
+           Database & {Names} & {Annots} & {Positive} & {Negative} & {Incomparable} & {Photobombs} \\
+    \midrule
+      plains zebras &            1202 &             5720 &   16583   & 30376    & 353  & 286 \\
+     Grévy's zebras &             771 &             2283 &   5002    & 13008    & 0    & 76  \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+}
+
 
 \newcommand{\MatchStateExample}{
 \begin{figure}[h] \centering
@@ -325,6 +347,9 @@ However, there is a point at which reducing the number of feature dimensions sig
 \centering
 \includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_6932_13253.jpg}
 \caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_16198_16329.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_16240_16255.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_16268_16317.jpg
 % ---
 The pair is incomparable, but the classifier predicts negative due to the small amount of incomparable training
 data available.
@@ -354,6 +379,13 @@ patterns that do not match.
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_63_72.jpg}
+
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_737_819.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_802_803.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_1543_8062.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/GZ_Master1/cases_match_state/fail_Positive_Negative_1842_2586.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/GZ_Master1/cases_match_state/fail_Positive_Negative_1912_3102.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/GZ_Master1/cases_match_state/fail_Positive_Negative_2587_2778.jpg
 \caption[\caplbl{PairFailPN}Positive pairwise failure case]{\caplbl{PairFailPN}
 % ---
 The pair is positive, but the classifier predicts negative because of occlusion and viewpoint variations.
@@ -363,18 +395,25 @@ The pair is positive, but the classifier predicts negative because of occlusion 
 \end{figure}
 }
 
-\newcommand{\LabelErrors}{
+\newcommand{\MatchLabelErrors}{
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Incomparable_5005_5245.jpg}
 \includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Incomparable_16192_16292.jpg}
-\caption[\caplbl{LabelErrors}Incomparable pairwise failure case]{\caplbl{LabelErrors}
+\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_239_3745.jpg}
+\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_239_3745.jpg}
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_4197_4771.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Positive_Negative_4220_5233.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/PZ_Master1/cases_match_state/fail_Incomparable_Negative_646_688.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/GZ_Master1/cases_match_state/fail_Negative_Positive_1535_2549.jpg
+file:///home/joncrall/latex/crall-thesis-2017/figures4/GZ_Master1/cases_match_state/fail_Negative_Positive_1757_2953.jpg
+\caption[\caplbl{MatchLabelErrors}Incomparable pairwise failure case]{\caplbl{MatchLabelErrors}
 % ---
 Several failure cases are due to existing errors in the database. In these examples the classifier 
 picks the correct answer even though the groundtruth is incorrect.
 % ---
 }
-\label{fig:LabelErrors}
+\label{fig:MatchLabelErrors}
 \end{figure}
 }
 

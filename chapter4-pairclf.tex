@@ -205,6 +205,12 @@ For the simplicity of the description we consider just one ratio threshold for n
 Spatial verification~\cite{philbin_object_2007} is applied to further refine the correspondences.
 This results in a richer set of correspondences between annotations $\qaid$ and $\daid$ than would be found using
   the ranking algorithm.
+We have found that, for some species like plains zebras, it is important to use keypoint orientation heuristic
+  described in \cref{sec:annotrepr} when computing one-vs-one matches.
+This heuristic causes each keypoint to extract $3$ descriptors instead of $1$.
+In this case we should not use the second nearest neighbor as the normalizer for the ratio test, because the
+  augmented keypoints may have similar descriptors.
+We account for this by using the $3\rd$ nearest neighbor as the normalizer instead.
 After the one-vs-one matching stage, measurements are made at each feature correspondence.
 
 Consider a feature correspondence between two features $i$ and $j$ with descriptors $\desc_i$ and $\desc_j$.
@@ -290,28 +296,8 @@ A final step we have found useful is to append an extra dimension simply indicat
 So, in total there are $61$ summary statistics computed for a set of feature correspondences.
 
 As previously noted this process is repeated for multiple threshold values of the ratio test.
-In our implementation we use values of $0.5$, $0.6$, $0.7$, and $0.8$.
-Once we have assigned feature correspondences, we filter these correspondences using the ratio test with the
-  maximum value of the ratio threshold.
-Note that these threshold points are with respect to the original ratio values, and not the ratio scores used in
-  the feature vector.
-Then the remaining feature correspondences are spatially verified as normal.
-At this point, we create a group of correspondences for each value of the ratio threshold.
-The member of each group are all correspondences with a ratio score less than that value.
-The local feature vector is constructed by applying summary statistics to each of these groups and then
-  concatenating the results, so in essence the size of the local feature vector is multiplied by the number of
-  ratio thresholds used.
-Thus the total number of local measurements is $4 \times 61 = 244$.
-
-% NOTE:
-%Once we have assigned feature correspondences, we create a group of correspondences for each ratio value.
-%The member of each group are all correspondences with a ratio score less than that value.
-%Each group is then spatially verified, and the union of the groups is the final set of correspondences.
-%When measuring spatial verification errors, each keypoint may be associated with more than one.
-%Therefore, we use the minimum error over all values of the ratio threshold.
-
-The reason we decided to use multiple ratio thresholds is because we noticed that some positive annotation pairs
-  had all of their correspondences filtered by the ratio test, but if we increased the threshold then the overall
+The reason we use multiple ratio thresholds is because we noticed that some positive annotation pairs had all of
+  their correspondences filtered by the ratio test, but if we increased the threshold then the overall
   classification performance decreased.
 Including larger values of the threshold ensures that most pairs of annotations generate at least a few
   correspondences, while smaller threshold ensure that information in highly distinctive correspondences are
@@ -319,13 +305,33 @@ Including larger values of the threshold ensures that most pairs of annotations 
 This softens the impact of the ratio test's binary threshold and adds robustness to viewpoint and pose variations
   that may cause correspondences to appear slightly less distinctive.
 
+In our implementation we use the ratio threshold values of $0.625$ and $0.8$.
+Once we have assigned feature correspondences, we create a group of correspondences for each ratio value.
+The member of each group are all correspondences with a ratio score less than that value.
+Each group is then spatially verified, and the union of the groups is the final set of correspondences.
+When measuring spatial verification errors, each keypoint may be associated with more than one.
+Therefore, we use the minimum spatial verification error over all values of the ratio threshold.
+%Once we have assigned feature correspondences, we filter these correspondences using the ratio test with the
+  %maximum value of the ratio threshold.
+%Note that these threshold points are with respect to the original ratio values, and not the ratio scores used in
+  %the feature vector.
+%Then the remaining feature correspondences are spatially verified as normal.
+%At this point, we create a group of correspondences for each value of the ratio threshold.
+%The member of each group are all correspondences with a ratio score less than that value.
+The local feature vector is constructed by applying summary statistics to each of these groups and then
+  concatenating the results, so in essence the size of the local feature vector is multiplied by the number of
+  ratio thresholds used.
+Thus the total number of local measurements is $2 \times 61 = 122$.
+
+% NOTE:
+
 \FloatBarrier{}
 \subsection{The final pairwise feature vector}
 
 The final pairwise feature vector is constructed by concatenating the local and the global vector.
-This results in a $253$ dimensional vector containing information that a learning algorithm can use to predict if
+This results in a $131$ dimensional vector containing information that a learning algorithm can use to predict if
   a pair of annotations is positive, negative, or incomparable.
-Of these dimensions, $9$ are from global measurements and $244$ are from local measurements.
+Of these dimensions, $9$ are from global measurements and $122$ are from local measurements.
 The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector.
 
 %\PairFeatVec{}
@@ -336,16 +342,16 @@ The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector
                  ('global(qual_delta)',  nan),
                  ('global(gps_delta)',   5.79),
                  ('len(matches[ratio < .8])',        20),
-                 ('sum(ratio[ratio < .8])', 10.05),
-                 ('mean(ratio[ratio < .8])',         0.50),
-                 ('std(ratio[ratio < .8])',          0.09)])
+                 ('sum(ratio_score[ratio < .8])', 10.05),
+                 ('mean(ratio_score[ratio < .8])', 0.50),
+                 ('std(ratio_score[ratio < .8])',  0.09)])
 \end{minted}
 \caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
 % ---
 Example of a small pairwise feature vector containing local and global information.
-In the constructed pairwise feature contains $253$ dimensions.
-Note the summary statistics in this example are all computed for correspondences with a ratio measurement that is
-  less than $0.8$.
+In the constructed pairwise feature contains $153$ dimensions.
+Note the summary statistics in this example are all computed for correspondences with a ratio value that is less
+  than $0.8$.
 % ---
 }
 \label{fig:PairFeatVec}
@@ -451,79 +457,92 @@ Note the summary statistics in this example are all computed for correspondences
 
 \section{Pairwise classification experiments}\label{sec:pairexpt}
 
-    We evaluate the pairwise classifiers on two datasets, one of plains zebras and the other of Grévy's zebras.
-    These datasets were previously described in \cref{sub:datasets}.
-    We will use these datasets to sample a set of annotation pairs, from which we will train and test our
-      classifiers.
-    The plains zebra dataset has $1202$ names with $5720$ annotations to sample from, and the Grevy's zebras
-      dataset has $771$ names with $2283$ annotations.
-    For each dataset we choose a sample of annotation pairs as detailed in \cref{sec:learnclf}.
-    This results in a sample of $47312$ pairs for plains zebras, with $16583$ positive pairs, $30376$ negative
-      pairs, and $353$ incomparable pairs.
-    For Grévy's zebra we sample $18010$ pairs, where $5002$ are positive, $13008$ are negative, and $0$ are
-      incomparable.
-    Because our datasets only have a small number of labeled incomparable and photobomb cases, our experiments
-      will primarily focus on the important question of separating positive from negative matching states.
+
+    We evaluate the pairwise classifiers on two datasets, one of plains zebras and the another of Grévy's zebras
+      with $5720$ and $2283$ annotations, respectively.
+    The details of these datasets were previously described in \cref{sub:datasets}.
+    To evaluate our pairwise classifier, we choose a sample of annotation pairs from these datasets as detailed
+      in \cref{sec:learnclf}.
+    This results in $47312$ pairs for plains zebras and $18010$ pairs for Grévy's zebras.
+    The number of pairs per class is detailed in \cref{tbl:PairDBStats}.
+    Note that our datasets only contain a small number of labeled incomparable and photobomb cases.
+    %This is because these classes must be explicitly labeled between pairs of annotations, whereas positive and
+    %  negative labels can be inferred depending on if a pair of annotation shares a name label.
+    For Grévy's zebras, there are no incomparable cases because all annotations have a right-side viewpoint.
+    Therefore, the primary focus of our experiments will be separating positive from negative matching states.
+
+    \PairDBStats{}
+
     %When interpreting the results of these experiments it is important to note that the plains zebra dataset
     %  contains only $54$ explicitly labeled incomparable cases and $286$ labeled photobombs, while the Grévy's
     %  zebra dataset contains $0$ labeled incomparable cases and $79$ labeled photobombs.
     %For plains zebras we can increase the number of incomparable cases to $353$ using by using viewpoint
     %  heuristics.
-    %Therefore, our experiments will primarily focus on the important question of separating positive from
-    %  negative matching states.
 
     After sampling, we have a set of annotation pairs and each is associated with a ground-truth matching state
       label of either positive, negative, or incomparable.
     Additionally, each pair is also labeled as either a photobomb or not a photobomb.
     For each pair we construct a pairwise feature vector as described in \cref{sec:pairfeat}.
-    We have found that, for plains zebras, it is important to use orientation augmentation when computing
-      one-vs-one matches.
-    In this case we should not use the second nearest neighbor as the normalizer for the ratio test, because the
-      augmented keypoints will have similar descriptors.
-    We account for this by using the $3\rd$ nearest neighbor as the normalizer instead.
 
     We split this dataset of labeled annotation pairs into multiple disjoint training and testing sets using
-    grouped stratified $k$-fold cross validation (we use $3$ folds). First, we enforce that each sample (a pair of
-    annotations) within the same name or between the same two names must be placed in the same group. Then, the
-    cross validation is constrained such that all samples in a group are either in the training or testing set for
-    each split. In other words, this means that a specific individual cannot appear in both the training and
-    testing set, which helps ensure that our results will generalize to new individuals.
+      grouped stratified $k$-fold cross validation (we use $3$ folds).
+    Note that this grouped variant is slightly different than normal stratified $k$-fold cross validation.
+    First, we enforce that each sample (a pair of annotations) within the same name or between the same two names
+      must be placed in the same group.
+    Then, the cross validation is constrained such that all samples in a group are either in the training or
+      testing set for each split.
+    In other words, this means that a specific individual cannot appear in both the training and testing set.
+    The same is true for specific pairs of individuals.
+    By grouping our cross-validation folds in this way, we ensure that the classifier cannot exploit individual
+      specific information to improve its predictions on the test set.
+    This increases our confidence that our results will generalize to new individuals.
 
-    For each cross validation split, we train the matching state and photobomb-state classifier on the training set
-    and then predict probabilities on each sample in the testing set. Because the cross validation is $k$-fold and
-    the splits are disjoint, we make a single prediction for each sample for each classifier. The result is that
-    each sample in our dataset will be assigned unbiased probabilities.
+    For each cross validation split, we train the matching state and photobomb-state classifier on the training
+      set and then predict probabilities on each sample in the testing set.
+    Because the cross validation is $k$-fold and the splits are disjoint, each sample appears in a testing set
+      exactly once.
+    The result is that each sample in our dataset will be assigned match-state and photobomb-state probabilities
+      exactly once.
+    Because each prediction was made using classifiers trained on disjoint data, the predictions will be
+      unbiased.
+    Thus, each sample in the dataset has a match-state and photobomb-state probability.
+    Thus, we can use all sample pairs to evaluate the performance of each classifier.
 
-    We will compare these predictions with the scores generated by LNBNN, so we must additionally generate an
-      LNBNN score for each pair.
-    This is done by issuing each annotation as a query.
+    We will compare these predicted match-state probabilities to the scores generated by LNBNN.
+    To do this we must generate an LNBNN score for each pair in our sample.
+    This is done by first taking unique set of annotations in the sample of pairs.
+    Then, we use these annotations as a database.
+    We issue each annotation as a query, taking case to ignore self-matches.
     Any (undirected) pair in our dataset that appears as a query / database pair in the ranked list is assigned
       that LNBNN score.
-    If a pair appears twice in the ranked list, then the maximum of the two scores is used.
-    Any pair that does not appear in the ranked list (because LNBNN failed to return it) is implicitly given a
+    If the same pair is in two ranked lists, then the maximum of the two scores is used.
+    Any pair that does not appear in any ranked list (because LNBNN failed to return it) is implicitly given a
       score of zero.
-
-    We have now predicted match-state probabilities, photobomb-state probabilities, and one-vs-many LNBNN scores
-      for each pair in our dataset.
-    We now analyze the results for each classifier in the following subsections.
-    Our tests will compare the match-state classifier and the LNBNN ranking algorithm.
-    However, note that the scores from the LNBNN ranking algorithm can only be used to distinguish positive cases
-      from non-positive pairs.
+    Note that the scores from the LNBNN ranking algorithm can only be used to distinguish positive cases from
+      non-positive pairs.
     Unlike the match-state classifier, the LNBNN scores cannot be used to tell if a non-positive case is negative
       or incomparable.
     Later in \cref{chap:graphid} it will be vitally important to distinguish these cases, but for now, in order
       to fairly compare the two algorithms, we only consider positive probabilities from the match-state
       classifier.
 
+    We have now predicted match-state probabilities, photobomb-state probabilities, and one-vs-many LNBNN scores
+      for each pair in our dataset.
+    We now analyze the results for each classifier in the following subsections.
     In our experiments we will measure the raw number of classification errors and success in a confusion matrix,
       and then summarize these numbers using standard classification metrics.
-    We will then compare our classifier to LNBNN in two ways.
+    For each classifier we will present several examples of failure cases to illustrate where improvements are
+      can be made.
+    We will also inspect the importance of each feature dimension of our pairwise feature vector.
+    For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
+      vector.
+
+    When we evaluate the match-state classifier we will compare it to LNBNN in two ways.
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
     Second, we will compare the ability of each algorithm to predict if a pair is positive or not.
     We will look at the distribution of positive and non-positive scores as well as the ROC curves.
-    After comparing to LNBNN, we inspect the importance of each feature dimension of our pairwise feature vector.
-    Finally, we will present the several examples of failure cases to illustrate where improvements are can be
-      made.
+
+    After comparing to LNBNN, 
 
     \FloatBarrier{}
     \subsection{Matching state}
@@ -539,8 +558,7 @@ Note the summary statistics in this example are all computed for correspondences
           distribution.
         An MCC ranges from $+1$, indicating perfect predictions, to $-1$, indicates pathological inverse
           predictions, with $0$ being random uninformed predictions.
-        % FIXME: ensure these numbers match the tables
-        The MCC of $0.86$ for Grévy's zebras and $0.91$ for plains zebras, indicating that our classifiers have
+        The MCC of $0.91$ for Grévy's zebras and $0.81$ for plains zebras, indicating that our classifiers have
           strong predictive power.
 
         \ConfusionMatch{}
@@ -560,7 +578,6 @@ Note the summary statistics in this example are all computed for correspondences
           \pvar{rank+clf}.
         The results of this experiment are illustrated in~\cref{fig:ReRank}, and clearly demonstrate that the
           number of correct matches returned at rank $1$ is improved by re-ranking with our pairwise classifier.
-        
 
         \ReRank{}
         
@@ -583,8 +600,9 @@ Note the summary statistics in this example are all computed for correspondences
           probabilities as binary classifiers.
         The separability of each method is measured using the area under an ROC curve.
         The ROC curves for plains and Grévy's zebras are illustrated in \cref{fig:PositiveROC}.
-        For plains zebras, the pairwise AUC of $0.96$ is better than the LNBNN AUC of $0.94$.
-        For Grévy's zebras the pairwise AUC of $0.99$ is convincingly better than the LNBNN AUC of $0.90$.
+        In both cases the scores significantly improve.
+        For plains zebras, the pairwise AUC of $0.97$ is better than the LNBNN AUC of $0.84$.
+        For Grévy's zebras the pairwise AUC of $0.99$ is  better than the LNBNN AUC of $0.89$.
 
         \PositiveHist{}
 
@@ -631,25 +649,27 @@ Note the summary statistics in this example are all computed for correspondences
         We repeat these two steps until there is only a feature dimension remaining.
         In~\cref{fig:Prune} we plot the MCC as a function of the number of features.
 
-        The results of this experiment indicate that there is little to no increase in classification accuracy
-          from pruning features dimensions.
-          However, once the number of feature dimensions falls below ${\sim}50$, the performance starts to noticeably
-          degrade.
-        This suggests that removing any of these top $50$ features would degrade performance. 
+        The results of this experiment indicate that there is a small increase in classification accuracy from
+          pruning features dimensions.
+        Note that once the number of feature dimensions falls below ${\sim}50$ for Grévy's and ${\sim}20$ for
+          plains, the performance starts to noticeably degrade.
+        This suggests that these top features are the most important to making a match-state prediction.
+        While modest improvements can be made by pruning to only the most important feature dimensions, we use
+          the full $131$ dimensions in the remainder of our experiments for simplicity.
 
-        For Grévy's zebras these $50$ dimensions are composed of $2$ global measures:
-        $\tt{delta\_gps}$ and $\tt{speed}$, and statics about $9$ local measurements:
-        $\tt{match\_dist, norm\_dist, norm\_y1, norm\_y2, ratio, scale1, sver\_err\_ori, sver\_err\_scale,}$ and
-          $\tt{sver\_err\_xy}$.
+        %For Grévy's zebras these $50$ dimensions are composed of $2$ global measures:
+        %$\tt{delta\_gps}$ and $\tt{speed}$, and statics about $9$ local measurements:
+        %$\tt{match\_dist, norm\_dist, norm\_y1, norm\_y2, ratio, scale1, sver\_err\_ori, sver\_err\_scale,}$ and
+        %  $\tt{sver\_err\_xy}$.
 
-        However, one weakness of this test is that the MDI does not measure correlation between features.
-        It might be the case that it if two feature are highly correlated (\eg{} the mean and median ratio
-          values), it might not be necessary to include both.
-        Correlated feature dimensions are also known to decrease the accuracy of individual decision trees.
-        However, it is also known that this effect is alleviated by the randomization process and when averaging
-          over multiple decision trees~\cite{louppe2014understanding}.
-        It is for this reason and the fact that the $MCC$ does not significantly improve that we chose to use all
-          $253$ dimension of our feature vector in the other experiments.
+        %It is important to note that the MDI does not measure correlation between features.
+        %It might be the case that it if two feature are highly correlated (\eg{} the mean and median ratio
+        %  scores), it might not be necessary to include both.
+        %Correlated feature dimensions are also known to decrease the accuracy of individual decision trees.
+        %However, it is also known that this effect is alleviated by the randomization process and when averaging
+        %  over multiple decision trees~\cite{louppe2014understanding}.
+        %It is for this reason and the fact that the $MCC$ does not significantly improve that we chose to use all
+        %  $131$ dimension of our feature vector in the other experiments.
 
         \MatchPrune{}
         
@@ -670,11 +690,11 @@ Note the summary statistics in this example are all computed for correspondences
         
 
         %illustrate failure cases: TODO Match State Failure Cases
-        \PairFailIN{} 
+        %\PairFailIN{} 
 
-        \PairFailPN{}
+        %\PairFailPN{}
 
-        \PairFailNP{}
+        %\PairFailNP{}
 
         \FloatBarrier{}
 
