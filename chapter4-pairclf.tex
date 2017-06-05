@@ -528,28 +528,35 @@ Note the summary statistics in this example are all computed for correspondences
 
     We have now predicted match-state probabilities, photobomb-state probabilities, and one-vs-many LNBNN scores
       for each pair in our dataset.
-    We now analyze the results for each classifier in the following subsections.
-    In our experiments we will measure the raw number of classification errors and success in a confusion matrix,
-      and then summarize these numbers using standard classification metrics.
+    In the next subsections we will analyze the predictions of each classifier.
+    For both the match-state and photobomb-state classifiers we will measure the raw number of classification
+      errors and successes in a confusion matrix.
+    We will then use standard classification metrics like precision, recall, and the Matthews correlation
+      coefficient to summarize these confusion matrices.
+    We will also inspect the importance of each feature dimension of our pairwise feature vector as measured
+      during random forest learning.
     For each classifier we will present several examples of failure cases to illustrate where improvements are
       can be made.
-    We will also inspect the importance of each feature dimension of our pairwise feature vector.
-    For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
-      vector.
 
-    When we evaluate the match-state classifier we will compare it to LNBNN in two ways.
+    In addition, we compare the match-state classifier to LNBNN in two ways.
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
-    Second, we will compare the ability of each algorithm to predict if a pair is positive or not.
-    We will look at the distribution of positive and non-positive scores as well as the ROC curves.
+    Second, we will compare the ability of each LNBNN and the match-state classifier to predict if a pair is
+      positive or not by looking at the distribution of positive and non-positive scores as well as the ROC curves
 
-    After comparing to LNBNN, 
+    %For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
+    %  vector.
+    %We .
 
     \FloatBarrier{}
     \subsection{Matching state}
 
         The primary classifier predicts the matching state (positive, negative, incomparable) of a pair of
-        annotations. To demonstrate the effectiveness of our multiclass classifier we report the confusion matrix
-        of class predictions for plains and Grévy's zebras in \cref{tbl:ConfusionMatch}.
+          annotations.
+        Each pair of annotations is assigned a probability for each of these state, and those probabilities sum
+          to one.
+        In this context we classify a pair as the state with the maximum predicted probability.
+        From these multiclass classifications we build a confusion matrix for plains and we Grévy's zebras.
+        This confusion matrix is shown in \cref{tbl:ConfusionMatch}.
 
         Using this confusion matrix we compute the average precision, recall, and Matthews correlation
           coefficient (MCC)~\cite{powers_evaluation_2011} for each class.
@@ -626,16 +633,16 @@ Note the summary statistics in this example are all computed for correspondences
           all nodes using that feature.
         The overall MDI for the forest is obtained by averaging over all trees.
 
-        The word cloud is illustrated in \cref{fig:MatchWordCloud}.
+        %The word cloud is illustrated in \cref{fig:MatchWordCloud}.
         The numeric importance of the top features is recorded in \cref{tbl:ImportantMatchFeat}.
-
-        For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
-          most important features.
-        This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
-          keypoint scale helps determine if matches are being made on a coarse level (\eg{} matching general zebra
-          shapes) or a fine detailed level (\ie{} capturing the smaller features that actually distinguish
-          individuals).
-        For Grévy's zebras, different statistics about the ratio measures dominate.
+        FIXME: Need to rerun experiments and write based on that output.
+        %For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
+        %  most important features.
+        %This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
+        %  keypoint scale helps determine if matches are being made on a coarse level (\eg{} matching general zebra
+        %  shapes) or a fine detailed level (\ie{} capturing the smaller features that actually distinguish
+        %  individuals).
+        %For Grévy's zebras, different statistics about the ratio measures dominate.
 
         \MatchWordCloud{}
         \ImportantMatchFeat{}
@@ -676,8 +683,8 @@ Note the summary statistics in this example are all computed for correspondences
         \paragraph{Failure cases}
 
         Lastly we investigate several failure cases.
-        First, it is not surprising that incomparable pairs like the one illustrated in \cref{fig:PairFailIN}
-          might be labeled as incomparable because of the lack of incomparable training data.
+        First, it is not surprising that incomparable pairs like the ones illustrated in \cref{fig:PairFailIN}
+          might fail be labeled as incomparable because of the lack of incomparable training data.
         The previously discussed failure ranking cases from ~\cref{sub:exptfail} such as viewpoint and quality
           are inherently challenging and also cause the pairwise classifier to fail as illustrated
           by~\cref{fig:PairFailPN}.
@@ -687,14 +694,21 @@ Note the summary statistics in this example are all computed for correspondences
         However, note that in all of these examples that the non-extreme probabilities assigned to each state
           demonstrate that the classifier is not confident in these predictions.
         We will take advantage of this in the next chapter.
+
+        Interestingly inspecting the failure cases reveled several labeling errors in the database.
+        The examples illustrated in ~\cref{fig:MatchLabelErrors} all show pairs of annotations with non-positive
+          labels that should have been labeled as positive.
+        Note that the positive probabilities from two of these examples are very close to $1.0$, indicating that
+          the classifier is confident that these ground-truth labels are incorrect.
         
 
-        %illustrate failure cases: TODO Match State Failure Cases
-        %\PairFailIN{} 
+        \PairFailIN{} 
 
-        %\PairFailPN{}
+        \PairFailPN{}
 
-        %\PairFailNP{}
+        \PairFailNP{}
+
+        \MatchLabelErrors{}
 
         \FloatBarrier{}
 
@@ -706,41 +720,97 @@ Note the summary statistics in this example are all computed for correspondences
         The overall performance is given in the classification confusion matrix illustrated in
           \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
 
-        Due to the small amount of available training data the performance of the photobomb-state classifier is
-          weaker than the match-state classifier.
-        For plains zebras the MCC of $0.64$ demonstrates that the photobomb classifier has moderate predictive
-          power.
-        For Grévy's zebras the MCC of $0.31$ demonstrates weak but significant predictive power.
-
-        While the small number of training examples makes it difficult to draw conclusions, there are two
-          observations we can make.
-        First, plains zebras have more photobomb examples than Grévy's zebras, and the photobomb-state MCC is
-          also much higher for that dataset.
-        This suggests, that with more training data the quality of the classifier could improve considerably.
-        The second observation is that the number of false negatives is lower than both the number of true
-          positives and false positives --- \ie{} the precision of the classifier is high.
-        This means that the classifier correctly flags most photobomb cases it considers.
-        Therefore, it can be used to prevent the match-state classifier from automatically classifying these
-          pairs as positive.
-        However, in its current state, it also incorrectly prevents automatic classification of a significant
-          number of pairs.
-
-        %The overall quality of the secondary classifier is not ideal for both species, but the small amount of
-        %  training data makes it difficult to draw conclusions from these experiments.
-
-        %As the important features in~\cref{tbl:ImportantPBFeat} illustrate, the photobomb classifier seems to
-        %  rely on global information such as time delta, GPS delta, and speed, because photobombs are more likely
-        %  when taking images of several animals in a small time period.
-        %The classifier also makes use of the spatial position of the feature correspondences, which can be
-        %  indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
-        %This suggests that with more training data the classifier could be trained reliably used to predict when
-        %  a match is a photobomb.
-
         \ConfusionPhotobomb{}
 
         \EvalMetricsPhotobomb{}
 
-        %\ImportantPBFeat{}
+        Due to the small amount of available training data the performance of the photobomb-state classifier is
+          weaker than the match-state classifier.
+        For plains zebras the MCC of $0.24$ demonstrates that the photobomb classifier has weak but significant
+          predictive power.
+        For Grévy's zebras the MCC of $0.0$ suggests that this photobomb classifier has no predictive power.
+        However, these classification metrics presuppose that the classification is the state with the maximum
+          probability.
+        In the two case scenario this means to be classified as a photobomb the probability must be greater than
+          $0.5$.
+        Because there is such a large training class imbalance, it will be difficult for the decision trees in
+          the random forest to ensure that more than half of the training samples at a leaf node are photobombs.
+        If we instead can choose a different threshold, then we see that the photobomb classifier is indeed
+          learning.
+        This is illustrated by the ROC curves in \cref{fig:PhotobombROC}, which plots the true positive and false
+          positive rate as a function of an adjustable threshold.
+        The AUC of $0.90$ for plains zebras and $0.95$ for Grévy's zebras are well above chance, and indicate
+          that the pairwise feature vector does contain enough information to predict if a pair of annotations is a
+          photobomb.
+
+        Considering this, we we adjust the classification threshold of each photobomb-state classifier to
+          maximize the MCC.
+        We plot the MCC as a function of this threshold in~\cref{fig:PBThreshMCC}.
+        We then find that we achieve an MCC of $0.34$ for plains zebras and $0.40$ for Grévy's zebras.
+        While these numbers are not overwhelmingly strong, they are significant and better represent the true
+          predictive power of the photobomb-state classifier.
+        We report the confusion matrix and evaluation metrics corresponding to this adjusted threshold
+          in~\cref{tbl:ConfusionPhotobomb,tbl:EvalMetricsPhotobomb}.
+
+          %the quality of the photobomb-state classifier could be greatly improved with more training data.
+        The top $10$ most important feature in~\cref{tbl:ImportantPBFeat} also support the conclusion that the
+          photobomb-state classifier is learning.
+        The photobomb classifier relies on global information such as time delta, GPS delta, and speed, because
+          photobombs are more likely when taking images of several animals in a small time period.
+        The classifier also makes use of the spatial position of the feature correspondences, which can be
+          indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
+        Thus, the chosen features correspond with those that intuitively make sense.
+        This suggests that the major problem with the classifier is simply the amount of training data.
+
+        We gain further insight into the weak performance of the photobomb-classifier by considering the failure
+          cases illustrated in \cref{fig:PBFailures}.
+        In each of these examples we observe that the classifier is either confused or it does not have enough
+          information to label a pair as a photobomb.
+        Furthermore, the classifier was able to find several new photobomb pairs that were not previously
+          labeled.
+        Examples of these errors in the groundtruth data are illustrated in~\cref{fig:PBLabelErrors}.
+        Discovering these photobomb cases with high accuracy indicates that the photobomb-state classifier is
+          actually stronger than our measurements suggest.
+        Furthermore, this indicates that the learning algorithm encountered unnecessary difficulties because it
+          was encouraged to incorrectly classify these errors.
+        %By reviewing and relabeling these cases we 
+        %Furthermore, because we know that each dataset contains photobombs that are not labeled, and hence were
+        %  in the training data labeled not-photobomb increasing the difficulty for the learning algorithm.
+
+        %For plains zebras the MCC of $.64$ demonstrates that the photobomb classifier has moderate predictive
+        %  power.
+        %For Grévy's zebras the MCC of $0.31$ demonstrates weak but significant predictive power.
+        %This weak performance can be explained by considering several failure cases. 
+
+        %While the small number of training examples makes it difficult to draw conclusions, there are two
+        %  observations we can make.
+        %First, plains zebras have more photobomb examples than Grévy's zebras, and the photobomb-state MCC is
+        %  also much higher for that dataset.
+        %This suggests, that with more training data the quality of the classifier could improve considerably.
+        %The second observation is that the number of false negatives is lower than both the number of true
+        %  positives and false positives --- \ie{} the precision of the classifier is high.
+        %This means that the classifier correctly flags most photobomb cases it considers.
+        %Therefore, it can be used to prevent the match-state classifier from automatically classifying these
+        %  pairs as positive.
+        %However, in its current state, it also incorrectly prevents automatic classification of a significant
+        %  number of pairs.
+
+        %The overall quality of the secondary classifier is not ideal for both species, but the small amount of
+        %  training data makes it difficult to draw conclusions from these experiments.
+
+        \PhotobombROC{}
+
+        \PBThreshMCC{}
+
+        \ConfusionPhotobombII{}
+
+        \EvalMetricsPhotobombII{}
+
+        \ImportantPBFeat{}
+
+        \PBFailures{}
+
+        \PBLabelErrors{}
 
     \FloatBarrier{}
     \subsection{Classifier experiment conclusions}
@@ -764,8 +834,10 @@ Note the summary statistics in this example are all computed for correspondences
 
         The performance of secondary photobomb classifier is weaker, but this is likely due to a small amount of
           training data.
-        Even in its weak state, it can be used to prevent automatic review of some photobomb cases.
-        Because the photobomb classifier can only prevent automatic decision and does not make them, the cost of
+        %However, with some manual effort, these 
+        Even in its weak state, it can be used to prevent automatic review of some photobomb cases by adjusting
+          the classification threshold to be less than $0.5$.
+        Because the photobomb classifier can only prevent automatic decisions and does not make them, the cost of
           including it in our algorithms is small, and by doing so we will increase the amount of labeled training
           data from which a stronger photobomb classifier can be bootstrapped.
         %Therefore, the pairwise algorithm can be used to re-rank the of the ranking algorithm.
