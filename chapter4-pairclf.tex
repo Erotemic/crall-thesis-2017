@@ -157,7 +157,7 @@ In the case of viewpoint this absolute difference is cyclic  --- \ie{} the dista
   is $\min(|x - y|, 8 - |x - y|)$.
 This results in $4$ pairwise measurements, one for each global attribute.
 Lastly, we include the ``speed'' of the pair, which is the GPS-distance divided by the time-delta.
-Thus, there are a total of $4 + 4 + 1 = 9$ global measurements.
+Thus, there the total number of global measurements is $4 + 4 + 1 = 9$.
 
 In the event that an attribute is not provided or not known (\eg{} the EXIF data is missing) a measurement cannot
 be made, so a \nan{} value is recorded instead. To apply random forests learning, these \nan{} values must be
@@ -296,21 +296,30 @@ A final step we have found useful is to append an extra dimension simply indicat
 So, in total there are $61$ summary statistics computed for a set of feature correspondences.
 
 As previously noted this process is repeated for multiple threshold values of the ratio test.
-The reason we use multiple ratio thresholds is because we noticed that some positive annotation pairs had all of
-  their correspondences filtered by the ratio test, but if we increased the threshold then the overall
-  classification performance decreased.
-Including larger values of the threshold ensures that most pairs of annotations generate at least a few
-  correspondences, while smaller threshold ensure that information in highly distinctive correspondences are
-  separated out and considered by the classifier.
+This is because we noticed that some positive annotation pairs had all of their correspondences filtered by the
+  ratio test.
+However, when we increased the ratio threshold, the overall classification performance decreased.
+Therefore, we included both small and large thresholds to allow the classifier to have access to both types of
+  information.
+Including larger threshold values helps ensure that most pairs generate at least a few correspondences, while
+  smaller threshold values capture the information in highly distinctive correspondences.
 This softens the impact of the ratio test's binary threshold and adds robustness to viewpoint and pose variations
   that may cause correspondences to appear slightly less distinctive.
 
-In our implementation we use the ratio threshold values of $0.625$ and $0.8$.
 Once we have assigned feature correspondences, we create a group of correspondences for each ratio value.
 The member of each group are all correspondences with a ratio score less than that value.
 Each group is then spatially verified, and the union of the groups is the final set of correspondences.
 When measuring spatial verification errors, each keypoint may be associated with more than one.
 Therefore, we use the minimum spatial verification error over all values of the ratio threshold.
+The local feature vector is constructed by applying summary statistics to each of these groups and then
+  concatenating the results, so in essence the size of the local feature vector is multiplied by the number of
+  ratio thresholds used.
+So, there is a cost to using multiple values of the ratio test, first in the number of times spatial verification
+  must be run and second in the resulting size of the feature vector.
+In our implementation we use the ratio threshold values of $0.625$ and $0.8$.
+Thus, the total number of local measurements is $2 \times 61 = 122$.
+
+% NOTE: Old way.
 %Once we have assigned feature correspondences, we filter these correspondences using the ratio test with the
   %maximum value of the ratio threshold.
 %Note that these threshold points are with respect to the original ratio values, and not the ratio scores used in
@@ -318,12 +327,6 @@ Therefore, we use the minimum spatial verification error over all values of the 
 %Then the remaining feature correspondences are spatially verified as normal.
 %At this point, we create a group of correspondences for each value of the ratio threshold.
 %The member of each group are all correspondences with a ratio score less than that value.
-The local feature vector is constructed by applying summary statistics to each of these groups and then
-  concatenating the results, so in essence the size of the local feature vector is multiplied by the number of
-  ratio thresholds used.
-Thus the total number of local measurements is $2 \times 61 = 122$.
-
-% NOTE:
 
 \FloatBarrier{}
 \subsection{The final pairwise feature vector}
@@ -429,8 +432,7 @@ Note the summary statistics in this example are all computed for correspondences
     For positive examples we select $4$ from the top, $2$ from the middle, $2$ from the bottom, and $2$ randomly.
     For negative examples we select $3$ from the top, $2$ from the middle, $1$ from the bottom, and $2$ randomly.
     If there are not enough examples to do this, then all are taken.
-    We included all pairs explicitly labeled as incomparable because there is only a small number of such
-      examples.
+    We included all pairs explicitly labeled as incomparable because there is only a few such examples.
     If this was not the case, then we would include an additional partition for incomparable cases.
 
 
@@ -486,7 +488,7 @@ Note the summary statistics in this example are all computed for correspondences
 
     We split this dataset of labeled annotation pairs into multiple disjoint training and testing sets using
       grouped stratified $k$-fold cross validation (we use $3$ folds).
-    Note that this grouped variant is slightly different than normal stratified $k$-fold cross validation.
+    Note that this grouping introduces a slight variation on standard stratified $k$-fold cross validation.
     First, we enforce that each sample (a pair of annotations) within the same name or between the same two names
       must be placed in the same group.
     Then, the cross validation is constrained such that all samples in a group are either in the training or
@@ -555,9 +557,11 @@ Note the summary statistics in this example are all computed for correspondences
         Each pair of annotations is assigned a probability for each of these state, and those probabilities sum
           to one.
         In this context we classify a pair as the state with the maximum predicted probability.
+        However, in practice we will choose thresholds for automatic classification where the false positive rate
+          is sufficeintly low.
+
         From these multiclass classifications we build a confusion matrix for plains and we Grévy's zebras.
         This confusion matrix is shown in \cref{tbl:ConfusionMatch}.
-
         Using this confusion matrix we compute the average precision, recall, and Matthews correlation
           coefficient (MCC)~\cite{powers_evaluation_2011} for each class.
         These numbers are reported in \cref{tbl:EvalMetricsMatch}.
@@ -611,31 +615,75 @@ Note the summary statistics in this example are all computed for correspondences
         For plains zebras, the pairwise AUC of $0.97$ is better than the LNBNN AUC of $0.84$.
         For Grévy's zebras the pairwise AUC of $0.99$ is  better than the LNBNN AUC of $0.89$.
 
+        In addition to demonstrating that the pairwise classifier outperforms LNBNN scores in this classification
+          task, these ROC curves also demonstrates that an operating point can be chosen to automatically classify
+          a significant number of positive pairs while making very few false positives.
+        For plains zebras, a true positive rate of $0.25$ results in $4146$ true positives and only $38$ false
+          positives.
+        For Grévy's, an operating point with a true positive rate of $0.5$, results in $2501$ true positives and
+          only $28$ false positives.
+
         \PositiveHist{}
 
         \PositiveROC{}
 
-
-        %\FloatBarrier{}
+        \FloatBarrier{}
         \paragraph{Feature importance}
 
-        To gain an intuition for which features are most important we create a word cloud where the size of the
-          text is proportional to the importance of the feature as measured using the ``mean decrease impurity''
-          (MDI)~\cite{louppe2014understanding}.
+        To better understand which feature dimensions are the most useful for classification, we measure the
+          ``mean decrease impurity'' (MDI)~\cite{louppe2014understanding} of each feature dimension.
         The MDI is a measure of feature importance that is computed during the training phase.
-        As a decision tree is grown, the number of training samples of each class that reach a particular node
-          are recorded.
-        This is used to compute the impurity of each node, which is the entropy of class labels.
-        The fraction of total samples that reach a node is its weight.
+        As each decision tree is grown, for each node, we record the number of training samples of each class
+          that reach it.
+        This is used to compute the impurity of each node, \ie{} the entropy of class labels.
+        Each node is weighted using the fraction of total samples that reach it.
         The weighted impurity decrease of a node is its weighted impurity minus the weighted sum of its
           children's impurity.
         The MDI for a single feature dimension in a single tree is computed as the weighted impurity decrease of
           all nodes using that feature.
         The overall MDI for the forest is obtained by averaging over all trees.
 
+
+        Using the MDI we ``prune'' the dimensions of our sample feature vectors by removing the least important
+          dimensions.
+        We measure the effect of pruning on classification accuracy using a greedy algorithm.
+        First we learn a random forest on a training set and compute the MCC on a test set.
+        Then we find the feature dimension with the lowest MDI and remove it from the dataset.
+        We repeat these two steps until there is only a single feature dimension remaining.
+
+        The impact of pruning on classification accuracy is illustrated in~\cref{fig:MatchPrune}, where we plot
+          the MCC as a function of the number of feature dimensions remaining.
+        The results of this experiment indicate that there is a small increase in classification accuracy from
+          pruning features dimensions.
+        We find that reducing the number of feature dimensions to $25$ for plains and $61$ for Grévy's produces
+          the best results, increasing the MCC by $.0155$ for plains and $.0048$ for Grévy's.
+        Note that once the number of feature dimensions falls below ${\sim}50$ for Grévy's and ${\sim}20$ for
+          plains, the performance starts to noticeably degrade.
+        This suggests that these top features are the most important to making a match-state prediction.
+
+        \MatchPrune{}
+
+        The numeric importance of these top $10$ pruned feature dimensions is reported in
+          \cref{tbl:ImportantMatchFeatPrune}.
+        For both species we find that the most important features are statistics involving the ratio score.
+        These statistics indicate the distinctiveness and similarity of a pair of annotations.
+        Statistics about the spatial verification error, which signifies when the matches are not well aligned,
+          are also important for both species.
+        For plains zebras, the global viewpoint is important because the dataset contains incomparable examples.
+
+        \ImportantMatchFeatPrune{}
+
+        \FloatBarrier{}
+
+
+        Even though we have shown that a small improvement can be made by pruning to only the most important
+          feature dimensions, we choose to use full $131$ dimensions in the remainder of our experiments.
+        The driving reason for this is the simplicity gained by using the same features for each dataset, and
+          because the overall performance gain is small.
+
         %The word cloud is illustrated in \cref{fig:MatchWordCloud}.
-        The numeric importance of the top features is recorded in \cref{tbl:ImportantMatchFeat}.
-        FIXME: Need to rerun experiments and write based on that output.
+        %FIXME:
+        %Need to rerun experiments and write based on that output.
         %For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
         %  most important features.
         %This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
@@ -644,25 +692,8 @@ Note the summary statistics in this example are all computed for correspondences
         %  individuals).
         %For Grévy's zebras, different statistics about the ratio measures dominate.
 
-        \MatchWordCloud{}
-        \ImportantMatchFeat{}
+        %\MatchWordCloud{}
 
-        We also consider if removing the least important feature dimensions might have a positive impact on
-          classification performance.
-        To measure this, we consider a greedy algorithm.
-        First we learn a random forest on a training set and compute the MCC on a test set.
-        Then we measure the least important feature dimension as the one with the lowest MDI and remove it from
-          the dataset.
-        We repeat these two steps until there is only a feature dimension remaining.
-        In~\cref{fig:Prune} we plot the MCC as a function of the number of features.
-
-        The results of this experiment indicate that there is a small increase in classification accuracy from
-          pruning features dimensions.
-        Note that once the number of feature dimensions falls below ${\sim}50$ for Grévy's and ${\sim}20$ for
-          plains, the performance starts to noticeably degrade.
-        This suggests that these top features are the most important to making a match-state prediction.
-        While modest improvements can be made by pruning to only the most important feature dimensions, we use
-          the full $131$ dimensions in the remainder of our experiments for simplicity.
 
         %For Grévy's zebras these $50$ dimensions are composed of $2$ global measures:
         %$\tt{delta\_gps}$ and $\tt{speed}$, and statics about $9$ local measurements:
@@ -677,36 +708,61 @@ Note the summary statistics in this example are all computed for correspondences
         %  over multiple decision trees~\cite{louppe2014understanding}.
         %It is for this reason and the fact that the $MCC$ does not significantly improve that we chose to use all
         %  $131$ dimension of our feature vector in the other experiments.
-
-        \MatchPrune{}
         
         \paragraph{Failure cases}
 
         Lastly we investigate several failure cases.
-        First, it is not surprising that incomparable pairs like the ones illustrated in \cref{fig:PairFailIN}
-          might fail be labeled as incomparable because of the lack of incomparable training data.
-        The previously discussed failure ranking cases from ~\cref{sub:exptfail} such as viewpoint and quality
-          are inherently challenging and also cause the pairwise classifier to fail as illustrated
-          by~\cref{fig:PairFailPN}.
-        Lastly, sometimes the pairwise classifier is simply unable to key in on cues that a set of one-vs-one
-          correspondences is not distinctive like when it predicts that the pair in ~\cref{fig:PairFailNP} is
-          positive instead of negative.
-        However, note that in all of these examples that the non-extreme probabilities assigned to each state
-          demonstrate that the classifier is not confident in these predictions.
-        We will take advantage of this in the next chapter.
+        The primary reasons that cause the match-state classifier to fail are similar to those that create
+          difficulty for the ranking algorithm.
+        These were previously discussed in~\cref{sub:exptfail}.
+        Factors such as viewpoint, quality, and occlusion are inherently challenging because they reduce the
+          similarity between matching descriptors, and increase the disparity between the annotations.
+        This makes it difficult to correctly establish and spatially verify feature correspondences.
+        Photobombing animals and scenery matches also pose a challenge to the match-state classifier, often
+          causing it to produce ambiguous probabilities.
 
-        Interestingly inspecting the failure cases reveled several labeling errors in the database.
+        We separate failure cases into three main categories:
+        (1) failure to classify a pair as positive,
+        (2) failures to classify a pair as negative, and
+        (3) failures to classify a pair as incomparable.
+        The examples in~\cref{fig:PairFailPN} illustrate the first and most important failure case.
+        Due to occlusion, quality, and viewpoint, the established correspondences were not distinctive enough for
+          the classifier to confidently predict positive.
+        However, in all but the last case the probabilities are ambiguous, which implies that improvements could
+          be made to fix these failures.
+        In the last case, only a few distinctive matches were made, which suggests that procedure that
+          establishes feature correspondences should be improved.
+
+        Examples of the second case are illustrated in~\cref{fig:PairFailNP}.
+        These examples were incorrectly classified as positive, even though they are negative.
+        In two cases this is due to scenery matches and photobombing animals.
+        In the other cases the pairwise classifier matches similar regions of the animal, but it is unable to key
+          in on the strong negative evidence provided by different distinctive patterns on corresponding body parts
+          of the animal.
+        In the future, algorithms powered by convolutional neural networks may be able to take advantage of this
+          strong negative evidence.
+        %The first of these failure cases are illustrated in~\cref{fig:PairFailIN}.
+        For the third case, it is not surprising that the examples in~\cref{fig:PairFailIN} were not labeled as
+          incomparable because only a small amount of incomparable training data was available.
+        Furthermore, photobombs and scenery matches also seem to cause a problem for incomparable examples.
+        Note that in the majority of all three types of failure, the examples have non-extreme probabilities
+          assigned to each state.
+        This demonstrates that the classifier is not confident in these failed predictions.
+        %We will take advantage of this in the next chapter.
+
+        Interestingly, inspection of the failure cases reveled several labeling errors in the database.
         The examples illustrated in ~\cref{fig:MatchLabelErrors} all show pairs of annotations with non-positive
           labels that should have been labeled as positive.
         Note that the positive probabilities from two of these examples are very close to $1.0$, indicating that
           the classifier is confident that these ground-truth labels are incorrect.
-        
-
-        \PairFailIN{} 
+        Furthermore, these success cases were found in the context of noisy groundtruth labels, showing that our
+          classifier is robust to errors in groundtruth labels.
 
         \PairFailPN{}
 
         \PairFailNP{}
+
+        \PairFailIN{} 
 
         \MatchLabelErrors{}
 
@@ -717,8 +773,20 @@ Note the summary statistics in this example are all computed for correspondences
     \FloatBarrier{}
     \subsection{Photobomb state}
         We perform a subset of similar experiments to demonstrate the effectiveness of our photobomb classifier.
-        The overall performance is given in the classification confusion matrix illustrated in
-          \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
+        Initially when performing this experiment, we classified a pair as a photobomb if its probability was
+          greater than $0.5$.
+        This caused us to measure an MCC of $0.0$ for the Grévy's zebra dataset because there were not enough
+          training examples for the random forest to learn strong probabilities.
+        Therefore, for each dataset we choose a classification threshold to maximize the MCC as illustrated in
+          \cref{fig:PBThreshMCC}.
+        Using this adjusted threshold, the overall performance is given in the classification confusion matrix
+          illustrated in \cref{tbl:ConfusionPhotobombII} and evaluation metrics are given in
+          \cref{tbl:EvalMetricsPhotobombII}.
+
+        %The overall performance is given in the classification confusion matrix illustrated in
+        %  \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
+
+        \PBThreshMCC{}
 
         \ConfusionPhotobomb{}
 
@@ -726,46 +794,26 @@ Note the summary statistics in this example are all computed for correspondences
 
         Due to the small amount of available training data the performance of the photobomb-state classifier is
           weaker than the match-state classifier.
-        For plains zebras the MCC of $0.24$ demonstrates that the photobomb classifier has weak but significant
-          predictive power.
-        For Grévy's zebras the MCC of $0.0$ suggests that this photobomb classifier has no predictive power.
-        However, these classification metrics presuppose that the classification is the state with the maximum
-          probability.
-        In the two case scenario this means to be classified as a photobomb the probability must be greater than
-          $0.5$.
-        Because there is such a large training class imbalance, it will be difficult for the decision trees in
-          the random forest to ensure that more than half of the training samples at a leaf node are photobombs.
-        If we instead can choose a different threshold, then we see that the photobomb classifier is indeed
-          learning.
-        This is illustrated by the ROC curves in \cref{fig:PhotobombROC}, which plots the true positive and false
-          positive rate as a function of an adjustable threshold.
-        The AUC of $0.90$ for plains zebras and $0.95$ for Grévy's zebras are well above chance, and indicate
-          that the pairwise feature vector does contain enough information to predict if a pair of annotations is a
-          photobomb.
+        By choosing the appropriate threshold we achieve an MCC of $0.34$ for plains zebras and $0.40$ for
+          Grévy's zebras, which indicates that each photobomb-state classifier has weak but significant predictive
+          power.
+        While the MCCs are not overwhelmingly strong, they indicate that the photobomb-classifier is learning,
+          and could likely be improved with more training data.
 
-        Considering this, we we adjust the classification threshold of each photobomb-state classifier to
-          maximize the MCC.
-        We plot the MCC as a function of this threshold in~\cref{fig:PBThreshMCC}.
-        We then find that we achieve an MCC of $0.34$ for plains zebras and $0.40$ for Grévy's zebras.
-        While these numbers are not overwhelmingly strong, they are significant and better represent the true
-          predictive power of the photobomb-state classifier.
-        We report the confusion matrix and evaluation metrics corresponding to this adjusted threshold
-          in~\cref{tbl:ConfusionPhotobomb,tbl:EvalMetricsPhotobomb}.
-
-          %the quality of the photobomb-state classifier could be greatly improved with more training data.
-        The top $10$ most important feature in~\cref{tbl:ImportantPBFeat} also support the conclusion that the
-          photobomb-state classifier is learning.
-        The photobomb classifier relies on global information such as time delta, GPS delta, and speed, because
-          photobombs are more likely when taking images of several animals in a small time period.
+        The conclusion that the photobomb-state classifier is learning is supported by investigating the top $10$
+          most important features.
+        These important features --- illustrated in~\cref{tbl:ImportantPBFeat} --- correspond with those that
+          intuitively make sense.
+        We find that photobomb classifier relies on global information such as time delta, GPS delta, and speed,
+          because photobombs are more likely when taking images of several animals in a small time period.
         The classifier also makes use of the spatial position of the feature correspondences, which can be
           indicative of a photobomb (\eg{} when all the matches are in the top left corner of an annotation).
-        Thus, the chosen features correspond with those that intuitively make sense.
         This suggests that the major problem with the classifier is simply the amount of training data.
 
-        We gain further insight into the weak performance of the photobomb-classifier by considering the failure
-          cases illustrated in \cref{fig:PBFailures}.
-        In each of these examples we observe that the classifier is either confused or it does not have enough
-          information to label a pair as a photobomb.
+        We gain further insight into the photobomb-state classifier by considering examples of failure cases,
+          which are illustrated in \cref{fig:PBFailures}.
+        In each example we observe that the classifier is either confused or it does not have enough information
+          to label a pair as a photobomb.
         Furthermore, the classifier was able to find several new photobomb pairs that were not previously
           labeled.
         Examples of these errors in the groundtruth data are illustrated in~\cref{fig:PBLabelErrors}.
@@ -800,31 +848,31 @@ Note the summary statistics in this example are all computed for correspondences
 
         \PhotobombROC{}
 
-        \PBThreshMCC{}
-
         \ConfusionPhotobombII{}
 
         \EvalMetricsPhotobombII{}
 
         \ImportantPBFeat{}
 
-        \PBFailures{}
+        %\PBFailures{}
 
-        \PBLabelErrors{}
+        %\PBLabelErrors{}
 
     \FloatBarrier{}
     \subsection{Classifier experiment conclusions}
         In these experiments we have demonstrated that our pairwise match-state classifier is able to reliably
           separate positive from negative and incomparable cases.
-        When compared to the LNBNN scores from~\cref{chap:ranking}, not only do these probabilities have more
-          predictive power, they are interpretable, always ranging between $0$ and $1$.
-        In practice, we have found that a validation dataset can be used to select a threshold --- to
-          automatically classify pairs --- where the false positive rate is sufficiently low.
-        %In practice, we have found these probabilities to be well calibrated, meaning that a validation dataset
-        %  can be used to select a threshold --- to automatically classify pairs --- where the false positive rate
-        %  is sufficiently low.
-        Because the positive cases are well separated from the negative and incomparable cases, a significant
-          number of automatic reviews is possible.
+        When making automatic decisions, these probabilites have several advantages over the LNBNN scores
+          from~\cref{chap:ranking}.
+        Not only do they have more predictive power, they are interpretable, and they always range between $0$
+          and $1$.
+
+        We will use these classifiers to make automatic decisions about pairs of anotations where the match-state
+          probability is above a threshold.
+        Our experiments have shown that it is possible to select a threshold, where the false positive rate is
+          sufficiently low.
+        %Because the positive cases are well separated from the negative and incomparable cases, a significant
+        %  number of automatic reviews is possible.
         Furthermore, because the classifier was trained using hard, moderate, and easy training examples, it is
           able to correctly re-rank results of the ranking algorithm, where the correct match was ranked in highly
           but not rank $1$.
