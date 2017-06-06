@@ -882,8 +882,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       labels, and then we proceed to construct all the names.
     This design simulates identification events like the \GZC{} and provides insight into the algorithms behave
       in practice.
-    Because our algorithms are semi-automatic, we simulate a noisy user response using ground-truth data.
-    Given a pair of annotations, the simulated user returns the ground-truth classification $98\percent$ of the
+    Because our algorithms are semi-automatic, we simulate a noisy user response using groundtruth data.
+    Given a pair of annotations, the simulated user returns the groundtruth classification $98\percent$ of the
       time, making errors $2\percent$ of the time uniformly at random.
     This accuracy assumption is simplistic and may be too low for an expert reviewer, but it will serve to
       demonstrate our graph algorithm's ability to recover from errors.
@@ -975,10 +975,10 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     We run the simulation for all combinations of datasets algorithms.
     After each review we record two measurements pertaining to accuracy and error.
     The accuracy measurement is the number of merges remaining before all individuals have been identified.
-    This is the number of edges in a spanning forest of the ground-truth positive subgraph minus same measurement
+    This is the number of edges in a spanning forest of the groundtruth positive subgraph minus same measurement
       but applied to the subgraph of all correctly predicted positive edges.
     The error measurement is the total number of edges with a predicted match-state that differs from its
-      ground-truth match-state.
+      groundtruth match-state.
     These measurements are plotted against the number of manual reviews.
 
     \Simulation{}
@@ -1003,7 +1003,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     However, \pvar{graph} is able to recover from many of these errors and achieve a low error rate despite
       starting with more errors due to an aggressive auto-classification threshold.
 
-    To further analyze the errors in a simulation, we compare the predicted PCCs to the real ground-truth PCCs.
+    To further analyze the errors in a simulation, we compare the predicted PCCs to the real groundtruth PCCs.
     We consider $3$ groups:
     (1) the ``common'' predicted PCCs that exactly match a real PCC,
     (2) the ``split'' predicted PCCs that must be split into real PCCs, and
@@ -1018,7 +1018,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       is $2$.
     Note that the majority of predicted PCCs can be purely split or merged into real PCCs, but there are some
       predicted PCCs that are counted twice because they must first be split and then merged before the
-      ground-truth is achieved.
+      groundtruth is achieved.
     We do not separate these cases for simplicity.
 
     These error measures are reported in~\cref{tbl:SimDetails}.

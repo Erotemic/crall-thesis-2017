@@ -179,7 +179,7 @@ def should_ignore(item):
                 return True
         if result['ruleid'] == 'THE_SUPERLATIVE':
             if error_text in {
-                '$ nearest', 'reciprocal nearest',
+                'rd$ nearest', '$ nearest', 'reciprocal nearest',
                 'of nearest', 'Bayes nearest',
                 'second nearest',
                              }:
