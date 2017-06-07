@@ -51,9 +51,8 @@ This requires that we:
 \end{enumin}
 The first requirement can be satisfied by carefully selecting representative annotations pairs, and the last
   requirement is satisfied by many pre-existing algorithms (\eg{} random forests and neural networks).
-It is the second requirement --- constructing an appropriate fixed-length feature vector --- that is the most
-  challenging.
-If given enough training data and a technique to align the animals in two annotations, using image data with a
+The second requirement --- constructing an appropriate fixed-length feature vector --- is the most challenging.
+Given enough training data and a technique to align the animals in two annotations, using image data with a
   Siamese or triplicate network~\cite{taigman_deepface_2014,schroff_facenet_2015} might appropriate, but without
   both of these pre-conditions we must turn towards more traditional methods.
 Recall from \cref{sec:annotrepr} that our annotation representation is an unordered bag-of-features, which cannot
@@ -62,9 +61,9 @@ Therefore, we develop a method for constructing a fixed length \glossterm{pairwi
   annotations.
 This novel feature vector will take into account local matching information as well as more global information
   such as GPS and viewpoint.
-A collection of these features from multiple labeled annotation pairs are used to fit a random
+A collection of these features from multiple labeled annotation pairs is used to fit a random
   forest~\cite{breiman_random_2001} which implements our pairwise classifier.
-We choose to use a random forest classifier, in part because they are fast to train, robust to overfitting, and
+We choose to use random forest classifiers, in part because they are fast to train, robust to overfitting, and
   naturally output probabilities in a multiclass setting, and in part because they can handle (and potentially take
   advantage of) missing data --- \ie{} \nan{} values in feature vectors --- using the ``separate class''
   method~\cite{ding_investigation_2010}.
@@ -73,9 +72,8 @@ We choose to use a random forest classifier, in part because they are fast to tr
 A final concern investigated in this chapter is the issue of image challenges that may confound the match-state
   pairwise classifier.
 Recall from~\cref{sub:exptfail}, {photobombs} --- pairs of annotations where feature correspondences are caused
-  by a secondary animal --- which are the most notable cause of such a challenge.
-By most accounts photobombs appear very similar to positive matches, and this similarity could confuse the
-  match-state classifier.
+  by a secondary animal --- are the most notable cause of such a challenge.
+Photobombs appear very similar to positive matches, and this similarity could confuse the match-state classifier.
 However, because photobombs are inherently a pairwise property between annotations, it should be possible to
   learn a separate classifier explicitly tasked with the challenge.
 Therefore, we also learn a photobomb classifier using the same sort of pairwise feature vector and random forest
@@ -132,7 +130,7 @@ The global feature vector is derived from the following attributes extracted fro
 \end{enumln}
 We gather the GPS and timestamp attributes from image EXIF data, and the viewpoint and quality labels are outputs
   of the deep classifiers previously discussed in \cref{subsec:introdataprocess}.
-The GPS and timestamp attribute inform the classifier of when its not possible for two annotations to match
+The GPS and timestamp attribute inform the classifier of when it is not possible for two annotations to match
   (\eg{} when a pair of annotations is close in time but far in space) and when two annotations were taken around
   the sample place and time.
 Pairs of annotations taken around the same place and time tend to have a higher similarity and are more likely to
@@ -172,9 +170,12 @@ For our application we choose the ``separate class'' method because their experi
   performs the best when \nan{} values are in both the training and testing data, which is the case for our data.
 
 In addition to being the best fit for our application, the separate class method is simple.
-The idea is to replace all \nan{} measurements with an extremely large number.
-This means that whenever a decision node in the random forest applies its test to a \nan{} value, the result will
-  always be the same.
+The idea is to replace all \nan{} measurements with either an extremely large or extremely small number.
+The choice of large or small is made independently at each node in the decision tree, depending on which choice
+  is best.
+%This means that a decision tree This means that samples with 
+%This means that whenever a decision node in the random forest applies its test to a \nan{} value, the result will
+%  always be the same.
 In this way the \nan{} values are essentially treated as a separate category because a test can always be chosen
   that separates the measured and unmeasured data.
 This has several effects.
@@ -197,8 +198,8 @@ Then for each correspondence we make several measurements (\eg{} descriptor dist
 Finally, we aggregate these measurements over all correspondences using summary statistics (\eg{} mean, sum,
   std).
 Later we augment this basic scheme by constructing multiple sets of feature correspondences.
-Thus, the total length of the feature vector is the number of measurements times, the number of summary
-  statistics, times the number of ways feature correspondences are established.
+Thus, the total length of the feature vector is the number of measurements times the number of summary statistics
+  times the number of ways feature correspondences are established.
 
 
 \paragraph{Establishing feature correspondences}
@@ -321,8 +322,8 @@ As previously noted we establish multiple groups of feature correspondences for 
   ratio test.
 We do this because we have observed that some positive annotation pairs had all of their correspondences filtered
   by the ratio test.
-However, when we increased the ratio threshold, the overall classification performance decreased.
-Therefore, we included both small and large thresholds to allow the classifier to have access to both types of
+However, when we increase the ratio threshold, the overall classification performance decreases.
+Therefore, we include both small and large thresholds to allow the classifier to have access to both types of
   information.
 Including larger threshold values helps ensure that most pairs generate at least a few correspondences, while
   smaller threshold values capture the information in highly distinctive correspondences.
@@ -421,24 +422,34 @@ Note the summary statistics in this example are all computed for correspondences
     Learning begins by initializing each decision tree as a single node.
     Each root node is assigned a random sample of the training data with replacement, and then a recursive
       algorithm is used to grow each root node into a decision tree.
-    Each iteration of the recursive algorithm is given a leaf node, and will choose a random test to split the
-      training data at the node into two child nodes.
-    The random test is constructed by choosing a random threshold and a random subset of feature dimensions as
-      candidates.
-    Each candidate feature dimension splits the training data, and the one that results in the largest decrease
-      in class-label entropy is chosen as the test for this node.
+    Each iteration of the recursive algorithm is given a leaf node, and will choose a test to split the training
+      data at the node into two child nodes.
+    The test is constructed by first choosing a random subset of feature dimensions.
+    We then find choose a dimension and threshold to maximize the decrease in class-label entropy.
+    Note that when using the ``separate class'' method, the algorithm tests placing samples with missing data on
+      both the left and right side of the split.
+    %Then, for each candidate dimension we find a threshold that maximizes the decrease in class-label entropy.
+    %The dimension and threshold that 
+    %choosing a random threshold and a random subset of feature dimensions as candidates.
+    %Each candidate feature dimension splits the training data, and the one that results in the largest decrease
+    %  in class-label entropy is chosen as the test for this node.
     The algorithm is then recursively executed on the right and left node until a leaf is assigned fewer than a
       minimum number of training examples.
-    To learn our random forest classifiers we use $256$ decision trees.
     To select a test for a node, the number of candidate features dimensions we choose is the square root of the
       total number of feature dimensions.
-    We stop growing a branch if a leaf node contains $5$ or fewer samples.
     Each decision tree predicts a probability distribution over all classes for a testing example by descending
       the tree, choosing left or right based on the test chosen at the node until it reaches a leaf node.
     The predicted probabilities are the proportions of training class-labels at that leaf node.
     The probability prediction of the random forest is the average of the probabilities predicted by all decision
       trees.
     We use the random forest implementation provided by Scikit Learn~\cite{pedregosa_scikit_learn_2011}.
+    To choose hyper-parameters, we preform a grid search.
+    We find that it works best to use $256$ decision trees, and to stop branch growth once a leaf node contains
+      $5$ or fewer training samples.
+    For other parameters we use the implementation defaults.
+    %We performed a grid search to find a good set of random forest hyper-parameters.
+    %We stop growing a branch if a leaf node contains $5$ or fewer samples.
+    %To learn our random forest classifiers we use $256$ decision trees.
 
     \paragraph{Sampling a labeled dataset of annotation pairs}
     Now that we have chosen a learning algorithm, the last remaining step is the selection of training data and
@@ -451,8 +462,8 @@ Note the summary statistics in this example are all computed for correspondences
       assigned an explicit three-state label.
     Therefore, we must make use of the name and viewpoint labels assigned each annotation by previous versions of
       the system.
-    This allows us to determine if an annotation pair are the same or different animals, but it does not allow us
-      to determine if the pair is comparable.
+    This allows us to determine if an annotation pair shows the same or different animals, but it does not allow
+      us to determine if the pair is comparable.
     To account for this we use heuristics to assign the incomparable label using the viewpoints, and if either
       annotation is not assigned a viewpoint it is assumed that they are comparable because most images in our
       datasets are taken from a consistent viewpoint (\ie{} collection events were designed to reduce
@@ -570,7 +581,7 @@ Note the summary statistics in this example are all computed for correspondences
     In order to do this, we must generate an LNBNN score for each pair in our sample.
     This is done by first taking the unique set of annotations in the sample of pairs.
     Then, we use these annotations as a database.
-    We issue each annotation as a query, taking case to ignore self-matches.
+    We issue each annotation as a query, taking care to ignore self-matches.
     Any (undirected) pair in our dataset that appears as a query / database pair in the ranked list is assigned
       that LNBNN score.
     If the same pair is in two ranked lists, then the maximum of the two scores is used.
@@ -578,8 +589,8 @@ Note the summary statistics in this example are all computed for correspondences
       score of zero.
     Note that the scores from the LNBNN ranking algorithm can only be used to distinguish positive cases from
       non-positive pairs.
-    Unlike the match-state classifier, the LNBNN scores cannot be used to tell if a non-positive case is negative
-      or incomparable.
+    Unlike the match-state classifier, the LNBNN scores cannot be used to distinguish non-positive cases as
+      either negative or incomparable.
     Later in \cref{chap:graphid}, it will be vitally important to distinguish these cases, but for now, in order
       to fairly compare the two algorithms, we only consider positive probabilities from the match-state
       classifier.
@@ -814,7 +825,7 @@ Note the summary statistics in this example are all computed for correspondences
         However, in all but the last case the probabilities are ambiguous, which implies that improvements could
           be made to fix these failures.
         In the last case, only a few distinctive matches were made, which suggests that procedure that
-          establishes feature correspondences should be improved.
+          establishes feature correspondences could be improved.
 
         Examples of the second case are illustrated in~\cref{fig:PairFailNP}.
         These examples were incorrectly classified as positive, even though they are negative.
