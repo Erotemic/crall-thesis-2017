@@ -200,49 +200,71 @@ Identification converges in $3$ iterations for plains zebras and $3$ for Grevy's
 
 
 
-    \begin{comment}
-    python -m ibeis Chap5.print_measures --db GZ_Master1 --diskshow
-    python -m ibeis Chap5.print_measures --db PZ_Master1 --diskshow
-    \end{comment}
+\begin{comment}
+python -m ibeis Chap5.draw error_tables PZ_Master1
+python -m ibeis Chap5.draw error_tables GZ_Master1
+\end{comment}
 
-
-\newcommand{\SimDetails}{
-\begin{table}[h]
+\newcommand{\ErrorSizeDetails}{
+\begin{table}[b]
     \centering
-\caption[\caplbl{SimDetails}Simulation error details]{\caplbl{SimDetails} 
-% ---
-Detailed analysis of the errors for the simulations.
-We compare statistics the predicted PCCs with statistics of the real ground-truth PCCs.
-In each category ``pred \#'' is the number of predicted PCCs and ``pred size'' is the average number of
-  annotations in those PCCs (measured as mean and standard deviation).
-The ``real \# PCCs'' and ``real size'' columns are similarly defined.
-Lastly, the ``small size'' and ``large size'' columns are the average size of the smallest and largest PCCs in
-  each error group.
-%The sum of the importance for all $205$ feature dimensions is $1$.
-% ---
-}
-\label{tbl:SimDetails}
-    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
-    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
+    \caption[\caplbl{ErrorSizeDetails}Simulation error sizes]{\caplbl{ErrorSizeDetails}
+    % ---
+    Analysis of the errors made in each simulation.
+    We compare statistics of the predicted PCCs with statistics of the real groundtruth PCCs.
+    In each category ``pred PCCs'' is the number of predicted PCCs and ``pred PCC size'' is the average number of
+      annotations in those PCCs (measured as mean and standard deviation).
+    The ``real PCCs'' and ``real PCC size'' columns are similarly defined.
+    % ---
+    }
+    \label{tbl:ErrorSizeDetails}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/error_size_details.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/error_size_details.tex}\caption{Grévy's zebra}\end{subfigure}
 \end{table}
 }
 
 
+\newcommand{\ErrorGroupDetails}{
+\begin{table}[b]
+    \centering
+    \caption[\caplbl{ErrorGroupDetails}Simulation error group sizes]{\caplbl{ErrorGroupDetails}
+    % ---
+    Analysis of the error groups in the graph algorithm.
+    A merge error group is a set of predicted PCCs that are incorrectly disconnected,  % 
+    and a split error group is a set of real PCCs that are incorrectly connected.
+    For each case we report the number of error groups, the average number of PCCs in each group, and the average
+      size of the smallest and largest PCC in each group.
+    % ---
+    }
+    \label{tbl:ErrorGroupDetails}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/error_group_details.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/error_group_details.tex}\caption{Grévy's zebra}\end{subfigure}
+\end{table}
+}
+
+
+\begin{comment}
+python -m ibeis Chap5.draw error_tables PZ_Master1
+python -m ibeis Chap5.draw error_tables GZ_Master1
+
+python -m ibeis Chap5.draw dbstats PZ_Master1,GZ_Master1
+
+\end{comment}
 \newcommand{\TestTrainDBStats}{
 \begin{table}[b]
     \centering
-    \caption[\caplbl{TestTrainDBStats}Database statistics for the graph simulation]{\caplbl{TestTrainDBStats}
+    \caption[\caplbl{TestTrainDBStats}Database statistics for graph identification experiments]{\caplbl{TestTrainDBStats}
     % ---
-    Database statistics for the end-to-end graph simulation.
-    We split each dataset into training and test sets.
-    The training set is used to learn the pairwise classifiers, and we perform the simulation on the test set.
+    Database statistics for the graph identification experiments.
+    Each database is split into a training and a testing set.
+    %We use the training set to learn the pairwise classifiers, and the simulation is run on the testing set.
     We report the number of names, the number of annotations, and the average number of annotations per name for
       each set.
-    For the training set we also report how many edges (pairs of annotations) were used to train the classifiers.
+    Additionally, we report how many edges (pairs of annotations) were used to train the classifiers.
     % ---
     }
     \label{tbl:TestTrainDBStats}
-    %\begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/dbstats.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/dbstats.tex}\caption{Plains zebra}\end{subfigure}
     \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/dbstats.tex}\caption{Grévy's zebra}\end{subfigure}
 \end{table}
 }

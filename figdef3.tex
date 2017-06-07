@@ -194,21 +194,28 @@ python -m ibeis Chap3.agg_dbstats
 \centering
 \caption[Database statistics]{Database statistics.}
 \label{tbl:DatabaseStatistics}
-\input{figuresY/agg-enc.tex}
+\input{figures3/agg-enc.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
-\caption[Annotations per quality]{Annotations per quality.}
+\caption[Annotations per quality]{Annotations per quality. The ``None'' column
+indicates the number of annotations without a quality label.}
 \label{tbl:AnnotationsPerQuality}
-\input{figuresY/agg-qual.tex}
+\input{figures3/agg-qual.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
-\caption[Annotations per viewpoint]{Annotations per viewpoint.}
+\caption[Annotations per viewpoint]{
+    % ---
+    Annotations per viewpoint.
+    Columns names are abbreviated using the first letters of front, left, back, and right.
+    The ``None'' column indicates the number of annotations without a viewpoint label.
+    % ---
+}
 \label{tbl:AnnotationsPerViewpoint}
-\input{figuresY/agg-view.tex}
+\input{figures3/agg-view.tex}
 \end{table}
 }
 
@@ -220,10 +227,10 @@ python -m ibeis Chap3.draw time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,
 \end{comment}
 \newcommand{\timedist}{
 \begin{figure}[ht!] \centering
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/PZ_Master1/timedist.png}\caption{Plains zebras}\end{subfigure}
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figuresY/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/PZ_Master1/timedist.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
 \caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
 % ---
 Distribution of image timestamps.
@@ -256,7 +263,7 @@ python -m ibeis Chap3.draw_all --db GIRM_Master1
 
 \newcommand{\BaselineExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/agg-baseline.png}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/agg-baseline.png}\end{subfigure}
         \caption[\caplbl{BaselineExpt}Baseline experiment]{\caplbl{BaselineExpt}
     % ---
     The baseline experiment is a high-level indicator of the ranking accuracy of each species.
@@ -289,8 +296,8 @@ ibeis Chap3.draw smk --dbs=GZ_Master1,PZ_Master1 --diskshow
 \end{comment}
 \newcommand{\SMKExpt}{
 \begin{figure}[ht!]\centering
-    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/smk.png}\caption{Plains zebras}\label{sub:SMKExptA}\end{subfigure}
-    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/smk.png}\caption{Grévy's zebras}\label{sub:SMKExptB}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/smk.png}\caption{Plains zebras}\label{sub:SMKExptA}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/smk.png}\caption{Grévy's zebras}\label{sub:SMKExptB}\end{subfigure}
     \caption[\caplbl{SMKExpt}SMK experiment]{\caplbl{SMKExpt}
     % ---
     The (VLAD based) SMK algorithm compared to our LNBNN ranking algorithm.
@@ -313,8 +320,8 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
 \end{comment}
 \newcommand{\ForegroundExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness.png}\caption{Plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness.png}\caption{Grévy's zebras}\label{sub:ForegroundExptB}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/foregroundness.png}\caption{Plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/foregroundness.png}\caption{Grévy's zebras}\label{sub:ForegroundExptB}\end{subfigure}
         \caption[\caplbl{ForegroundExpt}Foregroundness experiment]{\caplbl{ForegroundExpt}
             % ---
             Weighting the score of the feature correspondences using foregroundness results in more accurate
@@ -328,8 +335,8 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
 
 \newcommand{\FGIntraExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/foregroundness_intra.png}\caption{Plains zebras}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/foregroundness_intra.png}\caption{Grévy's zebras}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/foregroundness_intra.png}\caption{Plains zebras}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/foregroundness_intra.png}\caption{Grévy's zebras}\end{subfigure}
         \caption[\caplbl{FGIntraExpt}Foregroundness experiment]{\caplbl{FGIntraExpt}
             % ---
             Applying foregroundness weights to feature correspondences improves the identification accuracy at
@@ -349,8 +356,8 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
 
 \newcommand{\InvarExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/invar.png}\caption{Plains zebras}\label{sub:InvarExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/invar.png}\caption{Plains zebras}\label{sub:InvarExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
         \caption[\caplbl{InvarExpt}Feature invariance experiment]{\caplbl{InvarExpt}
             % ---
             Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the
@@ -422,8 +429,8 @@ python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
 
 \newcommand{\NScoreExpt}{
     \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/nsum.png}\caption{Plains zebras}\label{sub:NScoreExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/nsum.png}\caption{Plains zebras}\label{sub:NScoreExptA}\end{subfigure}
+        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
         \caption[\caplbl{NScoreExpt}Name scoring experiment]{\caplbl{NScoreExpt}
             % ---
             Results of the name scoring mechanism experiment.
@@ -453,7 +460,7 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 \end{comment}
 \newcommand{\KExptA}{
     \begin{figure}[ht!]\centering
-        \centering\includegraphics[width=\textwidth]{figuresY/PZ_Master1/kexpt.png}
+        \centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/kexpt.png}
         \caption[\caplbl{KExptA}The $K$ experiment for plains zebras]{\caplbl{KExptA}
             % ---
             Identification accuracy for plains zebras using different values of $\K$ (the number of nearest
@@ -468,7 +475,7 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 }
 \newcommand{\KExptB}{
     \begin{figure}[ht!]\centering
-        \centering\includegraphics[width=\textwidth]{figuresY/GZ_Master1/kexpt.png}
+        \centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/kexpt.png}
         \caption[\caplbl{KExptB}The $K$ experiment for Grévy's zebras]{\caplbl{KExptB}
             % ---
             Identification accuracy for Grévy's zebras using different values of $\K$ (the number of nearest

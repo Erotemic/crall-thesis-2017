@@ -21,6 +21,8 @@ grep -Przo "(?s)Deep *. *Face" *.tex
 grep -ER "tradeoff" *.tex
 grep -ER "precomputed" *.tex
 
+grep -ER "ground-truth" *.tex
+
 Gradient Location-Orientation Histogram
 Gradient Location-Orientation Histogram
 Speeded Up Robust Features

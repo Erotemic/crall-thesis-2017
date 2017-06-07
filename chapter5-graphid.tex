@@ -896,7 +896,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     The training set will be used to learn the pairwise classifiers and determine thresholds for automatic
       classification.
     The training dataset is further split into learning and validation sets as needed.
-    We summarize both the training and testing datasets in \cref{tbl:TestTrainInfo}.
+    We summarize both the training and testing datasets in \cref{tbl:TestTrainDBStats}.
 
     \TestTrainDBStats{}
 
@@ -1026,7 +1026,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       groundtruth is achieved.
     We do not separate these cases for simplicity.
 
-    These error measures are reported in~\cref{tbl:SimDetails}.
+    These error measures are reported in~\cref{tbl:ErrorSizeDetails,tbl:ErrorGroupDetails}.
     In all cases we see that \pvar{graph} results in the most number of common PCCs and fewest splits due to its
       error recovery mechanism.
     However, we also see that \pvar{graph} also has the most merge cases.
@@ -1042,7 +1042,12 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     Mistakes involving individuals with only one annotation are more difficult to detect and highlight the
       importance of obtaining multiple images of each individual.
 
-    \SimDetails{}
+    %\SimDetails{}
+
+    %\SimErrorSize{}
+    \ErrorSizeDetails{}
+
+    \ErrorGroupDetails{}
 
  
 \FloatBarrier{}
