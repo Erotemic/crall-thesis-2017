@@ -893,7 +893,12 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       \cref{sub:datasets}.
     Because some of our algorithms will require training, we split each dataset into a training set and a testing
       set each containing half of the names.
+    The training set will be used to learn the pairwise classifiers and determine thresholds for automatic
+      classification.
     The training dataset is further split into learning and validation sets as needed.
+    We summarize both the training and testing datasets in \cref{tbl:TestTrainInfo}.
+
+    \TestTrainDBStats{}
 
     This experiment will compare the three different methods of determining the identifies of annotations based
       on the algorithms in this \thesis{}.

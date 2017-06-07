@@ -157,9 +157,9 @@ python -m ibeis Chap5.draw_simulation --db GZ_Master1 --diskshow
 \newcommand{\Simulation}{
 \begin{figure}[t]
 \centering
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/simulation.png}\caption{Plains zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/PZ_Master1/simulation.png}\caption{Plains zebra}\end{subfigure}
 ~
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/GZ_Master1/simulation.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/simulation.png}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{Simulation}Simulation experiment]{\caplbl{Simulation}
 % ---
 The user simulation experiment compares the three identification algorithms defined in this \thesis{}.
@@ -180,9 +180,9 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \newcommand{\Refresh}{
 \begin{figure}[ht]
 \centering
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/PZ_Master1/refresh.png}\caption{Plains zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/PZ_Master1/refresh.png}\caption{Plains zebra}\end{subfigure}
 ~
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figuresGraph/GZ_Master1/refresh.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/refresh.png}\caption{Grévy's zebra}\end{subfigure}
 \caption[\caplbl{Refresh}Measured refresh and termination probabilities]{\caplbl{Refresh}
 % ---
 The measured refresh and termination criteria.
@@ -222,7 +222,27 @@ Lastly, the ``small size'' and ``large size'' columns are the average size of th
 % ---
 }
 \label{tbl:SimDetails}
-    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
-    \begin{subfigure}[h]{\textwidth}\centering\input{figuresGraph/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/error_size.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/error_size.tex}\caption{Grévy's zebra}\end{subfigure}
+\end{table}
+}
+
+
+\newcommand{\TestTrainDBStats}{
+\begin{table}[b]
+    \centering
+    \caption[\caplbl{TestTrainDBStats}Database statistics for the graph simulation]{\caplbl{TestTrainDBStats}
+    % ---
+    Database statistics for the end-to-end graph simulation.
+    We split each dataset into training and test sets.
+    The training set is used to learn the pairwise classifiers, and we perform the simulation on the test set.
+    We report the number of names, the number of annotations, and the average number of annotations per name for
+      each set.
+    For the training set we also report how many edges (pairs of annotations) were used to train the classifiers.
+    % ---
+    }
+    \label{tbl:TestTrainDBStats}
+    %\begin{subfigure}[h]{\textwidth}\centering\input{figures5/PZ_Master1/dbstats.tex}\caption{Plains zebra}\end{subfigure}
+    \begin{subfigure}[h]{\textwidth}\centering\input{figures5/GZ_Master1/dbstats.tex}\caption{Grévy's zebra}\end{subfigure}
 \end{table}
 }
