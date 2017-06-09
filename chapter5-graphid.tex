@@ -21,15 +21,15 @@ Using the connectivity of the decision graph, we naturally address the problem o
 Assuming no edges are incorrectly labeled, each connected component of positive edges are all annotations from
   the same individual animal.
 We will refer to these as \glossterm{positive connected components} (PCCs).
-If the graph has at least one negative edge between all pairs of PCCs, then we know that all individuals are
-  unique and identification is \emph{complete}.
+We call a graph \glossterm{id-complete} if there is at least one negative edge between all pairs of PCCs.
+In this case all labeled individuals must be distinct, and we have therefore completed identification.
 Alternatively, if every pair of PCCs either has a negative edge between them except for pairs of PCCs where all
   possible edges between them are incomparable, then we know that the data cannot be used to determine if those
   incomparable PCCs are the same or different.
 Removing the assumption that all edges are correctly labeled, we call a decision graph \glossterm{inconsistent}
   if any PCC contains a negative edge because it implies that an edge has been mislabeled.
-Therefore, stated abstractly, goal of graph identification is to determine a correct, consistent set of edges in
-  the decision graph.
+Therefore, stated abstractly, goal of graph identification is to determine a correct, consistent, and id-complete
+  set of edges in the decision graph.
 
 
 In the most general case, the decision graph is initialized with an empty set of edges.
@@ -98,9 +98,9 @@ Furthermore, because pairwise decisions are gathered and maintained by this fram
 The first section (\Cref{sec:decisiongraph}) of this chapter formalizes the decision graph and summarizes the
   priority-based review procedure used to construct it.
 This provides an overview of each component of the processes.
-Each of these components are then discussed in further detail
+Each of these components is then discussed in further detail
   in~\cref{sec:redun,sec:incon,sec:cand,sec:decision,sec:converge}.
-\Cref{sec:graphexpt} experimentally demonstrates that ability of the graph identification algorithm to reduce the
+\Cref{sec:graphexpt} experimentally demonstrates the ability of the graph identification algorithm to reduce the
   number of manual reviews and recover from decision errors.
 \Cref{sec:graphconclusion} concludes and summarizes the chapter.
 
@@ -172,9 +172,7 @@ Thus, in our context incomparable edges play a minor but necessary role.
 %play a minor but necessary role by 
 
 Using the connectivity of these edges, we can reduce the number of manual reviews needed.
-%Assuming that each edge is correctly labeled and, 
-We now make several observations assuming that each edge is reviewed correctly and
-
+We now make several observations assuming that each edge is reviewed correctly.
 To reduce the number of potential reviews, notice, that once a group of nodes is connected by (a tree of)
   positive edges, all those nodes in that PCC can be inferred to belong to the same individual, and it is not
   necessary to consider any other edge internal to the PCC for review.
@@ -182,9 +180,11 @@ Likewise, once a negative edges has been placed between two PCCs, all edges betw
 By ignoring these redundant edges we can reduce the number of reviews.
 Furthermore, we can construct a \glossterm{deterministic termination criterion}; if a negative edge is placed
   between every pair of PCCs, then all individuals must have been discovered and identification has converged.
+We call such a graph id-complete because when all vertices in a PCC are collapsed into one, the resulting
+  meta-graph is complete.
 
-Unfortunately, there are several issues with these previous observations.
-These observations depend on the condition that each edge was correctly reviewed.
+Unfortunately, there are two issues with these observations.
+First, they depend on the condition that each edge was correctly reviewed.
 In fact, we know that both the verification algorithm and human reviewers are sometimes wrong.
 We therefore will introduce redundancy into our graph that allows the algorithm to detect and correct errors,
   trading off the level of redundancy with the sophistication of the errors that may be caught.
@@ -199,10 +199,7 @@ Therefore, we will define a redundancy criterion in~\cref{sec:redun} which ignor
 
 Additionally, the deterministic termination criterion would require that each pair of PCCs has a redundant set of
   negative edges between them before the algorithm stop.
-%$O(|V|^2)$ edges are reviewed as
-%  negative.
-While the number of edges that need review grows quadratically, the number of edges able to be automatically
-  reviewed will only increase linearly in the number of nodes.
+However, the number of edges that need review grows quadratically.
 Therefore, unless the automatic algorithm is perfect or the dataset is small, the number of negative reviews
   needed to converge will be too large for a human to handle.
 We address this concern in~\cref{sec:converge} using a probabilistic termination criterion.
@@ -230,7 +227,7 @@ Throughout the main algorithm, the graph is maintained in a \emph{consistent} st
 Note, that while we describe the algorithm starting from an empty graph, without loss of generality, the edges in
   the graph can be initialized to reflect a previously known labeling.
 Thus, the algorithm can address the case where nothing is known, new images are being added to an existing
-  dataset, or multiple datasets are being combine.
+  dataset, or multiple datasets are being combined.
 
 
 \begin{algorithm}
@@ -253,7 +250,8 @@ Thus, the algorithm can address the case where nothing is known, new images are 
 
 The first step of the algorithm is to generate candidate edges predict probability measures (positive, negative,
   or incomparable) for each candidate edge.
-In the next step each edge is then entered into a priority queue.
+In the next step each edge is then entered into a priority queue with a priority based first on its ability to be
+  automatically reviewed and then on its positive probability.
 Next, the algorithm enters a loop where the next candidate edge is selected, a decision is made about this edge
   --- either automatically (as much as possible) or by the user --- and it is added to the graph.
 The algorithm proceeds toward convergence by removing candidate edges from the priority queue, either directly
@@ -286,10 +284,10 @@ The priority queue will gradually be emptied as each PCC obtains a sufficiently 
 %  terminate.
 
 Details of each step in the review algorithm are described in the following sections.
-First we describe the redundancy criterion in~\cref{sec:redun}, and then cover inconsistency recovery
-  in~\cref{sec:incon}.
-These will serve to inform the sections that define candidate edge generation, in~\cref{sec:cand},
-  decision-making in~\cref{sec:decision}, and the refresh and termination criteria in~\cref{sec:converge}.
+First we describe the redundancy criterion in~\cref{sec:redun}.
+Then we will define candidate edge generation in~\cref{sec:cand} and decision-making in~\cref{sec:decision}.
+Inconsistency recovery is covered in~\cref{sec:incon}.
+Finally we describe the refresh and termination criteria in~\cref{sec:converge}.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
@@ -325,8 +323,9 @@ The first is for positive edges within PCCs and the second is for negative edges
 
     \item negative-redundancy --- % 
         A pair of PCCs $C$ and $D$ is $k$-negative-redundant if there are $k$ negative edges between $C$ and $D$,
-        or if either PCC has fewer than $k$ nodes and there are at least $\mathop{max}(|C|, |D|)$ negative edges
-        between them.
+          or if there are $|C| \cdot |D|$ negative or incomparable edges between them.
+          %or if both PCCs have fewer than $k$ nodes and there are at least $\mathop{max}(|C|, |D|)$ negative edges
+          %between them.
         
     %which can be determined in $O(n_1 n_2)$ time.
     %(by looping over adjacency sets of nodes
@@ -365,9 +364,9 @@ Otherwise, in the more interesting case, when $n > k$, a PCC is positive-redunda
 In practice, we are primarily concerned with the case when $k=2$.
 The special case of $2$-edge-connectivity is also called bridge-connectivity, and this can be determined in %
 $O(n + m)$~\cite{eswaran_augmentation_1976,wang_simple_2015}.
-The basic idea is to trace cycles encountered during a depth-first-search of the graph and remove all edges not
-  part of those cycles.
-Any untraced edge is not part of any cycle, and is called a bridge.
+The basic idea is to trace cycles encountered during a depth-first-search of the graph and mark all edges that
+  are part of a cycle.
+Any unmarked edge is not part of any cycle, and is called a bridge.
 Removing any bridge edge would disconnect the PCC.
 Thus, if no bridge exists then the PCC is $2$-edge-connected.
 
@@ -436,9 +435,6 @@ We can address this by using a weighted variant of the problem, setting the weig
 However, the weighted variant of this problem is NP-hard, even for $k=2$, but can be approximated within a factor
   of $2$~\cite{khuller_approximation_1993}.
 We make use of this algorithm later in~\cref{sec:cand}
-%We use the augmentation algorithm to generate edges that complete positive redundancy.
-%We use the augmentation algorithms to ensure all PCCs are positive consistent without relying on edges returned
-%  by the ranking algorithm.
 
 A set of edges that would complete negative-redundancy for a pair of PCCs, we compute a
   $k$-negative-augmentation.
@@ -449,7 +445,8 @@ For each combination of nodes, if there is no existing edge between those nodes 
   augmenting set.
 Once $k$ edges have been added to the augmenting set or there are no more node combinations, stop and return the
   augmenting set.
-Note, that we do not use this algorithm in practice.
+Note, that we do not use this algorithm in practice because we use a probabilistic termination criteria instead
+  of enforcing that all pairs of PCCs are negative-redundant.
 
 %If the PCC only contains positive edges, edge augmentation with the fewest edges can be computed in linear time
 %  using~\cite{eswaran_augmentation_1976}.
@@ -465,14 +462,14 @@ In this section we describe the first step of the algorithm where candidate edge
 There many ways that candidate edges can be generated.
 Different sets and orderings of candidate edges will impact different properties of the graph at different rates.
 Therefore, we choose candidate edges to depend on what properties of the graph we want to manipulate.
-In the context of identifying individual animals, the most obvious property to manipulate is reduce the number of
-  PCCs in the graph by adding positive edges between existing PCCs, thus merging them into one.
+In the context of identifying individual animals, the most obvious manipulations is to reduce the number of PCCs
+  in the graph by adding positive edges between existing PCCs, thus merging them into one.
 A less obvious property that we can manipulate is the fraction of PCCs that are positive redundant.
 By increasing this fraction to $1$, we discover mistakes that have been made, which can be fixed using the
   algorithm in~\cref{sec:incon}.
 This ultimately decreases the likelihood that any PCC contains a mislabeled positive edge.
-In each iteration outer loop of our main algorithm, we alternate between first generating candidate to merge
-  PCCs, and then generating edges to ensure that all PCCs are positive redundant.
+In each iteration outer loop of our main algorithm, we alternate between first generating candidate edges to
+  merge PCCs, and then generating candidate edges to ensure that all PCCs are positive redundant.
 
 To generate candidate edges that may merge existing PCCs we use the LNBNN ranking algorithm
   from~\cref{chap:ranking}.
@@ -488,8 +485,7 @@ This ensures automatic decision-making is first, followed by an ordering of the 
   that are most likely to be positive and therefore add the most information to the graph.
 It is desirable to add positive decisions to the graph first because
 (1) they are the most important edges with respect to determining the animal identities, and
-(2) larger PCCs increase the number of edges that can be invalided by positive and negative reviews using the
-  redundancy criterion.
+(2) larger PCCs increase the number of edges that can be skipped using the redundancy criterion.
 
 The first iteration of the outer loop the algorithm generates edges using the ranking algorithm.
 Review of these edges continues until the priority queue is empty, or we determine that the candidate edges
@@ -500,7 +496,8 @@ In this next iteration, we generate candidate edges to ensure that all PCCs are 
 
 To generate candidate edges that will make PCCs positive redundant, we use the positive-augmentation algorithm
   from~\cref{subsec:augredun} to generate edges.
-These edges are assigned prioritized in the same way, however in this iteration the refresh criterion is disabled.
+These edges are assigned prioritized in the same way, however in this iteration the refresh criterion is
+  disabled.
 This enforces that if each edges is reviewed as positive, then all PCCs will be positive-redundant at the end of
   this inner loop.
 However, sometimes an edge will not be reviewed as positive.
@@ -508,8 +505,10 @@ If it is reviewed as negative, then it will introduce an inconsistency and be ha
   in~\cref{sec:incon}.
 If it is reviewed as incomparable, then the PCC will only be positive-redundant if all edges between the nodes in
   the PCC have been reviewed.
-Because we want to ensure that all PCCs are positive-redundant, we simply regenerate candidate edges using the
-  positive-augmentation algorithm in the next iteration of the outer loop until all PCCs are positive-redundant.
+Because we want to ensure that all PCCs are positive-redundant, we delay alternating back to the ranking
+  algorithm.
+Instead, we simply regenerate candidate edges using the positive-augmentation algorithm in the next iteration of
+  the outer loop until all PCCs are positive-redundant.
 Therefore, at the end of this process all PCCs are positive-redundant by construction.
 
 After we have ensured positive-redundancy, the outer loop alternates back to generating candidate edges using the
@@ -525,8 +524,8 @@ Now that we have generated and prioritized a set of candidate edges we come to t
   decision-making.
 Because of the surrounding structure of the graph framework, this step is quite simple.
 Given a popped edge from the priority queue, we check if any of the positive, negative, and incomparable state
-  probabilities are produced by the pairwise algorithm is above their automatic decision threshold (set externally
-  as a hyperparameter).
+  probabilities produced by the pairwise algorithm is above their automatic decision threshold (set externally as a
+  hyperparameter).
 If the edge cannot be automatically reviewed we issue a request for user feedback.
 Once we have obtained feedback for an edge --- either automatically or manually --- the edge is added to the
   appropriate edge set.
@@ -538,8 +537,10 @@ For each decision we record a user-id to identify the reviewer or algorithm maki
 We also follow the approach of~\cite{branson_visual_2010} and store a user-specified categorical confidence value
   of unspecified, guessing, not-sure, pretty-sure, and absolutely-sure (with associated integer values $0$, $1$,
   $2$, $3$, and $4$).
-The user-id maintains data provenance allows us to check the automatic verification algorithm, but is not
-  directly used in this algorithm description.
+The user-id allows us to differentiate between edges that were automatically from those that were manually
+  reviewed.
+While this is not directly used in this algorithm description, it enables a variety of possible post-processing
+  techniques, \eg{} manually reviewing automatically reviewed edges between PCCs containing only two annotations.
 However, the user confidence contributes to the edges weights in the error detection and recovery algorithm
   from~\cref{sec:incon}.
 
@@ -549,8 +550,8 @@ However, the user confidence contributes to the edges weights in the error detec
 In~\cref{sec:redun} we described a redundancy criterion that exposes errors by introducing inconsistencies.
 In this section we describe an algorithm for fixing these errors and recovering from these inconsistencies.
 
-Whenever a decision is made that either adds a negative edge within a PCC or adds a positive between two PCCs
-  with at least one negative edge between them, the graph becomes inconsistent.
+Whenever a decision is made that either adds a negative edge within a PCC or adds a positive edge between two
+  PCCs with at least one negative edge between them, the graph becomes inconsistent.
 In both cases the result is a single PCC $C$ with internal negative edges.
 The goal of inconsistency recovery mode is to change the labels of edges in order to make the subgraph formed by
   the nodes of $C$ and all of their edges.
@@ -560,8 +561,8 @@ Therefore, we develop an algorithm to hypothesize the edge(s) most likely to con
   minimum cut.
 If the hypothesis is correct, and all the labels on these edges were changed, then we show that the PCC would
   either become consistent or be split into multiple consistent PCCs.
-Because the hypothesis might not be correct, we then present these edges to a user for manual review, and if the
-  user agrees with the hypothesis, the algorithm completes.
+Because the hypothesis might not be correct, we present these edges to a user for manual review, and if the user
+  agrees with the hypothesis, the algorithm completes.
 Otherwise, the new information received by the user it taken into account, and the hypothesis is recomputed.
 An example of an inconsistent PCC with hypothesized edges is illustrated in \cref{fig:inconpcc}.
 
@@ -572,8 +573,8 @@ The procedure alternates between steps of generating ``mistake hypothesis'' edge
   user for review.
 The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which is
   re-labeled as positive or negative respectively would cause $C$ to become consistent.
-For simplicity, we focus first the case where $C$ contains exactly one negative edge, but it will not be hard to
-  extend to the general case.
+For simplicity, we focus first the case where $C$ contains exactly one negative edge.
+It will not be hard to extend to the general case.
 
 
 First consider a cut of $C$ that disconnects the endpoints of the negative edge.
@@ -586,8 +587,8 @@ Therefore, the algorithm starts by creating a minimum $s$-$t$-cut using the subg
 The endpoints of the single negative edge are the terminal nodes $s$ and $t$.
 Unlike in our preceding discussion where the edges only have positive/negative/incomparable labels the edges will
   now have weights that reflect a measure of confidence in their current label.
-In the case where the negative edge is correct, this will encourage the minimum cut to return the edges that are
-  most likely to be mislabeled.
+In the case where the negative edge is correct, this will encourage the minimum cut to return the positive edges
+  that are most likely to be mislabeled.
 
 The weight of edge in this cut problem is the sum of three values:
 \begin{enumln}
@@ -596,10 +597,10 @@ The weight of edge in this cut problem is the sum of three values:
     \item the number of consecutive times that edge was manually reviewed with
         its current label, and
 
-    \item an integer ranging from $0$ to $4$ indicating the confidence of the most recent review (which will be
-      discussed in \cref{sec:decision}).
+    \item an integer ranging from $0$ to $4$ indicating the confidence of the most recent review (see
+      \cref{sec:decision}).
 \end{enumln}
-Because we are using a minimum cut, the algorithm will find the lowest confidence of these edges.
+Because we are using a minimum cut, the algorithm will find the lowest confidence cut set of these edges.
 The higher each of these values is, the more likely that the edge is correctly labeled.
 The positive probability offers a baseline estimate of this confidence.
 Using the number of manual reviews means that if a user disagrees with a hypothesis, the weight on that edge will
@@ -761,7 +762,7 @@ Both the review and termination criteria can be addressed by considering the que
 A meaningful review is one that changes the name labeling of the annotations, \ie{} it is either a positive edge
   that merges two PCCs or a non-positive edge that splits one.
 Correct and meaningful reviews improve the accuracy of the identification by increasing the similarity --- in
-  terms of the name labeling --- between the predicted PCCs and the and the real underlying PCCs.
+  terms of the name labeling --- between the predicted PCCs and the real underlying PCCs.
 However, producing a meaningful review has a cost:
 the number of manual reviews since the last meaningful review.
 During the inner loop of the algorithm, when edges popped from the priority queue no longer consistently result
@@ -773,8 +774,8 @@ Note that if any meaningful reviews were made during that loop, we should refres
 On the other hand, if no meaningful reviews were made in the loop, then refreshing will have no benefit, and the
   algorithm should terminate.
 
-Thus, the task is construct a criterion that determines when edges on the top of the priority queue are no longer
-  meaningful.
+Thus, the task is to construct a criterion that determines when edges on the top of the priority queue are no
+  longer meaningful.
 In this way we directly address the refresh criterion and indirectly address termination criterion.
 This is direct in the case of the refresh criterion because when the name labeling is more accurate, the LNBNN
   ranking will improve.
@@ -801,15 +802,22 @@ Thus, instead of providing guarantees about identification accuracy our terminat
 %\newcommand{\PT}{\Pr{T\teq1}}
 %\newcommand{\T}{\Pr{T\teq1}}
 
-Based on these observations we estimate the probability that ``there will be a meaningful review soon''. We define
-``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful consecutive reviews that a
-manual reviewer is willing to do between meaningful reviews. Let $M\teq1$ be the event that a review is meaningful
-and $M\teq0$ otherwise. Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and
-denote the index of the next review as $n$. Let $T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ be the event
-that any of the next $a$ reviews will be meaningful. Thus, the aforementioned question can be addressed by
-measuring the probability of the event $T\teq1$ The goal is to measure the probability the event $T\teq1$. We can
-periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and either
-refresh or terminate.
+Based on these observations we estimate the probability that ``there will be a meaningful review soon''.
+We define ``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful consecutive
+  reviews that a manual reviewer is willing to do between meaningful reviews.
+Let $M\teq1$ be the event that a review is meaningful and $M\teq0$ otherwise.
+Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and denote the index of the
+  next review as $n$.
+Let  %
+%$T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ 
+$T = \Or_{i=n}^{n+a} \M_i$
+%
+be a binary random variable that takes the value $T\eq=1$ in the event that any of the next $a$ reviews will be
+  meaningful.
+Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
+  to measure the probability the event $T\teq1$.
+We can periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and
+  either refresh or terminate.
 
 To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
   $M_i$ must follow a uniform distribution.
@@ -820,7 +828,7 @@ Even so, the use of a Poisson model can be justified by considering a sliding wi
   $M_i$.
 Recall that we only need to make predictions about the next $a$ reviews in the future, thus we are only concerned
   with a small window to the right on the distribution.
-Because the long-tailed distribution is monotonic decreasing, we can use a small window in the past to estimate
+Assuming the long-tailed distribution is monotonic decreasing, we can use a small window in the past to estimate
   an upper bound on probability of $T\teq1$ in the future.
 As the window moves to the right, the interval on the distribution becomes increasingly approximately uniform and
   the tightness of the bound improves and eventually becomes tight.
@@ -880,14 +888,16 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     In this section we design an end-to-end experiment where we start with a set of annotations without any name
       labels, and then we proceed to construct all the names.
-    This design simulates identification events like the \GZC{} and provides insight into the algorithms behave
-      in practice.
+    This simulates identification events like the \GZC{} and provides insight into how the algorithms behave in
+      practice.
     Because our algorithms are semi-automatic, we simulate a noisy user response using groundtruth data.
     Given a pair of annotations, the simulated user returns the groundtruth classification $98\percent$ of the
       time, making errors $2\percent$ of the time uniformly at random.
-    This accuracy assumption is simplistic and may be too low for an expert reviewer, but it will serve to
+    These assumptions may be simple and too inaccurate to model an expert reviewer, but it will serve to
       demonstrate our graph algorithm's ability to recover from errors.
     We will measure the accuracy and error as a function of the number of manual reviews.
+    Using these measures we will compare our graph algorithm to alternative techniques to demonstrate that it
+      produces accurate identifications with fewer errors using significantly fewer manual reviews.
 
     For this experiment, we will use the plains and Grévy's zebras datasets previously described in
       \cref{sub:datasets}.
@@ -895,15 +905,13 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       set each containing half of the names.
     The training set will be used to learn the pairwise classifiers and determine thresholds for automatic
       classification.
-    The training dataset is further split into learning and validation sets as needed.
-    We summarize both the training and testing datasets in \cref{tbl:TestTrainDBStats}.
-
+    The details of training and testing sets are summarized in \cref{tbl:TestTrainDBStats}.
     \TestTrainDBStats{}
+    \FloatBarrier{}
 
     This experiment will compare the three different methods of determining the identifies of annotations based
-      on the algorithms in this \thesis{}.
-    The first uses just the ranking algorithm from 
-    We denote these algorithms as:
+      on the algorithms defined in this \thesis{}.
+    The first uses just the ranking algorithm from We denote these algorithms as:
     These algorithms are:
     \begin{enumin}
 
@@ -917,31 +925,40 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     \end{enumin}
     In the case \pvar{graph}, the procedure from~\cref{sub:graphalgo} can be directly applied.
-    However, \pvar{ranking} and \pvar{rank+clf} must first be adapted with a protocol defining the order of
-      reviews and when to stop.
+    However, in order to compare \pvar{graph} to \pvar{ranking} and \pvar{rank+clf} we must define baseline
+      methods to determine the ordering of the reviews and when to stop.
+    Details of these identification procedures are given in the next subsection.
 
-    \subsection{Identification protocols}
+    \FloatBarrier{}
+    \subsection{Identification procedures}
 
-    We design the protocol for \pvar{ranking} to be similar to the approach described in \cref{sec:introgzc} that
-      was used in the \GZC{}.
+    We design the procedure for \pvar{ranking} to be similar to the approach described in \cref{sec:introgzc}
+      that was used in the \GZC{}.
+    This algorithm does not require a pre-training phase and thus only the testing set is used.
     Given the unlabeled annotations we index the database, issue each annotation as a query, and collect the top
       $5$ results from each ranked list.
     The resulting pairs of query and database annotations are stacked and sorted by LNBNN score.
-    The user reviews each result in the list sequentially, without regard to the underlying graph structure.
-    As was done in the \GZC{}, all redundant reviews are all manually considered and verified, and all
-      inconsistencies are ignored.
-    Unlike the \GZC{} we only run the ranking algorithm once --- in part for simplicity and in part because it
-      does not change how we interpret the results.
-    We also do not apply the consistency checks used in during the \GZC{} because these were mainly based on
-      heuristics that are difficult to reproduce and splitting names is difficult without connectivity information.
-    This algorithm does not require training and thus only the testing set is used.
+    The user reviews each pair in the list sequentially.
+    As was done in the \GZC{}, all pairs are all manually considered and verified, and all inconsistencies are
+      ignored.
+    In the \GZC{} the choice to re-run the ranking algorithm was made manually, making it difficult to reproduce.
+    Therefore, we simplify the experiment by choosing to run the ranking algorithm once.
+    Consistency checks are not applied because developing these is the point of the graph algorithm.
+    %When designing this protocol we considered alternatives
 
-    The protocol for \pvar{rank+clf} is only slightly modified from the used for the \pvar{ranking}.
+    %This is primarily due to simplicity.
+    %--- in part for simplicity and in part because it
+    %  does not change how we interpret the results.
+    %We also do not apply the consistency checks used in during the \GZC{} because these were mainly based on
+    %  heuristics that are difficult to reproduce and splitting names is difficult without connectivity
+    %information.
+
+    The procedure for \pvar{rank+clf} is only slightly modified from the used for the \pvar{ranking}.
     The main difference is that we use the automatic classification algorithm to predict pairwise probabilities
       for each pair of top ranked query and database annotations.
     If the probabilities of a class are above a threshold, then the pair is automatically reviewed, thus reducing
       the total number of manual reviews.
-    The rest of the protocol is unchanged.
+    The rest of the procedure is unchanged.
     The pairwise classifier is trained on the training set, and the algorithm is evaluated on the test set.
     We choose automatic thresholds by finding the thresholds that result in a specified false positive rate on a
       validation dataset.
@@ -958,9 +975,10 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     %Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
     %  that achieve a $0\percent$ false positive rate on a validation dataset.
 
-    Finally, the protocol for \pvar{graph} has already been defined in ~\cref{sub:graphalgo}.
-    To quickly recap, LNBNN is used to search for candidate edges, which are then either automatically or
-      manually classified based on their order in a priority queue.
+    Finally, the procedure for \pvar{graph} has already been defined in ~\cref{sub:graphalgo}.
+    To quickly recap, LNBNN is used to search for candidate edges, which are then assigned probabilities and
+      inserted into a priority queue based on these probabilities.
+    Candidate edges are either automatically or manually classified based on their order in the priority queue.
     Connectivity information is used to enforce a minimum level of redundancy, preventing extraneous redundancy,
       and ensure consistency.
     The convergence criterion determines when candidate edges should be refreshed and when the algorithm should
@@ -972,19 +990,23 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     For plains, a false positive rate of $0.03$ results in a positive threshold of $0.58$, a negative threshold
       of $0.93$, and an incomparable threshold of $1.0$.
     For the convergence criterion use a patience of $a=20$, a window span of $s=20$, and a termination threshold
-      of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive non-meaningful
-      reviews.
+      of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive
+      non-meaningful reviews.
 
     \subsection{Results}
 
-    We run the simulation for all combinations of datasets algorithms.
-    After each review we record two measurements pertaining to accuracy and error.
+    We run the simulation for all combinations of datasets and algorithms.
+    After each review decision is made we record two measurements pertaining to accuracy and error.
     The accuracy measurement is the number of merges remaining before all individuals have been identified.
-    This is the number of edges in a spanning forest of the groundtruth positive subgraph minus same measurement
-      but applied to the subgraph of all correctly predicted positive edges.
-    The error measurement is the total number of edges with a predicted match-state that differs from its
-      groundtruth match-state.
+    This is the number of edges in a spanning forest of the groundtruth positive subgraph minus the same
+      measurement but applied to the subgraph of all correctly predicted positive edges.
+    % better error measure?
+    The error measurement is the total number of edges with a predicted label that differs from its groundtruth
+      match-state.
+    Additionally for \pvar{graph}, after each review decision we record the probability of convergence estimated
+      by the convergence criterion.
     These measurements are plotted against the number of manual reviews.
+    \Cref{fig:Simulation,fig:Refresh} shows these results for plains and Grévy's zebra datasets.
 
     \Simulation{}
 
@@ -992,29 +1014,38 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     The results illustrated in \cref{fig:Simulation} demonstrate that \pvar{graph} achieves the fewest manual
       reviews with the fewest errors while still correctly identifying almost all individuals.
-    The number of remaining merges (on the left) slowly decreases \pvar{ranking}, which must manually review all
-      result.
-    For \pvar{graph} and \pvar{rank+clf} the initial decrease is instantaneous due to the automatic
-      classification algorithm, which does not cost manually reviews, but once manual reviews begin note that the
-      slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the redundancy mechanisms that remove extraneous
-      reviews.
+    The number of remaining merges (on the left) slowly decreases for \pvar{ranking}, which is the only algorithm
+      that requires manual review of each pair.
+    For \pvar{graph} and \pvar{rank+clf} the initial decrease appears instantaneous due to the automatic
+      classification algorithm, which does not cost manually reviews.
+    Notice, once manual reviews begin the slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the
+      redundancy mechanisms that removes extraneous reviews.
     Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
-      \pvar{graph} is able to terminate once the curve asymptotes using the convergence criterion.
-    The convergence criterion for this experiment is illustrated in \cref{fig:Refresh}.
+      while \pvar{graph} is able to terminate once the curve asymptotes using the convergence criterion.
 
     We now turn our attention to the right of \cref{fig:Simulation}.
     The \pvar{ranking} and \pvar{rank+clf} algorithms have no mechanism for error recovery, and thus their error
       steadily increases over time.
     However, \pvar{graph} is able to recover from many of these errors and achieve a low error rate despite
       starting with more errors due to an aggressive auto-classification threshold.
+      
+    \subsection{Error cases}
 
-    To further analyze the errors in a simulation, we compare the predicted PCCs to the real groundtruth PCCs.
+    To further analyze the errors in the simulation, we compare the predicted PCCs to the real groundtruth PCCs
+      in terms of the nodes that belong to each group.
+    In this analysis we are only interested in the grouping of nodes, and we ignore the details of the edge
+      labeling.
     We consider $3$ groups:
-    (1) the ``common'' predicted PCCs that exactly match a real PCC,
-    (2) the ``split'' predicted PCCs that must be split into real PCCs, and
-    (3) the ``merge'' predicted PCCs that must be merged into real PCCs.
+    \begin{enumln}
+        \item The ``correct'' group consists of predicted PCCs that exactly match a real PCC.
+        For a predicted PCC to be correct there must be a real PCC with the same nodes.
+        
+        \item the ``split'' predicted PCCs that must be split into real PCCs, and
+      
+        \item the ``merge'' predicted PCCs that must be merged into real PCCs.
+    \end{enumln}
     For each group we count the number of predicted PCCs and the number of real PCCs they correspond to.
-    We also measure the average size of these predicted and real PCCs.
+    We also measure the average number of annotations that belong to each of these predicted and real PCCs.
     Lastly, we measure the size difference in the smallest and largest predicted PCCs in each error group.
     An error group is defined slightly differently for splits and merges.
     For merges the error group is the predicted PCCs that will be merged into a single real PCC.
@@ -1022,8 +1053,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     There can be any number of PCCs in each error group, but in most cases the number of PCCs in each error group
       is $2$.
     Note that the majority of predicted PCCs can be purely split or merged into real PCCs, but there are some
-      predicted PCCs that are counted twice because they must first be split and then merged before the
-      groundtruth is achieved.
+      predicted PCCs that are counted twice because they must first be split and then merged before the groundtruth
+      is achieved.
     We do not separate these cases for simplicity.
 
     These error measures are reported in~\cref{tbl:ErrorSizeDetails,tbl:ErrorGroupDetails}.
