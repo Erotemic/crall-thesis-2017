@@ -170,49 +170,49 @@ Thus, sight-resight statistics can now be performed on this graph.
 \end{comment}
 
 
-\chapter{Properties of the graph algorithm}\label{app:graphprop}
+%\chapter{Properties of the graph algorithm}\label{app:graphprop}
 
 
-\begin{enumln}
+%\begin{enumln}
 
-\item Finding the largest set of comparable PCCs is a generalization to the independent set problem.
-Using the meta-graph where PCCs are nodes, and an edge is drawn between any PCCs known to have no comparable
-  pairs of annotations, any independent set of PCCs will all be comparable to one another.
-The largest independent set will be the largest set of comparable PCCs.
+%\item Finding the largest set of comparable PCCs is a generalization to the independent set problem.
+%Using the meta-graph where PCCs are nodes, and an edge is drawn between any PCCs known to have no comparable
+%  pairs of annotations, any independent set of PCCs will all be comparable to one another.
+%The largest independent set will be the largest set of comparable PCCs.
 
-\item The graph identification procedure is agnostic to the underlying computer vision algorithms.
-    Any ranking and verification algorithm can be substituted in.
+%\item The graph identification procedure is agnostic to the underlying computer vision algorithms.
+%    Any ranking and verification algorithm can be substituted in.
 
-\item The graph identification procedure can be used without computer vision algorithms to facilitate a more
-  efficient brute-force search, which can be useful to label small datasets.
-This is done by using all edges as candidate edges, and each edge is given a priority of $0$.
-The refresh criterion is not used, and the algorithm stops when the queue is empty.
-The positive and negative redundancy criteria will remove edges from the queue, so less than $|V|^2$ manual
-  reviews will have to be done.
+%\item The graph identification procedure can be used without computer vision algorithms to facilitate a more
+%  efficient brute-force search, which can be useful to label small datasets.
+%This is done by using all edges as candidate edges, and each edge is given a priority of $0$.
+%The refresh criterion is not used, and the algorithm stops when the queue is empty.
+%The positive and negative redundancy criteria will remove edges from the queue, so less than $|V|^2$ manual
+%  reviews will have to be done.
 
-\item When $k=2$ and edges are only added to the graph exactly to the specifications of the graph algorithm, it
-  is impossible for a PCC to contain more than one negative edge at any time.
+%\item When $k=2$ and edges are only added to the graph exactly to the specifications of the graph algorithm, it
+%  is impossible for a PCC to contain more than one negative edge at any time.
 
-\item When $k=1$, reviewing edges in order of positive match probability minimizes the expected number of total
-  reviews.
+%\item When $k=1$, reviewing edges in order of positive match probability minimizes the expected number of total
+%  reviews.
 
-\item At the end of the graph algorithm every PCC will be $k$-positive-redundant.
+%\item At the end of the graph algorithm every PCC will be $k$-positive-redundant.
 
-\item In recovery mode, consider that the hypothesis algorithm has generated a set of edges.
-The user has reviewed some of these edges and agreed with each hypothesis so far.
-In this case the remaining edges are necessarily a minimum cut.
-This is because the edges reviewed so far have had their label changed, meaning that they no longer connect
-  terminal nodes.
-In this case, if hypothesis generation is recomputed, then the new hypothesis will be the same as the set of
-  remaining edges if the weights in the graph are unique.
-If the weights in the graph are not unique, then the implementation of min-cut can be chosen to enforce that the
-  new set is the same as the remaining set.
+%\item In recovery mode, consider that the hypothesis algorithm has generated a set of edges.
+%The user has reviewed some of these edges and agreed with each hypothesis so far.
+%In this case the remaining edges are necessarily a minimum cut.
+%This is because the edges reviewed so far have had their label changed, meaning that they no longer connect
+%  terminal nodes.
+%In this case, if hypothesis generation is recomputed, then the new hypothesis will be the same as the set of
+%  remaining edges if the weights in the graph are unique.
+%If the weights in the graph are not unique, then the implementation of min-cut can be chosen to enforce that the
+%  new set is the same as the remaining set.
 
-\item A review can have one of the following mutually exclusive effects on the PCCs of the graph:
-    (1) merge exactly two PCCs into one PCC.
-    (2) split a single PCC into exactly two PCCs.
-    (3) do nothing to the PCCs, but potentially influence redundancy.
-\end{enumln}
+%\item A review can have one of the following mutually exclusive effects on the PCCs of the graph:
+%    (1) merge exactly two PCCs into one PCC.
+%    (2) split a single PCC into exactly two PCCs.
+%    (3) do nothing to the PCCs, but potentially influence redundancy.
+%\end{enumln}
   
 
 \end{appendices}

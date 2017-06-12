@@ -287,7 +287,7 @@ Details of each step in the review algorithm are described in the following sect
 First we describe the redundancy criterion in~\cref{sec:redun}.
 Then we will define candidate edge generation in~\cref{sec:cand} and decision-making in~\cref{sec:decision}.
 Inconsistency recovery is covered in~\cref{sec:incon}.
-Finally we describe the refresh and termination criteria in~\cref{sec:converge}.
+Finally, we describe the refresh and termination criteria in~\cref{sec:converge}.
 
 % will be emptied when each PCC is sufficiently re
 % Obtaining sufficient redundancy and completeness in order to empty the priority queue can,
@@ -757,30 +757,33 @@ Like, the refresh criterion, this can be determined --- in part --- by predictin
 
 \subsection{Convergence as a Poisson process}
 
+%\newcommand{\meaningful}{meaningful}
+\newcommand{\meaningful}{label-changing}
+
 Both the review and termination criteria can be addressed by considering the question:
-``Will there be a meaningful review anytime soon?''.
-A meaningful review is one that changes the name labeling of the annotations, \ie{} it is either a positive edge
-  that merges two PCCs or a non-positive edge that splits one.
-Correct and meaningful reviews improve the accuracy of the identification by increasing the similarity --- in
+``Will there be a \meaningful{} review anytime soon?''.
+A \glossterm{\meaningful{} review} is one that changes the name labeling of the annotations, \ie{} it is either a
+  positive edge that merges two PCCs or a non-positive edge that splits one.
+Correct and \meaningful{} reviews improve the accuracy of the identification by increasing the similarity --- in
   terms of the name labeling --- between the predicted PCCs and the real underlying PCCs.
-However, producing a meaningful review has a cost:
-the number of manual reviews since the last meaningful review.
+However, producing a \meaningful{} review has a cost:
+the number of manual reviews since the last \meaningful{} review.
 During the inner loop of the algorithm, when edges popped from the priority queue no longer consistently result
-  in meaningful reviews, the marginal gains in identification accuracy that could be made from continuing are
+  in \meaningful{} reviews, the marginal gains in identification accuracy that could be made from continuing are
   outweighed by the cost of manual review.
 In this circumstance it is best to break out of the inner loop.
-Note that if any meaningful reviews were made during that loop, we should refresh candidate edges and start a new
-  loop because a refresh could result in new high priority meaningful edges.
-On the other hand, if no meaningful reviews were made in the loop, then refreshing will have no benefit, and the
-  algorithm should terminate.
+Note that if any \meaningful{} reviews were made during that loop, we should refresh candidate edges and start a
+  new loop because a refresh could result in new high priority \meaningful{} edges.
+On the other hand, if no \meaningful{} reviews were made in the loop, then refreshing will have no benefit, and
+  the algorithm should terminate.
 
 Thus, the task is to construct a criterion that determines when edges on the top of the priority queue are no
-  longer meaningful.
+  longer \meaningful{}.
 In this way we directly address the refresh criterion and indirectly address termination criterion.
 This is direct in the case of the refresh criterion because when the name labeling is more accurate, the LNBNN
   ranking will improve.
-When we directly measure that the next reviews in the current priority queue are unlikely to be meaningful, and
-  the name labeling of the decision graph has changed, then it is more likely that we would review a meaningful
+When we directly measure that the next reviews in the current priority queue are unlikely to be \meaningful{}, and
+  the name labeling of the decision graph has changed, then it is more likely that we would review a \meaningful{}
   edge on the top of a new set of candidate edges sorted by priority.
 
 This task indirectly addresses the termination criterion because instead of stopping once the probability that
@@ -789,7 +792,7 @@ This task indirectly addresses the termination criterion because instead of stop
 However, if we were to directly address the termination criterion, we would have to estimate the probability that
   undiscovered merge and split cases exist.
 This probability depends on the effectiveness of the ranking algorithm.
-Even if our estimate of this probability was perfect, once the ranking algorithm starting producing meaningful
+Even if our estimate of this probability was perfect, once the ranking algorithm starting producing \meaningful{}
   reviews at a rate no better than random edge generation, it would take an enormous amount of manual effort to
   push this probability passed a desired threshold.
 Thus, instead of providing guarantees about identification accuracy our termination criterion achieves a
@@ -802,18 +805,18 @@ Thus, instead of providing guarantees about identification accuracy our terminat
 %\newcommand{\PT}{\Pr{T\teq1}}
 %\newcommand{\T}{\Pr{T\teq1}}
 
-Based on these observations we estimate the probability that ``there will be a meaningful review soon''.
-We define ``soon'' using a patience parameter $a$, defined as the maximum number of non-meaningful consecutive
-  reviews that a manual reviewer is willing to do between meaningful reviews.
-Let $M\teq1$ be the event that a review is meaningful and $M\teq0$ otherwise.
-Because reviews are ordered, denote the meaningfulness of the $i\th$ review as $M_i$, and denote the index of the
+Based on these observations we estimate the probability that ``there will be a \meaningful{} review soon''.
+We define ``soon'' using a patience parameter $a$, defined as the maximum number of consecutive reviews that a
+  manual reviewer is willing to do between \meaningful{} reviews.
+Let $M\teq1$ be the event that a review is \meaningful{} and $M\teq0$ otherwise.
+Because reviews are ordered, denote if the $i\th$ review is \meaningful{} as $M_i$, and denote the index of the
   next review as $n$.
 Let  %
 %$T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ 
 $T = \Or_{i=n}^{n+a} \M_i$
 %
 be a binary random variable that takes the value $T\eq=1$ in the event that any of the next $a$ reviews will be
-  meaningful.
+  \meaningful{}.
 Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
   to measure the probability the event $T\teq1$.
 We can periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and
@@ -822,7 +825,7 @@ We can periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, 
 To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
   $M_i$ must follow a uniform distribution.
 This would be true if the edges were reviewed in a random order.
-However, the priority queue orders edges more likely to be meaningful first, causing $M_i$ to follow a right
+However, the priority queue orders edges more likely to be \meaningful{} first, causing $M_i$ to follow a right
   skewed long tail distribution and violate Poisson assumptions.
 Even so, the use of a Poisson model can be justified by considering a sliding window along the distribution of
   $M_i$.
@@ -841,14 +844,14 @@ Thus, the use of a Poisson model with a sliding window allows us to approximate 
 \subsection{Details of Poisson convergence}
 
 Having justified its use, we model $M$ as a Poisson process, which is determined by a single parameter $\mu$.
-We can measure $\mu$ as the fraction of recently observed manual reviews that were meaningful using an
+We can measure $\mu$ as the fraction of recently observed manual reviews that were \meaningful{} using an
   exponentially weighted moving window.
-We initialize $\mu=1$ to denote that it is likely that the first review will be meaningful.
+We initialize $\mu=1$ to denote that it is likely that the first review will be \meaningful{}.
 Then, after each new review we update the parameter as %
-$\mu \leftarrow m \alpha + (1 - \alpha) \mu$, where $m\teq1$ if the review was meaningful and $0$ otherwise.
+$\mu \leftarrow m \alpha + (1 - \alpha) \mu$, where $m\teq1$ if the review was \meaningful{} and $0$ otherwise.
 The exponential decay $\alpha = 2 / (s + 1)$ is determined by a span parameter $s$, which roughly represents the
   number of previous reviews that are significant.
-Using this model, the desired probability that any of the next $a$ reviews will be meaningful is %
+Using this model, the desired probability that any of the next $a$ reviews will be \meaningful{} is %
 $\Pr{T\teq1} = 1 - \exp{-\mu  a}$.
 The example in \cref{fig:poisson} illustrates the behavior of the criterion using a synthetic dataset.
 %In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $t=\exp{-2}\approx 0.135$.
@@ -857,7 +860,7 @@ The example in \cref{fig:poisson} illustrates the behavior of the criterion usin
 %$\lceil{\frac{\log{\left (t \right )}}{\log{\left (\frac{s - 1}{s + 1} \right )}}}\rceil$
 
 %If we set the threshold to $\exp{-2}\approx0.135$, then the window span parameter also roughly represents how
-%  many successive consecutive non-meaningful decisions are necessary before reaching the threshold if starting from
+%  many successive consecutive non-\meaningful{} decisions are necessary before reaching the threshold if starting from
 %  initial state.
 
 \begin{comment}
@@ -935,7 +938,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     We design the procedure for \pvar{ranking} to be similar to the approach described in \cref{sec:introgzc}
       that was used in the \GZC{}.
     This algorithm does not require a pre-training phase and thus only the testing set is used.
-    Given the unlabeled annotations we index the database, issue each annotation as a query, and collect the top
+    Given the unlabeled annotations, we index the database, issue each annotation as a query, and collect the top
       $5$ results from each ranked list.
     The resulting pairs of query and database annotations are stacked and sorted by LNBNN score.
     The user reviews each pair in the list sequentially.
@@ -953,45 +956,47 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     %  heuristics that are difficult to reproduce and splitting names is difficult without connectivity
     %information.
 
-    The procedure for \pvar{rank+clf} is only slightly modified from the used for the \pvar{ranking}.
+    The procedure for \pvar{rank+clf} is similar to the one used for \pvar{ranking}.
     The main difference is that we use the automatic classification algorithm to predict pairwise probabilities
       for each pair of top ranked query and database annotations.
-    If the probabilities of a class are above a threshold, then the pair is automatically reviewed, thus reducing
-      the total number of manual reviews.
+    If the probabilities of a class are above a threshold, then the pair is automatically reviewed.
+    This has the effect of reducing the total number of manual reviews.
     The rest of the procedure is unchanged.
     The pairwise classifier is trained on the training set, and the algorithm is evaluated on the test set.
     We choose automatic thresholds by finding the thresholds that result in a specified false positive rate on a
       validation dataset.
     Because \pvar{rank+clf} has no mechanisms for error recovery, we choose conservative automatic thresholds by
-      specifying a false positive rate close to $0$.
-    When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
-    This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting
-      data.
-    For Grévy's, a false positive rate of $0.001$ results in a positive threshold of $0.99$, a negative threshold
-      of $0.98$, and an incomparable threshold of $1.0$.
-    For plains, a false positive rate of $0.01$ results in a positive threshold of $0.68$, a negative threshold
-      of $0.96$, and an incomparable threshold of $1.0$.
+      specifying an acceptable false positive rate of $0.001$.
+    This results in a positive, negative, and incomparable threshold of $0.976$, $0.991$, and $0.5$ respectively
+      for plains zebras, and $0.997$, $0.998$, $1.0$ for Grévy's.
+    %When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
+    %This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting
+    %  data.
+    % GRAPH THRESH
+    %We choose a false positive rate of $0.001$.
 
     %Because this approach has no mechanism for error recovery, we choose conservative classification thresholds
     %  that achieve a $0\percent$ false positive rate on a validation dataset.
 
-    Finally, the procedure for \pvar{graph} has already been defined in ~\cref{sub:graphalgo}.
-    To quickly recap, LNBNN is used to search for candidate edges, which are then assigned probabilities and
+    Finally, we quickly recap the procedure for \pvar{graph} which was defined in~\cref{sub:graphalgo}.
+    The algorithm begins by using LNBNN to search for candidate edges, which are then assigned probabilities and
       inserted into a priority queue based on these probabilities.
-    Candidate edges are either automatically or manually classified based on their order in the priority queue.
+    As candidate edges are removed from the queue they are either automatically or manually classified based on
+      probability thresholds.
     Connectivity information is used to enforce a minimum level of redundancy, preventing extraneous redundancy,
       and ensure consistency.
     The convergence criterion determines when candidate edges should be refreshed and when the algorithm should
       terminate.
-    The automatic classifier is the same one used in \pvar{rank+clf}, but because this algorithm can recover from
-      errors we can choose a slightly more aggressive threshold.
-    For Grévy's, a false positive rate of $0.0014$ results in a positive threshold of $0.97$, a negative
-      threshold of $0.97$, and an incomparable threshold of $1.0$.
-    For plains, a false positive rate of $0.03$ results in a positive threshold of $0.58$, a negative threshold
-      of $0.93$, and an incomparable threshold of $1.0$.
+    We use the same pairwise classifier from \pvar{rank+clf}, but due to the graph algorithm's error recovery
+      mechanisms we can choose more aggressive thresholds.
+    However, we have found that the algorithm is sensitive to this parameter, therefore we only slightly increase
+      acceptable false positive rate from $.001$ to $.0014$.
+    % GRAPH THRESH
+    This results in a positive, negative, and incomparable threshold of $0.969$, $0.986$, and $0.5$ respectively
+      for plains zebras, and $0.989$, $0.992$, and $1.0$ for Grévy's.
     For the convergence criterion use a patience of $a=20$, a window span of $s=20$, and a termination threshold
-      of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive
-      non-meaningful reviews.
+      of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive reviews that
+      are not \meaningful{}.
 
     \subsection{Results}
 
@@ -1003,10 +1008,11 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     % better error measure?
     The error measurement is the total number of edges with a predicted label that differs from its groundtruth
       match-state.
-    Additionally for \pvar{graph}, after each review decision we record the probability of convergence estimated
+    Additionally, for \pvar{graph}, after each review decision we record the probability of convergence estimated
       by the convergence criterion.
     These measurements are plotted against the number of manual reviews.
-    \Cref{fig:Simulation,fig:Refresh} shows these results for plains and Grévy's zebra datasets.
+    \Cref{fig:Simulation} shows these accuracy and error plots, and \cref{fig:Refresh} shows the convergence
+      criterion.
 
     \Simulation{}
 
@@ -1014,14 +1020,15 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     The results illustrated in \cref{fig:Simulation} demonstrate that \pvar{graph} achieves the fewest manual
       reviews with the fewest errors while still correctly identifying almost all individuals.
-    The number of remaining merges (on the left) slowly decreases for \pvar{ranking}, which is the only algorithm
-      that requires manual review of each pair.
+    We first focus on the left part of this figure.
+    The number of remaining merges slowly decreases for \pvar{ranking}, which is the only algorithm that requires
+      manual review of each pair.
     For \pvar{graph} and \pvar{rank+clf} the initial decrease appears instantaneous due to the automatic
       classification algorithm, which does not cost manually reviews.
     Notice, once manual reviews begin the slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the
       redundancy mechanisms that removes extraneous reviews.
     Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
-      while \pvar{graph} is able to terminate once the curve asymptotes using the convergence criterion.
+      while \pvar{graph} uses the convergence criterion to to terminate shortly after the curve flattens.
 
     We now turn our attention to the right of \cref{fig:Simulation}.
     The \pvar{ranking} and \pvar{rank+clf} algorithms have no mechanism for error recovery, and thus their error
@@ -1031,47 +1038,97 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       
     \subsection{Error cases}
 
-    To further analyze the errors in the simulation, we compare the predicted PCCs to the real groundtruth PCCs
-      in terms of the nodes that belong to each group.
-    In this analysis we are only interested in the grouping of nodes, and we ignore the details of the edge
-      labeling.
-    We consider $3$ groups:
+    To further analyze the predictions of the graph the simulation, we compare the node groupings of the
+      predicted PCCs to the real groundtruth PCCs.
+    For convenience we will still refer to a group of nodes as a PCC.
+    %Even though we are only concerned with the grouping of nodes
+    In this analysis we categorize groups of predicted PCCs and their corresponding real PCCs as one of three
+      types:
+    correct, split, or merge.
+    Consider an example where we are given a graph with $8$ nodes and the real PCCs are %
+    $\curly{\curly{a, b, c}, \curly{d}, \curly{e, f}, \curly{g}}$, and we predict the PCCs%
+    $\curly{\curly{a, b}, \curly{c}, \curly{d, e, f}, \curly{g}}$.
+    Using this example we define the three group types:
+    %correct, split We will categorize predictions as one of three types.
+      %in terms of the nodes that belong to each group.
+    %In this analysis we are only interested in the grouping of nodes, and we ignore the details of the edge
+    %  labeling.
+    %To analyze our predictions we define $3$ types of groups.
     \begin{enumln}
-        \item The ``correct'' group consists of predicted PCCs that exactly match a real PCC.
-        For a predicted PCC to be correct there must be a real PCC with the same nodes.
+        \item A ``correct'' group is a predicted PCCs that contains all nodes in a real PCC.
+        In the example the PCC $\curly{g}$ is a real group.
+        %For a predicted PCC to be correct there must be a real PCC with the same nodes.
         
-        \item the ``split'' predicted PCCs that must be split into real PCCs, and
+        \item A ``split'' error group consists of multiple real PCCs that are labeled as belonging to the same
+          predicted PCC.
+        Each split group contains at least one edge incorrectly labeled as positive.
+        In the example, the real PCCs $\curly{\curly{d}, \curly{e, f}}$ are a split group.
+        %Thus split groups are created when an edge is incorrectly labeled as positive.
+        %A split cases is caused by when two real PCCs are connected.
+        %This results in two real PCCs that are connected.
+        %because that edge connects two real PCCs.
+        %two nodes in two real PCCs are connected by
       
-        \item the ``merge'' predicted PCCs that must be merged into real PCCs.
+        \item A ``merge'' error group consists of multiple predicted PCCs that must be merged into a single real
+          PCCs.
+        Each pair of predicted PCCs in a merge group is missing a positive edge.
+        This can happen if an edge is incorrectly labeled, if the ranking algorithm never generates this edge as
+          a candidate, or the termination criterion stops the algorithm before the edge can be reviewed.
+        In the example, the predicted PCCs $\curly{\curly{a, b}, \curly{c}}$ are a merge group.
+        
+        %that would have connected 
+        %A merge cases is caused by the absence of a positive edge that would have connected two nodes in a real
+        %  PCC.
     \end{enumln}
-    For each group we count the number of predicted PCCs and the number of real PCCs they correspond to.
-    We also measure the average number of annotations that belong to each of these predicted and real PCCs.
-    Lastly, we measure the size difference in the smallest and largest predicted PCCs in each error group.
-    An error group is defined slightly differently for splits and merges.
-    For merges the error group is the predicted PCCs that will be merged into a single real PCC.
-    For splits the error group is the real PCCs that should result from splitting a single predicted PCC.
-    There can be any number of PCCs in each error group, but in most cases the number of PCCs in each error group
-      is $2$.
-    Note that the majority of predicted PCCs can be purely split or merged into real PCCs, but there are some
-      predicted PCCs that are counted twice because they must first be split and then merged before the groundtruth
-      is achieved.
-    We do not separate these cases for simplicity.
+    As defined, the split and merge error groups do not cover all cases.
+    We call the previously described cases ``pure'' split/merge error groups because there is a mapping between
+      sets of real/predicted PCCs to exactly one predicted/real PCC.
+    However, consider the real PCCs $\curly{\curly{x, y}, \curly{z}}$ and predicted PCCs $\curly{\curly{x},
+      \curly{y, z}}$.
+    This case cannot be cleanly categorized as a split or a merge group, but it contains elements of both.
+    Thus, we call this a ``hybrid'' case.
+    A slight modification to the above groups can incorporate hybrid cases.
+    First, we change the definition of a split groups to be the set of maximal real PCC subsets that are labeled
+      as belonging to the same predicted PCC.
+    In essence this means we can treat $\curly{\curly{y}, \curly{z}}$ as a split group.
+    Second, for merges, we simply change predicted PCCs to be the predicted PCCs after they have been split.
+    This lets us treat $\curly{\curly{x}, \curly{y}}$ as a merge group.
+    %In or graph simulation almost all error groups are either pure splits or pure merges.
 
-    These error measures are reported in~\cref{tbl:ErrorSizeDetails,tbl:ErrorGroupDetails}.
-    In all cases we see that \pvar{graph} results in the most number of common PCCs and fewest splits due to its
-      error recovery mechanism.
+    %In our analysis we will treat hybrids similar to split and merge cases. 
+    %However, for the simplicity of analysis we will group hybrid cases with 
+    %We can address a hybrid case by first splitting hybrid groups into maximal subsets of real PCCs and then
+    %  merging these subsets into real PCCs.
+
+    We analyze statistics of these groups and present the results in two tables.
+    First, for each simulation we gather the set of predicted and real PCCs, and then we group them into correct,
+      split, and merge groups.
+    For each group type we count the number of predicted PCCs and the number of real PCCs they correspond to.
+    We also measure the average number of annotations in each PCC.
+    These number are reported in~\cref{tbl:ErrorSizeDetails}.
+    Then, in~\cref{tbl:ErrorGroupDetails} we focus only on the results of \pvar{graph} and measure the average
+      number of PCCs in each error group.
+    Additionally, we consider the smallest and largest PCC in each error group, and we measure the average number
+      of annotations in each.
+
+    Looking at~\cref{tbl:ErrorSizeDetails} we observe that \pvar{graph} predicts the most correct PCCs and fewest
+      splits in all cases.
+    This is not surprising due to its error recovery mechanism.
     However, we also see that \pvar{graph} also has the most merge cases.
     The reason for this is that the other algorithms do not have termination criteria.
-    They continued to review pairs, even long after the rankings were no longer meaningful, essentially beginning
-      a brute-force search of the database.
-    In the thousands of extra iterations, the other algorithms managed to find less than $10$ extra merge cases
-      not discovered by \pvar{graph}.
-    Furthermore, almost all merge cases for all algorithms were the result of failing to match a single
-      annotation to a larger group of annotations.
-    Lastly, many of the split cases for the \pvar{graph} algorithm involve splitting just one singleton
-      annotation off of a larger PCC.
-    Mistakes involving individuals with only one annotation are more difficult to detect and highlight the
-      importance of obtaining multiple images of each individual.
+    They continued to review pairs, even long after the rankings were no longer consistently \meaningful{}, and
+      essentially began to brute-force search the database.
+    In the thousands of extra iterations, the other algorithms managed to find ${\sim}20$ extra merge cases that
+      were not discovered by \pvar{graph}.
+
+    Now moving to~\cref{tbl:ErrorGroupDetails},  we notice that almost all merge cases for \pvar{graph} are the
+      result of failing to match a single annotation to a larger group of annotations.
+    Similarly, most split cases involve splitting just one singleton annotation off of a larger PCC.
+    To gain further insight into what is causing these errors we will visualize individual cases.
+    %Mistakes involving individuals with only one annotation are more difficult to detect and highlight the
+    %  importance of obtaining multiple images of each individua.
+    %These error measures are reported
+    %in~\cref{tbl:ErrorSizeDetails,tbl:ErrorGroupDetails}.
 
     %\SimDetails{}
 
@@ -1080,6 +1137,50 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     \ErrorGroupDetails{}
 
+    \FloatBarrier{}
+
+    We illustrate several individual error cases from \pvar{graph}
+    in~\cref{fig:SplitErrorsPZ,fig:SplitErrorsGZ,fig:MergeErrorPZA,fig:MergeErrorPZB,fig:MergeErrorGZA,fig:MergeErrorGZB}.
+    On the top of each figure we will show the subgraph corresponding to an error group.
+    For a split case this will be the single PCC that must be broken apart, and for a merge case this will be
+      multiple PCCs that should be connected.
+    For merge cases, if no edge connecting the PCCs was ever added to the priority queue as a candidate, then we
+      will insert a dashed edge between two arbitrary annotations.
+    We will highlight the edges with labels that differ from their groundtruth.
+    On the bottom we show the annotation pair corresponding to a selected highlighted edge.
+
+    Upon inspection, we discover that the split cases in~\cref{fig:SplitErrorsPZ,fig:SplitErrorsGZ} are caused by
+      groundtruth errors.
+    In each of these cases the automatic verification algorithm made the PCCs positive redundant, thus the
+      simulated reviewer --- which is driven by the groundtruth --- was unable to split the PCC.
+    In fact, we discovered that all split cases are due to groundtruth errors.
+    This means that \pvar{graph} did not predict any PCCs that were split cases.
+    %This is encouraging because it means that 
+
+    When inspecting merge cases we also found several caused by groundtruth errors, but most were due to
+      challenging image conditions such as viewpoint, occlusion, and pose.
+    These factors either prevented an edge from being generated as a candidate or caused the classifier to
+      produce a low positive probability.
+    Two merge cases for plains zebras are illustrated in ~\cref{fig:MergeErrorPZA,fig:MergeErrorPZB}, and two for
+      Grévy's zebras are illustrated in~\cref{fig:MergeErrorGZA,fig:MergeErrorGZB}.
+
+    %all split
+    %  cases for the graph algorithm are due to groundtruth errors.
+    % %$5$ split cases reported for plains zebras 
+    %Two examples of these cases are shown in \cref{fig:SplitErrorsPZ,fig:SplitErrorsGZ}
+
+    \SplitErrorsPZ{}
+
+    \SplitErrorsGZ{}
+
+    \MergeErrorPZA{}
+
+    \MergeErrorPZB{}
+
+    \MergeErrorGZA{}
+
+    \MergeErrorGZB{}
+
  
 \FloatBarrier{}
 \section{Summary of graph identification}\label{sec:graphconclusion}
@@ -1087,8 +1188,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 In this chapter we have described the final component in our approach to animal identification.
 The graph-based framework takes advantage of the algorithms previously developed in
   \cref{chap:ranking,chap:pairclf} and uses them in a principled way to address the identification problem.
-The ranking algorithm is used to quickly identify candidate edges that are likely to be meaningful, and the
-  pairwise classifier automatically verifies pairs of annotations, reducing the required manual interaction.
+The ranking algorithm quickly identifies candidate edges that are likely to be \meaningful{}, and the pairwise
+  classifier automatically verifies pairs of annotations, reducing the required manual interaction.
 While these algorithms can be applied to address identification directly, our experiments have demonstrated that
   there is a considerable advantage to placing them in the context of the graph identification framework.
 
@@ -1100,7 +1201,7 @@ When inconsistencies are detected, edge-connectivity is again used to quickly fi
   labeling.
 Our framework also includes a probabilistic convergence criterion based on a Poisson process.
 This criterion stops identification once the ranking and verification algorithm are no longer able to find
-  meaningful edges.
+  \meaningful{} edges.
 This means that the algorithm will stop the identification process before it devolves into a brute force search.
 The point at which this happens will depend on the power of the ranking and verification algorithms.
 
