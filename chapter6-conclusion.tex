@@ -11,13 +11,14 @@
       giraffes, and humpback whales.
     Our approach consists of three main components:
     (1) the ranking algorithm from \cref{chap:ranking} that uses a bounding box annotation around an animal to
-      search a labeled database of annotations for likely matches.
+      search a labeled database of annotations for likely matches,
     (2) the classification algorithm from \cref{chap:pairclf} that probabilistically verifies if a pair of
       annotation is positive, negative, or incomparable, and
     (3) the graph framework from \cref{chap:graphid} that harnesses the previous algorithms in a principled way
       to dynamically determine the identity of all animals in a dataset.
-    Each of these algorithms was designed to improve upon the previous, and in \cref{sec:graphexpt} we
-      demonstrated that this was indeed the case.
+    Each of these algorithms was designed to build on the previous one(s), improving the overall accuracy and
+      efficiency of the counting process.
+    In \cref{sec:graphexpt} we demonstrated that this was indeed the case.
 
     By combining these algorithms we have made a several meaningful contributions to the problem of animal
       identification.
@@ -32,7 +33,7 @@
       of positive results from negative and incomparable results in a ranked list.
     In \cref{sec:graphexpt} we simulated the \GZC{} and demonstrated that our improvements to the ranking
       algorithm --- made by the classification and graph algorithm --- enable us to perform identification in less
-      than $25\percent$ of the time required by the original event.
+      than $25\percent$ of the number of manual reviews required by the original event.
 
     \section{Discussion}\label{sec:discuss}
 
@@ -94,35 +95,58 @@
         We have adapted LNBNN~\cite{mccann_local_2012} to the problem of individual animal identification.
         We have performed experiments that demonstrate the effect of several parameters at multiple database
           sizes.
+        We have shown that tripling the number of annotations in a database can reduce the ranking accuracy at
+          rank $1$ by $2\percent$.
+        %The best choice for the $\K$ parameter (indicating the number of nearest descriptor neighbors) depends on
+        %  the species and database size.
+        %Overall, for highly distinctive species like Grévy's zebras, lower choices of $\K$ closer to $1$ seem
+        %  better, and for less distinctive species like plains zebras, higher choices closer to $4$ seem to work
+        %  best.
 
         \item
         We have evaluated the effect of various levels of feature invariance in our experiments.
         We have introduced a heuristic that augments the orientation of query keypoints to account for pose
           variations.
+        For plains zebras, this can improve the ranking accuracy at rank $1$ by $7\percent$.
 
         \item
         We have accounted for the influence of background features using a learned a foregroundness measure to
           weight the LNBNN scores of feature correspondences.
-        We have empirically shown the effectiveness of this procedure.
+        We have empirically shown that this procedure can increase the ranking accuracy at rank $1$ by
+          $5\percent$.
 
-        \item
-        We have developed a \name{} scoring mechanism to take advantage of information in database names with
-          multiple exemplars.
-        Our experiments have demonstrated that having multiple exemplars per name significantly improves the
-          accuracy of identification.
+
+        \item We have demonstrated the impact of image redundancy and the importance of collecting more than one
+          annotation in each encounter.
+        Our experiments show that multiple exemplars per name can significantly increase the ranking accuracy at
+          rank $1$ by $20\percent$.
+
+        \item We have developed a \name{} scoring mechanism to take advantage of information in database names
+          with multiple exemplars.
+        We have shown that this can increase the ranking accuracy at rank $1$ by $1\percent$ when there are
+          multiple exemplars per name.
         \end{enumln}
 
     \item {The pairwise classification algorithm}:
         \begin{enumln}
 
-        \item We have developed a novel feature vector that represents the matching information between two
-          annotations.
+        \item We have developed a novel feature vector that represents local and global matching information
+          between two annotations.
+        Our experiments have shown that both the local and global feature dimensions are important for predicting
+          if two annotations match.
 
         \item We have used this feature vector to learn a random forest that can predict the probability that two
           annotations are either positive, negative, or incomparable.
+        We have shown that this learned pairwise classifier is a strong predictor of match-state by measuring an
+          MCC of $0.83$ for plains zebras and $0.91$ for Grevy's zebras.
 
-        \item We have compared the learned probabilities to LNBNN scores and demonstrated that the separation of
-          positive cases is significantly improved.
+        \item We have compared the learned probabilities to LNBNN scores and demonstrated that re-ranking using
+          the positive probabilities can improve the ranking accuracy at rank $1$ by $9\percent$ for plains zebras
+          and $2\percent$ for Grevy's zebras.
+        Additionally, the probabilities significantly improve the separation of positive and non-positive
+          annotation pairs.
+        For both species, an ROC AUC of less than $0.9$ is improved to an AUC greater than $0.97$.
+          
         \end{enumln}
 
     \item {The graph identification algorithm}:

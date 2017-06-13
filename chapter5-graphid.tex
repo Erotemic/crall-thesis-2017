@@ -815,7 +815,7 @@ Let  %
 %$T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ 
 $T = \Or_{i=n}^{n+a} \M_i$
 %
-be a binary random variable that takes the value $T\eq=1$ in the event that any of the next $a$ reviews will be
+be a binary random variable that takes the value $T\teq1$ in the event that any of the next $a$ reviews will be
   \meaningful{}.
 Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
   to measure the probability the event $T\teq1$.
@@ -912,9 +912,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     \TestTrainDBStats{}
     \FloatBarrier{}
 
-    This experiment will compare the three different methods of determining the identifies of annotations based
-      on the algorithms defined in this \thesis{}.
-    The first uses just the ranking algorithm from We denote these algorithms as:
+    The experiment will compare the three different methods of determining the identifies of annotations based on
+      the algorithms defined in this \thesis{}.
     These algorithms are:
     \begin{enumin}
 
@@ -967,7 +966,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       validation dataset.
     Because \pvar{rank+clf} has no mechanisms for error recovery, we choose conservative automatic thresholds by
       specifying an acceptable false positive rate of $0.001$.
-    This results in a positive, negative, and incomparable threshold of $0.976$, $0.991$, and $0.5$ respectively
+    This results in positive, negative, and incomparable thresholds of $0.976$, $0.991$, and $0.5$ respectively
       for plains zebras, and $0.997$, $0.998$, $1.0$ for Grévy's.
     %When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
     %This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting
@@ -983,8 +982,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
       inserted into a priority queue based on these probabilities.
     As candidate edges are removed from the queue they are either automatically or manually classified based on
       probability thresholds.
-    Connectivity information is used to enforce a minimum level of redundancy, preventing extraneous redundancy,
-      and ensure consistency.
+    Connectivity information is used to enforce a minimum level of redundancy, to prevent extraneous redundancy,
+      and to ensure consistency.
     The convergence criterion determines when candidate edges should be refreshed and when the algorithm should
       terminate.
     We use the same pairwise classifier from \pvar{rank+clf}, but due to the graph algorithm's error recovery
@@ -992,7 +991,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     However, we have found that the algorithm is sensitive to this parameter, therefore we only slightly increase
       acceptable false positive rate from $.001$ to $.0014$.
     % GRAPH THRESH
-    This results in a positive, negative, and incomparable threshold of $0.969$, $0.986$, and $0.5$ respectively
+    This results in positive, negative, and incomparable thresholds of $0.969$, $0.986$, and $0.5$ respectively
       for plains zebras, and $0.989$, $0.992$, and $1.0$ for Grévy's.
     For the convergence criterion use a patience of $a=20$, a window span of $s=20$, and a termination threshold
       of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive reviews that
@@ -1001,8 +1000,10 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     \subsection{Results}
 
     We run the simulation for all combinations of datasets and algorithms.
-    After each review decision is made we record two measurements pertaining to accuracy and error.
-    The accuracy measurement is the number of merges remaining before all individuals have been identified.
+    During the simulation, after each review decision is made we record two measurements pertaining to accuracy
+      and error.
+    The accuracy measurement is the number of merges remaining --- \ie{} the number of PCCs that must be merged
+      --- before all individuals have been identified.
     This is the number of edges in a spanning forest of the groundtruth positive subgraph minus the same
       measurement but applied to the subgraph of all correctly predicted positive edges.
     % better error measure?
@@ -1026,9 +1027,11 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     For \pvar{graph} and \pvar{rank+clf} the initial decrease appears instantaneous due to the automatic
       classification algorithm, which does not cost manually reviews.
     Notice, once manual reviews begin the slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the
-      redundancy mechanisms that removes extraneous reviews.
+      redundancy mechanisms, which removes extraneous reviews.
     Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
-      while \pvar{graph} uses the convergence criterion to to terminate shortly after the curve flattens.
+      \pvar{graph} uses the convergence criterion to to terminate shortly after the curve flattens.
+    It is noteworthy that \pvar{graph} completes identification using less than $25\percent$ of the manual
+      reviews needed by $\pvar{ranking}$, which models the way that we counted individuals in the \GZC{}.
 
     We now turn our attention to the right of \cref{fig:Simulation}.
     The \pvar{ranking} and \pvar{rank+clf} algorithms have no mechanism for error recovery, and thus their error
@@ -1062,7 +1065,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
         \item A ``split'' error group consists of multiple real PCCs that are labeled as belonging to the same
           predicted PCC.
         Each split group contains at least one edge incorrectly labeled as positive.
-        In the example, the real PCCs $\curly{\curly{d}, \curly{e, f}}$ are a split group.
+        In the example, the real PCCs $\curly{\curly{d}, \curly{e, f}}$ are a split group because in the
+          predicted graph $\curly{d, e, f}$ is a PCC.
         %Thus split groups are created when an edge is incorrectly labeled as positive.
         %A split cases is caused by when two real PCCs are connected.
         %This results in two real PCCs that are connected.
@@ -1074,7 +1078,8 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
         Each pair of predicted PCCs in a merge group is missing a positive edge.
         This can happen if an edge is incorrectly labeled, if the ranking algorithm never generates this edge as
           a candidate, or the termination criterion stops the algorithm before the edge can be reviewed.
-        In the example, the predicted PCCs $\curly{\curly{a, b}, \curly{c}}$ are a merge group.
+        In the example, the predicted PCCs $\curly{\curly{a, b}, \curly{c}}$ are a merge group because in the
+          real graph $\curly{a, b, c}$ is a PCC.
         
         %that would have connected 
         %A merge cases is caused by the absence of a positive edge that would have connected two nodes in a real
@@ -1088,9 +1093,14 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     This case cannot be cleanly categorized as a split or a merge group, but it contains elements of both.
     Thus, we call this a ``hybrid'' case.
     A slight modification to the above groups can incorporate hybrid cases.
-    First, we change the definition of a split groups to be the set of maximal real PCC subsets that are labeled
-      as belonging to the same predicted PCC.
-    In essence this means we can treat $\curly{\curly{y}, \curly{z}}$ as a split group.
+    %First, we change the definition of a split group to be a maximal set of at least two non-empty maximal
+    %  subsets of real PCCs where all annotations in those subsets are labeled as belonging to the same predicted
+    %  PCC.
+    First, we modify the definition of a split group.
+    For a predicted PCC containing annotations in more than one real PCC, the split group consists of the subsets
+      of each of these real PCCs that intersect with the predicted PCC.
+    In essence this means we treat $\curly{\curly{y}, \curly{z}}$ as a split group, even though $\curly{y}$ is
+      only a subset of the real PCC $\curly{x, y}$.
     Second, for merges, we simply change predicted PCCs to be the predicted PCCs after they have been split.
     This lets us treat $\curly{\curly{x}, \curly{y}}$ as a merge group.
     %In or graph simulation almost all error groups are either pure splits or pure merges.
@@ -1100,19 +1110,15 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     %We can address a hybrid case by first splitting hybrid groups into maximal subsets of real PCCs and then
     %  merging these subsets into real PCCs.
 
-    We analyze statistics of these groups and present the results in two tables.
-    First, for each simulation we gather the set of predicted and real PCCs, and then we group them into correct,
-      split, and merge groups.
+    %We analyze statistics of these groups and present the results in two tables.
+    To analyze statistics of these groups, we gather the set of real PCCs and the set of predicted PCCs for each
+      simulation.
+    Then, we group them into correct, split, and merge groups.
     For each group type we count the number of predicted PCCs and the number of real PCCs they correspond to.
     We also measure the average number of annotations in each PCC.
     These number are reported in~\cref{tbl:ErrorSizeDetails}.
-    Then, in~\cref{tbl:ErrorGroupDetails} we focus only on the results of \pvar{graph} and measure the average
-      number of PCCs in each error group.
-    Additionally, we consider the smallest and largest PCC in each error group, and we measure the average number
-      of annotations in each.
 
-    Looking at~\cref{tbl:ErrorSizeDetails} we observe that \pvar{graph} predicts the most correct PCCs and fewest
-      splits in all cases.
+    From this table we observe that \pvar{graph} predicts the most correct PCCs and fewest splits in all cases.
     This is not surprising due to its error recovery mechanism.
     However, we also see that \pvar{graph} also has the most merge cases.
     The reason for this is that the other algorithms do not have termination criteria.
@@ -1121,8 +1127,14 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     In the thousands of extra iterations, the other algorithms managed to find ${\sim}20$ extra merge cases that
       were not discovered by \pvar{graph}.
 
-    Now moving to~\cref{tbl:ErrorGroupDetails},  we notice that almost all merge cases for \pvar{graph} are the
-      result of failing to match a single annotation to a larger group of annotations.
+    We continue our analysis focusing only on the results of \pvar{graph}.
+    We measure the average number of PCCs in each error group.
+    Additionally, we consider the smallest and largest PCC in each error group, and we measure the average number
+      of annotations in each.
+    These numbers are given in ~\cref{tbl:ErrorGroupDetails}.
+
+    Here, we notice that almost all merge cases for \pvar{graph} are the result of failing to match a single
+      annotation to a larger group of annotations.
     Similarly, most split cases involve splitting just one singleton annotation off of a larger PCC.
     To gain further insight into what is causing these errors we will visualize individual cases.
     %Mistakes involving individuals with only one annotation are more difficult to detect and highlight the
@@ -1192,11 +1204,22 @@ The ranking algorithm quickly identifies candidate edges that are likely to be \
   classifier automatically verifies pairs of annotations, reducing the required manual interaction.
 While these algorithms can be applied to address identification directly, our experiments have demonstrated that
   there is a considerable advantage to placing them in the context of the graph identification framework.
+Specifically, we have simulated an identification event similar to the \GZC{} using our ranking and graph
+  algorithms.
+We have shown that that using the graph framework can reduce the number of manual reviews needed to complete
+  identification by a factor of $4$.
+Furthermore, the graph framework reduces the number of errors and can recover from them when they occur.
+The only false positives (split cases) produced using the graph framework were the result of errors in the
+  groundtruth.
+
+%and shown that identification events like the $\GCZ$ can
+%  be performed using less than $25\percent$ of the number of manual reviews required by our original algorithm.
+
 
 Our graph framework uses the connectivity of positive, negative, and incomparable edges in order to quickly
   converge on a final identification.
 Edge connectivity is used to enforce that the graph contains a small exact amount of redundancy, which reduces
-  the number of manual decisions while providing the means to detect inconsistencies.
+  the number of manual decisions that must be made while providing the means to detect inconsistencies.
 When inconsistencies are detected, edge-connectivity is again used to quickly find and fix errors in edge
   labeling.
 Our framework also includes a probabilistic convergence criterion based on a Poisson process.
