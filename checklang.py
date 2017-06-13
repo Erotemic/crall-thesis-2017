@@ -100,6 +100,7 @@ class Spelling(object):
         'mathop', 'inconpcc', 'leftarrorow', 'emph', 'jpg', 'kredun', 'kredun',
         'leq', 'decisiongraph', 'giga', 'vec', 'opname', 'ldots',
         'quantization', 'argmin',
+        'Pred',
     }
 
 
@@ -204,6 +205,7 @@ def should_ignore(item):
                 'the SIFT', 'The SIFT', 'a SIFT',
                 'The shortlist', 'a shortlist', 'A shortlist', 'Bayes nearest',
                 'a refresh', 'the refresh', 'a merge',
+                'A merge',
             }:
                 return True
     else:

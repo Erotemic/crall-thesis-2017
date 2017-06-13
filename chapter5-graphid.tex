@@ -872,7 +872,7 @@ Let $D = \binom{|V|}{2}$ be the number of edges in the dataset and let $N=\sum_{
   number of edges in the MSTs of all PCCs.
 We can measure the density of meaninful reviews in the current labeled dataset as $N/D$.
 
-After our estimated mu gets close enough to to $N/D$, we can terminate.
+After our estimated mu gets close enough to $N/D$, we can terminate.
 
 \end{comment}
 
@@ -1029,7 +1029,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
     Notice, once manual reviews begin the slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the
       redundancy mechanisms, which removes extraneous reviews.
     Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
-      \pvar{graph} uses the convergence criterion to to terminate shortly after the curve flattens.
+      \pvar{graph} uses the convergence criterion to terminate shortly after the curve flattens.
     It is noteworthy that \pvar{graph} completes identification using less than $25\percent$ of the manual
       reviews needed by $\pvar{ranking}$, which models the way that we counted individuals in the \GZC{}.
 
@@ -1043,7 +1043,7 @@ After our estimated mu gets close enough to to $N/D$, we can terminate.
 
     To further analyze the predictions of the graph the simulation, we compare the node groupings of the
       predicted PCCs to the real groundtruth PCCs.
-    For convenience we will still refer to a group of nodes as a PCC.
+    For convenience, we will still refer to a group of nodes as a PCC.
     %Even though we are only concerned with the grouping of nodes
     In this analysis we categorize groups of predicted PCCs and their corresponding real PCCs as one of three
       types:
@@ -1206,7 +1206,7 @@ While these algorithms can be applied to address identification directly, our ex
   there is a considerable advantage to placing them in the context of the graph identification framework.
 Specifically, we have simulated an identification event similar to the \GZC{} using our ranking and graph
   algorithms.
-We have shown that that using the graph framework can reduce the number of manual reviews needed to complete
+We have shown that using the graph framework can reduce the number of manual reviews needed to complete
   identification by a factor of $4$.
 Furthermore, the graph framework reduces the number of errors and can recover from them when they occur.
 The only false positives (split cases) produced using the graph framework were the result of errors in the
