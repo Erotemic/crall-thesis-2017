@@ -7,6 +7,7 @@ fixtex --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 --sho
 fixtex --fpaths chapter5-graphid.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter5-graphid.md
 fixtex --fpaths chapter6-conclusion.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter6-conclusion.md
 fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_appendix.md
+./checklang.py tmp.txt
 
 
 fixtex --fpaths chapter4-pairclf.tex --outline --asmarkdown --numlines=999 --shortcite --debug-latex

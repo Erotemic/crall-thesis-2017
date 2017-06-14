@@ -397,6 +397,33 @@
       \leftline{\@membersix, Member\hfil} \fi
 } 
 
+\def\sigblockdraft{
+      \numcount=\numcomm
+      %\leftline{Approved by the\hfil}
+      \leftline{Examining Committee:\hfil}
+      \vskip 19pt
+      \leftline{\adviser, \doctype Adviser\hfil} 
+      \advance \numcount by -1
+      \if \coadviser * \else % there's a co-adviser
+        \leftline{\coadviser, \doctype Adviser\hfil}
+        \advance \numcount by -1
+      \fi
+      \ifnum\numcount > 0 %
+      \leftline{\@memberone, Member\hfil} \fi %
+      \advance \numcount by -1 \ifnum\numcount > 0 %
+      \leftline{\@membertwo, Member\hfil} \fi %
+      \advance \numcount by -1 \ifnum\numcount > 0
+      \leftline{\@memberthree, Member\hfil}  \fi
+      \advance \numcount by -1 \ifnum\numcount > 0
+      \leftline{\@memberfour, Member\hfil}   \fi
+      \advance \numcount by -1 \ifnum\numcount > 0
+      \leftline{\@memberfive, Member\hfil}  \fi
+      \advance \numcount by -1 \ifnum\numcount > 0
+      \leftline{\@membersix, Member\hfil} \fi
+      \vfill
+} 
+
+
  \def\titlepage{%
      \pagenumbering{roman}
      \thispagestyle{empty}
@@ -482,6 +509,37 @@
          %Troy, New York\\ [14pt]
          %\ifnum\numcomm>6 \vskip -8pt \fi
          %\@submitdate
+     \end{center}
+     \end{singlespace}
+     \newpage
+     \pagestyle{plain}
+%    \pagenumbering{roman}
+%    \setcounter{page}{2}
+}
+
+
+ \def\titlepagefinaldraft{%
+     \pagenumbering{roman}
+     \thispagestyle{empty}
+     \ifnum\numcomm<4 \vglue .5in\vfil \fi  % masters
+     \ifnum\numcomm>5 \hbox{ } \vspace{-24pt}\fi % make more space on page
+     \begin{singlespace}
+     \begin{center}
+         \parindent=0pt
+         {\large\uppercase\expandafter{\@thesistitle}}\\ [12pt]
+         By \\ [12pt]
+         \@author\\ [12pt]
+         A \doctype DRAFT \\ [8pt]
+         for the Degree of\\ [8pt]
+         \uppercase\expandafter{\@degree}\\ [8pt]
+         Major Subject:~~\uppercase\expandafter{\@department}\\ 
+         \ifnum\numcomm < 7 \vskip 32pt \else \vskip 24pt \fi
+         \sigblockdraft
+         \ifnum \numcomm < 7 \vskip 32pt \else \vskip 24pt \fi
+         Rensselaer Polytechnic Institute\\
+         Troy, New York\\ [14pt]
+         \ifnum\numcomm>6 \vskip -8pt \fi
+         \@submitdate
      \end{center}
      \end{singlespace}
      \newpage
