@@ -14,18 +14,19 @@
       the task is to determine a ranking of database individuals most likely to match the unknown animal.
     A human reviewer manually determines which --- if any --- of the top ranked results are correct.
 
-    An \glossterm{annotation} is a rectangular region  of interest around a specific animal within an image. Each
-    known annotation is associated with a \name{} label denoting its individual identity. A \glossterm{\name{}}
-    refers to a group of annotations known to be the same individual. The identification process assigns a \name{}
-    label to an unknown annotation either as (1) the \name{} label of a matched database annotation or (2) a new
-    \name{} label if no matches are found.
+    An \glossterm{annotation} is a rectangular region  of interest around a specific animal within an image.
+    Each annotation given a \name{} label denoting its individual identity.
+    A \glossterm{\name{}} refers to a group of annotations known to be the same individual.
+    The identification process assigns a \name{} label to an unknown annotation either as
+    (1) the \name{} label of a matched database annotation or
+    (2) a new \name{} label if no matches are found.
 
     The ranking algorithm is based on the feature correspondences between a query annotation and a set of
       database annotations.
     In each annotation a set of patch-based features is detected at keypoint locations.
     Then the visual appearance of each patch is described using SIFT~\cite{lowe_distinctive_2004}.
-    A nearest neighbor algorithm establishes a set of feature correspondences between query and annotations in
-      database.
+    A nearest neighbor algorithm establishes a set of feature correspondences between a query and the annotations
+      in the database.
     A scoring mechanism based on local \naive{} Bayes nearest neighbor (LNBNN)~\cite{mccann_local_2012} produces
       a score for each feature correspondence.
     These scores are then aggregated into a single score for each \name{} in the database, producing a ranked
@@ -234,7 +235,7 @@
 
    \subsection{Establishing initial feature correspondence}\label{sub:featmatch}
 
-        \paragraph{offline indexing}
+        \paragraph{Offline indexing}
             Before feature correspondences can be established, an offline algorithm indexes descriptors from all
             database annotations for fast approximate nearest neighbor search. All database descriptor vectors are
             stacked into a single database array of vectors, %
@@ -779,9 +780,9 @@
     \subsection{Datasets}\label{sub:datasets}
 
         All the images in the datasets used in these experiments were taken by photographers in the field. Each
-        dataset is labeled with groundtruth in the form of annotations with name labels. Annotations (bounding
+        dataset is labeled with \groundtruth{} in the form of annotations with name labels. Annotations (bounding
         boxes) have been drawn to localize animals within the image. A unique \name{} label has been assigned to
-        all annotations with the same identity. Some of this groundtruth labeling was generated independently.
+        all annotations with the same identity. Some of this \groundtruth{} labeling was generated independently.
         However, large portions of the datasets were labeled with assistance from the matching algorithm. While
         this may introduce some bias in the results, there was no alternative because the amount of time needed to
         independently and completely label a large dataset is prohibitive and error prone.
@@ -819,7 +820,7 @@
               body.
             The constituent datasets were collected in Kenya at several locations including Nairobi National
               Park, Sweetwaters, and Ol Pejeta.
-            More than $90\percent$ of the groundtruth generated for this dataset was assisted using the matching
+            More than $90\percent$ of the \groundtruth{} generated for this dataset was assisted using the matching
               algorithm.
             This dataset contains many imaging challenges including occlusion, viewpoint, pose, quality, and time
               variation.
@@ -830,8 +831,8 @@
 
             \item \textbf{Grévy's zebras}.
             This is another aggregated dataset.
-            The original groundtruth for this dataset was generated independently of the matching algorithm,
-              however the matching algorithm revealed several groundtruth errors that have since been corrected.
+            The original \groundtruth{} for this dataset was generated independently of the matching algorithm,
+              however the matching algorithm revealed several \groundtruth{} errors that have since been corrected.
             The Grévy's dataset was collected in Mpala, Kenya.
             Most of the annotations in this database have been cropped to the animal's flank.
             This dataset contains a moderate degree of pose and viewpoint variation and occlusion.
@@ -840,7 +841,7 @@
             \item \textbf{Masai giraffes}.
             These images of Masai giraffes were all taken in Nairobi National Park during the \GZC{} between
               February $20$, $2015$ and March $2$, $2015$.
-            All groundtruth was established using the matching algorithm followed by manual verification.
+            All \groundtruth{} was established using the matching algorithm followed by manual verification.
             This dataset contains a high degree of pose and viewpoint variation, and occlusion.
             Because of their long necks, it is difficult to ensure that only a single giraffe appears in each
               annotation.
@@ -850,7 +851,7 @@
             \item \textbf{Humpback whales}.
             The humpback dataset was collected by FlukeBook~\cite{levenson_flukebook_2015} over nearly 15 years.
             Images were contributed by both marine and citizen scientists.
-            The original groundtruth was established using both manual and automated methods that are disjoint
+            The original \groundtruth{} was established using both manual and automated methods that are disjoint
               from these techniques considered here, however our software was used to correct mistakes.
             The annotations in this dataset have not been manually reviewed.
             Some are cropped to the fluke while others encompass the entire image.
@@ -1018,7 +1019,7 @@
           for plains and Grévy's zebras.
         The accuracy of the invariance experiment is shown in~\cref{fig:InvarExpt}.
         For plains zebras, the \QRHCirc{} scores are significantly better than all other invariance settings.
-        Interesting, affine invariance results in worse performance when QRH is on, but if the QRH is off then
+        Interestingly, affine invariance results in worse performance when QRH is on, but if the QRH is off then
           affine invariance improves accuracy.
         This suggests that the QRH better handles matching the coarse patterns seen on the plains zebras across
           pose and viewpoint variations than using affine invariance, which can tend to adapt itself around
@@ -1094,12 +1095,12 @@
         Two database factors that may influence the best choice of $\K$ are the number of annotations in the
         database and the number of annotations per name in the database. If there are more correct matches for a
         query annotation it would be beneficial to allow it to match more annotations. Likewise, if there are more
-        overall annotation in the database, then it might be beneficial to search deeper into all the database
+        overall annotations in the database, then it might be beneficial to search deeper into all the database
         descriptors to find the correct matches. Therefore, in addition to varying $\K$ we also vary the number
         exemplars per name (\pvar{dpername}) and the overall number of annotations in the database (\pvar{dsize})
 
         We use a protocol similar to the one used in the scoring mechanism experiment to sample databases.
-        The difference is that we use the extra confusers annotations to vary the total number of annotations in
+        The difference is that we use the extra confuser annotations to vary the total number of annotations in
           the database.
         However, controlling for these factors constrains the number of annotations we can use.
         For Grévy's, we can vary the total database size between $476$ and $774$.
@@ -1188,17 +1189,20 @@
             annotation would be segmented, but when simply matching raw annotations non-primary correspondences may
             be formed. This results in the photobomb and scenery-match failure cases.
 
-            Photobombs are caused by correct correspondences a non-primary animal (seen either in the foreground or
-            background) in an annotation. Likewise, scenery matches are caused by matches in the background
-            landscape. Both cases are most commonly caused by pairs of annotations with the same occurrence, but
-            photobombs can occur over larger time deltas. The example in~\cref{fig:FailPhotobomb} illustrates a
-            failure case due to a photobombing background animal, and \cref{fig:FailScenery} illustrates a scenery
-            match. For plains and Grévy's zebras, most scenery matches are eliminated using the foregroundness
-            measure, but the problem remains in databases without a trained foregroundness estimator. Accounting
-            for photobombs is a more challenging problem because a simple patch-based classifier cannot distinguish
-            a primary feature from a  secondary feature without having information about the animal identity.
-            However, there are some patterns that photobomb matches present that we seek to take advantage of later
-            in \cref{sec:learnpb}.
+            Photobombs are caused by correct correspondences to a non-primary animal (seen either in the
+              foreground or background) in an annotation.
+            Likewise, scenery matches are caused by matches in the background landscape.
+            Both cases are most commonly caused by pairs of annotations with the same occurrence, but photobombs
+              can occur over larger time deltas.
+            The example in~\cref{fig:FailPhotobomb} illustrates a failure case due to a photobombing background
+              animal, and \cref{fig:FailScenery} illustrates a scenery match.
+            For plains and Grévy's zebras, most scenery matches are eliminated using the foregroundness measure,
+              but the problem remains in databases without a trained foregroundness estimator.
+            Accounting for photobombs is a more challenging problem because a simple patch-based classifier
+              cannot distinguish a primary feature from a  secondary feature without having information about the
+              animal identity.
+            However, there are some patterns that photobomb matches present that we seek to take advantage of
+              later in \cref{sec:learnpb}.
 
             \FailScenery{}
             \FailPhotobomb{}
@@ -1252,7 +1256,7 @@
     applied to individual animal identification and demonstrated that in a majority of cases the correct match is
     ranked first by our algorithm for plains zebras, Grévy's zebras, Masai giraffes, and humpback whales.
 
-    Because we have used the algorithm to curate the groundtruth, we do not claim the reported accuracies in our
+    Because we have used the algorithm to curate the \groundtruth{}, we do not claim the reported accuracies in our
     experiments to be quantitatively absolute. However, qualitative evidence for the algorithm's overall success is
     provided by the facts that (1) we were able to use the algorithm to identify a significant number of
     individuals from different species and (2) our approach provides more accurate rankings than standard instance

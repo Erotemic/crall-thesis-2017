@@ -19,7 +19,7 @@
     Data are collected as sets of \glossterm{sighting} and \glossterm{resighting} observations.
     A sighting is the first observation of an individual, and a resighting is a subsequent observation of a
       previously sighted individual.
-    The observed data are then analyzed using software such as program MARK~\cite{white_program_1999,
+    The observed data are then analyzed using software such as ``program MARK''~\cite{white_program_1999,
       schwarz_jolly_seber_2006} or Wildbook that applies statistical models such as the Lincoln-Petersen
       index~\cite{seber_estimation_1982}, Jolly-Seber model~\cite{jolly_explicit_1965, seber_note_1965}, or other
       related models~\cite{cormack_estimates_1964, chao_estimating_1987,kenneth._h._pollock_statistical_1990}.
@@ -46,7 +46,7 @@
     individuals in the images remains. Manual methods are infeasible due to the rapid rate at which images can be
     collected. Therefore, we must turn towards computer vision based methods.
 
-    This \thesis{} develops the foundation of the image analysis component the ``Image Based Ecological
+    This \thesis{} develops the foundation of the image analysis component of the ``Image Based Ecological
       Information System'' (IBEIS).
     The purpose of this system is to gain ecological insight from images using computer vision.
     We focus on estimating the size of a population of animals as just one example of ecological insight that
@@ -100,7 +100,7 @@
         However, other cues --- like the shape of the notches along the trailing edge of the fluke --- can be
           used to distinguish between different individuals.
         %The work of Hendrick Weideman~\cite{hendrick} addresses identifying humpback whales using shape features.
-        The work of Hendrick Weideman and Zach Jablons~\cite{jablons_identifying_2016} addresses identifying
+        The work of Weideman and Jablons~\cite{jablons_identifying_2016} addresses identifying
           humpback whales using trailing edge shape features.
         The example in~\cref{fig:HumpbackFig} illustrates individual humpback whales with and without distinctive
           textures.
@@ -138,7 +138,7 @@
         the other animals nearby can be distracting because features from these animals will match different animals in
         the database. These \glossterm{distractors} may also be from non-animal features when multiple pictures are
         taken against the same background as animals move through the same field of view. Several examples of occlusions
-        and distractors are illustrated in~\cref{fig:OccludeFigure}
+        and distractors are illustrated in~\cref{fig:OccludeFigure}.
 
         \OccludeFigure{}
 
@@ -234,13 +234,15 @@
 
         \subsubsection{Animal detection}
             Before matching begins each image is cropped to focus on a particular animal and remove background
-            distractors. A detection algorithm localizes animals within the images. Each verified detection
-            generates an \glossterm{\annot{}} --- a bounding box around a single animal in an image. An example
-            illustrating detection of plains zebras is shown in~\cref{fig:DetectFigure}. In the \GZC{} each
-            detection was manually verified before becoming an \annot{}, but recent work introduces an automatic
-            verification mechanism and reduces the need for complete manual review. The details of the detection
-            algorithm are beyond the scope of this \thesis{}, and are described in the work of Jason
-            Parham~\cite{parham_photographic_2015,parham_detecting_2016}.
+              distractors.
+            A detection algorithm localizes animals within the images.
+            Each verified detection generates an \glossterm{\annot{}} --- a bounding box around a single animal
+              in an image.
+            An example illustrating detection of plains zebras is shown in~\cref{fig:DetectFigure}.
+            In the \GZC{} each detection was manually verified before becoming an \annot{}, but recent work
+              introduces an automatic verification mechanism and reduces the need for complete manual review.
+            The details of the detection algorithm are beyond the scope of this \thesis{}, and are described in
+              the work of Parham~\cite{parham_photographic_2015,parham_detecting_2016}.
 
             \DetectFigure{}
 
@@ -453,7 +455,7 @@
     to the foreground. Matches are combined across multiple \exemplar{} \annots{} to produce a matching score for each
     \name{} in the database, resulting in a ranked list of results for each query.
 
-    We then extend ranking algorithm by developing a classifier able to automatically review its results.
+    We then extend the ranking algorithm by developing a classifier able to automatically review its results.
     First, we construct a pairwise feature that captures relationships between two annotations using local
       feature correspondence and global properties such as time and GPS.
     Then, we learn a classifier to predict if a pair of annotations --- \ie{} a result in the ranked list --- is
@@ -464,15 +466,17 @@
     placing labeled edges between annotations to represent how they are related. Using the graph framework we will be
     able to detect and recover from errors by taking advantage of multiple images seen of each individual.
 
-    We evaluate the ranking, verification, and graph identification algorithm by performing experiments two main
-    databases of plains zebras and Grévy's zebras. Some additional experiments are also performed on databases of Masai
-    giraffes and humpback whales. First, the ranking experiments test the algorithm's ability to find potential matches
-    of an individual animal over large periods of time, different viewpoints, different sized databases, and different
-    numbers of \exemplars{}. Then, the verification experiments will test the extent to the correct results from the
-    ranking algorithm can be separated from the incorrect results using our learned classifier. Finally, the graph
-    identification experiments will demonstrate the algorithm's ability to reduce the number of required manual reviews
-    and recover from errors. We determine the configuration of each algorithm that works best for identifying each
-    species.
+    We evaluate the ranking, verification, and graph identification algorithm by performing experiments on two
+      main databases of plains zebras and Grévy's zebras.
+    Some additional experiments are also performed on databases of Masai giraffes and humpback whales.
+    First, the ranking experiments test the algorithm's ability to find potential matches of an individual animal
+      over large periods of time, different viewpoints, different sized databases, and different numbers of
+      \exemplars{}.
+    Then, the verification experiments will test the extent to the correct results from the ranking algorithm can
+      be separated from the incorrect results using our learned classifier.
+    Finally, the graph identification experiments will demonstrate the algorithm's ability to reduce the number
+      of required manual reviews and recover from errors.
+    We determine the configuration of each algorithm that works best for identifying each species.
     
     %To do this we
     %develop both a suite of algorithms and a software system. The algorithms

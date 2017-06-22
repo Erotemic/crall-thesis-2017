@@ -176,7 +176,7 @@ We now make several observations assuming that each edge is reviewed correctly.
 To reduce the number of potential reviews, notice, that once a group of nodes is connected by (a tree of)
   positive edges, all those nodes in that PCC can be inferred to belong to the same individual, and it is not
   necessary to consider any other edge internal to the PCC for review.
-Likewise, once a negative edges has been placed between two PCCs, all edges between those PCCs can be ignored.
+Likewise, once a negative edge has been placed between two PCCs, all edges between those PCCs can be ignored.
 By ignoring these redundant edges we can reduce the number of reviews.
 Furthermore, we can construct a \glossterm{deterministic termination criterion}; if a negative edge is placed
   between every pair of PCCs, then all individuals must have been discovered and identification has converged.
@@ -219,9 +219,9 @@ Akin to a segmentation algorithm~\cite{fulkerson_class_2009} that starts with an
   the identification graph starts with an empty set of edges, $G = (V, \{ \})$, so in essence each annotation
   starts by itself as an individual animal, but because there are no negative edges we cannot be confident that any
   pair of annotations should indeed be given different labels.
-Therefore, the algorithm proceeds prioritize and add positive edges that merge multiple annotations into the same
-  PCC, negative edges that indicate that two annotations are different individuals, and incomparable edges that
-  prevent two annotations from being labeled as positive or negative.
+Therefore, the algorithm proceeds to prioritize and add positive edges that merge multiple annotations into the
+  same PCC, negative edges that indicate that two annotations are different individuals, and incomparable edges
+  that prevent two annotations from being labeled as positive or negative.
 Throughout the main algorithm, the graph is maintained in a \emph{consistent} state, which means that each PCC
   has no internal negative edges.
 Note, that while we describe the algorithm starting from an empty graph, without loss of generality, the edges in
@@ -269,7 +269,7 @@ Each new edge addition could trigger two important events:
       PCCs that already have a negative edge between them creates an inconsistent PCC.
 \end{enumin}
 Handling a merge is largely a matter of bookkeeping and can be done efficiently using a data structure that can
-  dynamically maintain connected components~\cite{jacob_holm_poly_logarithmic_1998}.
+  dynamically maintain connected components~\cite{jacob_holm_poly_logarithmic_2001}.
 Finding an inconsistency, however, drops the user into inconsistency recovery mode which alternates between
   hypothesizing one or more edges to fix and manually verifying these edges with the user until consistency is
   restored.
@@ -629,7 +629,7 @@ The modification is simple.
 Instead of using a minimum $s$-$t$-cut, we use a multicut to disconnect the endpoints in all pairs of negative
   edges.
 Multicut is NP-hard, but a simple approximation algorithm is to perform a minimum $s$-$t$-cut for each set of
-  terminal nodes, and then take the union of the resulting cut~\cite{vazirani_approximation_2013}.
+  terminal nodes, and then take the union of the resulting cut~\cite[203--208]{vazirani_approximation_2013}.
 When considering which edges to return we consider all negative edges together, comparing the sum of their
   weights to the sum of the positive edge weights.
 
@@ -758,32 +758,32 @@ Like, the refresh criterion, this can be determined --- in part --- by predictin
 \subsection{Convergence as a Poisson process}
 
 %\newcommand{\meaningful}{meaningful}
-\newcommand{\meaningful}{label-changing}
+%\newcommand{\meaningful}{label-changing}
 
 Both the review and termination criteria can be addressed by considering the question:
-``Will there be a \meaningful{} review anytime soon?''.
-A \glossterm{\meaningful{} review} is one that changes the name labeling of the annotations, \ie{} it is either a
-  positive edge that merges two PCCs or a non-positive edge that splits one.
-Correct and \meaningful{} reviews improve the accuracy of the identification by increasing the similarity --- in
+``Will there be a label-changing review anytime soon?''.
+A \emph{label-changing review} is one that changes the name labeling of the annotations, \ie{} it is either
+  a positive edge that merges two PCCs or a non-positive edge that splits one.
+Correct and label-changing reviews improve the accuracy of the identification by increasing the similarity --- in
   terms of the name labeling --- between the predicted PCCs and the real underlying PCCs.
-However, producing a \meaningful{} review has a cost:
-the number of manual reviews since the last \meaningful{} review.
+However, producing a label-changing review has a cost:
+the number of manual reviews since the last label-changing review.
 During the inner loop of the algorithm, when edges popped from the priority queue no longer consistently result
-  in \meaningful{} reviews, the marginal gains in identification accuracy that could be made from continuing are
+  in label-changing reviews, the marginal gains in identification accuracy that could be made from continuing are
   outweighed by the cost of manual review.
 In this circumstance it is best to break out of the inner loop.
-Note that if any \meaningful{} reviews were made during that loop, we should refresh candidate edges and start a
-  new loop because a refresh could result in new high priority \meaningful{} edges.
-On the other hand, if no \meaningful{} reviews were made in the loop, then refreshing will have no benefit, and
+Note that if any label-changing reviews were made during that loop, we should refresh candidate edges and start a
+  new loop because a refresh could result in new high priority label-changing edges.
+On the other hand, if no label-changing reviews were made in the loop, then refreshing will have no benefit, and
   the algorithm should terminate.
 
 Thus, the task is to construct a criterion that determines when edges on the top of the priority queue are no
-  longer \meaningful{}.
+  longer label-changing.
 In this way we directly address the refresh criterion and indirectly address termination criterion.
 This is direct in the case of the refresh criterion because when the name labeling is more accurate, the LNBNN
   ranking will improve.
-When we directly measure that the next reviews in the current priority queue are unlikely to be \meaningful{}, and
-  the name labeling of the decision graph has changed, then it is more likely that we would review a \meaningful{}
+When we directly measure that the next reviews in the current priority queue are unlikely to be label-changing, and
+  the name labeling of the decision graph has changed, then it is more likely that we would review a label-changing
   edge on the top of a new set of candidate edges sorted by priority.
 
 This task indirectly addresses the termination criterion because instead of stopping once the probability that
@@ -792,75 +792,71 @@ This task indirectly addresses the termination criterion because instead of stop
 However, if we were to directly address the termination criterion, we would have to estimate the probability that
   undiscovered merge and split cases exist.
 This probability depends on the effectiveness of the ranking algorithm.
-Even if our estimate of this probability was perfect, once the ranking algorithm starting producing \meaningful{}
+Even if our estimate of this probability was perfect, once the ranking algorithm starting producing label-changing
   reviews at a rate no better than random edge generation, it would take an enormous amount of manual effort to
   push this probability passed a desired threshold.
 Thus, instead of providing guarantees about identification accuracy our termination criterion achieves a
   trade-off between the number of manual reviews and the cost of identification.
 
-
-%\newcommand{\M1}{\Pr{M\teq1}}
-%\newcommand{\M0}{\Pr{M\teq0}}
-%\newcommand{\Mi}{\Pr{M_i\teq1}}
-%\newcommand{\PT}{\Pr{T\teq1}}
-%\newcommand{\T}{\Pr{T\teq1}}
-
-Based on these observations we estimate the probability that ``there will be a \meaningful{} review soon''.
+Based on these observations we estimate the probability that ``there will be a label-changing review soon''.
 We define ``soon'' using a patience parameter $a$, defined as the maximum number of consecutive reviews that a
-  manual reviewer is willing to do between \meaningful{} reviews.
-Let $M\teq1$ be the event that a review is \meaningful{} and $M\teq0$ otherwise.
-Because reviews are ordered, denote if the $i\th$ review is \meaningful{} as $M_i$, and denote the index of the
+  manual reviewer is willing to do between label-changing reviews.
+Let $L\teq1$ be the event that a review is label-changing and $L\teq0$ otherwise.
+Because reviews are ordered, denote if the $i\th$ review is label-changing as $L_i$, and denote the index of the
   next review as $n$.
 Let  %
-%$T\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ 
-$T = \Or_{i=n}^{n+a} \M_i$
+%$C\teq1 \equiv (\M_i\teq1, \exists i \in [n, n + a])$ 
+$C = \Or_{i=n}^{n+a} L_i$
 %
-be a binary random variable that takes the value $T\teq1$ in the event that any of the next $a$ reviews will be
-  \meaningful{}.
-Thus, the aforementioned question can be addressed by measuring the probability of the event $T\teq1$ The goal is
-  to measure the probability the event $T\teq1$.
-We can periodically check if $\Pr{T\teq1}$ is less than a threshold, and if so, we stop the current loop and
+be a binary random variable that takes the value $C\teq1$ in the event that any of the next $a$ reviews will be
+  label-changing.
+Thus, the aforementioned question can be addressed by measuring the probability of the event $C\teq1$.
+%The goal is to measure the probability the event $C\teq1$.
+We can periodically check if $\Pr{C\teq1}$ is less than a threshold, and if so, we stop the current loop and
   either refresh or terminate.
 
-To estimate $\Pr{T\teq1}$, we model the event $M_i\teq1$ as a Poisson processes, but for this to be appropriate,
-  $M_i$ must follow a uniform distribution.
+We model the event $C\teq1$ as a Poisson processes, but for this to be appropriate, $L_i$ must follow a uniform
+  distribution.
 This would be true if the edges were reviewed in a random order.
-However, the priority queue orders edges more likely to be \meaningful{} first, causing $M_i$ to follow a right
+However, the priority queue orders edges more likely to be label-changing first, causing $L_i$ to follow a right
   skewed long tail distribution and violate Poisson assumptions.
 Even so, the use of a Poisson model can be justified by considering a sliding window along the distribution of
-  $M_i$.
+  $L_i$.
 Recall that we only need to make predictions about the next $a$ reviews in the future, thus we are only concerned
   with a small window to the right on the distribution.
 Assuming the long-tailed distribution is monotonic decreasing, we can use a small window in the past to estimate
-  an upper bound on probability of $T\teq1$ in the future.
+  an upper bound on probability of $C\teq1$ in the future.
 As the window moves to the right, the interval on the distribution becomes increasingly approximately uniform and
   the tightness of the bound improves and eventually becomes tight.
-This is because once the prioritization algorithm cannot distinguish positive from negative cases, the order of
-  the remaining reviews becomes random and the Poisson model becomes exactly appropriate.
-Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on $\Pr{T\teq1}$,
-  and the smaller $\Pr{T\teq1}$ is, the more accurate our estimate will be.
+This is because the order of the remaining reviews becomes random once the prioritization algorithm cannot
+  distinguish positive from negative cases.
+In this case the Poisson model becomes appropriate.
+Thus, the use of a Poisson model with a sliding window allows us to approximate an upper bound on $\Pr{C\teq1}$,
+  and the smaller $\Pr{C\teq1}$ is, the more accurate our estimate will be.
 
 
 \subsection{Details of Poisson convergence}
 
-Having justified its use, we model $M$ as a Poisson process, which is determined by a single parameter $\mu$.
-We can measure $\mu$ as the fraction of recently observed manual reviews that were \meaningful{} using an
+Having justified its use, we model $C$ as a Poisson process, which is determined by a rate parameter $\mu$ and an
+  interval length parameter $a$.
+We can measure $\mu$ as the fraction of recently observed manual reviews that were label-changing using an
   exponentially weighted moving window.
-We initialize $\mu=1$ to denote that it is likely that the first review will be \meaningful{}.
+We initialize $\mu_0=1$ to denote that it is likely that the first review will be label-changing.
 Then, after each new review we update the parameter as %
-$\mu \leftarrow m \alpha + (1 - \alpha) \mu$, where $m\teq1$ if the review was \meaningful{} and $0$ otherwise.
+$\mu_{i + 1} \leftarrow \ell_i \alpha + (1 - \alpha) \mu_{i}$, where $\ell_i\teq1$ if the $i\th$ review was
+  label-changing and $0$ otherwise.
 The exponential decay $\alpha = 2 / (s + 1)$ is determined by a span parameter $s$, which roughly represents the
   number of previous reviews that are significant.
-Using this model, the desired probability that any of the next $a$ reviews will be \meaningful{} is %
-$\Pr{T\teq1} = 1 - \exp{-\mu  a}$.
+Using this model, the desired probability that any of the next $a$ reviews will be label-changing is %
+$\Pr{C\teq1} = 1 - \exp{-\mu  a}$.
 The example in \cref{fig:poisson} illustrates the behavior of the criterion using a synthetic dataset.
-%In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $t=\exp{-2}\approx 0.135$.
+In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $\tau=0.135$.
 
 %To achieve a certain threshold with a specified span the number of iterations required is: 
 %$\lceil{\frac{\log{\left (t \right )}}{\log{\left (\frac{s - 1}{s + 1} \right )}}}\rceil$
 
 %If we set the threshold to $\exp{-2}\approx0.135$, then the window span parameter also roughly represents how
-%  many successive consecutive non-\meaningful{} decisions are necessary before reaching the threshold if starting from
+%  many successive consecutive non-label-changing decisions are necessary before reaching the threshold if starting from
 %  initial state.
 
 \begin{comment}
@@ -893,8 +889,8 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       labels, and then we proceed to construct all the names.
     This simulates identification events like the \GZC{} and provides insight into how the algorithms behave in
       practice.
-    Because our algorithms are semi-automatic, we simulate a noisy user response using groundtruth data.
-    Given a pair of annotations, the simulated user returns the groundtruth classification $99\percent$ of the
+    Because our algorithms are semi-automatic, we simulate a noisy user response using \groundtruth{} data.
+    Given a pair of annotations, the simulated user returns the \groundtruth{} classification $99\percent$ of the
       time, making errors $1\percent$ of the time uniformly at random.
     These assumptions may be simple and too inaccurate to model an expert reviewer, but it will serve to
       demonstrate our graph algorithm's ability to recover from errors.
@@ -994,8 +990,9 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     This results in positive, negative, and incomparable thresholds of $0.969$, $0.986$, and $0.5$ respectively
       for plains zebras, and $0.989$, $0.992$, and $1.0$ for Grévy's.
     For the convergence criterion use a patience of $a=20$, a window span of $s=20$, and a termination threshold
-      of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive reviews that
-      are not \meaningful{}.
+      of $\exp{-2}\approx0.135$.
+      %of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive reviews that
+      %are not label-changing.
 
     \subsection{Results}
 
@@ -1004,10 +1001,10 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       and error.
     The accuracy measurement is the number of merges remaining --- \ie{} the number of PCCs that must be merged
       --- before all individuals have been identified.
-    This is the number of edges in a spanning forest of the groundtruth positive subgraph minus the same
+    This is the number of edges in a spanning forest of the \groundtruth{} positive subgraph minus the same
       measurement but applied to the subgraph of all correctly predicted positive edges.
     % better error measure?
-    The error measurement is the total number of edges with a predicted label that differs from its groundtruth
+    The error measurement is the total number of edges with a predicted label that differs from its \groundtruth{}
       match-state.
     Additionally, for \pvar{graph}, after each review decision we record the probability of convergence estimated
       by the convergence criterion.
@@ -1025,7 +1022,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     The number of remaining merges slowly decreases for \pvar{ranking}, which is the only algorithm that requires
       manual review of each pair.
     For \pvar{graph} and \pvar{rank+clf} the initial decrease appears instantaneous due to the automatic
-      classification algorithm, which does not cost manually reviews.
+      classification algorithm, which does not cost manual reviews.
     Notice, once manual reviews begin the slope of \pvar{graph} is steeper than \pvar{rank+clf} due to the
       redundancy mechanisms, which removes extraneous reviews.
     Furthermore, while \pvar{rank+clf} and \pvar{ranking} continue until their candidate edges are exhausted,
@@ -1042,7 +1039,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     \subsection{Error cases}
 
     To further analyze the predictions of the graph the simulation, we compare the node groupings of the
-      predicted PCCs to the real groundtruth PCCs.
+      predicted PCCs to the real \groundtruth{} PCCs.
     For convenience, we will still refer to a group of nodes as a PCC.
     %Even though we are only concerned with the grouping of nodes
     In this analysis we categorize groups of predicted PCCs and their corresponding real PCCs as one of three
@@ -1122,7 +1119,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     This is not surprising due to its error recovery mechanism.
     However, we also see that \pvar{graph} also has the most merge cases.
     The reason for this is that the other algorithms do not have termination criteria.
-    They continued to review pairs, even long after the rankings were no longer consistently \meaningful{}, and
+    They continued to review pairs, even long after the rankings were no longer consistently label-changing, and
       essentially began to brute-force search the database.
     In the thousands of extra iterations, the other algorithms managed to find ${\sim}20$ extra merge cases that
       were not discovered by \pvar{graph}.
@@ -1158,18 +1155,18 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       multiple PCCs that should be connected.
     For merge cases, if no edge connecting the PCCs was ever added to the priority queue as a candidate, then we
       will insert a dashed edge between two arbitrary annotations.
-    We will highlight the edges with labels that differ from their groundtruth.
+    We will highlight the edges with labels that differ from their \groundtruth{}.
     On the bottom we show the annotation pair corresponding to a selected highlighted edge.
 
     Upon inspection, we discover that the split cases in~\cref{fig:SplitErrorsPZ,fig:SplitErrorsGZ} are caused by
-      groundtruth errors.
+      \groundtruth{} errors.
     In each of these cases the automatic verification algorithm made the PCCs positive redundant, thus the
-      simulated reviewer --- which is driven by the groundtruth --- was unable to split the PCC.
-    In fact, we discovered that all split cases are due to groundtruth errors.
+      simulated reviewer --- which is driven by the \groundtruth{} --- was unable to split the PCC.
+    In fact, we discovered that all split cases are due to \groundtruth{} errors.
     This means that \pvar{graph} did not predict any PCCs that were split cases.
     %This is encouraging because it means that 
 
-    When inspecting merge cases we also found several caused by groundtruth errors, but most were due to
+    When inspecting merge cases we also found several caused by \groundtruth{} errors, but most were due to
       challenging image conditions such as viewpoint, occlusion, and pose.
     These factors either prevented an edge from being generated as a candidate or caused the classifier to
       produce a low positive probability.
@@ -1177,7 +1174,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       Grévy's zebras are illustrated in~\cref{fig:MergeErrorGZA,fig:MergeErrorGZB}.
 
     %all split
-    %  cases for the graph algorithm are due to groundtruth errors.
+    %  cases for the graph algorithm are due to \groundtruth{} errors.
     % %$5$ split cases reported for plains zebras 
     %Two examples of these cases are shown in \cref{fig:SplitErrorsPZ,fig:SplitErrorsGZ}
 
@@ -1200,7 +1197,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
 In this chapter we have described the final component in our approach to animal identification.
 The graph-based framework takes advantage of the algorithms previously developed in
   \cref{chap:ranking,chap:pairclf} and uses them in a principled way to address the identification problem.
-The ranking algorithm quickly identifies candidate edges that are likely to be \meaningful{}, and the pairwise
+The ranking algorithm quickly identifies candidate edges that are likely to be label-changing, and the pairwise
   classifier automatically verifies pairs of annotations, reducing the required manual interaction.
 While these algorithms can be applied to address identification directly, our experiments have demonstrated that
   there is a considerable advantage to placing them in the context of the graph identification framework.
@@ -1210,7 +1207,7 @@ We have shown that using the graph framework can reduce the number of manual rev
   identification by a factor of $4$.
 Furthermore, the graph framework reduces the number of errors and can recover from them when they occur.
 The only false positives (split cases) produced using the graph framework were the result of errors in the
-  groundtruth.
+  \groundtruth{}.
 
 %and shown that identification events like the $\GCZ$ can
 %  be performed using less than $25\percent$ of the number of manual reviews required by our original algorithm.
@@ -1224,7 +1221,7 @@ When inconsistencies are detected, edge-connectivity is again used to quickly fi
   labeling.
 Our framework also includes a probabilistic convergence criterion based on a Poisson process.
 This criterion stops identification once the ranking and verification algorithm are no longer able to find
-  \meaningful{} edges.
+  label-changing edges.
 This means that the algorithm will stop the identification process before it devolves into a brute force search.
 The point at which this happens will depend on the power of the ranking and verification algorithms.
 

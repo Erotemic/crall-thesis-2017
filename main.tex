@@ -21,6 +21,8 @@ http://gradoffice.rpi.edu/update.do
 http://www.rpi.edu/dept/grad/docs/Dissertation%20Checklist.pdf
 http://www.rpi.edu/dept/grad/docs/Thesis%20Manual.pdf
 
+Submit here: http://www.etdadmin.com/cgi-bin/school?siteId=489
+
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@hyrule.cs.rpi.edu:latex/crall-thesis-2017/ ~/latex/crall-thesis-2017
     rsync -arvhzP --include='figures*/***' --exclude='*' joncrall@lev.cs.rpi.edu:latex/crall-thesis-2017/ ~/latex/crall-thesis-2017
 
@@ -34,8 +36,26 @@ http://www.rpi.edu/dept/grad/docs/Thesis%20Manual.pdf
     ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
 \end{comment}
 
-\author{Jonathan P. Crall}
-\input{thesis_preamb}
+\author{Jonathan P. Crall
+    %Rensselaer Polytechnic Institute\\
+    %110 8th Street Troy, NY 12180\\
+    %{\tt\small cralljp@cs.rpi.edu} 
+}
+
+\thesistitle{Identifying Individual Animals using Ranking, Verification, and Connectivity}        
+
+\degree{Doctor of Philosophy}        
+\department{Computer Science} 
+     
+\signaturelines{4}     %max number of signature lines is 7        
+\thadviser{Dr.\ Charles Stewart}
+\memberone{Dr.\ Barbara Cutler}        
+\membertwo{Dr.\ Bulent Yener}        
+\memberthree{Dr.\ Richard Radke}
+
+\submitdate{June 2017\\(For Graduation August 2017)}        
+%\submitdate{June 2016}
+%\copyrightyear{2017}   % if omitted, current year is used.        
 
 
 \begin{document}
@@ -76,6 +96,14 @@ Dana
 
 Zach Jablons
 Jason, Hendrick
+
+Bill and Naomi Hoffman
+
+Too many people at kitware to thank
+
+Wes Turner, Rusty Blue,
+Amitha Perea, Bob Obara
+Roddy Collins, Arslan Basharat, Matt Turek
 
 Chuck, Barb, Rich, and Bulent
 \end{comment}
@@ -133,12 +161,13 @@ Using the graph algorithm we perform a population census on the scale of the Gre
 \include{chapter4-pairclf}
 \include{chapter5-graphid}
 \include{chapter6-conclusion}
-\include{appendix}
 
 \bibliographystyle{ieee}
 %\bibliographystyle{ieeetr}
 \bibliography{My_Library_clean}
 %\nobibliography{My_Library_clean}
+
+\include{appendix}
 
 \end{document}
 % chktex-file 17

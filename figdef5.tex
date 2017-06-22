@@ -135,8 +135,8 @@ python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --
       synthetic dataset]{\caplbl{poisson}
     %--
     The convergence criteria applied to a synthetic dataset with $40$ names and $2$ annotations per name.
-    The red line indicates the fraction of \meaningful{} reviews that remain undiscovered.
-    The blue line is the probability that at least one of the next $20$ reviews will be \meaningful{}.
+    The red line indicates the fraction of label-changing reviews that remain undiscovered.
+    The blue line is the probability that at least one of the next $20$ reviews will be label-changing.
     Notice that the blue line dips when the red line flattens.
     The process terminates once this probability drops below a threshold, which is denoted by the green dotted
       line.
@@ -216,10 +216,11 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \caption[\caplbl{Refresh}Measured refresh and termination probabilities]{\caplbl{Refresh}
 % ---
 The measured refresh and termination criteria.
-The probability that the next reviews will be \meaningful{} ($\Pr{T\teq1}$) is high while new merges are discovered.
+The probability that the next reviews will be label-changing ($\Pr{C\teq1}$) is high while new merges are
+  discovered.
 Once the probability falls under the threshold, positive redundancy is enforced (the flat areas) on existing
   PCCs, and then candidate edges are recomputed.
-After an iteration with no \meaningful{} reviews, the process terminates.
+After an iteration with no label-changing reviews, the process terminates.
 %Identification converges in $4$ iterations for plains zebras and $3$ for Grevy's.
 % ---
 }
@@ -241,7 +242,7 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \caption[\caplbl{ErrorSizeDetails}Simulation error sizes]{\caplbl{ErrorSizeDetails}
     % ---
     Analysis of the simulation errors.
-    We compare statistics of the predicted PCCs with statistics of the real groundtruth PCCs.
+    We compare statistics of the predicted PCCs with statistics of the real \groundtruth{} PCCs.
     In each category ``Pred PCCs'' is the number of predicted PCCs and ``Pred PCC size'' is the average number of
       annotations in those PCCs (measured as mean and standard deviation).
     The ``Real PCCs'' and ``Real PCC size'' columns are similarly defined.
@@ -284,17 +285,17 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \includegraphics[width=\textwidth]{figures5/PZ_Master1/errors/split_14,22_hdupvjwn_edge2134,2492.png}
     %\end{subfigure}
     %\begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,4_swpbhhis_edge1600,2066.png}\end{subfigure}
-    \caption[\caplbl{SplitErrorsPZ}Plains split case due to groundtruth error]{\caplbl{SplitErrorsPZ}
+    \caption[\caplbl{SplitErrorsPZ}Plains split case due to \groundtruth{} error]{\caplbl{SplitErrorsPZ}
     % ---
     A reported split case from the plains zebra graph simulation.
-    Further inspection shows that this split case is due to a groundtruth error.
+    Further inspection shows that this split case is due to a \groundtruth{} error.
     The automatic verification algorithm correctly predicted that this pair is positive.
     %The top shows the PCC that should be split into multiple PCCs.
-    %Annotations are colored by their groundtruth label.
-    %The highlighted edges have labels that disagree with the groundtruth.
+    %Annotations are colored by their \groundtruth{} label.
+    %The highlighted edges have labels that disagree with the \groundtruth{}.
     %The bottom shows one the annotations on a highlighted edge in more detail.
     %All $5$ split cases reported for plains zebras are discovered to be due to
-    %errors in the groundtruth.
+    %errors in the \groundtruth{}.
     % ---
     }
     \label{fig:SplitErrorsPZ}
@@ -309,10 +310,10 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     %\begin{subfigure}[h]{.7\textwidth}
     \includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,19_cymmmggo_edge1582,2371.png}
     %\begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,4_swpbhhis_edge1600,2066.png}\end{subfigure}
-    \caption[\caplbl{SplitErrorsGZ}Grévy's split case due to groundtruth error]{\caplbl{SplitErrorsGZ}
+    \caption[\caplbl{SplitErrorsGZ}Grévy's split case due to \groundtruth{} error]{\caplbl{SplitErrorsGZ}
     % ---
     A reported split case from the Grévy's zebra graph simulation.
-    Further inspection shows that this split case is due to a groundtruth error.
+    Further inspection shows that this split case is due to a \groundtruth{} error.
     The automatic verification algorithm correctly predicted that these annotations should be in the same PCC.
     % ---
     }

@@ -456,8 +456,8 @@ Note the summary statistics in this example are all computed for correspondences
       generation of labels.
     Recall that our the purpose of our classifier is to output a probability distribution over three labels:
     positive, negative and incomparable.
-    Given a pair of annotations we need to assign one of these three labels using groundtruth data.
-    In recent versions of our system, this groundtruth label is stored along with each unordered pair of
+    Given a pair of annotations we need to assign one of these three labels using \groundtruth{} data.
+    In recent versions of our system, this \groundtruth{} label is stored along with each unordered pair of
       annotations that has been manually reviewed, but because this is a new feature, only a few pairs have been
       assigned an explicit three-state label.
     Therefore, we must make use of the name and viewpoint labels assigned each annotation by previous versions of
@@ -476,7 +476,7 @@ Note the summary statistics in this example are all computed for correspondences
     In all other cases return positive if the annotations share a name label and negative if they do not.
 
     In order to select pairs from our ground truth dataset, we sample representative pairs of annotations guided
-      by the principal of selecting examples that exhibit a range of difficulties~\cite{shi_embedding_2016} (\eg
+      by the principle of selecting examples that exhibit a range of difficulties~\cite{shi_embedding_2016} (\eg
       hard-negatives and moderate positives).
     We use the LNBNN ranking algorithm to estimate how easy or difficult it might be to predict the match-state
       of a pair.
@@ -549,7 +549,7 @@ Note the summary statistics in this example are all computed for correspondences
     %For plains zebras we can increase the number of incomparable cases to $353$ using by using viewpoint
     %  heuristics.
 
-    After sampling, we have a set of annotation pairs and each is associated with a groundtruth matching state
+    After sampling, we have a set of annotation pairs and each is associated with a \groundtruth{} matching state
       label of either positive, negative, or incomparable.
     Additionally, each pair is also labeled as either a photobomb or not a photobomb.
     For each pair we construct a pairwise feature vector as described in \cref{sec:pairfeat}.
@@ -609,7 +609,7 @@ Note the summary statistics in this example are all computed for correspondences
     Additionally, we will compare the match-state classifier to LNBNN in two ways.
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
     Second, we will compare the ability of each LNBNN and the match-state classifier to predict if a pair is
-      positive or not by looking at the distribution of positive and non-positive scores as well as the ROC curves
+      positive or not by looking at the distribution of positive and non-positive scores as well as the ROC curves.
 
     %For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
     %  vector.
@@ -726,7 +726,7 @@ Note the summary statistics in this example are all computed for correspondences
         \paragraph{Feature importance}
 
         To better understand which feature dimensions are the most useful for classification, we measure the
-          ``mean decrease impurity'' (MDI)~\cite{louppe2014understanding} of each feature dimension.
+          ``mean decrease impurity'' (MDI)~\cite{louppe_understanding_2014} of each feature dimension.
         The MDI is a measure of feature importance that is computed during the training phase.
         As each decision tree is grown, for each node, we record the number of training samples of each class
           that reach it.
@@ -799,7 +799,7 @@ Note the summary statistics in this example are all computed for correspondences
         %  scores), it might not be necessary to include both.
         %Correlated feature dimensions are also known to decrease the accuracy of individual decision trees.
         %However, it is also known that this effect is alleviated by the randomization process and when averaging
-        %  over multiple decision trees~\cite{louppe2014understanding}.
+        %  over multiple decision trees~\cite{louppe_understanding_2014}.
         %It is for this reason and the fact that the $MCC$ does not significantly improve that we chose to use all
         %  $131$ dimension of our feature vector in the other experiments.
         
@@ -848,9 +848,9 @@ Note the summary statistics in this example are all computed for correspondences
         The examples illustrated in ~\cref{fig:MatchLabelErrors} all show pairs of annotations with non-positive
           labels that should have been labeled as positive.
         Note that the positive probabilities from two of these examples are very close to $1.0$, indicating that
-          the classifier is confident that these groundtruth labels are incorrect.
-        Furthermore, these success cases were found in the context of noisy groundtruth labels, showing that our
-          classifier is robust to errors in groundtruth labels.
+          the classifier is confident that these \groundtruth{} labels are incorrect.
+        Furthermore, these success cases were found in the context of noisy \groundtruth{} labels, showing that our
+          classifier is robust to errors in \groundtruth{} labels.
 
         \PairFailPN{}
 
@@ -930,7 +930,7 @@ Note the summary statistics in this example are all computed for correspondences
         Notice that many of the probabilities predicted for these cases are well above the thresholds.
         Predicting high probabilities for these undiscovered photobomb cases indicates that the photobomb-state
           classifier is stronger than our measurements suggest.
-        These mislabeled groundtruth cases also help explain why the predicted probabilities were so low; the
+        These mislabeled \groundtruth{} cases also help explain why the predicted probabilities were so low; the
           learning algorithm was encouraged to incorrectly classify them.
         Reviewing and relabeling all of these cases would improve results by both removing noise from the
           training set and increasing the number of labeled examples.

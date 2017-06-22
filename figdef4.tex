@@ -38,8 +38,8 @@
     \toprule
                {}   & {Names} & {Annots} & {Positive} & {Negative} & {Incomparable} & {Photobombs} \\
     \midrule
-      Plains zebras &            1202 &             5720 &   16583   & 30376    & 353  & 286 \\
-     Grévy's zebras &             771 &             2283 &   5002    & 13008    & 0    & 76  \\
+      Plains zebras &            $1202$ &             $5720$ &   $16583$   & $30376$    & $353$  & $286$ \\
+     Grévy's zebras &             $771$ &             $2283$ &   $5002$    & $13008$    & $0$    & $76$  \\
     \bottomrule
     \end{tabular}
 \end{table}
@@ -162,7 +162,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     \caption[\caplbl{ConfusionMatch}Match-state experiment confusion matrix]{\caplbl{ConfusionMatch}
     % ---
     Multiclass match-state confusion for plains and Grévy's zebras.
-    The rows are the real (groundtruth) state, and the columns are the predicted states.
+    The rows are the real (\groundtruth{}) state, and the columns are the predicted states.
     %The final column indicates the number of examples for each class.
     %A pair is classified as the state (positive, negative, or incomparable) with the maximum predicted
     %  probability.
@@ -203,7 +203,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     \caption[\caplbl{ConfusionPhotobomb}Photobomb-state experiment confusion matrix]{\caplbl{ConfusionPhotobomb}
     % ---
     The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
-    (groundtruth) classes.  The final column indicates the number of examples of each class.
+    (\groundtruth{}) classes.  The final column indicates the number of examples of each class.
     A pair is classified as a photobomb if its probability is greater than $0.5$.
     % ---
     }
@@ -235,7 +235,7 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     \caption[\caplbl{ConfusionPhotobombII}Photobomb-state adjusted confusion matrix]{\caplbl{ConfusionPhotobombII} 
     % ---
     The photobomb-state confusion matrix after adjusting the probability threshold to maximize the MCC.
-    The columns indicate predicted classes, and the rows indicate real (groundtruth) classes.
+    The columns indicate predicted classes, and the rows indicate real (\groundtruth{}) classes.
     The final column indicates the number of examples of each class.
     % ---
     }
@@ -501,10 +501,10 @@ In the bottom two examples, scenery matches and photobombing animals hinder the 
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_match_nomatch_4771_4846.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1349_3087.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1535_2549.jpg}\end{subfigure}
-\caption[\caplbl{MatchLabelErrors}Errors in the match-state groundtruth]{\caplbl{MatchLabelErrors}
+\caption[\caplbl{MatchLabelErrors}Errors in the match-state \groundtruth{}]{\caplbl{MatchLabelErrors}
 % ---
-Groundtruth errors in the database are the reason for several match-state failure cases.
-In these examples the classifier picks the correct answer even though the groundtruth is incorrect.
+\Groundtruth{} errors in the database are the reason for several match-state failure cases.
+In these examples the classifier picks the correct answer even though the \groundtruth{} is incorrect.
 Note that the probability assigned to the true state of each pair is close to $1.0$.
 % ---
 }
@@ -575,11 +575,11 @@ The last two cases the classifier incorrectly predicts not photobomb, but confid
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_photobomb_state/fail_notpb_pb_3928_4880.jpg}\end{subfigure}
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_notpb_pb_1377_1378.jpg}\end{subfigure}
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_notpb_pb_1184_1185.jpg}\end{subfigure}
-\caption[\caplbl{PBLabelErrors}Errors in the photobomb-state groundtruth]{\caplbl{PBLabelErrors}
+\caption[\caplbl{PBLabelErrors}Errors in the photobomb-state \groundtruth{}]{\caplbl{PBLabelErrors}
 % ---
-Groundtruth errors in the database are the reason for several photobomb-state failure cases.
-It is encouraging that the photobomb-state classifier is able to detect errors in the groundtruth even given only
-  a few examples of photobomb pairs.
+\Groundtruth{} errors in the database are the reason for several photobomb-state failure cases.
+It is encouraging that the photobomb-state classifier is able to detect errors in the \groundtruth{} even given
+  only a few examples of photobomb pairs.
 % ---
 }
 \label{fig:PBLabelErrors}

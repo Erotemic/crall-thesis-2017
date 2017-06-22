@@ -22,9 +22,9 @@
     and convolutional neural networks~\cite{krizhevsky_imagenet_2012, razavian_cnn_2014,
       zagoruyko_learning_2015,han_matchnet_2015,arandjelovic_netvlad_2016}.
 
-    At a high level main questions addressed by the aforementioned research can be summarized as: How should image
+    At a high level, the main questions addressed by the aforementioned research can be summarized as: How should image
     features be detected? How should detected image features be represented? How much invariance should features
-    have? Should image features be quantized? How should image feature be matched? How should feature matches be
+    have? Should image features be quantized? How should image features be matched? How should feature matches be
     aggregated? How should feature matches be scored? How should all of this be done accurately? How should all of
     this be done efficiently? Answers to these questions address many of the challenges to animal identification
     previously introduced in~\cref{sec:challenges}.
@@ -97,7 +97,7 @@
         efficiently implemented as a discrete convolution with the $1$-dimensional discrete Gaussian kernel in the
         $x$-direction and then in the $y$-direction, because the discrete Gaussian kernel is separable in
         orthogonal directions~\cite{lindeberg_scale_space_1993}. Using the definition of an image at a single scale
-        the next step is to represent an image a multiple scales.
+        the next step is to represent an image at multiple scales.
 
        \paragraph{Gaussian pyramid}
 
@@ -121,11 +121,14 @@
             A property of discrete scale-space is that after appropriate smoothing downsampling the image by half
             is equivalent to doubling sigma. Let
             % ---
-            $\img_\ell(\pt) = \downsamp{\rawimg}{2^{\ell}}({\pt} / {2^{\ell}})$ 
+            %$\img_\ell(\pt) = \downsamp{\rawimg}{2^{\ell}}({\pt} / {2^{\ell}})$ 
+            $\img_\ell(\pt)$ %= \downsamp{\rawimg}{2^{\ell}}({\pt} / {2^{\ell}})$ 
             % ---
             denote the raw image downsampled by a factor of $2^{\ell}$ using Lanczos resampling. Now, each level of
             the pyramid can be written as %
-            $\img(\pt, 2^\ell) = g( 1 ) \conv \rawimg^\ell$. Given the raw image at level $\ell$, the scale
+            %$\img(\pt, 2^\ell) = g( 1 ) \conv \rawimg^\ell$. 
+            $\img(\pt, 2^\ell) = g( 1 ) \conv \img_\ell(\pt)$. 
+            Given the raw image at level $\ell$, the scale
             corresponding to $\sigma$ can be written as a relative scale
             % ---
             $\sigma_\ell = \sigma / 2^\ell$.
@@ -189,15 +192,16 @@
             are filtered using a threshold $t_{\tt{edge}}$ which is compared to the ratio of the Hessian's squared
             trace and the determinant.
             \begin{equation}
-                \kpts = \{(\pt, \scale) \in \kpts' \where
-                  \frac{\trfn{\hessMAT}^2}{\detfn{\hessMAT}} > t_{\tt{edge}}\}
+                %\kpts = \{(\pt, \scale) \in \kpts' \where
+                %  \frac{\trfn{\hessMAT}^2}{\detfn{\hessMAT}} > t_{\tt{edge}}\}
+                \kpts = \left\{(\pt, \scale) \in \kpts' \bigwhere \frac{\trfn{\hessMAT}^2}{\detfn{\hessMAT}} > t_{\tt{edge}}\right\}
             \end{equation}
 
         \paragraph{Sub-pixel and sub-scale localization}
             To compensate for the discrete nature of pixel images, each keypoint detection is localized to
             sub-pixel and sub-scale accuracy. The importance of feature localization is demonstrated
             in~\cite{ke_pca_sift_2004}, where descriptors were computed on the normalized vectors of patch
-            gradients using only principal component analysis (PCA)~\cite{jolliffe_principal_2014}. Despite the
+            gradients using only principal component analysis (PCA)~\cite{jolliffe_principal_1986}. Despite the
             simplicity of the descriptors the authors were still able to effectively match two images due to the
             robust localization of the features.
 
@@ -621,7 +625,7 @@
 
         One of the most well-known techniques in instance recognition is the \glossterm{bag-of-words} model
         introduced to computer vision by Sivic and Zisserman~\cite{sivic_video_2003, sivic_efficient_2009}. The
-        bag-of-words model addresses instance recognition using techniques from text-retrieval. An image is cast as
+        bag-of-words model addresses instance recognition using techniques from text retrieval. An image is cast as
         a text document where the image patches (detected at keypoints and described with SIFT) are the words. The
         concept of a visual word is formalized using a visual vocabulary. A \glossterm{visual vocabulary} is
         defined by clustering feature descriptors traditionally constructed using k-means~\cite{lloyd_least_1982}
@@ -883,7 +887,7 @@
         networks~\cite{turk_eigenfaces_1991, taigman_deepface_2014}, sparse coding~\cite{wright_robust_2009,
         jiang_label_2013}, principal component analysis (PCA)~\cite{craw_face_1992}, Fisher linear discriminant
         (FLD)~\cite{liu_robust_2000}, linear discriminant analysis (LDA)~\cite{lu_face_2003}, and support vector
-        machines (SVMs)~\cite{phillips_support_1998, levy_svm_minus_2013}.
+        machines (SVMs)~\cite{phillips_support_1999, levy_svm_minus_2013}.
 
         Before the neural network revolution~\cite{krizhevsky_imagenet_2012}, sparse coding was one of the most
         popular techniques to retrieve faces~\cite{aharon_k_svd_2006, wright_robust_2009, zhang_sparse_2011,
@@ -1154,10 +1158,9 @@
 
     Because fine-grained recognition lies on the same spectrum as instance recognition and category recognition it
     is not surprising that many of the same techniques --- like Fisher vectors --- are
-    used~\cite{gosselin_revisiting_2014}.
-    Recently convolutional models have been successfully applied to fine-grained
-    recognition~\cite{catherine_wah_similarity_2014, branson_bird_2014, zongyuan_ge_modelling_2015,
-    zhang_weakly_2015, xiao_application_2015}.
+    used~\cite{gosselin_revisiting_2014}. Recently convolutional models have been successfully applied to
+    fine-grained recognition~\cite{catherine_wah_similarity_2014, branson_bird_2014, zhang_weakly_2015,
+    xiao_application_2015}.
 
     \subsection{Discussion --- fine-grained recognition}
         The goal of fine-grained recognition is somewhat similar to animal identification. Fine-grained recognition
@@ -1175,13 +1178,13 @@
     until 2012 when a deep convolutional neural network (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the
     best support vector machines (SVMs)~\cite{vapnik_statistical_1998} by over $10\percent$ in the ImageNet
     category recognition challenge~\cite{russakovsky_imagenet_2014}. Since then, many successful category
-    recognition techniques based on DCNNs have been published~\cite{simonyan_very_2014, chatfield_efficient_2014,
-    chatfield_return_2014, oquab_learning_2014, szegedy_going_2014, long_convnets_2014, he_spatial_2014,
+    recognition techniques based on DCNNs have been published~\cite{simonyan_very_2015, chatfield_efficient_2015,
+    chatfield_return_2014, oquab_learning_2014, szegedy_going_2015, long_convnets_2014, he_spatial_2014,
     dean_fast_2013}. DCNNs have also been shown to produce excellent results when applied to other computer vision
     problems such as: %
     instance recognition~\cite{razavian_cnn_2014, razavian_baseline_2015, liu_learning_2015,
     held_deep_2015,arandjelovic_netvlad_2016,radenovic_cnn_2016}, %
-    fine-grained recognition~\cite{branson_bird_2014, donahue_decaf_2013, catherine_wah_similarity_2014}, %
+    fine-grained recognition~\cite{branson_bird_2014, donahue_decaf_2014, catherine_wah_similarity_2014}, %
     detection~\cite{girshick_rich_2014, sermanet_overfeat_2013, li_wan_end_end_2015}, %
     face verification~\cite{huang_learning_2012, taigman_deepface_2014, sun_deep_2013}, %
     and learning similarity between feature patches~\cite{osendorfer_convolutional_2013, han_matchnet_2015,
@@ -1237,7 +1240,7 @@
       naturally suited for extracting features from images.
     Even without learning weights, convolutions can be used to extract powerful features for
       matching~\cite{revaud_deep_2015}.
-    The popular SIFT and HoG features~\cite{mahendran_understanding_2014} can even be implemented as
+    The popular SIFT and HoG features~\cite{mahendran_understanding_2015} can even be implemented as
       convolutional networks.
     Despite the lack of hard theoretical insight into the inner workings of these networks, their empirical
       performance cannot be denied.
