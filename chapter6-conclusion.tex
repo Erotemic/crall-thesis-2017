@@ -13,7 +13,7 @@
     (1) the ranking algorithm from \cref{chap:ranking} that uses a bounding box annotation around an animal to
       search a labeled database of annotations for likely matches,
     (2) the classification algorithm from \cref{chap:pairclf} that probabilistically verifies if a pair of
-      annotation is positive, negative, or incomparable, and
+      annotations is positive, negative, or incomparable, and
     (3) the graph framework from \cref{chap:graphid} that harnesses the previous algorithms in a principled way
       to dynamically determine the identity of all animals in a dataset.
     Each of these algorithms was designed to build on the previous one(s), improving the overall accuracy and
@@ -32,17 +32,14 @@
     In \cref{sec:pairexpt} we demonstrated that a classification algorithm can be used to improve the separation
       of positive results from negative and incomparable results in a ranked list.
     In \cref{sec:graphexpt} we simulated the \GZC{} and demonstrated that our improvements to the ranking
-      algorithm --- made by the classification and graph algorithm --- enable us to perform identification in less
-      than $25\percent$ of the number of manual reviews required by the original event.
+      algorithm --- made by the classification and graph algorithm --- enable us to perform identification using
+      less than $25\percent$ of the number of manual reviews required by the original event.
 
     \section{Discussion}\label{sec:discuss}
 
     The research that resulted in this \thesis{} began in $2010$ and was completed in $2017$.
     During that time, many significant developments were made in the fields of computer vision and machine
       learning, most notably the explosion of deep learning~\cite{lecun_deep_2015}.
-      %where technological and theoretical achievements have
-      %made it possible to efficiently train deep convolutional neural networks (DCNNs).
-      %(DCNNs)~\cite{krizhevsky_imagenet_2012,taigman_deepface_2014,razavian_baseline_2015,lecun_deep_2015,arandjelovic_netvlad_2016,rocco_convolutional_2017}.
     While some steps in our approach (\eg{} the foregroundness weights) do make use of deep convolutional neural
       networks (DCNNs), most do not.
     In some sense this is an advantage because the algorithms can be applied to different species without any
@@ -59,7 +56,7 @@
       deep or shallow.
     The framework dynamically manages the relationships between annotations.
     In most cases this means deciding if two annotations are the same (positive) or different (negative), but
-      this also means handling corner cases like when the annotations are incomparable or when there is some other
+      this also means handling cases like when the annotations are incomparable or when there is some other
       interesting connection between two annotations like scenery matches and photobombs.
     As new relationships are added, errors are discovered and corrected, and the identifications are updated.
 
@@ -69,9 +66,8 @@
     (3) the minimum cut needed to correct an error and split an inconsistent individual.
     Edge prioritization works in conjunction with a convergence criteria that determines when identification has
       been completed.
-    %This means that the graph algorithm can simply be given a set of annotations and executed.
-    A signal is emitted whenever manual interaction is needed, and once the user returns with a response the
-      algorithm continues.
+    A signal is emitted whenever manual interaction is needed, and the algorithm continues after the user returns
+      with a response.
     The only time a user interacts with the algorithm after it begins is to label an edge as positive, negative,
       or incomparable.
     All other decisions are made internally.
@@ -97,11 +93,6 @@
           sizes.
         We have shown that tripling the number of annotations in a database can reduce the ranking accuracy at
           rank $1$ by $2\percent$.
-        %The best choice for the $\K$ parameter (indicating the number of nearest descriptor neighbors) depends on
-        %  the species and database size.
-        %Overall, for highly distinctive species like Grévy's zebras, lower choices of $\K$ closer to $1$ seem
-        %  better, and for less distinctive species like plains zebras, higher choices closer to $4$ seem to work
-        %  best.
 
         \item
         We have evaluated the effect of various levels of feature invariance in our experiments.
@@ -138,11 +129,11 @@
         \item We have used this feature vector to learn a random forest that can predict the probability that two
           annotations are either positive, negative, or incomparable.
         We have shown that this learned pairwise classifier is a strong predictor of match-state by measuring an
-          MCC of $0.83$ for plains zebras and $0.91$ for Grevy's zebras.
+          MCC of $0.83$ for plains zebras and $0.91$ for Grévy's zebras.
 
         \item We have compared the learned probabilities to LNBNN scores and demonstrated that re-ranking using
           the positive probabilities can improve the ranking accuracy at rank $1$ by $9\percent$ for plains zebras
-          and $2\percent$ for Grevy's zebras.
+          and $2\percent$ for Grévy's zebras.
         Additionally, the probabilities significantly improve the separation of positive and non-positive
           annotation pairs.
         For both species, an ROC AUC of less than $0.9$ is improved to an AUC greater than $0.97$.
@@ -151,16 +142,12 @@
 
     \item {The graph identification algorithm}:
         \begin{enumln}
-        %\item We have introduced the graph identification algorithm for semi-automatic animal identification.
 
         \item 
             We have demonstrated that combining the graph algorithm with existing ranking and verification
               algorithms improves the accuracy and efficiency of semi-automatic animal identification.
             We have designed the framework to be agnostic to the specific ranking and verification algorithms so
               future DCNN-based algorithms can be swapped in.
-            %The algorithms discussed in this \thesis{} could be replaced with algorithms based on DCNNs.
-            %The framework can even be used without any computer vision algorithms in order to facilitate a more
-            %  efficient brute force search for small databases.
 
         \item We have proposed a measure of redundancy based on edge-connectivity used to increase accuracy and
           reduce the number of reviews needed.
@@ -179,7 +166,6 @@
     However, the clearest direction for future research is to replace these algorithms with ones based on DCNNs.
     To replace the ranking algorithm, we believe that the approach in~\cite{arandjelovic_netvlad_2016} is a good
       starting point.
-    %This algorithm is similar to the VLAD approach we tested here, the deep features and vocabularies .
     We had briefly investigated replacing the pairwise classifier using the techniques
       in~\cite{taigman_deepface_2014}, but the results were poor because we did not have as much training data or
       an alignment procedure.

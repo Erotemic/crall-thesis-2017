@@ -4,6 +4,8 @@ grep -ER "0\.[0-9]*\\\\percent" *
 
 grep -ER "\\$\\.[0-9]*\\$" *
 
+grep -ER "Grevy" *.tex
+
 
 grep -Przo "(?s)Fisher *. *Vector" *.tex
 grep -Przo "(?s)Hamming *. *Em" *.tex
