@@ -198,7 +198,7 @@ Therefore, we will define a redundancy criterion in~\cref{sec:redun} which ignor
   but only after they meet a minimum level of redundancy.
 
 Additionally, the deterministic termination criterion would require that each pair of PCCs has a redundant set of
-  negative edges between them before the algorithm stop.
+  negative edges between them before the algorithm stops.
 However, the number of edges that need review grows quadratically.
 Therefore, unless the automatic algorithm is perfect or the dataset is small, the number of negative reviews
   needed to converge will be too large for a human to handle.
@@ -248,9 +248,9 @@ Thus, the algorithm can address the case where nothing is known, new images are 
 \label{alg:AlgoOverview}
 \end{algorithm}
 
-The first step of the algorithm is to generate candidate edges predict probability measures (positive, negative,
-  or incomparable) for each candidate edge.
-In the next step each edge is then entered into a priority queue with a priority based first on its ability to be
+The first step of the algorithm is to generate candidate edges and predict probability measures (positive,
+  negative, or incomparable) for each candidate edge.
+In the next step each edge is entered into a priority queue with a priority based first on its ability to be
   automatically reviewed and then on its positive probability.
 Next, the algorithm enters a loop where the next candidate edge is selected, a decision is made about this edge
   --- either automatically (as much as possible) or by the user --- and it is added to the graph.
@@ -362,7 +362,7 @@ This can be determined in $O(m)$ by checking if the sum of the number of positiv
 Otherwise, in the more interesting case, when $n > k$, a PCC is positive-redundant iff it is $k$-edge-connected
   --- \ie{} it is impossible to disconnect the nodes in the PCC by removing any set of $k - 1$ edges.
 In practice, we are primarily concerned with the case when $k=2$.
-The special case of $2$-edge-connectivity is also called bridge-connectivity, and this can be determined in %
+This special case of $2$-edge-connectivity is also called bridge-connectivity, and can be tested for in %
 $O(n + m)$~\cite{eswaran_augmentation_1976,wang_simple_2015}.
 The basic idea is to trace cycles encountered during a depth-first-search of the graph and mark all edges that
   are part of a cycle.
@@ -373,8 +373,9 @@ Thus, if no bridge exists then the PCC is $2$-edge-connected.
 In the general case when $k>2$, edge-connectivity can be determined in $O(m n)$ amortized
   time~\cite{esfahanian_connectivity_2017}.
 This involves first computing a small (not necessarily the smallest) dominating set.
-A small dominating set can be using a greedy algorithm that starts with an empty set, and iteratively adds an
-  arbitrary node that is not in or adjacent to the current set until all nodes are in or adjacent to that set.
+A small dominating set can be computed using a greedy algorithm that starts with an empty set and iteratively
+  adds an arbitrary node that is not in or adjacent to the current set until all nodes are in or adjacent to that
+  set.
 Then an arbitrary node in the dominating set is chosen.
 The local-edge-connectivity is computed between the chosen node and every other node in the dominating set.
 The local-edge-connectivity between two nodes is simply the maximum flow between those nodes, if all edge
@@ -384,8 +385,7 @@ The edge-connectivity of the entire PCC is the minimum of
 (2) the minimum computed local-edge-connectivity.
 
 
-We now describe how to check if two PCCs are a consistent PCC  $C$ and $D$ with sizes $n_1$ and $n_2$ are
-  $k$-negative-redundant.
+We now describe how to check if two PCCs $C$ and $D$ with sizes $n_1$ and $n_2$ are $k$-negative-redundant.
 This can be done in $O(n_1 n_2)$ time using adjacency lists and set intersections to check if the number of
   negative edges between the nodes in $C$ and $D$ is greater than $k$.
 For each node in $C$ we simply check if any node in $D$ is in the adjacency list (stored as a set) of that node.
@@ -415,8 +415,8 @@ We can dynamically remove these from the priority queue by checking when a new e
   queue is within an existing PCC.
 We can check if the local-edge-connectivity~\cite{esfahanian_connectivity_2017} --- \ie{} the maximum flow ---
   between the edge's endpoints is at least $k$.
-If local-edge-connectivity between those nodes is at least $k$, then that edge is part of a $k$-edge-connected
-  component and can be ignored.
+If the local-edge-connectivity between those nodes is at least $k$, then that edge is part of a
+  $k$-edge-connected component and can be ignored.
 
 
 \subsection{Redundancy augmentation}\label{subsec:augredun}
