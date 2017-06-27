@@ -431,12 +431,12 @@ When $k=2$ the problem is called bridge augmentation and can be computed $O(m)$~
   as long as all edges in the complement of the PCC can be used in the augmentation.
 However, if the PCC contains incomparable edges, then these edges cannot be used.
 We can address this by using a weighted variant of the problem, setting the weights of the incomparable edges to
-  $\inf$, and searching for a minimum cost augmentation.
+  $\infty$, and searching for a minimum cost augmentation.
 However, the weighted variant of this problem is NP-hard, even for $k=2$, but can be approximated within a factor
   of $2$~\cite{khuller_approximation_1993}.
 We make use of this algorithm later in~\cref{sec:cand}
 
-A set of edges that would complete negative-redundancy for a pair of PCCs, we compute a
+To find a set of edges that would complete negative-redundancy for a pair of PCCs, we compute a
   $k$-negative-augmentation.
 Computing this set of augmenting edges is trivial.
 Initialize an empty augmenting set.
