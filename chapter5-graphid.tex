@@ -462,7 +462,7 @@ In this section we describe the first step of the algorithm where candidate edge
 There many ways that candidate edges can be generated.
 Different sets and orderings of candidate edges will impact different properties of the graph at different rates.
 Therefore, we choose candidate edges to depend on what properties of the graph we want to manipulate.
-In the context of identifying individual animals, the most obvious manipulations is to reduce the number of PCCs
+In the context of identifying individual animals, the most obvious manipulation is to reduce the number of PCCs
   in the graph by adding positive edges between existing PCCs, thus merging them into one.
 A less obvious property that we can manipulate is the fraction of PCCs that are positive redundant.
 By increasing this fraction to $1$, we discover mistakes that have been made, which can be fixed using the
@@ -496,8 +496,7 @@ In this next iteration, we generate candidate edges to ensure that all PCCs are 
 
 To generate candidate edges that will make PCCs positive redundant, we use the positive-augmentation algorithm
   from~\cref{subsec:augredun} to generate edges.
-These edges are assigned prioritized in the same way, however in this iteration the refresh criterion is
-  disabled.
+These edges are assigned priorities in the same way, however in this iteration the refresh criterion is disabled.
 This enforces that if each edges is reviewed as positive, then all PCCs will be positive-redundant at the end of
   this inner loop.
 However, sometimes an edge will not be reviewed as positive.
@@ -524,21 +523,21 @@ Now that we have generated and prioritized a set of candidate edges we come to t
   decision-making.
 Because of the surrounding structure of the graph framework, this step is quite simple.
 Given a popped edge from the priority queue, we check if any of the positive, negative, and incomparable state
-  probabilities produced by the pairwise algorithm is above their automatic decision threshold (set externally as a
-  hyperparameter).
+  probabilities produced by the pairwise algorithm are above their automatic decision threshold (set externally as
+  a hyperparameter).
 If the edge cannot be automatically reviewed we issue a request for user feedback.
 Once we have obtained feedback for an edge --- either automatically or manually --- the edge is added to the
   appropriate edge set.
 After the new edge is added, we update candidate edge priorities discussed in~\cref{sec:redun}.
-If the new edge causes an inconsistency, then we drop into inconsistency mode we will discuss
+If the new edge causes an inconsistency, then we drop into inconsistency mode, which we will discuss
   in~\cref{sec:incon}.
 
 For each decision we record a user-id to identify the reviewer or algorithm making the decision.
 We also follow the approach of~\cite{branson_visual_2010} and store a user-specified categorical confidence value
   of unspecified, guessing, not-sure, pretty-sure, and absolutely-sure (with associated integer values $0$, $1$,
   $2$, $3$, and $4$).
-The user-id allows us to differentiate between edges that were automatically from those that were manually
-  reviewed.
+The user-id allows us to differentiate between edges that were automatically reviewed from those that were
+  manually reviewed.
 While this is not directly used in this algorithm description, it enables a variety of possible post-processing
   techniques, \eg{} manually reviewing automatically reviewed edges between PCCs containing only two annotations.
 However, the user confidence contributes to the edges weights in the error detection and recovery algorithm
@@ -554,7 +553,7 @@ Whenever a decision is made that either adds a negative edge within a PCC or add
   PCCs with at least one negative edge between them, the graph becomes inconsistent.
 In both cases the result is a single PCC $C$ with internal negative edges.
 The goal of inconsistency recovery mode is to change the labels of edges in order to make the subgraph formed by
-  the nodes of $C$ and all of their edges.
+  the nodes of $C$ and all of their edges consistent.
 An inconsistency implies that a mistake was made, but does not necessarily determine which edge has the wrong
   label.
 Therefore, we develop an algorithm to hypothesize the edge(s) most likely to contain the mistake(s) using a
@@ -571,7 +570,7 @@ An example of an inconsistent PCC with hypothesized edges is illustrated in \cre
 \paragraph{Hypothesis generation}
 The procedure alternates between steps of generating ``mistake hypothesis'' edges, and presenting these to the
   user for review.
-The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which is
+The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which if
   re-labeled as positive or negative respectively would cause $C$ to become consistent.
 For simplicity, we focus first the case where $C$ contains exactly one negative edge.
 It will not be hard to extend to the general case.
@@ -580,7 +579,7 @@ It will not be hard to extend to the general case.
 First consider a cut of $C$ that disconnects the endpoints of the negative edge.
 If the labels on these edges were changed from positive to negative or incomparable, then the inconsistent PCC
   would be split into multiple consistent PCCs.
-Alternatively, if the label on the negative edge was change to positive or incomparable, the PCC would no longer
+Alternatively, if the label on the negative edge was changed to positive or incomparable, the PCC would no longer
   be inconsistent.
 Therefore, the algorithm starts by creating a minimum $s$-$t$-cut using the subgraph of $C$ containing only
   positive edges.
@@ -590,7 +589,7 @@ Unlike in our preceding discussion where the edges only have positive/negative/i
 In the case where the negative edge is correct, this will encourage the minimum cut to return the positive edges
   that are most likely to be mislabeled.
 
-The weight of edge in this cut problem is the sum of three values:
+The weight of an edge in this cut problem is the sum of three values:
 \begin{enumln}
     \item its positive probability previously computed using the pairwise classifier,
 
@@ -610,8 +609,8 @@ The confidence performs a similar role, speeding up the pace at which the algori
 Using this weighting scheme we find the minimum $s$-$t$-cut, which returns a cut set of positive edges.
 We now need to decide if it is more likely that the positive cut-edges should be relabeled, or the negative edge
   should be relabeled.
-We compare the total weight of cut positive edges with the weight of the terminal negative edge (weighted using
-  the same scheme).
+We compare the total weight of cut positive edges with the weight of the negative edge (weighted using the same
+  scheme).
 If the positive weight is smaller, the algorithm suggests that the cut positive edges should be relabeled as
   negative.
 Otherwise, it suggests that the negative edge should become positive.
@@ -620,11 +619,13 @@ Otherwise, it suggests that the negative edge should become positive.
 %  $t$ would no longer be part of the same PCC and the inconsistency would be removed.
 
 \paragraph{Generalization}
-In a restricted scenario where each edge is reviewed exactly to the specifications of the algorithm, then it is
-  only possible for one negative edge to exist in a PCC when $k=2$.
-However, in practice it is possible for edges to be added outside of these constraints.
-In this case we can slightly modify inconsistency recovery to apply to the case when there are any number of
-  negative edges between the nodes of a PCC.
+So far, we have only considered the case when only one negative edge exists in a PCC.
+%In a restricted scenario where each edge is reviewed exactly to the specifications of the algorithm, then it is
+%  only possible for one negative edge to exist in a PCC when $k=2$.
+However, in practice it is possible for multiple negative edges to exist within a PCC.
+In this case we can slightly modify the inconsistency recovery algorithm.
+%to apply to the case when there are any number of
+%  negative edges between the nodes of a PCC.
 The modification is simple.
 Instead of using a minimum $s$-$t$-cut, we use a multicut to disconnect the endpoints in all pairs of negative
   edges.
@@ -647,7 +648,7 @@ If there are no more hypothesis edges, then either all inconsistencies were remo
 In the case where the reviewer disagrees with the algorithm, the new review is recorded and we generate a new set
   of hypothesis errors.
 Because reviewing the edge increases its weight, the algorithm will be forced to look elsewhere for a cut.
-This alternation between hypothesis generation and user review repeats until there the reviewer agrees with all
+This alternation between hypothesis generation and user review repeats until the reviewer agrees with all
   hypothesis edges, which means that all inconsistencies have been eliminated
 
 Fixing inconsistencies can result in splitting $C$ into multiple PCCs.
@@ -666,8 +667,8 @@ Hypothesis edges are computed whenever a new inconsistency is created, and these
   with their normal priority plus $10$ to ensure they are reviewed first.
 It can be shown that as long as the user agrees with the current hypothesis edges computed so far, recomputing
   the new hypothesis edges will always be the same as the remaining hypothesis edges.
-This implementation is important first step for generalizing the graph algorithm into a distributed setting with
-  multiple reviewers.
+This implementation is an important first step for generalizing the graph algorithm into a distributed setting
+  with multiple reviewers.
 
 
 %\section{Refreshing candidate edges}\label{sec:refresh}
@@ -719,27 +720,27 @@ This implementation is important first step for generalizing the graph algorithm
 In this section we discuss the criteria we use for both determining when to refresh candidate edges and when to
   stop the algorithm altogether.
 We first consider the need for a refresh criterion.
-As the review algorithm proceeds, we should only continue manually review as long as the algorithm is
+As the review algorithm proceeds, we should only continue to manually review edges as long as the algorithm is
   consistently generating edges that --- once reviewed --- change the PCCs.
-This happens whenever a review merges two PCCs into one, or splits one PCC into two.
+This happens whenever a review merges two PCCs into one or splits one PCC into two.
 Because splits only happen during inconsistency recovery, we are primarily concerned with searching for new
   positive edges.
 However, at some point the candidate edges may no longer contain positive results, but undiscovered positive
   matches may still exist.
 This is because LNBNN, working initially with each annotation having a separate label, can miss more subtle but
-  correct matches, especially when there are several annotations for an animal and subtle viewpoints.
+  correct matches, especially when there are several annotations for an individual with multiple viewpoints.
 As the labeling improves, so does the reliability of LNBNN.
 Recall that the verification algorithm is only run after candidate edges are generated.
 If the edges required to complete the underlying real PCCs are missing from the candidate set, then nothing can
   be done.
-We therefore must develop a ``refresh criterion'' to determine when to stop and update the current priority queue
-  with new LNBNN matches.
+We therefore must develop a ``refresh criterion'' to determine when to stop and replace the current priority
+  queue with new LNBNN matches.
 This will be done by predicting if none of the remaining edges would change the PCCs, and then recomputing
   candidate edges when this happens.
 However, before we describe this process, we consider the problem of termination, which will turn out to have a
   similar solution.
 
-Similar to the refresh criterion, we must be able to determine when to terminate the algorithm.
+Similar to the refresh criterion, we must be able to determine when the algorithm should stop.
 To ensure that the identification is perfect, the algorithm would need to use all $\binom{|V|}{2}$ edges as
   candidates and then terminate using the deterministic convergence criterion explained in the introduction of this
   chapter.
@@ -841,7 +842,8 @@ Having justified its use, we model $C$ as a Poisson process, which is determined
   interval length parameter $a$.
 We can measure $\mu$ as the fraction of recently observed manual reviews that were label-changing using an
   exponentially weighted moving window.
-We initialize $\mu_0=1$ to denote that it is likely that the first review will be label-changing.
+We initialize $\mu_0=1$ to denote that it is likely that the first review will be label-changing and because it
+  will ensure our estimated probability is an upper bound.
 Then, after each new review we update the parameter as %
 $\mu_{i + 1} \leftarrow \ell_i \alpha + (1 - \alpha) \mu_{i}$, where $\ell_i\teq1$ if the $i\th$ review was
   label-changing and $0$ otherwise.
@@ -850,7 +852,18 @@ The exponential decay $\alpha = 2 / (s + 1)$ is determined by a span parameter $
 Using this model, the desired probability that any of the next $a$ reviews will be label-changing is %
 $\Pr{C\teq1} = 1 - \exp{-\mu  a}$.
 The example in \cref{fig:poisson} illustrates the behavior of the criterion using a synthetic dataset.
-In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $\tau=0.135$.
+In this example we use a window span of $s=20$, a patience of $a=20$, and a threshold of $\tau=0.135$. \footnote{
+    % ---
+    A better choice would be to set these parameters such that % 
+    $\tau = 1 - \exp{-a \left(s - 1\right)^{a} \left(s + 1\right)^{- a}}$ is satisfied.
+    This will guarantee convergence after a maximum of $a$ consecutive non-label-changing reviews.
+    Unfortunately, this was discovered after the completion of this \thesis{}, so the parameters in our
+      experiments do not satisfy this property.
+    Suggested values for future work are $s=20$, $a=72$, and $\tau=0.052$.
+    % ---
+    %$\tau = 1 - e^{- a \left(1 - \frac{2}{s + 1}\right)^{a}}$
+}
+
 
 %To achieve a certain threshold with a specified span the number of iterations required is: 
 %$\lceil{\frac{\log{\left (t \right )}}{\log{\left (\frac{s - 1}{s + 1} \right )}}}\rceil$
