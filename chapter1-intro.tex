@@ -250,7 +250,7 @@
             When determining the number of animals in a population it is important to account for factors that can lead
             to over-counting. If two \annots{} of the same individual are not matched, then that individual will be
             counted twice. This could happen due to factors such as viewpoint and quality. For example, one \annot{}
-            showing the only left side of an animal and another \annot{} showing only the right side the same animal
+            showing only the left side of an animal and another \annot{} showing only the right side the same animal
             cannot be matched because they are \glossterm{incomparable}. The two \annots{} are comparable when they
             share regions with distinguishing patterns that can be put in correspondence. Viewpoint is the primary
             reason that two \annots{} are not comparable. However, other factors like image quality and heavy occlusion
@@ -262,7 +262,7 @@
             notion of a marked-individual~\cite{seber_estimation_1982}. For an
             \annot{} to be identifiable the patterns that can distinguish it
             from the rest of the population must be clear and visible, otherwise
-            the \annot{} may not be able find or be compared to potential
+            the \annot{} may not be able to find or be compared to potential
             matches. This means an \annot{} is only identifiable if
             \begin{enumin}
                 \item the image quality is high enough, and %
@@ -274,7 +274,7 @@
             labels. The quality labels we define are: \qualJunk{}, \qualPoor{}, \qualOk{}, \qualGood{}, and
             \qualExcellent{}. The \qualJunk{} label is given to \annots{} that almost certainly will not be able to be
             identified, and \qualPoor{} labels are given to \annots{} that will likely be unidentifiable for a computer
-            vision algorithm. The $\qualGood{}$ and \qualExcellent{} labels are given to clear well illuminated
+            vision algorithm. The $\qualGood{}$ and \qualExcellent{} labels are given to clear, well illuminated
             \annots{} with little to no occlusion with \qualExcellent{} being reserved for the best of the best. All
             other \annots{} are labeled as $\qualOk$. The viewpoint labels we define are: \vpFront{}, \vpFrontLeft{},
             \vpLeft{}, \vpBackLeft{}, \vpBack{}, \vpBackRight{}, \vpBack{}, and \vpFrontRight{}. Note, that additional
@@ -296,7 +296,7 @@
             views is a challenge, but also potentially an advantage as we can exploit redundancy to better handle
             missing features, subtle viewpoint changes, and occlusions.
 
-            We exploit this redundancy to gain the benefit of complimentary views by matching all \annots{} within an
+            We exploit this redundancy to gain the benefit of complementary views by matching all \annots{} within an
             \occurrence{} in a process called \glossterm{\intraoccurrence{} matching}. In the \GZC{}, each \annot{} was
             queried against all other \annots{} in its \occurrence{}, returning a ranked list of candidate matches. The
             person running the software made the final decisions about which \annots{} match. Details about the ranking
@@ -352,9 +352,10 @@
             should not match. Likewise, care was taken to ensure that an intermediate \annot{} linking two disjoint
             \annots{} has enough information to establish the link. 
 
-            Merge checks issue all \exemplars{} as queries against all other \exemplars{}. High similarity between
-            two different \names{} suggested that a match that was missed. These high scoring results were manually
-            reviewed. More sophisticated error detection and recovery will be discussed in \Cref{sec:incon}.
+            Merge checks issue all \exemplars{} as queries against all other \exemplars{}.
+            High similarity between two different \names{} suggested that a match was missed.
+            These high scoring results were manually reviewed.
+            More sophisticated error detection and recovery will be discussed in \Cref{sec:incon}.
 
         \subsubsection{Population estimation}
             The final step for the \GZC{} workflow was to estimate the number of animals in the park.
@@ -371,8 +372,8 @@
         system is to be applied in future events. These challenges include the number of manual reviews required, the
         detection of and recovery from manual errors, and the overall lack of a systematic identification framework.
 
-        Perhaps the greatest challenge faced during the \GZC{} was the considerable amount time that was required
-          to manually verify identification results.
+        Perhaps the greatest challenge faced during the \GZC{} was the considerable amount of time that was
+          required to manually verify identification results.
         It can take several seconds to manually verify if a pair of \annots{} is a correct match even if the
           results are presented in a ranked list.
         This task is illustrated in~\cref{fig:RankFigure}.
@@ -434,7 +435,7 @@
 \section{Approach}
     The problem addressed in this \thesis{} is to identify individual animals ``in the wild'' and to count the
       individuals in a population.
-    We are given a set images containing \annots{} of the same species.
+    We are given a set of images containing \annots{} of the same species.
     The images are collected in an uncontrolled environment and likely contain imaging challenges such as
       occlusion, distracting features, viewpoint variations, pose variations, and quality variations.
     Furthermore, the images may be collected either over many years or over just a few days as in the \GZC{}.
@@ -472,8 +473,8 @@
     First, the ranking experiments test the algorithm's ability to find potential matches of an individual animal
       over large periods of time, different viewpoints, different sized databases, and different numbers of
       \exemplars{}.
-    Then, the verification experiments will test the extent to the correct results from the ranking algorithm can
-      be separated from the incorrect results using our learned classifier.
+    Then, the verification experiments will test the extent to which the correct results from the ranking
+      algorithm can be separated from the incorrect results using our learned classifier.
     Finally, the graph identification experiments will demonstrate the algorithm's ability to reduce the number
       of required manual reviews and recover from errors.
     We determine the configuration of each algorithm that works best for identifying each species.
