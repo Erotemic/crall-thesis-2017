@@ -907,7 +907,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       time, making errors $1\percent$ of the time uniformly at random.
     These assumptions may be simple and too inaccurate to model an expert reviewer, but it will serve to
       demonstrate our graph algorithm's ability to recover from errors.
-    We will measure the accuracy and error as a function of the number of manual reviews.
+    We will measure the simulation's accuracy and error as a function of the number of manual reviews.
     Using these measures we will compare our graph algorithm to alternative techniques to demonstrate that it
       produces accurate identifications with fewer errors using significantly fewer manual reviews.
 
@@ -921,7 +921,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     \TestTrainDBStats{}
     \FloatBarrier{}
 
-    The experiment will compare the three different methods of determining the identifies of annotations based on
+    The experiment will compare the three different methods of determining the identities of annotations based on
       the algorithms defined in this \thesis{}.
     These algorithms are:
     \begin{enumin}
@@ -935,7 +935,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     \item \pvar{graph} --- the graph identification algorithm introduced in this chapter.
 
     \end{enumin}
-    In the case \pvar{graph}, the procedure from~\cref{sub:graphalgo} can be directly applied.
+    In the case of \pvar{graph}, the procedure from~\cref{sub:graphalgo} can be directly applied.
     However, in order to compare \pvar{graph} to \pvar{ranking} and \pvar{rank+clf} we must define baseline
       methods to determine the ordering of the reviews and when to stop.
     Details of these identification procedures are given in the next subsection.
@@ -976,7 +976,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     Because \pvar{rank+clf} has no mechanisms for error recovery, we choose conservative automatic thresholds by
       specifying an acceptable false positive rate of $0.001$.
     This results in positive, negative, and incomparable thresholds of $0.976$, $0.991$, and $0.5$ respectively
-      for plains zebras, and $0.997$, $0.998$, $1.0$ for Grévy's.
+      for plains zebras, and $0.997$, $0.998$, and $1.0$ for Grévy's.
     %When choosing thresholds we enforce a warm-up period of $200$ examples, where the threshold is set to $1$.
     %This ensures that we do not automatically classify categories (\eg{} incomparable) with little supporting
     %  data.
@@ -998,14 +998,14 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     We use the same pairwise classifier from \pvar{rank+clf}, but due to the graph algorithm's error recovery
       mechanisms we can choose more aggressive thresholds.
     However, we have found that the algorithm is sensitive to this parameter, therefore we only slightly increase
-      acceptable false positive rate from $.001$ to $.0014$.
+      the acceptable false positive rate from $0.001$ to $0.0014$.
     % GRAPH THRESH
     This results in positive, negative, and incomparable thresholds of $0.969$, $0.986$, and $0.5$ respectively
       for plains zebras, and $0.989$, $0.992$, and $1.0$ for Grévy's.
-    For the convergence criterion use a patience of $a=20$, a window span of $s=20$, and a termination threshold
-      of $\exp{-2}\approx0.135$.
+    For the convergence criterion we use a patience of $a=20$, a window span of $s=20$, and a termination
+      threshold of $\tau=0.135$.
       %of $\exp{-2}\approx0.135$, which causes the criterion to trigger after at most $20$ consecutive reviews that
-      %are not label-changing.
+    %are not label-changing.
 
     \subsection{Results}
 
@@ -1017,8 +1017,8 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     This is the number of edges in a spanning forest of the \groundtruth{} positive subgraph minus the same
       measurement but applied to the subgraph of all correctly predicted positive edges.
     % better error measure?
-    The error measurement is the total number of edges with a predicted label that differs from its \groundtruth{}
-      match-state.
+    The error measurement is the total number of edges with a predicted label that differs from the
+      \groundtruth{} match-state.
     Additionally, for \pvar{graph}, after each review decision we record the probability of convergence estimated
       by the convergence criterion.
     These measurements are plotted against the number of manual reviews.
@@ -1044,8 +1044,8 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       reviews needed by $\pvar{ranking}$, which models the way that we counted individuals in the \GZC{}.
 
     We now turn our attention to the right of \cref{fig:Simulation}.
-    The \pvar{ranking} and \pvar{rank+clf} algorithms have no mechanism for error recovery, and thus their error
-      steadily increases over time.
+    The \pvar{ranking} and \pvar{rank+clf} algorithms do not have mechanisms for error recovery, and thus their
+      error steadily increases over time.
     However, \pvar{graph} is able to recover from many of these errors and achieve a low error rate despite
       starting with more errors due to an aggressive auto-classification threshold.
       
@@ -1059,7 +1059,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       types:
     correct, split, or merge.
     Consider an example where we are given a graph with $8$ nodes and the real PCCs are %
-    $\curly{\curly{a, b, c}, \curly{d}, \curly{e, f}, \curly{g}}$, and we predict the PCCs%
+    $\curly{\curly{a, b, c}, \curly{d}, \curly{e, f}, \curly{g}}$, and we predict the PCCs %
     $\curly{\curly{a, b}, \curly{c}, \curly{d, e, f}, \curly{g}}$.
     Using this example we define the three group types:
     %correct, split We will categorize predictions as one of three types.
@@ -1084,7 +1084,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
         %two nodes in two real PCCs are connected by
       
         \item A ``merge'' error group consists of multiple predicted PCCs that must be merged into a single real
-          PCCs.
+          PCC.
         Each pair of predicted PCCs in a merge group is missing a positive edge.
         This can happen if an edge is incorrectly labeled, if the ranking algorithm never generates this edge as
           a candidate, or the termination criterion stops the algorithm before the edge can be reviewed.
@@ -1100,7 +1100,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       sets of real/predicted PCCs to exactly one predicted/real PCC.
     However, consider the real PCCs $\curly{\curly{x, y}, \curly{z}}$ and predicted PCCs $\curly{\curly{x},
       \curly{y, z}}$.
-    This case cannot be cleanly categorized as a split or a merge group, but it contains elements of both.
+    This case cannot be cleanly categorized as a pure split or a merge group, but it contains elements of both.
     Thus, we call this a ``hybrid'' case.
     A slight modification to the above groups can incorporate hybrid cases.
     %First, we change the definition of a split group to be a maximal set of at least two non-empty maximal
@@ -1133,7 +1133,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
     However, we also see that \pvar{graph} also has the most merge cases.
     The reason for this is that the other algorithms do not have termination criteria.
     They continued to review pairs, even long after the rankings were no longer consistently label-changing, and
-      essentially began to brute-force search the database.
+      the simulated reviewer essentially began to brute-force search the database.
     In the thousands of extra iterations, the other algorithms managed to find ${\sim}20$ extra merge cases that
       were not discovered by \pvar{graph}.
 
@@ -1175,11 +1175,11 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
       \groundtruth{} errors.
     In each of these cases the automatic verification algorithm made the PCCs positive redundant, thus the
       simulated reviewer --- which is driven by the \groundtruth{} --- was unable to split the PCC.
-    In fact, we discovered that all split cases are due to \groundtruth{} errors.
+    In fact, we discovered that all split cases measured for \pvar{graph} are due to \groundtruth{} errors.
     This means that \pvar{graph} did not predict any PCCs that were split cases.
-    %This is encouraging because it means that 
+    %This is encouraging because it means that
 
-    When inspecting merge cases we also found several caused by \groundtruth{} errors, but most were due to
+    When inspecting merge cases, we also found several caused by \groundtruth{} errors, but most were due to
       challenging image conditions such as viewpoint, occlusion, and pose.
     These factors either prevented an edge from being generated as a candidate or caused the classifier to
       produce a low positive probability.
@@ -1211,7 +1211,7 @@ In this chapter we have described the final component in our approach to animal 
 The graph-based framework takes advantage of the algorithms previously developed in
   \cref{chap:ranking,chap:pairclf} and uses them in a principled way to address the identification problem.
 The ranking algorithm quickly identifies candidate edges that are likely to be label-changing, and the pairwise
-  classifier automatically verifies pairs of annotations, reducing the required manual interaction.
+  classifier automatically verifies pairs of annotations, reducing the amount of required manual interaction.
 While these algorithms can be applied to address identification directly, our experiments have demonstrated that
   there is a considerable advantage to placing them in the context of the graph identification framework.
 Specifically, we have simulated an identification event similar to the \GZC{} using our ranking and graph
@@ -1252,6 +1252,6 @@ This case is not just theoretical.
 To extend to new species and domains it is important to be able to construct a small labeled database from which
   learned ranking and verification algorithms can be bootstrapped.
 As more pairwise training data is gathered and maintained using this framework, more sophisticated pairwise
-  classifiers trained using deep learning could be applied, perhaps removing the need for manual verification
-  interaction and resulting in a fully automatic identification algorithm.
+  classifiers trained using deep learning could be applied, perhaps removing the need for manual interaction and
+  resulting in a fully automatic identification algorithm.
 
