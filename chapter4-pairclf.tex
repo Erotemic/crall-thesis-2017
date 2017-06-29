@@ -53,7 +53,7 @@ The first requirement can be satisfied by carefully selecting representative ann
   requirement is satisfied by many pre-existing algorithms (\eg{} random forests and neural networks).
 The second requirement --- constructing an appropriate fixed-length feature vector --- is the most challenging.
 Given enough training data and a technique to align the animals in two annotations, using image data with a
-  Siamese or triplicate network~\cite{taigman_deepface_2014,schroff_facenet_2015} might appropriate, but without
+  Siamese or triplicate network~\cite{taigman_deepface_2014,schroff_facenet_2015} might be appropriate, but without
   both of these pre-conditions we must turn towards more traditional methods.
 Recall from \cref{sec:annotrepr} that our annotation representation is an unordered bag-of-features, which cannot
   be directly fed to most learning algorithms.
@@ -63,10 +63,10 @@ This novel feature vector will take into account local matching information as w
   such as GPS and viewpoint.
 A collection of these features from multiple labeled annotation pairs is used to fit a random
   forest~\cite{breiman_random_2001} which implements our pairwise classifier.
-We choose to use random forest classifiers, in part because they are fast to train, robust to overfitting, and
-  naturally output probabilities in a multiclass setting, and in part because they can handle (and potentially take
-  advantage of) missing data --- \ie{} \nan{} values in feature vectors --- using the ``separate class''
-  method~\cite{ding_investigation_2010}.
+We choose to use random forest classifiers, in part because they are fast to train, insensitive to feature
+  scaling, robust to overfitting, and naturally output probabilities in a multiclass setting, and in part because
+  they can handle (and potentially take advantage of) missing data --- \ie{} \nan{} values in feature vectors ---
+  using the ``separate class'' method~\cite{ding_investigation_2010}.
   
 
 A final concern investigated in this chapter is the issue of image challenges that may confound the match-state
@@ -87,7 +87,7 @@ This outline of this chapter is as follows.
   classifier.
 \Cref{sec:learnclf} describes the process of collecting training data and learning the match-state pairwise
   classifier.
-\Cref{sec:learnpb} extends this approach to predict secondary attributes (\eg{} is a pair a photobomb) beyond
+\Cref{sec:learnpb} extends this approach to predict secondary attributes (\eg{} if a pair is a photobomb) beyond
   just the matching state.
 \Cref{sec:pairexpt} presents a set of experiments that evaluate the pairwise classifier.
 \Cref{sec:pairconclusion} summarizes and concludes this chapter.
@@ -96,14 +96,15 @@ This outline of this chapter is as follows.
 \section{Constructing the pairwise feature vector}\label{sec:pairfeat}
 
 In order to use the random forest learning algorithm to address the problem of pairwise verification, we must
-  construct a feature vector to representing a pair of annotations that contains information able to differentiate
-  between each class.
+  construct a feature vector to representing a pair of annotations.
+This feature vector must contain enough information to differentiate between the positive, negative, and
+  incomparable classes.
 In contrast to the unordered bag-of-features used to represent an annotation, the dimensions in this feature
   vector must be ordered and each dimension should correspond to a specific measurement.
 In practice this means that the feature vector must be ordered and have a fixed length.
 
 We construct this feature vector to contain both global and local information.
-Global information is higher level and serves to augment visual information.
+Global information is high level metadata about the annotation pair and includes non-visual information.
 The local information aggregates statistics about feature correspondences between the two annotations.
 The local and global vectors are constructed separately and then concatenated to form the final pairwise feature
   vector.
@@ -117,7 +118,7 @@ Semantic labels such as quality and viewpoint are derived from visual informatio
   knowledge to help the classifier make a decision.
 Non-visual attributes such as GPS and timestamp can be extracted from EXIF metadata and may help determine facts
   not discernible from visual data alone.
-The global feature vector is derived from the following attributes extracted from each annotation:
+The global feature vector is derived from the following ``unary'' attributes extracted from each annotation individually:
 \begin{enumln}
 
     \item Timestamp, represented in POSIX format as a float.
@@ -138,17 +139,18 @@ Pairs of annotations taken around the same place and time tend to have a higher 
 The viewpoint and quality attributes should help the classifier predict when pairs of annotations are not
   comparable --- forcing there to be stronger evidence to form a match, such as strong correspondences on a face
   turned toward the camera in both a left and right side view.
-An example illustrating such a case where two annotations with different viewpoints are a positive match is
-  illustrated in \cref{fig:LeftRightFace}.
+An example illustrating such a case --- where two annotations with different viewpoints are a positive match ---
+  is illustrated in \cref{fig:LeftRightFace}.
 
 \LeftRightFace{}
 
 These four ``unary'' attributes are gathered for each annotation.
-Thus, for each attribute we have two measurements, but we do not use them directly because the ordering of the
-  annotations in each pair is arbitrary.
+Thus, for each attribute we have two measurements, one for each annotation.
+However, we do not use them directly because the ordering of the annotations in each pair is arbitrary.
 For each unary attribute, we either ignore it (as in the case of GPS and time) or record the minimum of the two
   values in one feature dimension and the maximum in another (as is done with viewpoint and quality).
 This results in $4$ unary measurements, $2$ for viewpoint and $2$ for quality.
+These measurements are appended to the front of the global feature vector.
 
 The remaining dimensions of the global feature vector are constructed by encoding relationships between pairs of
   unary attributes using distance measurements.
@@ -158,14 +160,14 @@ In the case of viewpoint we use a cyclic absolute difference --- \ie{} the dista
 For quality and time we simply use the absolute difference between their values.
 This results in $4$ pairwise measurements, one for each global attribute.
 Lastly, we include the ``speed'' of the pair, which is the GPS-distance divided by the time-delta.
-Thus, there the total number of global measurements is $4 + 4 + 1 = 9$.
+Thus, the total number of global measurements is $4 + 4 + 1 = 9$.
 
-In the event that an attribute is not provided or not known (\eg{} the EXIF data is missing) a measurement cannot
-  be made, so a \nan{} value is recorded instead.
+In the event that an attribute is not provided or not known (\eg{} the EXIF data is missing), then a measurement
+  cannot be made, so a \nan{} value is recorded instead.
 To apply random forests learning, these \nan{} values must be handled by either modifying the learning algorithm
   or replacing them with a number.
-Ding and Simonoff investigate several methods for doing this in~\cite{ding_investigation_2010}, and they conclude
-  that the best choice is application dependent.
+Ding and Simonoff investigate several methods for handling missing data in~\cite{ding_investigation_2010}, and
+  they conclude that the best choice is application dependent.
 For our application we choose the ``separate class'' method because their experiments demonstrate that it
   performs the best when \nan{} values are in both the training and testing data, which is the case for our data.
 
@@ -210,15 +212,15 @@ Keypoint correspondences are formed by searching for the reciprocal nearest neig
   descriptors~\cite{qin_hello_2011}.
 For each feature in each correspondence, the next nearest neighbor is used as a normalizer for Lowe's ratio
   test~\cite{lowe_distinctive_2004}.
-Because matching is symmetric, each feature correspondences is associated with two normalizing neighbors.
+Because matching is symmetric, each feature correspondence is associated with two normalizing neighbors.
 The feature / normalizer pair with the minimum descriptor distance is used as a normalizing pair.
-If the ratio of the descriptor distance between correspondences to the distance between the normalizing pair is
+If the ratio of the descriptor distance between a correspondence to the distance between the normalizing pair is
   above a threshold, the correspondence is regarded as non-distinct and removed.
 For the simplicity of the description we consider just one ratio threshold for now, but later we will describe
   this process using multiple thresholds.
 Spatial verification~\cite{philbin_object_2007} is applied to further refine the correspondences.
-This results in a richer set of correspondences between annotations than would be found using
-  the ranking algorithm.
+This one-vs-one matching algorithm results in a richer set of correspondences between annotations than would be
+  found using the LNBNN ranking algorithm.
 
 \paragraph{Local measurements}
 After the one-vs-one matching stage, several measurements are made for each feature correspondence.
@@ -293,8 +295,9 @@ Given these definitions, the measurements we consider are:
 
     \item Keypoint scales:
 
-        These are the keypoint scale parameters $\sigma_i$ and $\sigma_j$ that indicate the size of each keypoint
-          with respect to its annotation.
+        These are the keypoint scale parameters $\sigma_i$ and $\sigma_j$, as measured
+          using~\cref{eqn:affinewarp}.
+        The scales indicate the size of each keypoint with respect to its annotation.
         This may be useful for disregarding matches between large coarsely described features that do not carry a
           significant amount of individually distinctive information.
         This adds $2$ measurements, denoted as $\tt{scale1}$ and $\tt{scale2}$, for each correspondence.
@@ -335,7 +338,7 @@ Once we have assigned feature correspondences using symmetric nearest neighbors,
   correspondences for each ratio value.
 The members of each group are all correspondences with a ratio score less than that value.
 Each group is then spatially verified, and the union of the groups is the final set of correspondences.
-When measuring spatial verification errors, each keypoint may be associated with more than one.
+When measuring spatial verification errors, each keypoint may be associated with multiple values.
 Therefore, we use the minimum spatial verification error over all values of the ratio threshold.
 The local feature vector is constructed by applying summary statistics to each of these groups independently and
   then concatenating the results.
@@ -390,7 +393,7 @@ The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector
 \caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
 % ---
 Example of a small pairwise feature vector containing local and global information.
-In the constructed pairwise feature contains $131$ dimensions.
+The feature vector we use in practice contains $131$ dimensions.
 Note the summary statistics in this example are all computed for correspondences with a ratio value that is less
   than $0.8$.
 % ---
@@ -454,14 +457,14 @@ Note the summary statistics in this example are all computed for correspondences
     \paragraph{Sampling a labeled dataset of annotation pairs}
     Now that we have chosen a learning algorithm, the last remaining step is the selection of training data and
       generation of labels.
-    Recall that our the purpose of our classifier is to output a probability distribution over three labels:
+    Recall that the purpose of our classifier is to output a probability distribution over three labels:
     positive, negative and incomparable.
     Given a pair of annotations we need to assign one of these three labels using \groundtruth{} data.
     In recent versions of our system, this \groundtruth{} label is stored along with each unordered pair of
       annotations that has been manually reviewed, but because this is a new feature, only a few pairs have been
       assigned an explicit three-state label.
-    Therefore, we must make use of the name and viewpoint labels assigned each annotation by previous versions of
-      the system.
+    Therefore, we must make use of the name and viewpoint labels assigned to each annotation by previous versions
+      of the system.
     This allows us to determine if an annotation pair shows the same or different animals, but it does not allow
       us to determine if the pair is comparable.
     To account for this we use heuristics to assign the incomparable label using the viewpoints, and if either
@@ -469,7 +472,7 @@ Note the summary statistics in this example are all computed for correspondences
       datasets are taken from a consistent viewpoint (\ie{} collection events were designed to reduce
       incomparability).
 
-    Thus, given a pair of annotations a training label is assigned as follows.
+    Given a pair of annotations, a training label is assigned as follows.
     First, if an explicit three-state label exists, return it.
     Otherwise, we must heuristically decide if the pair is comparable based on viewpoint information.
     If the heuristics determine that a pair is not comparable, then return incomparable.
@@ -486,8 +489,8 @@ Note the summary statistics in this example are all computed for correspondences
     Specifically, to sample a dataset for learning, we first rank the database for each query image using the
       ranking algorithm.
     We partition the ranked lists into two parts:
-    a list of correct result matches and a list of incorrect matches.
-    We select annotations randomly and from the top, middle, bottom of each list.
+    a list of correct matches and a list of incorrect matches.
+    We select annotations randomly from the top, middle, and bottom of each list.
     For positive examples we select $4$ from the top, $2$ from the middle, $2$ from the bottom, and $2$ randomly.
     For negative examples we select $3$ from the top, $2$ from the middle, $1$ from the bottom, and $2$ randomly.
     If there are not enough examples to do this, then all are taken.
@@ -503,7 +506,7 @@ Note the summary statistics in this example are all computed for correspondences
     A pair of annotations is a photobomb if a secondary animal in one annotation matches an animal in another
       annotation (\eg see Figure~\ref{fig:PhotobombExample}).
     Only the primary animal in each annotation should be used to determine identity, but photobombs provide
-      strong evidence of matching that can confuse a matching algorithm.
+      strong evidence of matching that can confuse a verification algorithm.
 
     \PhotobombExample{}
 
@@ -575,7 +578,7 @@ Note the summary statistics in this example are all computed for correspondences
       once.
     Because each prediction is made using classifiers trained on disjoint data, the predictions will be unbiased.
     Thus, each sample in the dataset has a match-state and photobomb-state probability.
-    Thus, we can use all sample pairs to evaluate the performance of each classifier.
+    Therefore, we can use all sample pairs to evaluate the performance of each classifier.
 
     In our experiments we compare these predicted match-state probabilities to the scores generated by LNBNN.
     In order to do this, we must generate an LNBNN score for each pair in our sample.
@@ -608,8 +611,8 @@ Note the summary statistics in this example are all computed for correspondences
       can be made.
     Additionally, we will compare the match-state classifier to LNBNN in two ways.
     First, we will compare the original LNBNN ranking against a re-ranking using the positive probabilities.
-    Second, we will compare the ability of each LNBNN and the match-state classifier to predict if a pair is
-      positive or not by looking at the distribution of positive and non-positive scores as well as the ROC curves.
+    Second, we will compare the ability of LNBNN and the match-state classifier to predict if a pair is positive
+      or not by looking at the distribution of positive and non-positive scores as well as the ROC curves.
 
     %For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
     %  vector.
@@ -620,7 +623,7 @@ Note the summary statistics in this example are all computed for correspondences
 
         The primary classifier predicts the matching state (positive, negative, incomparable) of a pair of
           annotations.
-        Each pair of annotations is assigned a probability for each of these state, and those probabilities sum
+        Each pair of annotations is assigned a probability for each of these states, and those probabilities sum
           to one.
         In this context we classify a pair as the state with the maximum predicted probability.
         However, in practice we will choose thresholds for automatic classification where the false positive rate
@@ -633,10 +636,10 @@ Note the summary statistics in this example are all computed for correspondences
           class.
         The MCC provides a measurement of overall multiclass classification performance not biased by the number
           of samples contained in each class.
-        An MCC ranges from $+1$, indicating perfect predictions, to $-1$, indicates pathological inverse
-          predictions, with $0$ being random uninformed predictions.
-        The MCC of $0.83$ for plains zebras and $0.91$ for Grévy's zebras, indicating that our classifiers have
-          strong predictive power.
+        An MCC ranges from $+1$, indicating perfect predictions, to $-1$, indicating pathological inverse
+          predictions, and $0$ represents random predictions.
+        The measured MCC of $0.83$ for plains zebras and $0.91$ for Grévy's zebras, indicates that our
+          match-state classifiers have strong predictive power.
 
         \ConfusionMatch{}
 
@@ -651,12 +654,12 @@ Note the summary statistics in this example are all computed for correspondences
         Using the fraction of correct results found at each rank, we construct a cumulative match characteristic
           (CMC) curve~\cite{decann_relating_2013}.
         We denote this CMC curve as \pvar{ranking}.
-        Then we take each ranked lists and compute match-state probabilities for each top ranked pair of
+        Then we take each ranked list and compute match-state probabilities for each top ranked pair of
           query/database annotations.
         We use the positive probabilities to re-rank the lists, and then we construct another CMC curve
           corresponding to these new ranks.
         This re-ranked CMC curve is denoted as \pvar{rank+clf}.
-        The results of this experiment are illustrated in~\cref{fig:ReRank}, and clearly demonstrate that the
+        The results of this experiment --- illustrated in~\cref{fig:ReRank} --- clearly demonstrate that the
           number of correct matches returned at rank $1$ is improved by re-ranking with our pairwise classifier.
 
         \ReRank{}
@@ -701,15 +704,15 @@ Note the summary statistics in this example are all computed for correspondences
         These experiments clearly demonstrate that the pairwise classifier outperforms LNBNN in this
           classification task.
 
-        In addition to illustrating the effectiveness of our classifiers when classification are made for all
+        In addition to illustrating the effectiveness of our classifiers when classifications are made for all
           samples, the ROC curves --- which plot the true positive rate and the false positive rate as a function
-          of a threshold --- demonstrates that an operating point can be chosen to automatically classify a
+          of a threshold --- demonstrate that an operating point can be chosen to automatically classify a
           significant number of positive pairs while making very few mistakes.
         For plains zebras, a true positive rate of $0.25$ results in $4146$ true positives and only $38$ false
           positives.
         For Grévy's, an operating point with a true positive rate of $0.5$, results in $2501$ true positives and
           only $28$ false positives.
-        Therefore, by carefully selected an operating point we can bypass a significant number of manual reviews
+        Therefore, by carefully selecting an operating point we can bypass a significant number of manual reviews
           without making a significant number of mistakes when adding new annotations to our dataset.
         %In practice we will only use the match-state classifier to automatically classify annotation pairs with
         %  high probability.
@@ -765,9 +768,10 @@ Note the summary statistics in this example are all computed for correspondences
         For plains zebras, the global viewpoint is important because the dataset contains incomparable examples.
 
         Even though we have shown that a small improvement can be made by pruning to only the most important
-          feature dimensions, we choose to use full $131$ dimensions in the remainder of our experiments.
-        The driving reason for this is the simplicity gained by using the same features for each dataset, and
-          because the overall performance gain is small.
+          feature dimensions, we choose to use full $131$ dimensions in the remainder of our experiments because
+          the overall performance gain is small.
+        %The driving reason for this is the simplicity gained by using the same features for each dataset, and
+        %  because the overall performance gain is small.
 
         \MatchPrune{}
 
@@ -817,9 +821,9 @@ Note the summary statistics in this example are all computed for correspondences
 
         We separate failure cases into three main categories:
         (1) failure to classify a pair as positive,
-        (2) failures to classify a pair as negative, and
-        (3) failures to classify a pair as incomparable.
-        The examples in~\cref{fig:PairFailPN} illustrate the first and most important failure case.
+        (2) failure to classify a pair as negative, and
+        (3) failure to classify a pair as incomparable.
+        The examples in~\cref{fig:PairFailPN} illustrate the first and most important failure case category.
         Due to occlusion, quality, and viewpoint, the established correspondences were not distinctive enough for
           the classifier to confidently predict positive.
         However, in all but the last case the probabilities are ambiguous, which implies that improvements could
@@ -844,7 +848,7 @@ Note the summary statistics in this example are all computed for correspondences
         This demonstrates that the classifier is not confident in these failed predictions.
         %We will take advantage of this in the next chapter.
 
-        Interestingly, inspection of the failure cases reveled several labeling errors in the database.
+        Interestingly, inspection of the failure cases revealed several labeling errors in the database.
         The examples illustrated in ~\cref{fig:MatchLabelErrors} all show pairs of annotations with non-positive
           labels that should have been labeled as positive.
         Note that the positive probabilities from two of these examples are very close to $1.0$, indicating that
@@ -896,7 +900,7 @@ Note the summary statistics in this example are all computed for correspondences
 
         Due to the small amount of available training data, the performance of the photobomb-state classifier is
           weaker than the match-state classifier.
-        By choosing the appropriate threshold we achieve an MCC of $0.34$ for plains zebras and $0.40$ for
+        By choosing the appropriate thresholds we achieve an MCC of $0.34$ for plains zebras and $0.40$ for
           Grévy's zebras.
         These scores indicate that each photobomb-state classifier has weak but significant predictive power.
         While these MCCs are not overwhelmingly strong, they do demonstrate that each classifier is able to learn
@@ -930,8 +934,8 @@ Note the summary statistics in this example are all computed for correspondences
         Notice that many of the probabilities predicted for these cases are well above the thresholds.
         Predicting high probabilities for these undiscovered photobomb cases indicates that the photobomb-state
           classifier is stronger than our measurements suggest.
-        These mislabeled \groundtruth{} cases also help explain why the predicted probabilities were so low; the
-          learning algorithm was encouraged to incorrectly classify them.
+        These mislabeled \groundtruth{} cases also help explain why the predicted probabilities are so low; the
+          learning algorithm is encouraged to incorrectly classify them.
         Reviewing and relabeling all of these cases would improve results by both removing noise from the
           training set and increasing the number of labeled examples.
 
@@ -950,13 +954,11 @@ Note the summary statistics in this example are all computed for correspondences
 
         We will use these classifiers to make automatic decisions about pairs of annotations where the
           match-state probability is above a threshold.
-        Our experiments have shown that it is possible to select a threshold, where the false positive rate is
+        Our experiments have shown that it is possible to select a threshold where the false positive rate is
           sufficiently low.
         %Because the positive cases are well separated from the negative and incomparable cases, a significant
         %  number of automatic reviews is possible.
-        Furthermore, because the classifier was trained using hard, moderate, and easy training examples, it is
-          able to correctly re-rank results of the ranking algorithm, where the correct match was ranked in highly
-          but not rank $1$.
+        Furthermore, the classifier is able to improve the ranking algorithm by re-ranking its results.
         Lastly, because the classifier predicts probabilities independent of their position in the ranked list,
           it can be used to determine when a query individual is new --- \ie{} does not have a correct match in the
           database.
@@ -984,15 +986,17 @@ Note the summary statistics in this example are all computed for correspondences
     We used the random forest learning algorithm to train our classifiers.
     Our experiments demonstrate that the match-state classifier is able to strongly separate positive and
       negative cases.
-    The performance of the photobomb classifier was weaker, but could likely be improved with more training data.
+    The performance of the photobomb-state classifier was weaker, but could likely be improved with more training
+      data.
 
     Based on our experiments, it is clear that the ranking algorithm is improved by an automatic verifier, but by
       themselves ranking and verification are not enough to robustly address animal identification.
     There is no mechanism for error recovery, nor is there a mechanism for determining when identification is
       complete.
-    This means, the operating point for the automatic review threshold must be set conservatively to avoid any
+    This means the operating point for the automatic review threshold must be set conservatively to avoid any
       errors, which results in more work for a human reviewer.
     These issues are addressed in \cref{chap:graphid} using a graph-based framework to manage the identification
       process.
-    This framework will detect when errors have occurred, recover from the errors, and stop the identification
+    This framework will use graph connectivity to further reduce the number of required manual reviews, detect
+      when errors have occurred, recover from the errors, and stop the identification
       process in a timely manner.

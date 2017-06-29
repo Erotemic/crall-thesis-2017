@@ -95,10 +95,10 @@ because we can establish a distinctive correspondence in the face.
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_lnbnn.png}\caption{Plains zebra LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Plains zebra learned}\label{sub:pos_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebra LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebra learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
 \caption[\caplbl{PositiveHist}Positive score histogram experiment]{\caplbl{PositiveHist}
 % ---
@@ -171,8 +171,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionMatch}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_match_state.tex}\caption{Plains zebras match-state confusion matrix}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy's zebras match-state confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_match_state.tex}\caption{Plains zebra match-state confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy's zebra match-state confusion matrix}\end{subtable} %
 \end{table}
 }
 
@@ -189,8 +189,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy's zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_match_state.tex}\caption{Plains zebra match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy's zebra match-state metrics}\end{subtable} %
 \end{table}
 }
 
@@ -224,8 +224,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsPhotobomb}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy's zebras photobomb metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_photobomb_state.tex}\caption{Plains zebra photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy's zebra photobomb metrics}\end{subtable} %
 \end{table}
 }
 
@@ -256,8 +256,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsPhotobombII}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Plains zebras adjusted photobomb metrics} \end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Grévy's zebras adjusted photobomb metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Plains zebra adjusted photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Grévy's zebra adjusted photobomb metrics}\end{subtable} %
 \end{table}
 }
 
@@ -538,7 +538,7 @@ are indeed learning from the data.
 % ---
 Because there are not many labeled photobomb pairs, the probabilities returned by the photobomb-state classifier
   are low.
-However, good classification can be achieved by choosing an operating point that maximizes the MCC.
+However, good classification results can be achieved by choosing an operating point that maximizes the MCC.
 In each plot the legend indicates the threshold corresponding to the maximum MCC.
 % ---
 }
@@ -559,7 +559,8 @@ In each plot the legend indicates the threshold corresponding to the maximum MCC
 In the top example the classifier incorrectly predicts photobomb due to the alignment of the annotations.
 In the next case down, the classifier incorrectly predicts photobomb, but no matches were made between the
   photobombing animals.
-The last two cases the classifier incorrectly predicts not photobomb, but confidence of the prediction is low.
+The last two cases the classifier incorrectly predicts not photobomb, but the confidence of the prediction is
+  low.
 % ---
 }
 \label{fig:PBFailures}
@@ -579,7 +580,7 @@ The last two cases the classifier incorrectly predicts not photobomb, but confid
 % ---
 \Groundtruth{} errors in the database are the reason for several photobomb-state failure cases.
 It is encouraging that the photobomb-state classifier is able to detect errors in the \groundtruth{} even given
-  only a few examples of photobomb pairs.
+  only a few training examples.
 % ---
 }
 \label{fig:PBLabelErrors}
