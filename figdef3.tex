@@ -193,7 +193,7 @@ python -m ibeis Chap3.agg_dbstats
 \newcommand{\DatabaseInfo}{
 \begin{table}[ht!]
 \centering
-\caption[Database statistics]{Database statistics.}
+\caption[Database statistics]{Database statistics indicating the number of individuals and annotations in each dataset. An encounter is a group of annotations from the same individual taken at the same place and time. Resighted names contain multiple encounters.}
 \label{tbl:DatabaseStatistics}
 \input{figures3/agg-enc.tex}
 \end{table}
@@ -319,19 +319,6 @@ python -m ibeis Chap3.draw foregroundness --dbs=GZ_Master1,PZ_Master1 --diskshow
 
 python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_on=[True,False]  --show
 \end{comment}
-\newcommand{\ForegroundExpt}{
-    \begin{figure}[ht!]\centering
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/foregroundness.png}\caption{Plains zebras}\label{sub:ForegroundExptA}\end{subfigure}
-        \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/foregroundness.png}\caption{Grévy's zebras}\label{sub:ForegroundExptB}\end{subfigure}
-        \caption[\caplbl{ForegroundExpt}Foregroundness experiment]{\caplbl{ForegroundExpt}
-            % ---
-            Weighting the score of the feature correspondences using foregroundness results in more accurate
-              identifications.
-            % ---
-        }
-        \label{fig:ForegroundExpt}
-    \end{figure}
-}
 
 
 \newcommand{\FGIntraExpt}{

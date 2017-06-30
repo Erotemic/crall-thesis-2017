@@ -273,27 +273,10 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     --clipwhite --diskshow
 \end{comment}
 
-\newcommand{\MatchWordCloud}{
+
+\newcommand{\MatchPrune}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/wc_match_state.png}\caption{Plains zebras}\label{sub:wc_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/wc_match_state.png}\caption{Grévy's zebras}\label{sub:wc_gz}\end{subfigure}
-\caption[\caplbl{MatchWordCloud}Word cloud of important features for match-state prediction]{\caplbl{MatchWordCloud}
-% ---
-Word cloud of important features for predicting match-state.
-For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_delta)}) has high importance
-  because of its role in distinguishing incomparable cases.
-% ---
-}
-\label{fig:MatchWordCloud}
-\end{figure}
-}
-
-
-\newcommand{\MatchPrune }{
-\begin{figure}[h]
-\centering
-%\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/wc_match_state.png}\caption{Plains zebras}\label{sub:wc_pz}\end{subfigure}
 \begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/prune.png}\caption{Plains zebras}\end{subfigure}
 \begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/prune.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{MatchPrune}Pruning feature dimensions for match classification]{\caplbl{MatchPrune}

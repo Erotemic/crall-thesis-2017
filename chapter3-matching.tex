@@ -49,8 +49,6 @@
       filtering the correspondences.
     \Cref{sec:exempselect} describes the process for selecting \exemplars{}.
     \Cref{sec:rankexpt} provides an experimental evaluation of the ranking algorithm.
-    %These experiments inform the direction we take in our proposal to extend
-    %  this algorithm.
     \Cref{sec:staticsum} summarizes this chapter.
 
     \rankedmatches{}
@@ -508,7 +506,7 @@
 \FloatBarrier{}
 \section{Spatial verification}\label{sec:sver}
 
-    The basic matching algorithm treats each annotation as an orderless set of feature descriptors (with a small
+    The basic ranking algorithm treats each annotation as an orderless set of feature descriptors (with a small
     exception in name scoring, which has used a small amount of spatial information). This means that many of the
     initial feature correspondences will be spatially inconsistent. Spatial verification removes these spatially
     inconsistent feature correspondences. Determining which features are inconsistent is done by first estimating
@@ -798,9 +796,9 @@
 
     The outline of this section is as follows. First, \cref{sub:datasets} introduces and describes each dataset.
     Our first experiment in \cref{sub:exptbase} establishes the accuracy of our ranking algorithm on several
-    datasets using a default pipeline configuration. We then compare our approach to an alternative
-    \cref{sub:exptsmk} SMK approach. The next subsections perform in depth experiments on the parameter settings of
-    our algorithm. \Cref{sub:exptfg} tests the effect of the foregroundness weight on identification accuracy.
+    datasets using a default pipeline configuration. We then compare our approach to an alternative SMK approach in
+    \cref{sub:exptsmk}. The next subsections perform in depth experiments on the parameter settings of our
+    algorithm. \Cref{sub:exptfg} tests the effect of the foregroundness weight on identification accuracy.
     \Cref{sub:exptinvar} investigates the effect of the level of feature invariance and viewpoint.
     \Cref{sub:exptscoremech} compares the \csumprefix{} and the \nsumprefix{} \namescoring{} mechanism.
     \Cref{sub:exptk} varies the $\K$ parameter (the number of the nearest neighbors used in establishing feature
@@ -815,7 +813,7 @@
         dataset is labeled with \groundtruth{} in the form of annotations with name labels. Annotations (bounding
         boxes) have been drawn to localize animals within the image. A unique \name{} label has been assigned to
         all annotations with the same identity. Some of this \groundtruth{} labeling was generated independently.
-        However, large portions of the datasets were labeled with assistance from the matching algorithm. While
+        However, large portions of the datasets were labeled with assistance from the ranking algorithm. While
         this may introduce some bias in the results, there was no alternative because the amount of time needed to
         independently and completely label a large dataset is prohibitive and error prone.
 
@@ -830,7 +828,7 @@
         The number of names, annotations, and their distribution within each database are summarized in the
         following tables. In these tables we distinguish between \glossterm{singleton} and \glossterm{resighted}
         names. Singleton names are individuals sighted only once, \ie{} contain only a single encounter. Resighted
-        names contain more than one encounter. We make this distinction because resighted names have known correct
+        names contain more than one encounter. We make this distinction because resighted names have correct
         matches across a significant time delta. Note, that singleton names may still have more than one
         annotation, but those annotations are all from the same encounter. We have pre-filtered each database to
         remove annotations that are unidentified, are missing timestamps, or are labeled as ``junk'' quality.
@@ -852,39 +850,39 @@
               body.
             The constituent datasets were collected in Kenya at several locations including Nairobi National
               Park, Sweetwaters, and Ol Pejeta.
-            More than $90\percent$ of the \groundtruth{} generated for this dataset was assisted using the matching
-              algorithm.
+            More than $90\percent$ of the \groundtruth{} generated for this dataset was assisted using the
+              matching algorithm.
             This dataset contains many imaging challenges including occlusion, viewpoint, pose, quality, and time
               variation.
             There are some annotations in this dataset without quality or viewpoint labelings and some images
               contain undetected animals.
-            This data was collected between 2006 and 2015, but the majority of the data was collected in
-              2012--2015.
+            This data was collected between $2006$ and $2015$, but the majority of the data was collected in
+              $2012$--$2015$.
 
             \item \textbf{Grévy's zebras}.
             This is another aggregated dataset.
-            The original \groundtruth{} for this dataset was generated independently of the matching algorithm,
-              however the matching algorithm revealed several \groundtruth{} errors that have since been corrected.
+            The original \groundtruth{} for this dataset was generated independently of the ranking algorithm,
+              however the ranking algorithm revealed several \groundtruth{} errors that have since been corrected.
             The Grévy's dataset was collected in Mpala, Kenya.
             Most of the annotations in this database have been cropped to the animal's flank.
             This dataset contains a moderate degree of pose and viewpoint variation and occlusion.
-            This data was collected between 2003 and 2012, but the majority was collected in 2011 and 2012.
+            This data was collected between $2003$ and $2012$, but the majority was collected in $2011$ and $2012$.
 
             \item \textbf{Masai giraffes}.
             These images of Masai giraffes were all taken in Nairobi National Park during the \GZC{} between
               February $20$, $2015$ and March $2$, $2015$.
-            All \groundtruth{} was established using the matching algorithm followed by manual verification.
+            All \groundtruth{} was established using the ranking algorithm followed by manual verification.
             This dataset contains a high degree of pose and viewpoint variation, and occlusion.
             Because of their long necks, it is difficult to ensure that only a single giraffe appears in each
               annotation.
             This results in many \glossterm{photobombs} --- pairs of annotations where a background animal in one
               annotation matches the foreground animal in the other --- when matching.
 
-            \item \textbf{Humpback whales}.
+            \item \textbf{Humpbacks}.
             The humpback dataset was collected by FlukeBook~\cite{levenson_flukebook_2015} over nearly 15 years.
             Images were contributed by both marine and citizen scientists.
             The original \groundtruth{} was established using both manual and automated methods that are disjoint
-              from these techniques considered here, however our software was used to correct mistakes.
+              from these techniques considered here; however our software was used to correct mistakes.
             The annotations in this dataset have not been manually reviewed.
             Some are cropped to the fluke while others encompass the entire image.
             Quality and viewpoint labels do not exist for this dataset.
@@ -963,7 +961,7 @@
         Running this experiment with using the query / database sample as outlined in the baseline experiment does
         not result in a noticeable difference in scores because the purpose of the foregroundness measure is to
         down weight matches between scenery objects (\eg{} trees, grass, bushes) that appear in multiple
-        annotations. The baseline database sample contains only a single images from each encounter and only two
+        annotations. The baseline database sample contains only a single image from each encounter and only two
         encounters per individual. This means that it will be unlikely for an annotation in the query set and
         another annotation in the database set to have a similar background.
 
@@ -974,14 +972,6 @@
         that annotation pairs that share common scenery exist. We perform this test over multiple occurrences and
         aggregate the results. Therefore, the reported database size will be an average, and the query size is the
         sum of all unique query annotations.
-        %We sort the occurrences by size in descending order, and then iterate through each occurrence.
-        %We sample the highest quality annotation in encounter in the occurrence as long as that name has not been
-        %  sampled more than two times.
-        %At the end of this process we have at most two annotations for each name.
-        %We randomly choose annotations to be query and database annotations from each name with two annotations.
-        %The rest are used as confusers.
-        %We execute the ranking algorithm twice with foregroundness both enabled and disabled.
-        %The rest of the pipeline configuration is the same as the baseline test.
 
         The accuracy of the foregroundness is illustrated in~\cref{fig:FGIntraExpt}. The results show that using
         foregroundness weights improves the number of correct results at rank $1$ by a significant margin for both
@@ -990,16 +980,8 @@
         nor common. Therefore, we find it beneficial to always include foregroundness when a trained estimator is
         available.
 
-        %\ForegroundExpt{}
         \FGIntraExpt{}
 
-        %foreground weights occasionally dips below Occasionally the accuracy of using foreground weights Occasionaly toNote that towards higher ranks 
-        %N
-        %For plains zebras, using the foregroundness measure results in a significant $3.79\percent$ increase in
-        %  identification accuracy.
-        %For Grévy's zebras there is also a significant $3.3\percent$ increase.
-        %This experiment clearly shows the importance of eliminating background feature correspondences.
-     
     \FloatBarrier{}
 
     \subsection{Invariance experiment}\label{sub:exptinvar} %
@@ -1076,9 +1058,6 @@
     \FloatBarrier{}
     \subsection{Scoring mechanism experiment}\label{sub:exptscoremech}  
 
-        % TODO: change experiment so only one annotation per name is chosen for
-        % each confuser
-
         % Database setup for name scoring
         The purpose of the scoring mechanism is to aggregate scores of individual feature correspondences across
           multiple annotations into a single score for each name --- \ie{} an annotation-to-name similarity, which
@@ -1143,7 +1122,7 @@
         experiment, the number of exemplars per name is the most significant variable impacting accuracy.
         Furthermore, when there are more exemplars in the database the choice of $\K$ starts become less
         significant. The results also show that accuracy does slightly decrease when the database becomes larger,
-        but magnitude of the decrease is between $1\percent$ and $3\percent$. Interesting the optimal choice of
+        but magnitude of the decrease is between $1\percent$ and $3\percent$. Interestingly, the optimal choice of
         $\K$ is not consistent between species when there is only one exemplar per name. For Grévy's zebras using a
         lower $\K$ results in better results, but for plains zebras there is a significant loss when $\K=1$ and the
         database size is large. This is likely due to the nature of the distinguishing patterns on the different
@@ -1251,8 +1230,8 @@
           better ranking accuracy.
         LNBNN does not quantize descriptor and therefore it is able to distinguish more subtle descriptor
           details.
-        Because LNBNN does not require an expensive pre-training phase, it makes it make it ideal to rank the
-          databases on the scales considered in this thesis.
+        Because LNBNN does not require an expensive pre-training phase, it makes it ideal to rank the databases
+          on the scales considered in this thesis.
         However, we note that SMK is more efficient on larger scales, and it may be necessary to consider when
           databases become very large.
 
@@ -1299,10 +1278,6 @@
       are several limitations to this approach.
     \begin{enumln}
         \item All results must be manually verified, which can be time-consuming.
-            %process for large datasets.
-            %We introduced a mechanism for ranking the individuals in a database
-            %based similarity to a single query, but provided no means of verifying
-            %which --- if any --- of the top ranked results matched.
         \item There is no mechanism for recovering from errors once they occur.
         \item There is no mechanism to determine when identification is complete.
     \end{enumln}
