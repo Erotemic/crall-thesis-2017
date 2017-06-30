@@ -95,10 +95,10 @@ because we can establish a distinctive correspondence in the face.
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_lnbnn.png}\caption{Plains zebra LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Plains zebra learned}\label{sub:pos_hist_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebra LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebra learned}\label{sub:pos_hist_gz} \end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_lnbnn.png}\caption{Plains zebras LNBNN}\label{sub:pos_lnbnn_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Plains zebras learned}\label{sub:pos_hist_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
 \caption[\caplbl{PositiveHist}Positive score histogram experiment]{\caplbl{PositiveHist}
 % ---
@@ -118,8 +118,8 @@ Note that in this plot, negative refers to annotation pairs with a non-positive 
 \newcommand{\PositiveROC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_match_state.png}\caption{Plains zebra}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_match_state.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_match_state.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_match_state.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{PositiveROC}Positive match-state ROC experiment]{\caplbl{PositiveROC}
 % ---
 The positive match-state ROC for scores computed by the pairwise classifier and LNBNN.
@@ -139,12 +139,12 @@ The pairwise classifier significantly improves the separation of positive and no
 \newcommand{\ReRank}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/rerank.png}\caption{Plains zebra}\end{subfigure}
-\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/rerank.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/rerank.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/rerank.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{ReRank}Re-ranking experiment]{\caplbl{ReRank}
 % ---
 Re-ranking the top LNBNN results using the positive probabilities from the match-state classifier improves the
-  number of correct matches at rank $1$ for both plains and Grévy's zebra.
+  number of correct matches at rank $1$ for both plains and Grévy's zebras.
 % ---
 }
 \label{fig:ReRank}
@@ -171,8 +171,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionMatch}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_match_state.tex}\caption{Plains zebra match-state confusion matrix}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy's zebra match-state confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_match_state.tex}\caption{Plains zebras match-state confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_match_state.tex}\caption{Grévy's zebras match-state confusion matrix}\end{subtable} %
 \end{table}
 }
 
@@ -189,8 +189,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsMatch}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_match_state.tex}\caption{Plains zebra match-state metrics}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy's zebra match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_match_state.tex}\caption{Plains zebras match-state metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_match_state.tex}\caption{Grévy's zebras match-state metrics}\end{subtable} %
 \end{table}
 }
 
@@ -208,8 +208,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionPhotobomb}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_photobomb_state.tex}\caption{Plains zebra photobomb confusion matrix}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_photobomb_state.tex}\caption{Grévy's zebra photobomb confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion_photobomb_state.tex}\caption{Plains zebras photobomb confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion_photobomb_state.tex}\caption{Grévy's zebras photobomb confusion matrix}\end{subtable} %
 \end{table}
 }
 
@@ -224,8 +224,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsPhotobomb}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_photobomb_state.tex}\caption{Plains zebra photobomb metrics} \end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy's zebra photobomb metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics_photobomb_state.tex}\caption{Plains zebras photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics_photobomb_state.tex}\caption{Grévy's zebras photobomb metrics}\end{subtable} %
 \end{table}
 }
 
@@ -240,8 +240,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     % ---
     }
     \label{tbl:ConfusionPhotobombII}
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion2_photobomb_state.tex}\caption{Plains zebra photobomb adjusted confusion matrix}\end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion2_photobomb_state.tex}\caption{Grévy's zebra photobomb adjusted confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/confusion2_photobomb_state.tex}\caption{Plains zebras photobomb adjusted confusion matrix}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/confusion2_photobomb_state.tex}\caption{Grévy's zebras photobomb adjusted confusion matrix}\end{subtable} %
 \end{table}
 }
 
@@ -256,8 +256,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
     }
     \label{tbl:EvalMetricsPhotobombII}
     \centering
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Plains zebra adjusted photobomb metrics} \end{subtable} %
-    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Grévy's zebra adjusted photobomb metrics}\end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/PZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Plains zebras adjusted photobomb metrics} \end{subtable} %
+    \begin{subtable}[h]{\textwidth}\centering\input{figures4/GZ_Master1/eval_metrics2_photobomb_state.tex}\caption{Grévy's zebras adjusted photobomb metrics}\end{subtable} %
 \end{table}
 }
 
@@ -276,8 +276,8 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 \newcommand{\MatchWordCloud}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/wc_match_state.png}\caption{Grévy's zebra}\label{sub:wc_gz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/wc_match_state.png}\caption{Plains zebras}\label{sub:wc_pz}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/wc_match_state.png}\caption{Grévy's zebras}\label{sub:wc_gz}\end{subfigure}
 \caption[\caplbl{MatchWordCloud}Word cloud of important features for match-state prediction]{\caplbl{MatchWordCloud}
 % ---
 Word cloud of important features for predicting match-state.
@@ -293,9 +293,9 @@ For plains zebras, the difference in viewpoint (denoted as \pvar{global(view\_de
 \newcommand{\MatchPrune }{
 \begin{figure}[h]
 \centering
-%\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/wc_match_state.png}\caption{Plains zebra}\label{sub:wc_pz}\end{subfigure}
-\begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/prune.png}\caption{Plains zebra}\end{subfigure}
-\begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/prune.png}\caption{Grévy's zebra}\end{subfigure}
+%\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_PB_RF_TRAIN/wc_match_state.png}\caption{Plains zebras}\label{sub:wc_pz}\end{subfigure}
+\begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/prune.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/prune.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{MatchPrune}Pruning feature dimensions for match classification]{\caplbl{MatchPrune}
 % ---
 The effect of pruning the least important feature dimensions on the MCC of the match-state classifier.
@@ -329,7 +329,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \input{figures4/PZ_Master1/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
-        \caption{Plains zebra}
+        \caption{Plains zebras}
     \end{subtable} %
     %~~~~~~~~ 
     \begin{subtable}[h]{1.0\textwidth}
@@ -341,7 +341,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \input{figures4/GZ_Master1/feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
-        \caption{Grévy's zebra}
+        \caption{Grévy's zebras}
     \end{subtable} %
 \end{table}
 }
@@ -367,7 +367,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \input{figures4/PZ_Master1/pruned_feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
-        \caption{Plains zebra}
+        \caption{Plains zebras}
     \end{subtable} %
     %~~~~~~~~ 
     \begin{subtable}[h]{1.0\textwidth}
@@ -379,7 +379,7 @@ However, there is a point at which reducing the number of feature dimensions sig
             \input{figures4/GZ_Master1/pruned_feat_importance_match_state.tex}
             \bottomrule
         \end{tabular}
-        \caption{Grévy's zebra}
+        \caption{Grévy's zebras}
     \end{subtable} %
 \end{table}
 }
@@ -408,7 +408,7 @@ However, there is a point at which reducing the number of feature dimensions sig
                 \input{figures4/PZ_Master1/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
-            \caption{Plains zebra photobomb importance}
+            \caption{Plains zebras photobomb importance}
         \end{subtable} %
         %~~~~
         \begin{subtable}[h]{\textwidth}
@@ -420,7 +420,7 @@ However, there is a point at which reducing the number of feature dimensions sig
                 \input{figures4/GZ_Master1/feat_importance_photobomb_state.tex}
                 \bottomrule
             \end{tabular}
-            \caption{Grévy's zebra photobomb importance}
+            \caption{Grévy's zebras photobomb importance}
         \end{subtable} %
     \end{table}
 }
@@ -516,8 +516,8 @@ Note that the probability assigned to the true state of each pair is close to $1
 \newcommand{\PhotobombROC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_photobomb_state.png}\caption{Plains zebra}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_photobomb_state.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_photobomb_state.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_photobomb_state.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{PhotobombROC}Photobomb ROC experiment]{\caplbl{PhotobombROC}
 % ---
 The photobomb-state ROC curve demonstrate that both photobomb-state classifiers
@@ -532,8 +532,8 @@ are indeed learning from the data.
 \newcommand{\PBThreshMCC}{
 \begin{figure}[h]
 \centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/mcc_thresh_photobomb_state.png}\caption{Plains zebra}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/mcc_thresh_photobomb_state.png}\caption{Grévy's zebra}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/mcc_thresh_photobomb_state.png}\caption{Plains zebras}\end{subfigure}
+\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/mcc_thresh_photobomb_state.png}\caption{Grévy's zebras}\end{subfigure}
 \caption[\caplbl{PBThreshMCC}Photobomb ROC experiment]{\caplbl{PhotobombROC}
 % ---
 Because there are not many labeled photobomb pairs, the probabilities returned by the photobomb-state classifier

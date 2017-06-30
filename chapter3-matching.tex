@@ -31,19 +31,23 @@
       a score for each feature correspondence.
     These scores are then aggregated into a single score for each \name{} in the database, producing a ranked
       list of \names{}.
-    Identification is performed by applying a classifier (decision algorithm) to the scores in this ranked list.
     If the top ranked \name{} has a ``high'' score, then it is likely to be the same individual depicted in the
       query annotation.
     If the top ranked \name{} has a ``low'' score, then it is likely that the query individual is not depicted in
       any database annotation.
     An example ranked list returned by the algorithm is illustrated in~\cref{fig:rankedmatches}.
+    For each result in the ranked list we decide if it is a correct or incorrect match.
     In the baseline algorithm this identification decision is left to a user.
+    However, in the next chapter we will consider using an algorithm to automatically verify results returned in
+      this ranked list.
 
-    The outline of this chapter is as follows: \Cref{sec:annotrepr} discusses the initial processing of an
-    annotation which involves image normalization, feature extraction, and feature weighting.
-    \Cref{sec:baselineranking,sec:sver} describe the baseline ranking and scoring algorithm. The first of these
-    sections focuses on establishing feature correspondences, and the second focuses on verifying the
-    correspondences. \Cref{sec:exempselect} describes the process for selecting \exemplars{}.
+    The outline of this chapter is as follows:
+    \Cref{sec:annotrepr} discusses the initial processing of an annotation which involves image normalization,
+      feature extraction, and feature weighting.
+    \Cref{sec:baselineranking,sec:sver} describe the baseline ranking and scoring algorithm.
+    The first of these sections focuses on establishing feature correspondences, and the second focuses on
+      filtering the correspondences.
+    \Cref{sec:exempselect} describes the process for selecting \exemplars{}.
     \Cref{sec:rankexpt} provides an experimental evaluation of the ranking algorithm.
     %These experiments inform the direction we take in our proposal to extend
     %  this algorithm.
@@ -82,11 +86,12 @@
     \subsection{Keypoint detection and description}
 
         Keypoints are detected within each annotation's chip using a modified implementation of the Hessian
-        detector described in~\cite{perdoch_efficient_2009} and reviewed in~\cref{sec:featuredetect}. This produces
-        a set of elliptical features localized in space, scale, shape, and orientation. Each keypoint is described
-        using the SIFT~\cite{lowe_distinctive_2004} descriptor that was reviewed in~\cref{sec:featuredescribe}. The
-        resulting keypoint-descriptor pairs are an annotation's features. Further details about the keypoint
-        structure are given in~\cref{sec:kpstructure}.
+          detector described in~\cite{perdoch_efficient_2009} and reviewed in~\cref{sec:featuredetect}.
+        This produces a set of elliptical features localized in space, scale, shape, and orientation.
+        Each keypoint is described using the SIFT~\cite{lowe_distinctive_2004} descriptor that was reviewed
+          in~\cref{sec:featuredescribe}.
+        The resulting unordered set of keypoint-descriptor pairs are an annotation's features.
+        Further details about the keypoint structure are given in~\cref{sec:kpstructure}.
 
         We choose a baseline feature detection algorithm that produces affine invariant keypoints with the gravity
         vector. Affine invariant (\ie{} shape adapted) keypoints detect elliptical patches instead of circular
@@ -97,16 +102,19 @@
 
         It is important to select the appropriate level of invariance for each species we identify.
         % Shape 
-        Our experiments in~\cref{sub:exptinvar} vary several parameters related to invariance in keypoint
-        detection. To determine if affine invariance is appropriate for animal identification we experiment with
-        both circular and elliptical keypoints.
+        In our experiments in~\cref{sub:exptinvar}, we will vary several parameters related to invariance in
+          keypoint detection.
+        To determine if affine invariance is appropriate for animal identification we experiment with both
+          circular and elliptical keypoints.
         % Orientation 
-        We also experiment with different levels of orientation invariance. The gravity vector assumption holds in
-        the case of rigid non-poseable objects (\eg{} buildings), if the image is upright. Clearly, for highly
-        poseable animals, this assumption is more questionable. However, full rotation invariance (using dominant
-        gradient orientations) has intuitive problems. Patterns (like ``V'' and ``$\Lambda$'') that might
-        contribute distinguishing evidence that two annotations match, would always appear identical under full
-        rotation invariance. Ideally orientation selection would be made based on the pose of the animal.
+        We also experiment with different levels of orientation invariance.
+        The gravity vector assumption holds in the case of rigid non-poseable objects (\eg{} buildings), if the
+          image is upright.
+        Clearly, for highly poseable animals, this assumption is more questionable.
+        However, full rotation invariance (using dominant gradient orientations) has intuitive problems.
+        Patterns (like ``V'' and ``$\Lambda$'') that might contribute distinguishing evidence that two
+          annotations match, would always appear identical under full rotation invariance.
+        Ideally orientation selection would be made based on the pose of the animal.
 
         We introduce a simple orientation heuristic to help match keypoints from the same animal in the presence of
         small pose variations. Instead of extracting a single keypoint in the direction of gravity or multiple
@@ -127,7 +135,7 @@
         belonging to the foreground --- its ``foregroundness''. This weight is used indicate the importance of a
         feature in scoring and spatial verification.
 
-        Foregroundness is derived from a species detection algorithm developed by Jason
+        Foregroundness is derived from a species detection algorithm developed by
         Parham~\cite{parham_photographic_2015}. The input to the species detection algorithm is the annotation's
         chip, and the output is an intensity image. Each pixel in the intensity image represents the likelihood
         that it is part of a foreground object.
@@ -184,10 +192,10 @@
         \paragraph{Extracting keypoint parameters from an affine matrix}
         During the spatial verification step, described in~\cref{sec:sver}, keypoints are warped from one image
         into the space of another. It will be useful to extract the keypoint parameters from an arbitrary keypoint
-        matrix. This will allow us to directly compare properties of corresponding right side
-        of~\cref{eqn:invTVRConstruct}. Given an arbitrary affine matrix $\inv{\rvmat}$ representing keypoint $\kp$,
-        we show how the individual parameters $(\pt, \scale, \ori)$ can be extracted. First consider the components
-        of $\inv{\rvmat}$ by simplifying the right side of~\cref{eqn:invTVRConstruct}.
+        matrix. This will allow us to directly compare properties of corresponding features. Given an arbitrary
+        affine matrix $\inv{\rvmat}$ representing keypoint $\kp$, we show how the individual parameters $(\pt,
+        \scale, \ori)$ can be extracted. First consider the components of $\inv{\rvmat}$ by simplifying the right
+        side of~\cref{eqn:invTVRConstruct}.
         \begin{equation}\label{eqn:ArbInvRVTMat}
             \inv{\rvmat} = 
             \BIGMAT{
@@ -223,9 +231,9 @@
 
     To identify a query annotation, it is matched against a database of known \names{}. \Aan{\name{}} is a set of
     annotations known to depict the same animal. The basic matching pipeline can be summarized in \three{} steps:
-    establish feature correspondences \rpipe{} %
-    score feature correspondences \rpipe{} %
-    aggregate feature correspondence scores across the \names{}. Correspondences between a query annotation's
+    (1) establish feature correspondences,  %
+    (2) score feature correspondences, and %
+    (3) aggregate feature correspondence scores across the \names{}. Correspondences between a query annotation's
     features and \emph{all} database annotation features are established using an approximate nearest neighbor
     algorithm. This step also establishes a normalizing feature which is used to measure the distinctiveness of a
     query feature. Each feature correspondence is scored based on the feature weights established in the previous
@@ -238,13 +246,13 @@
         \paragraph{Offline indexing}
             Before feature correspondences can be established, an offline algorithm indexes descriptors from all
             database annotations for fast approximate nearest neighbor search. All database descriptor vectors are
-            stacked into a single database array of vectors, %
+            stacked into a single array of vectors, %
             $\AnyDB$, % should this be removed?
               %
-            and these descriptors are indexed by an inverted file. The inverted file maps each descriptor in the
+            and these descriptors are indexed by an inverted index. The inverted index maps each descriptor in the
             stacked array back to its original annotation and feature. This database array is indexed for nearest
             neighbor search using a forest of kd-trees~\cite{silpa_anan_optimised_2008} using the FLANN
-            library~\cite{muja_fast_2009}, which were reviewed in~\cref{sec:ann}. This allows for the efficient
+            library~\cite{muja_fast_2009}, both of which were reviewed in~\cref{sec:ann}. This allows for the efficient
             implementation of a \codeobj{neighbor index function}  %
             $\NN(\AnyDB, \desc, \K)$  %
             %$\NN(\desc, \K)$  %
@@ -291,13 +299,16 @@
             $\K + 1$ neighbor, then these correspondences will be inappropriately downweighted.
               
             % probably need to reword.
-            Consider the example in~\cref{fig:knorm}. In this case there are two examples
-            \Cref{sub:knorma,sub:knormb} of the query images in the database. The figure shows the case where
-            $\K=3$ and $\Knorm=1$. Even though there is an incorrect match, the LNBNN scores of the correct matches
-            are an order of magnitude higher than the score for the incorrect match. Now, consider the case where
-            the number of correct matches in the database is greater than $\K$ by setting $\K=1$. In this case the
-            normalizing descriptor is the ``same'' feature as the query feature and the nearest match drops from
-            $0.066$ to $0.007$.
+            To gain an intuition of the LNBNN scoring mechanism, consider the example in~\cref{fig:knorm}.
+            The figure shows the case where $\K=3$ and $\Knorm=1$.
+            In this case there are two examples \Cref{sub:knormb,sub:knormc} of the query individual in the
+              database.
+            Even though there is an incorrect match, the LNBNN scores of the correct matches are an order of
+              magnitude higher than the score for the incorrect match.
+            Now, consider the case where the number of correct matches in the database is greater than $\K$ by
+              setting $\K=1$.
+            In this case the normalizing descriptor is the ``same'' feature as the query feature and the nearest
+              match drops from $0.066$ to $0.007$.
 
             \knorm{}
 
@@ -317,7 +328,7 @@
 
     \subsection{Feature correspondence scoring}
         Each feature correspondence is given a score representing how likely it is to be a correct match. While the
-        L2-distance between query and database descriptors is useful ranking feature correspondences based on
+        L2-distance between query and database descriptors is useful for ranking feature correspondences based on
         visual similarity, the distinctiveness of the match is more useful for ranking the query annotation's
         similarity to a database annotation~\cite{lowe_distinctive_2004, arandjelovic_dislocation_2015,
         mccann_local_2012}. However, highly distinctive matches from other objects --- like background matches ---
@@ -329,22 +340,26 @@
 
         \paragraph{LNBNN score}\label{sec:lnbnnscore}
 
-            Using the normalizing feature, $\descnorm_{i}$, LNBNN compares a query feature's similarity to the
-            match and query feature's similarity to the normalizer. This serves as an estimate of local feature
-            density and measures the distinctiveness of the feature correspondence. A match is distinctive when the
-            query-to-match distance is much smaller than the query-to-normalizer distance, \ie{} the local density
-            of descriptor space around the query is sparse. The LNBNN score of a feature match is computed as
-            follows:
+            The LNBNN scoring mechanism measures the difference in similarity between the query descriptor and
+            (1) its match and
+            (2) its normalizer $\descnorm_{i}$.
+            This serves as an estimate of local feature density and measures the distinctiveness of the feature
+              correspondence.
+            A match is distinctive when the query-to-match distance is much smaller than the query-to-normalizer
+              distance, \ie{} the local density of descriptor space around the query is sparse.
+            The LNBNN score of a feature match is computed as follows:
             \begin{equation}\label{eqn:lnbnn}
                 \fs_{\LNBNN} \eqv \frac{\elltwo{\desc_i - \descnorm_{i}} - \elltwo{\desc_i - \desc_j}}{Z}
             \end{equation}
             All descriptors used in this calculation are L2-normalized to unit length --- \ie{} to sit on the
-            surface of a unit hypersphere. The $Z$ term normalizes the score to ensure that it is in the range
-            $\rangeinin{0, 1}$. If descriptor vectors have only non-negative components (as in the case of
-            SIFT~\cite{lowe_distinctive_2004}), then the maximum distance between any two L2-normalized descriptors
-            is $Z\tighteq\sqrt{2}$. If descriptors vectors have negative components (like those that might
-            extracted from a deep convolutional neural network~\cite{zagoruyko_learning_2015}), then the maximum
-            distance between is $Z\tighteq2$.
+              surface of a unit hypersphere.
+            The $Z$ term normalizes the score to ensure that it is in the range $\rangeinin{0, 1}$.
+            If descriptor vectors have only non-negative components (as in the case of
+              SIFT~\cite{lowe_distinctive_2004}), then the maximum distance between any two L2-normalized
+              descriptors is $Z\tighteq\sqrt{2}$.
+            If descriptors vectors have negative components (like those that might extracted from a deep
+              convolutional neural network~\cite{zagoruyko_learning_2015}), then the maximum distance between them
+              is $Z\tighteq2$.
 
         \paragraph{Foregroundness score}
             To reduce the influence of background matches, each feature correspondence is assigned a score based on
@@ -375,13 +390,16 @@
         goal of the application is to classify a new query annotation as either a known \name{} or as a new
         \name{}, not to determine which annotations are most similar.
 
-        This subsection presents two mechanisms to compute \namescores{}. The first mechanism is \csumprefix{} and
-        computes a \namescore{} in two steps. This mechanism aggregates feature correspondences scores into an
-        \annotscore{} for each annotation in the database. Then the \annotscores{} are aggregated into a score for
-        each \name{} in the database. The second mechanism is \nsumprefix{}. This mechanism aggregates feature
-        correspondences scores matching multiple database annotations directly into a \namescore{}. These
-        mechanisms are respectively similar to the image-to-image distance and the image-to-class distance
-        described in~\cite{boiman_defense_2008}.
+        This subsection presents two mechanisms to compute \namescores{}.
+        The first mechanism is \csumprefix{} and computes a \namescore{} in two steps.
+        This mechanism aggregates feature correspondence scores into an \annotscore{} for each annotation in the
+          database.
+        Then the \annotscores{} are aggregated into a score for each \name{} in the database.
+        The second mechanism is \nsumprefix{}.
+        This mechanism aggregates feature correspondence scores matching multiple database annotations directly
+          into a \namescore{}.
+        These mechanisms are respectively similar to the image-to-image distance and the image-to-class distance
+          described in~\cite{boiman_defense_2008}.
 
         \paragraph{The set of all feature correspondences}
         All scoring mechanisms presented in this subsection are based on aggregating scores from features
@@ -409,10 +427,12 @@
         % SAME AS IMAGE-TO-CLASS
         \paragraph{Name scoring (1) --- \csumprefix{}} %
 
-            The \cscoring{} mechanism aggregates \annotscores{} into \namescores{} by taking as the score highest
-            scoring annotation for each \name{}. In our experiments we refer to this version of \namescoring{} as
-            \csum{}. Let $\nid$ be the set of database annotations with the same \name{}. The \cscore{} between a
-            query annotation and a database \name{} is the maximum over all annotations scores in that \name{}:
+            The \cscoring{} mechanism aggregates \annotscores{} into \namescores{} by simply taking the maximum
+              \annotscore{} over all annotations belonging to a \name{}.
+            In our experiments we refer to this version of \namescoring{} as \csum{}.
+            Let $\nid$ be the set of database annotations with the same \name{}.
+            The \cscore{} between a query annotation and a database \name{} is:
+            %the maximum over all annotations scores in that \name{}:
             \begin{equation}
                 \amechscoreop(\qaid, \nid) 
                 \eqv
@@ -422,14 +442,17 @@
                 }
             \end{equation}
 
-        \paragraph{Name scoring (2) --- \nsumprefix{}} %
+        \paragraph{Name scoring
+        (2) --- \nsumprefix{}} %
             The \cscoring{} mechanism accounts for the fact that animals will be seen multiple times, but it does
-            not take advantage of complementary information available when \aan{\name{}} has multiple annotations.
-            The following aggregation mechanism combines scores on a feature level to correct for this. It allows
-            each query feature at a specific location to vote for a given \name{} at most once. Thus, when a query
-            feature (or multiple query features at the same location) corresponds to database features from
-            multiple views of the same animal, only the best correspondence for that feature will contribute to the
-            score. In our experiments we refer to this version of \namescoring{} as \nsum{}.
+              not take advantage of complementary information available when \aan{\name{}} has multiple
+              annotations.
+            The following aggregation mechanism combines scores on a feature level to correct for this.
+            It allows each query feature at a specific location to vote for a given \name{} at most once.
+            Thus, when a query feature (or multiple query features at the same location) correspond(s) to
+              database features from multiple views of the same animal, only the best correspondence for that
+              feature will contribute to the score.
+            In our experiments we refer to this version of \namescoring{} as \nsum{}.
 
             The first step of computing \aan{\namescore{}} for a specific \name{} is grouping the feature
               correspondences.
@@ -441,10 +464,12 @@
 
             \newcommand{\MatchesGroup}{\Matches^{G}}
 
-            Formally, consider two feature correspondences $\mI\tighteq(\iI, \jI)$ and $\mII\tighteq(\iII, \jII)$.
-            Let $\pt_{\iI}$ and $\pt_{\iII}$ be the $xy$-location of the query feature in a correspondence. Let
-            $\nid_{\jI}$ and $\nid_{\jII}$ be the \name{} of the database annotations containing the matched
-            features. The group that contains feature correspondence $\mI$ is defined as:
+            Formally, consider two feature correspondences $\mI\tighteq(\iI, \jI)$ and $\mII\tighteq(\iII,
+              \jII)$.
+            Let $\pt_{\iI}$ and $\pt_{\iII}$ be the $xy$-location of the query feature in each correspondence.
+            Let $\nid_{\jI}$ and $\nid_{\jII}$ be the \name{} of the database annotations containing the matched
+              features.
+            The group that contains feature correspondence $\mI$ is defined as:
             \begin{equation}
                 \MatchesGroup_{\mI} \eqv \curly{\mII \in \Matches  \where
                 \paren{
@@ -511,14 +536,18 @@
 
     \subsection{Affine hypothesis estimation}
         Here, we will compute an affine transformation that will remove a majority of the spatially inconsistent
-        feature correspondences. Instead of using random sampling of the feature correspondences as in the original
-        RANSAC algorithm~\cite{hartley_multiple_2003}, we estimate affine hypotheses using a deterministic method
-        similar to~\cite{philbin_object_2007, chum_homography_2012}. Given a set of matching features between
-        annotation $\annotI$ and $\annotII$, the shape, scale, orientation, and position of each pair of matching
-        keypoints are used to estimate a hypothesis affine transformation. Each hypothesis transformation warps
-        keypoints from annotation $\annotI$ into the space of $\annotII$. Inliers are estimated by using the error
-        in position, scale, and orientation between each warped keypoint and its correspondence. The transformation
-        with the most inliers determines the final affine transform.
+          feature correspondences.
+        Instead of using random sampling of the feature correspondences as in the original RANSAC
+          algorithm~\cite{hartley_multiple_2003}, we estimate affine hypotheses using a deterministic method
+          similar to~\cite{philbin_object_2007, chum_homography_2012}.
+        Given a set of matching features between annotations $\annotI$ and $\annotII$, the shape, scale,
+          orientation, and position of each pair of matching keypoints are used to estimate a hypothesis affine
+          transformation.
+        Each hypothesis transformation warps keypoints from annotation $\annotI$ into the space of $\annotII$.
+        Inliers are estimated by using the error in position, scale, and orientation between each warped keypoint
+          and its correspondence.
+        Each inlier is weighted by its feature correspondence score.
+        The final affine transform is chosen to be the one that produces the maximum weight set of inliers.
 
         % vmat = V here
         % V maps from ellipse to u-circle
@@ -533,29 +562,34 @@
             %  computed for each feature correspondence in a match from  to an
             %  annotation.
             Let $\Matches_{\annotII}$ be the set of all correspondences between features from query annotation
-            $\annotI$ to database annotation $\annotII$. For each feature correspondence $(i, j) \in
-            \Matches_{\annotII}$, we construct a hypothesis transformation, $\AffMatij$ using the matrices
-            $\rvmat_{i}$ and $\inv{\rvmat_{j}}$, which where defined in~\cref{eqn:RVTConstruct}
-            and~\cref{eqn:invTVRConstruct}. The first transformation $\rvmat_{i}$, warps points from
-            $\annotI$-space into a normalized reference frame. Then the second transformation, $\inv{\rvmat_{j}}$,
-            warps points in the normalized reference frame into $\annotII$-space. Formally, the hypothesis
-            transformation is defined as $\AffMatij \eqv \inv{\rvmat_{j}}\rvmat_{i}$, and the set of hypothesis
-            transformations is:
+              $\annotI$ to database annotation $\annotII$.
+            For each feature correspondence $(i, j) \in \Matches_{\annotII}$, we construct a hypothesis
+              transformation, $\AffMatij$ using the matrices $\rvmat_{i}$ and $\inv{\rvmat_{j}}$, which where
+              defined in~\cref{eqn:RVTConstruct,eqn:invTVRConstruct}.
+            The first transformation $\rvmat_{i}$, warps points from $\annotI$-space into a normalized reference
+              frame.
+            Then the second transformation, $\inv{\rvmat_{j}}$, warps points in the normalized reference frame
+              into $\annotII$-space.
+            Formally, the hypothesis transformation is defined as $\AffMatij \eqv \inv{\rvmat_{j}}\rvmat_{i}$,
+              and the set of hypothesis transformations is:
             \begin{equation}
                 \HypothSet \eqv \curly{ \AffMatij \where (i, j) \in \Matches_{\annotII} }
             \end{equation}
 
         \subsubsection{Measuring the affine transformation error}
             The transformation $\AffMatij$ perfectly aligns the corresponding $i\th{}$ query feature with the
-            $j\th{}$ database feature in the space of the database annotation ($\annotII$). If the correspondence
-            is indeed correct, then we can expect that other corresponding features will be well aligned by the
-            transformation. The next step is to determine how close the other transformed features from the query
-            annotation ($\annotI$) are to their corresponding features in database annotation ($\annotII$). This
-            can be measured using the error in distance, scale, and orientation for every correspondence. The
-            following procedure is repeated for each hypothesis transform %
-            $\AffMatij \in \HypothSet$. Note that the following description is in the context of the $i\th{}$ query
-            feature and the $j\th{}$ database feature, and the $i,j$ suffix is omitted for clarity. In this
-            context, the suffixes $\idxI$ and $\idxII$ will be used to index into features correspondences.
+              $j\th{}$ database feature in the space of the database annotation ($\annotII$).
+            If the correspondence is indeed correct, then we can expect that other corresponding features will be
+              well aligned by the transformation.
+            The next step is to determine how close the other transformed features from the query annotation
+              ($\annotI$) are to their corresponding features in database annotation ($\annotII$).
+            This can be measured using the error in distance, scale, and orientation for every correspondence.
+            The following procedure is repeated for each hypothesis transform %
+            $\AffMatij \in \HypothSet$.
+            Note that the following description is in the context of the correspondence between the $i\th{}$
+              query feature and the $j\th{}$ database feature, and the $i,j$ suffix is omitted for clarity.
+            In this context, the suffixes $\idxI$ and $\idxII$ will be used to index into features
+              correspondences.
 
             Let $\set{B}_{\idxI} = \curly{\invvrmatI \where (\idxI, \idxII) \in \Matches_{\annotII}}$ be the set of
             keypoint matrices in the query annotation with correspondences to database annotation $\annotII$. Given
@@ -589,15 +623,11 @@
             \end{equation}
 
         \subsubsection{Selecting affine inliers}
-            %Valid inliers are those matches that have all absolute differences
-            %  within a certain spatial distance threshold $\xythresh$, orientation
-            %  threshold $\orithresh$, and scale threshold $\scalethresh$.
-            %  %$\xythresh$ is specified as a percentage of the matched chip's
-            %  %  diagonal length.
-            Any keypoint match $(\idxI, \idxII) \in \Matches_{\annotII}$  is considered an inlier \wrt{} $\AffMat$
-            if its absolute differences in position, scale, and orientation are all within a spatial distance
-            threshold $\xythresh$, scale threshold $\scalethresh$, and orientation threshold $\orithresh$. This is
-            expressed using the function $\isinlierop$, which determines if match is an inlier:
+            Any keypoint correspondence $(\idxI, \idxII) \in \Matches_{\annotII}$  is considered an inlier \wrt{}
+              $\AffMat$ if its absolute differences in position, scale, and orientation are all within a spatial
+              distance threshold $\xythresh$, scale threshold $\scalethresh$, and orientation threshold
+              $\orithresh$.
+            This is expressed using the function $\isinlierop$, which determines if match is an inlier:
              %\begin{equation}
               %\label{eqn:inlierchecks}
               %    \begin{gathered}
@@ -633,8 +663,8 @@
         \end{equation}
 
     \subsection{Homography refinement}
-        Matches that are inliers to the best hypothesis affine transformation, $\HypothAffMat$, are used in the
-          least squares refinement step.
+        Feature correspondences that are inliers to the best hypothesis affine transformation, $\HypothAffMat$,
+          are used in the least squares refinement step.
         This step is only executed if there are at least $4$ inliers to $\HypothAffMat$, otherwise all
           correspondences between features in query annotation $\annotI$ to features in database annotation
           $\annotII$ are removed.
@@ -653,26 +683,28 @@
         \end{equation}
 
         Similar to affine error estimation, we will identify the subset of inlier features correspondences
-        $\Matches_{\HmgMatBest} \subseteq \Matches_{\annotII}$. A correspondence is an inlier if the query feature
-        is transformed to within a certain spatial distance threshold $\xythresh$, orientation threshold
-        $\orithresh$, and scale threshold $\scalethresh$ of its corresponding database feature. For convenience,
-        let $\tohmg{\cdot}$ transform points into homogeneous coordinates. For each feature correspondence $(\idxI,
-        \idxII) \in \Matches_{\annotII}$, the query feature position, $\ptI$, is warped from $\annotI$-space into
-        $\annotII$-space.
+          $\Matches_{\HmgMatBest} \subseteq \Matches_{\annotII}$.
+        A correspondence is an inlier if the query feature is transformed to within a certain spatial distance
+          threshold $\xythresh$, orientation threshold $\orithresh$, and scale threshold $\scalethresh$ of its
+          corresponding database feature.
+        For convenience, let $\tohmg{\cdot}$ and $\unhmg{\cdot}$ transform points into and out of homogeneous
+          form (recall homogeneous form augments an $xy$-point with a $z$ coordinate).
+        For each feature correspondence $(\idxI, \idxII) \in \Matches_{\annotII}$, the query feature position,
+          $\ptI$, is warped from $\annotI$-space into $\annotII$-space.
         \begin{equation}
             \warp{\ptI} = \unhmg{\HmgMatBest \tohmg{\ptI}}
         \end{equation}
-        However, because projective transformations are not guaranteed
-          to preserve the structure of the affine keypoints, warped
-          scales and orientations cannot be estimated with the method
-          previously shown in~\cref{eqn:affinewarp}.
+        However, because projective transformations are not guaranteed to preserve the structure of the affine
+          keypoints, warped scales and orientations cannot be estimated using~\cref{eqn:affinewarp}.
+        Therefore we estimate values that will serve a similar purpose relative to a reference point.
 
         \subsubsection{Estimation of warped shape parameters}
         Because we cannot warp the shape of an affine keypoint using a projective transformation, we instead
-        estimate the warped scale and orientation for the $\idxI\th{}$ query feature using a reference point. Given
-        a single feature match $(\idxI, \idxII) \in \Matches_{\annotII}$, we associate a reference point $\refptI$
-        with the query location $\ptI$, scale $\scaleI$ and orientation $\oriI$. The reference point is defined to
-        be $\scaleI$ distance away from the feature center at an angle of $\oriI$ radians in $\annotI$-space.
+          estimate the warped scale and orientation for the $\idxI\th{}$ query feature using a reference point.
+        Given a single feature correspondence $(\idxI, \idxII) \in \Matches_{\annotII}$, we associate a reference
+          point $\refptI$ with the query location $\ptI$, scale $\scaleI$ and orientation $\oriI$.
+        The reference point is defined to be $\scaleI$ distance away from the feature center at an angle of
+          $\oriI$ radians in $\annotI$-space.
           \begin{equation}
             \refptI = \ptI + \scale_1 \BVEC{\sin{\oriI} \\ -\cos{\oriII}}
           \end{equation}
@@ -688,8 +720,8 @@
             %\Delta \warp{\refptI} = \BVEC{\Delta \warp{\inI{x}} \\ \Delta \warp{\inI{y}}} = \warp{\ptI}- \warp{\refptI}.
             \ptres = \BVEC{\xres \\ \yres} = \warp{\ptI}- \warp{\refptI}.
         \end{equation}
-        The warped scale is estimated using the length of the residual vector, and the warped orientation is
-          estimated using the angle of the residual vector.
+        The warped scale and orientation are estimated using the length and angle of the residual vector.
+        Recall, the warped location can be computed exactly.
         In summary, the warped location, scale, and orientation of the $\idxI\th{}$ query feature is:
         \begin{equation}\label{eqn:homogwarp}
             \begin{aligned}

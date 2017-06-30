@@ -368,8 +368,9 @@
           as an array of unsigned $8$-bit integers (uint8), resulting in a $128$-byte descriptor.
         To reduce the impact of this quantization a trick is to multiply by $512$ instead of $255$ and then
           truncate values to $255$ before converting from a float to a uint8.
-        Even though each component is $8$-bits and therefore can only store a maximum value of $255$, but because
-          of truncation, L2-normalization, and properties of natural images value overflow is not likely to occur.
+        Even though each component is $8$-bits and therefore can only store a maximum value of $255$, value
+          overflow is not likely to occur because of truncation, L2-normalization, and properties of natural
+          images.
     
        \vizfeatrow{}
 
@@ -475,9 +476,9 @@
 
         \paragraph{Building a kd-tree index}
         Indexing a set of vectors involves first choosing a dimension and threshold to split the data into two
-        partitions. Then this procedure is recursively to each of the partitions. A common measure for choosing the
-        dimension is to choose the dimension with the greatest variance in the data. The threshold is then selected
-        as the median value of the chosen dimension.
+        partitions. Then this procedure is recursively applied to each of the partitions. A common measure for
+        choosing the dimension is to choose the dimension with the greatest variance in the data. The threshold is
+        then selected as the median value of the chosen dimension.
 
         \paragraph{Augmenting a kd-tree index}
         It is possible to augment an existing kd-tree by adding and removing vectors. Addition of a vector to a
@@ -687,7 +688,7 @@
             \end{equation}
 
             Similarity between bag-of-words vectors is computed using the weighted cosine similarity. It is only
-            necessary to sum the scores of matching features, because the weight of a word that is not in both a
+            necessary to sum the scores of matching features because the weight of a word that is not in both a
             query and database image is $0$. The tf-idf similarity between two images can be written as
             \begin{equation}
                 \opname{sim}(\X, \Y) = \sum_{\c \in q(\X) \isect q(\Y)} \opname{tf}(\X, \c) \opname{tf}(\Y, \c) \opname{idf}(\c) 
@@ -718,17 +719,17 @@
             matrix for SIFT descriptors is learned in~\cite{philbin_descriptor_2010} to preserve information that
             would be lost in quantization.
 
-            Because the tf-idf weighting was original designed for text recognition, it does not take into account
-            challenges that occur in image recognition such as bursty features --- a single feature that appears in
-            an image with a higher than term expected frequency (\eg{} bricks on a wall or vertical stripes on a
-            zebra). Strategies for accounting for burstiness involve penalizing frequently occurring features by
-            removing multiple matches to the same feature, using inter-image normalization, and using intra-image
-            normalization.~\cite{jegou_burstiness_2009}.
+            Because the tf-idf weighting was originally designed for text recognition, it does not take into
+            account challenges that occur in image recognition such as bursty features --- a single feature that
+            appears in an image with a higher than term expected frequency (\eg{} bricks on a wall or vertical
+            stripes on a zebra). Strategies for accounting for burstiness involve penalizing frequently occurring
+            features by removing multiple matches to the same feature, using inter-image normalization, and using
+            intra-image normalization.~\cite{jegou_burstiness_2009}.
             
             Query Expansion is a way to increase the recall of retrieval techniques and recover from tf-idf
             failure~\cite{chum_total_2007, chum_total_2011, arandjelovic_three_2012, tolias_visual_2014}. After an
             initial query, all spatially verified feature correspondences are back-projected onto the query image.
-            Then the query is then re-issued. A model of ``confusing features'' --- features more likely to belong
+            Then the query is re-issued. A model of ``confusing features'' --- features more likely to belong
             to the background --- can be used to filter out matches that should not be back projected onto the
             query image. Query expansion enriches the query with intermediate information that may help retrieve
             other viewpoints of the query image. However, because this technique requires at least one correct
@@ -750,7 +751,7 @@
         chum_large_scale_2010}.
 
         The basic idea is to represent an image as a set of hashes based on permutations of a visual vocabulary.
-        Recognition is performed performing a lookup for each hash. Collisions are returned as the recognition
+        Recognition is accomplished by performing a lookup for each hash. Collisions are returned as the recognition
         results. Like LSH, the primary advantage of using min hash for instance recognition is its speed.
 
     \subsection{Hamming embedding}
@@ -911,7 +912,10 @@
         One of the most recent advances in face verification and recognition is the DeepFace
           system~\cite{taigman_deepface_2014}.
         The DeepFace system implements face verification using the following pipeline:
-        detect \rpipe{} align \rpipe{} represent \rpipe{} classify.
+        (1) detect,
+        (2) align,
+        (3) represent, and
+        (4) classify.
         Specialized facial point detectors and a 3D face model are used to register a 3D affine camera to an
           RGB-image.
         The image is then warped into a ``frontalized'' view using a piecewise affine transform.
@@ -923,8 +927,8 @@
         In a supervised setting, a $\chi^2$-SVM is trained to recognize the individuals in a training dataset
           using the descriptor vectors produced by the network.
         In an unsupervised setting an ensemble of classifiers is used.
-        The ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} and 
-          several non-linear SVM classifiers with different inputs.
+        The ensemble is composed of the output of a Siamese network~\cite{chopra_learning_2005} and several
+          non-linear SVM classifiers with different inputs.
         The inputs are deep representations --- the activations of a deep neural network's output layer --- of
           the 3D aligned RGB-image, the 2D aligned RGB-image (generated using a simpler model based on similarity
           transforms), and an image comprised of intensity, magnitude, and orientation channels.

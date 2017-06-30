@@ -175,9 +175,6 @@ In addition to being the best fit for our application, the separate class method
 The idea is to replace all \nan{} measurements with either an extremely large or extremely small number.
 The choice of large or small is made independently at each node in the decision tree, depending on which choice
   is best.
-%This means that a decision tree This means that samples with 
-%This means that whenever a decision node in the random forest applies its test to a \nan{} value, the result will
-%  always be the same.
 In this way the \nan{} values are essentially treated as a separate category because a test can always be chosen
   that separates the measured and unmeasured data.
 This has several effects.
@@ -239,7 +236,6 @@ Given these definitions, the measurements we consider are:
     \item Foregroundness score:
     This is the geometric mean of the features' foregroundness measures, $\sqrt{w_i w_j}$.
     This adds $1$ measurement, denoted as $\tt{fgweight}$, for each correspondence.
-    %along with the individual foregroundness weights $w_i$ and $w_j$.
 
     \item Correspondence distance:
     This is the Euclidean distance between the corresponding descriptors, $\elltwo{\desc_i - \desc_j} / Z$.
@@ -265,9 +261,6 @@ Given these definitions, the measurements we consider are:
     We also include a weighted version of this measurement by multiplying it with the foregroundness score.
     This adds $2$ measurements, denoted as $\tt{ratio\_score}$ and $\tt{weighted\_ratio\_score}$, for each
       correspondence.
-    %Note, we subtract the ratio from one to ensure that larger score are better.
-    %We also include a weighted version of the ratio and normalizer distance by multiplying this weight by the
-    %  respective value.
         
     \item Spatial verification error:
 
@@ -312,7 +305,6 @@ We consider the sum, median, mean, and standard deviation over all correspondenc
 We have also considered taking values from individual correspondences based on rankings and percentiles with
   respect to a particular attribute (\eg{} ratio score), however we found that these did not improve the
   performance of our classifiers.
-  %little information in %practice.
 In practice the summary statistics work quite well.
 The resulting measurements are stacked to form the local feature vector.
 This results in $15 \times 4 = 60$ measurements.
@@ -401,10 +393,6 @@ Note the summary statistics in this example are all computed for correspondences
 \label{fig:PairFeatVec}
 \end{figure}
 
-%This results in a final descriptor vector where  that can be quite large (thousands of dimensions) and some dimensions
-%  might not be useful.
-%Therefore, we prune the feature vector using only the most useful of the proposed dimensions.
-
 
 \section{Learning the match-state classifier}\label{sec:learnclf}
 
@@ -431,11 +419,6 @@ Note the summary statistics in this example are all computed for correspondences
     We then find choose a dimension and threshold to maximize the decrease in class-label entropy.
     Note that when using the ``separate class'' method, the algorithm tests placing samples with missing data on
       both the left and right side of the split.
-    %Then, for each candidate dimension we find a threshold that maximizes the decrease in class-label entropy.
-    %The dimension and threshold that 
-    %choosing a random threshold and a random subset of feature dimensions as candidates.
-    %Each candidate feature dimension splits the training data, and the one that results in the largest decrease
-    %  in class-label entropy is chosen as the test for this node.
     The algorithm is then recursively executed on the right and left node until a leaf is assigned fewer than a
       minimum number of training examples.
     To select a test for a node, the number of candidate features dimensions we choose is the square root of the
@@ -450,9 +433,6 @@ Note the summary statistics in this example are all computed for correspondences
     We find that it works best to use $256$ decision trees, and to stop branch growth once a leaf node contains
       $5$ or fewer training samples.
     For other parameters we use the implementation defaults.
-    %We performed a grid search to find a good set of random forest hyper-parameters.
-    %We stop growing a branch if a leaf node contains $5$ or fewer samples.
-    %To learn our random forest classifiers we use $256$ decision trees.
 
     \paragraph{Sampling a labeled dataset of annotation pairs}
     Now that we have chosen a learning algorithm, the last remaining step is the selection of training data and
@@ -518,13 +498,6 @@ Note the summary statistics in this example are all computed for correspondences
       training dataset.
     Any pair in this set that is explicitly labeled as a photobomb is given that label, otherwise it is labeled
       as not a photobomb.
-    %Here we can select all pairs of annotations labeled as photobombs for positive training data.
-    %For negative training data we use the same sample generated to learn the primary classifier, where any pair
-    %  of annotations in explicitly labeled as a photobomb is assumed to not be a photobomb.
-    %For negative training data we must be careful only to choose pairs that have been explicitly reviewed as not
-    %  a photobomb.
-    %We attempt to balance the ratio of positive, negative, and incomparable examples in the negative training
-    %  data.
 
 \section{Pairwise classification experiments}\label{sec:pairexpt}
 
@@ -545,12 +518,6 @@ Note the summary statistics in this example are all computed for correspondences
     Therefore, the primary focus of our experiments will be separating positive from negative matching states.
 
     \PairDBStats{}
-
-    %When interpreting the results of these experiments it is important to note that the plains zebra dataset
-    %  contains only $54$ explicitly labeled incomparable cases and $286$ labeled photobombs, while the Grévy's
-    %  zebra dataset contains $0$ labeled incomparable cases and $79$ labeled photobombs.
-    %For plains zebras we can increase the number of incomparable cases to $353$ using by using viewpoint
-    %  heuristics.
 
     After sampling, we have a set of annotation pairs and each is associated with a \groundtruth{} matching state
       label of either positive, negative, or incomparable.
@@ -614,10 +581,6 @@ Note the summary statistics in this example are all computed for correspondences
     Second, we will compare the ability of LNBNN and the match-state classifier to predict if a pair is positive
       or not by looking at the distribution of positive and non-positive scores as well as the ROC curves.
 
-    %For the match-state classifier we will experiment with pruning feature dimensions from the pairwise feature
-    %  vector.
-    %We .
-
     \FloatBarrier{}
     \subsection{Evaluating the match-state classifier}
 
@@ -679,19 +642,6 @@ Note the summary statistics in this example are all computed for correspondences
         The pairwise scores provide a superior separation between positive and non-positive cases.
         Furthermore, the pairwise scores range from zero to one, which makes them easier to interpret than the
           unbounded LNBNN scores.
-        %, while r
-        %lyi
-        %In addition to providing a clearly superior separation between positive and non-positive cases, the
-        %  pairwise scores are also in the range zero to one, while LNBNN scores do not have an upper bound.
-        %This makes it much easier to interpret the results of the pairwise classifier.
-        %To test this we plot histograms of scores (LNBNN vs positive probability) 
-        %It is immediately noticeable that the pairwise scores seem to have a much better separating in addition
-        %  to being in the interpretable range of zero to one.
-
-        %These results demonstrate the advantage of using the pairwise classifier
-        %of the pairwise classifier
-        %that the pairwise classifier results in
-        %interpretable scores
 
         We can make a more direct and precise comparison by considering both LNBNN scores and positive pairwise
           probabilities as binary classifiers.
@@ -714,11 +664,6 @@ Note the summary statistics in this example are all computed for correspondences
           only $28$ false positives.
         Therefore, by carefully selecting an operating point we can bypass a significant number of manual reviews
           without making a significant number of mistakes when adding new annotations to our dataset.
-        %In practice we will only use the match-state classifier to automatically classify annotation pairs with
-        %  high probability.
-        %In a practical context we will only use the match-state classifier to classify as a verification
-        %  algorithm to reduce the number of manual reviews required to identify a set of animals.
-        %The ROC curves show that
 
 
         \PositiveHist{}
@@ -770,8 +715,6 @@ Note the summary statistics in this example are all computed for correspondences
         Even though we have shown that a small improvement can be made by pruning to only the most important
           feature dimensions, we choose to use full $131$ dimensions in the remainder of our experiments because
           the overall performance gain is small.
-        %The driving reason for this is the simplicity gained by using the same features for each dataset, and
-        %  because the overall performance gain is small.
 
         \MatchPrune{}
 
@@ -779,34 +722,6 @@ Note the summary statistics in this example are all computed for correspondences
 
         \FloatBarrier{}
 
-        %The word cloud is illustrated in \cref{fig:MatchWordCloud}.
-        %FIXME:
-        %Need to rerun experiments and write based on that output.
-        %For plains zebras, the global viewpoint measures and the local scales of corresponding keypoints are the
-        %  most important features.
-        %This makes sense because the global viewpoint helps distinguish negative from incomparable cases, and the
-        %  keypoint scale helps determine if matches are being made on a coarse level (\eg{} matching general zebra
-        %  shapes) or a fine detailed level (\ie{} capturing the smaller features that actually distinguish
-        %  individuals).
-        %For Grévy's zebras, different statistics about the ratio measures dominate.
-
-        %\MatchWordCloud{}
-
-
-        %For Grévy's zebras these $50$ dimensions are composed of $2$ global measures:
-        %$\tt{delta\_gps}$ and $\tt{speed}$, and statics about $9$ local measurements:
-        %$\tt{match\_dist, norm\_dist, norm\_y1, norm\_y2, ratio, scale1, sver\_err\_ori, sver\_err\_scale,}$ and
-        %  $\tt{sver\_err\_xy}$.
-
-        %It is important to note that the MDI does not measure correlation between features.
-        %It might be the case that it if two feature are highly correlated (\eg{} the mean and median ratio
-        %  scores), it might not be necessary to include both.
-        %Correlated feature dimensions are also known to decrease the accuracy of individual decision trees.
-        %However, it is also known that this effect is alleviated by the randomization process and when averaging
-        %  over multiple decision trees~\cite{louppe_understanding_2014}.
-        %It is for this reason and the fact that the $MCC$ does not significantly improve that we chose to use all
-        %  $131$ dimension of our feature vector in the other experiments.
-        
         \paragraph{Failure cases}
 
         Lastly we investigate several causes of failure.
@@ -839,7 +754,6 @@ Note the summary statistics in this example are all computed for correspondences
           of the animal.
         In the future, algorithms powered by convolutional neural networks may be able to take advantage of this
           strong negative evidence.
-        %The first of these failure cases are illustrated in~\cref{fig:PairFailIN}.
         For the third case, it is not surprising that the examples in~\cref{fig:PairFailIN} were not labeled as
           incomparable because only a small amount of incomparable training data was available.
         Furthermore, photobombs and scenery matches also seem to cause a problem for incomparable examples.
@@ -875,23 +789,17 @@ Note the summary statistics in this example are all computed for correspondences
           classifier --- to demonstrate the effectiveness of our photobomb-state classifier.
         Because there are only a few photobomb training examples, the random forest is not able to learn strong
           probabilities.
-        %We discovered this when initially performing these experiments.
         In the initial design of these experiments, a pair was classified as a photobomb if its probability was
           greater than $0.5$, but we found that this caused the MCC of Grévy's zebras to drop to $0.0$.
         However, because this is a binary classification problem we can choose any threshold as an operating
           point and classify a pair as a photobomb if its probability is above that threshold and as not a
           photobomb otherwise.
-        %Unlike match-state classification, the photobomb-state is a binary classification problem. 
-        %This means that we can choose a threshold 
         Therefore, for each dataset, we choose a photobomb-state probability threshold to maximize the MCC as
           illustrated in \cref{fig:PBThreshMCC}.
         We classify a pair as a photobomb if its probability is above $0.13$ for plains zebras and $0.17$ for
-          Grévy's zebra.
+          Grévy's zebras.
         Using these adjusted thresholds, the overall performance measured using the classification confusion
           matrices in \cref{tbl:ConfusionPhotobombII} and evaluation metrics in \cref{tbl:EvalMetricsPhotobombII}.
-
-        %The overall performance is given in the classification confusion matrix illustrated in
-        %  \cref{tbl:ConfusionPhotobomb} and evaluation metrics are given in \cref{tbl:EvalMetricsPhotobomb}.
 
         \PBThreshMCC{}
 
@@ -956,8 +864,6 @@ Note the summary statistics in this example are all computed for correspondences
           match-state probability is above a threshold.
         Our experiments have shown that it is possible to select a threshold where the false positive rate is
           sufficiently low.
-        %Because the positive cases are well separated from the negative and incomparable cases, a significant
-        %  number of automatic reviews is possible.
         Furthermore, the classifier is able to improve the ranking algorithm by re-ranking its results.
         Lastly, because the classifier predicts probabilities independent of their position in the ranked list,
           it can be used to determine when a query individual is new --- \ie{} does not have a correct match in the
@@ -965,13 +871,11 @@ Note the summary statistics in this example are all computed for correspondences
 
         The performance of secondary photobomb classifier is weaker, but this is likely due to a small amount of
           training data.
-        %However, with some manual effort, these 
         Even in its weak state, it can be used to prevent automatic review of some photobomb cases by adjusting
           the classification threshold to be less than $0.5$.
         Because the photobomb classifier can only prevent automatic decisions and does not make them, the cost of
           including it in our algorithms is small, and by doing so we will increase the amount of labeled training
           data from which a stronger photobomb classifier can be bootstrapped.
-        %Therefore, the pairwise algorithm can be used to re-rank the of the ranking algorithm.
 
 
 \section{Summary of pairwise classification}\label{sec:pairconclusion}
