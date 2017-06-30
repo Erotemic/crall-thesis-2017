@@ -72,8 +72,14 @@ unused = list(all_fpaths - used_fpaths)
 
 unuse_dirs = ut.group_items(unused, ut.emap(dirname, unused))
 
+
+semi_used = {}
 for dpath, fpaths in unuse_dirs.items():
     used_in_dpath = set(ut.ls(dpath)) - set(fpaths)
     if len(used_in_dpath) == 0:
         # completely unused directories
         print(dpath)
+    else:
+        semi_used[dpath] = fpaths
+
+print(ut.repr4(list(semi_used.keys())))
