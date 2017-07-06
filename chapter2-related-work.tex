@@ -5,7 +5,7 @@
     fixtex --fpaths chapter2-related-work.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter2-related-work.md
 \end{comment}
 
-\chapter{Related work}\label{chap:relatedwork} 
+\chapter{RELATED WORK}\label{chap:relatedwork} 
 
     To address the individual animal identification problem we draw upon related research in %
     feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2007, perdoch_efficient_2009}, %
@@ -36,7 +36,7 @@
     \Cref{sec:dcnn} will discuss convolutional neural networks.
 
 
-\section{Image feature detection}\label{sec:featuredetect}
+\section{IMAGE FEATURE DETECTION}\label{sec:featuredetect}
 
     Before an image can be analyzed, it must be broken down into smaller components. An image's visual appearance
     can be captured using a combination of local image patterns --- \glossterm{patch-based features}. The most
@@ -309,7 +309,7 @@
         novel method that achieves a middle ground between full orientation invariance and the gravity vector.
 
 
-\section{Image feature description}\label{sec:featuredescribe}  
+\section{IMAGE FEATURE DESCRIPTION}\label{sec:featuredescribe}  
 
     Once each feature has been localized its visual appearance must be described before it can be matched. The goal
     of feature description is to encode raw image data into a vector --- \ie{} a \glossterm{descriptor}. To
@@ -455,7 +455,7 @@
         representation. Exploration of alternative convolutional descriptors is discussed later in~\cref{sec:dcnn}.
 
 
-\section{Approximate nearest neighbor search}\label{sec:ann}  
+\section{APPROXIMATE NEAREST NEIGHBOR SEARCH}\label{sec:ann}  
 
     In computer vision applications it is often necessary to search a database of high dimensional
     vectors~\cite{shakhnarovich_nearest_neighbor_2006, datar_locality_sensitive_2004, muja_fast_2009,
@@ -552,7 +552,7 @@
         needed in a dynamic setting~\cite{silpa_anan_optimised_2008}.
 
 
-\section{Instance recognition}\label{sec:ir}
+\section{INSTANCE RECOGNITION}\label{sec:ir}
     There are many variations on the problem of visual recognition such as: specific object recognition (\eg{}
     CD-covers)~\cite{lowe_distinctive_2004, sivic_efficient_2009, nister_scalable_2006},
       % --
@@ -1021,7 +1021,7 @@
         individuals.
 
 
-\section{Category recognition}\label{sec:cr}  
+\section{CATEGORY RECOGNITION}\label{sec:cr}  
 
     Different types of image recognition lie at different points on a spectrum of specificity. If instance
     recognition is at one end of the spectrum, then category recognition is at the other. The goal of a
@@ -1148,7 +1148,7 @@
         features, we adopt LNBNN as the baseline algorithm for animal identification.
 
 
-\section{Fine-grained recognition}\label{sec:fgr}  
+\section{FINE-GRAINED RECOGNITION}\label{sec:fgr}  
 
     Fine-grained recognition is a problem more general than instance recognition, but more specific than category
     recognition~\cite{parkhi_cats_2012, berg_poof_2013, gavves_local_2014}. Given an object of a known category,
@@ -1176,7 +1176,7 @@
         individuals before they are compared.
 
 
-\section{Deep convolutional neural networks}\label{sec:dcnn}
+\section{DEEP CONVOLUTIONAL NEURAL NETWORKS}\label{sec:dcnn}
     Convolutional networks have been around for over more than two decades~\cite{lecun_gradient_based_1998,
     fukushima_neocognitron_1988}. However, they did not receive major attention from computer vision researchers
     until $2012$ when a deep convolutional neural network (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the

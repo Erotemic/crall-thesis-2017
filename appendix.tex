@@ -2,12 +2,14 @@
 fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_appendix.md
 \end{comment}
 
-\begin{appendices}
+\appendix    % This command is used only once!
+%\addcontentsline{toc}{chapter}{APPENDICES}             %toc entry  or:
+\addtocontents{toc}{\parindent0pt\vskip12pt APPENDICES} %toc entry, no page #
 %\chapter{Appendix}
 
 \crefalias{section}{appsec}
 \crefalias{chapter}{appsec}
-\chapter{Occurrences}\label{app:occurgroup}
+\chapter{OCCURRENCES}\label{app:occurgroup}
 
     In the identification workflow we separate groups of images into \glossterm{occurrences}.
     The Darwin Core defines an occurrence as a collection of evidence that shows an organism exists within
@@ -215,4 +217,4 @@ Thus, sight-resight statistics can now be performed on this graph.
 %\end{enumln}
   
 
-\end{appendices}
+%\end{appendices}

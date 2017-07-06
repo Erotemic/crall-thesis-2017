@@ -1,15 +1,6 @@
 %! TEX root = main.tex
-
-\newif\ifusegraphics{}
-\newif\ifpublishversion{}
-\usegraphicstrue{}
-\publishversiontrue{}
-
-\documentclass[chap]{thesis}
-
-\usepackage{makecell}
-% defines the FloatBarrier command
-\usepackage[section]{placeins}
+%\documentclass[chap]{thesis}
+\documentclass{thesis}
 
 \input{CrallPramb}
 \input{CrallDef}
@@ -38,11 +29,7 @@ Submit here: http://www.etdadmin.com/cgi-bin/school?siteId=489
     ./texfix.py --fpaths main.tex --outline --numlines=0 --ignoreinputstartswith=def,Crall,header,colordef,figdef
 \end{comment}
 
-\author{Jonathan P. Crall
-    %Rensselaer Polytechnic Institute\\
-    %110 8th Street Troy, NY 12180\\
-    %{\tt\small cralljp@cs.rpi.edu} 
-}
+\author{Jonathan P. Crall}
 
 \thesistitle{Identifying Individual Animals using Ranking, Verification, and Connectivity}        
 
@@ -62,25 +49,6 @@ Submit here: http://www.etdadmin.com/cgi-bin/school?siteId=489
 
 \begin{document}
 
-
-%\newcommand{\fnote}[1]{\footnote{#1}}
-\newcommand{\fnote}[1]{ (#1)}
-\ifpublishversion{}
-    \newcommand{\devcomment}[1]{}
-    \newcommand{\chuckcomment}[1]{}
-    \newcommand{\caplbl}[1]{}
-\else
-    \newcommand{\caplbl}[1]{\red(#1)\black\xspace}
-    \newcommand{\devcomment}[1]{\marginpar{\scriptsize{\darkgreen{}\textbf{#1}\black{}}}}
-    \newcommand{\chuckcomment}[1]{\marginpar{\scriptsize{\chuckblue{}\textbf{#1}\black{}}}}
-\fi
-
-\input{def}
-\input{colordef}
-
-%\maketitle
-%\titlepagedraft{}
-%\titlepagefinaldraft{}
 \titlepage{}
 
 %\copyrightpage{}         % optional           
@@ -94,8 +62,6 @@ Submit here: http://www.etdadmin.com/cgi-bin/school?siteId=489
 % http://matt.might.net/articles/phd-school-in-pictures/
 Over the past seven years, I have devoted nearly all of my time and energy into learning the skills and
   developing the systems that have allowed me to make this contribution.
-  %to make my dent on the circle of human knowledge.
-%This would not have been possible if it wasn't for the support and guidance of others.
 I would've been unable to achieve this feat without the support and guidance of others.
 
 First and foremost, I must thank my partner: Dana Cardona.
@@ -150,28 +116,20 @@ The approach represents each image as a node in the graph and incrementally form
   to the same animal.
 The ranking and verification algorithms are used to search for candidate edges and estimate their probability of
   matching.
-Based on these probabilities, edges are prioritized for review and placed in the graph when they are automatically
-  verified or manually reviewed.
+Based on these probabilities, edges are prioritized for review and placed in the graph when they are
+  automatically verified or manually reviewed.
 Redundant connections are added to detect and recover from errors.
 A termination criterion determines when identification is finished.
 Using the graph algorithm we perform a population census on the scale of the Great Zebra Count using less than
-  $25\percent$ of the manual reviews required by the original method.
+  $25\%$ of the manual reviews required by the original method.
 
-%A census of these populations requires that we group all images containing the same individual.
-%To census these populations we must group all images that contain the same individual.
-%Given a new image of an animal, we must determine if we have previously seen that individual or if it is new.
-%However, by addressing this problem, we significantly increase the speed, efficiency, and scale at which an
-%  ecologist can perform a population census --- a critical step for gaining ecological insight.
-
-%%There are two scenarios 
+\input{def}
 
 \input{figdef1}
 \input{figdef2}
 \input{figdef3}
 \input{figdef4}
 \input{figdef5}
-
-%\setcounter{chapter}{0}
 
 \include{chapter1-intro}
 \include{chapter2-related-work}
@@ -180,10 +138,12 @@ Using the graph algorithm we perform a population census on the scale of the Gre
 \include{chapter5-graphid}
 \include{chapter6-conclusion}
 
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{BIBLIOGRAPHY}
+
 \bibliographystyle{ieee}
-%\bibliographystyle{ieeetr}
 \bibliography{My_Library_clean}
-%\nobibliography{My_Library_clean}
 
 \include{appendix}
 

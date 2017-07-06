@@ -2108,7 +2108,7 @@ FUNCTION {mastersthesis}
   name.or.dash
   format.article.title "title" output.warn
   format.master.thesis.type output.nonnull
-  format.school "school" bibinfo.warn output
+  format.institution "institution" bibinfo.warn output
   format.address "address" bibinfo.check output
   format.date "year" output.warn
   format.note output
@@ -2178,7 +2178,8 @@ FUNCTION {phdthesis}
   name.or.dash
   format.article.title "title" output.warn
   format.phd.thesis.type output.nonnull
-  format.school "school" bibinfo.warn output
+  %format.school "school" bibinfo.warn output
+  format.institution "institution" bibinfo.warn output
   format.address "address" bibinfo.check output
   format.date "year" output.warn
   format.note output

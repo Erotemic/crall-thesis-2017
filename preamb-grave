@@ -1,0 +1,364 @@
+%\usepackage{fontspec}
+%\usepackage{minted}
+%\setsansfont{Calibri}
+%\setmonofont{Consolas}
+%\setmonofont{monofur}
+%\setmonofont{Inconsolata}
+
+%\usepackage[newfloat=true]{minted}
+%\usepackage{shellesc} 
+
+%\usepackage{minted}
+o
+% Upside Down Text
+% References;
+% http://tex.stackexchange.com/questions/28861/text-upside-down-characters-rotated-along-baseline
+%\usepackage{forloop}
+%\newcounter{idx}
+%\newcounter{posx}
+%\DeclareRobustCommand{\rotraise}[1]{%
+%  \StrLen{#1}[\slen]
+%  \forloop[-1]{idx}{\slen}{\value{idx}>0}{%
+%    \StrChar{#1}{\value{idx}}[\crtLetter]%
+%    \IfSubStr{tlQWERTZUIOPLKJHGFDSAYXCVBNM}{\crtLetter}
+%      {\raisebox{\depth}{\rotatebox{180}{\crtLetter}}}
+%      {\raisebox{1ex}{\rotatebox{180}{\crtLetter}}}}%
+%}
+
+%\usepackage{rotating}
+
+%\usepackage[numbers,sort]{natbib}
+
+%\usepackage{silence}
+%\WarningFilter{latex}{Text page}
+
+%\usepackage{ifplatform} 
+
+%\usepackage[toc]{appendix} 
+%\usepackage[toc,xindy]{glossaries} 
+%\usepackage{lipsum}
+
+
+%\usepackage[T1]{fontenc}
+%\usepackage{blindtext}
+%\usepackage{needspace} 
+
+%\newif\ifreadable{}
+%\readablefalse{}
+%\ifreadable{}
+%    \usepackage[none]{hyphenat} % No Hyphenations
+%    \raggedright{} % No Justification
+%    \usepackage[ left=2in, right=2in, top=2in, bottom=2in, paperwidth=8.5in,
+%    paperheight=16383pt, textwidth=280pt,
+%    %marginparsep=20pt, marginparwidth=100pt,
+%    marginpar=1cm,
+%    textheight=16263pt, footskip=40pt] {geometry} % One Page
+%\fi
+
+
+%\newlength{\subfigheight} % REMOVE?
+%\setlength{\subfigheight}{1in} % REMOVE?
+
+
+
+% ------------
+
+
+%\newcommand{\ImageFigureDraft}[4]{ 
+%    \begin{figure}[h]
+%    \centering 
+%    \fboxII{\includegraphics[draft,width=#2]{#1}}
+%    \caption{\caplbl{#4}#3}\label{fig:#4} 
+%    \end{figure} 
+%} 
+
+
+%\makeatletter
+%\newcommand{\ImageCommandDraft}[4]{%
+%    \expandafter\newcommand\csname #4\endcsname{\ImageFigureDraft{#1}{#2}{#3}{#4}}%
+%}
+%\makeatother
+
+
+
+%\newcommand{\ImageFigure}[4]{ 
+%    \begin{figure}[h]
+%    \centering 
+%    \fboxII{\includegraphics[width=#2]{#1}}
+%    \caption{\caplbl{#4}#3}\label{fig:#4} 
+%    \end{figure} 
+%} 
+
+%\makeatletter
+%\newcommand{\ImageCommand}[4]{%
+%    \expandafter\newcommand\csname #4\endcsname{\ImageFigure{#1}{#2}{#3}{#4}}%
+%}
+%\makeatother
+
+
+%\newcommand{\CaptionedImageFigure}[5]{ 
+%    \begin{figure}[h]
+%    \centering 
+%    \fboxII{\includegraphics[width=#2]{#5}}
+%    \caption[\caplbl{#1}#3]{\caplbl{#1}#4}\label{fig:#1} 
+%    \end{figure} 
+%} 
+
+%\makeatletter
+%% {label}{textwidth_percent}{shortcap}{caption_str}{fpath}
+%\NewDocumentCommand\SingleImageCommand{mmmmm}{%
+%    \expandafter\newcommand\csname #1\endcsname{\CaptionedImageFigure{#1}{#2\textwidth}{#3}{#4}{#5}}
+%}
+%\makeatother
+
+
+
+
+% ----------
+% Super hacky def for multiple fig stuffs
+
+%http://tex.stackexchange.com/questions/132956/reduce-space-between-subfigure-and-the-subfigure-captions
+
+% TODO: change to use keyval arguments for multifigure
+% http://tex.stackexchange.com/questions/180147/newcommand-for-tabular-entries-using-keyval
+
+% command to specify up to 4 subfigures
+% FIXME: if one of the IfValueTF goes to its false case it leaves an ungly space between the figure and the caption
+% Not sure how to fix this robustly. Adding \vspace{-1\baselineskip} in the last else seems to help some.
+% chktex-file 39
+%\NewDocumentCommand\MultiImageFigure{mmmgggg}{ 
+%    \begin{figure}[h]
+%        \centering 
+%        \IfValueTF{#4}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#4}}\caption{}\label{sub:#1A}\end{subfigure}
+%           ~~%
+%        }{}
+%        \IfValueTF{#5}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#5}}\caption{}\label{sub:#1B}\end{subfigure}
+%            ~~%
+%        }{}
+%        \IfValueTF{#6}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#6}}\caption{}\label{sub:#1C}\end{subfigure}
+%            ~~%
+%        }{}
+%        \IfValueTF{#7}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#7}}\caption{}\label{sub:#1D}\end{subfigure}
+%            ~~%
+%        }{
+%            \vspace{-.5\baselineskip}
+%        }
+%        %\IfValueTF{#8}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1E}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#9}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#9}}\caption{}\label{sub:#1F}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#10}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#10}}\caption{}\label{sub:#1G}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#11}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#11}}\caption{}\label{sub:#1H}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#12}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#12}}\caption{}\label{sub:#1I}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%%\caption[#3]{\caplbl{#1}#3} 
+%\caption{\caplbl{#1}#3}  % TODO: use first sentence as the short title.
+%\label{fig:#1} 
+%    \end{figure} 
+%} 
+
+% Set up the keys.  Only the ones directly under /myparbox
+% can be accepted as options to the \myparbox macro.
+%http://tex.stackexchange.com/questions/34312/how-to-create-a-command-with-key-values
+%\pgfkeys{
+% /MultiImageFigure/.is family, /MultiImageFigure,
+% % Here are the options that a user can pass
+% default/.style = 
+%  {width = \textwidth, height = \baselineskip},
+% width/.estore in = \myparboxWidth,
+% height/.estore in = \myparboxHeight,
+%}
+
+
+%\NewDocumentCommand\MultiImageFigureII{mmmmgggg}{ 
+%    \begin{figure}[h]
+%        \centering 
+%        \IfValueTF{#5}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#5}}\caption{}\label{sub:#1A}\end{subfigure}
+%        }{}
+%        \IfValueTF{#6}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#6}}\caption{}\label{sub:#1B}\end{subfigure}
+%        }{}
+%        \IfValueTF{#7}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#7}}\caption{}\label{sub:#1C}\end{subfigure}
+%        }{
+%            \vspace{-.5\baselineskip}
+%        }
+%        \IfValueTF{#8}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1D}\end{subfigure}
+%        }{}
+%\caption[\caplbl{#1}#3]{\caplbl{#1}#4}  % TODO: use first sentence as the short title.
+%\label{fig:#1} 
+%    \end{figure} 
+%} 
+
+
+%\NewDocumentCommand\MultiImageFigureDraft{mmmgggg}{ 
+%    \begin{figure}[h]
+%        \centering 
+%        \IfValueTF{#4}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[draft,width=\textwidth]{#4}}\caption{}\label{sub:#1A}\end{subfigure}
+%           ~~%
+%        }{}
+%        \IfValueTF{#5}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[draft,width=\textwidth]{#5}}\caption{}\label{sub:#1B}\end{subfigure}
+%            ~~%
+%        }{}
+%        \IfValueTF{#6}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[draft,width=\textwidth]{#6}}\caption{}\label{sub:#1C}\end{subfigure}
+%            ~~%
+%        }{}
+%        \IfValueTF{#7}{
+%            \begin{subfigure}[h]{#2\textwidth}
+%                \centering
+%                \fboxII{\includegraphics[draft,width=\textwidth]{#7}}\caption{}\label{sub:#1D}\end{subfigure}
+%            ~~%
+%        }{
+%            \vspace{-.5\baselineskip}
+%        }
+%        %\IfValueTF{#8}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#8}}\caption{}\label{sub:#1E}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#9}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#9}}\caption{}\label{sub:#1F}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#10}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#10}}\caption{}\label{sub:#1G}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#11}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#11}}\caption{}\label{sub:#1H}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%        %\IfValueTF{#12}{
+%        %    \begin{subfigure}[h]{#2\textwidth}
+%        %        \centering
+%        %        \fboxII{\includegraphics[width=\textwidth]{#12}}\caption{}\label{sub:#1I}\end{subfigure}
+%        %    ~~%
+%        %}{}
+%%\caption[#3]{\caplbl{#1}#3} 
+%\caption{\caplbl{#1}#3}  % TODO: use first sentence as the short title.
+%\label{fig:#1} 
+%    \end{figure} 
+%} 
+
+%\makeatletter
+%\NewDocumentCommand\MultiImageCommand{mmmgggg}{%
+%    \expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{#2}{#3}{#4}{#5}{#6}{#7}}
+%    %\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{.1}{#3}{#4}{#5}{#6}{#7}}
+%}
+%\makeatother
+
+
+%\makeatletter
+%\NewDocumentCommand\MultiImageCommandII{mmmmgggg}{%
+%    \expandafter\newcommand\csname #1\endcsname{\MultiImageFigureII{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}}
+%    %\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{.1}{#3}{#4}{#5}{#6}{#7}}
+%}
+%\makeatother
+
+%\expandafter\newcommand\csname #1\endcsname{\MultiImageFigure{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}{#9}{#10}{#11}{#12}}
+
+%https://en.wikipedia.org/wiki/Wikipedia:LaTeX_symbols
+%\ifwindows{}
+%\newcommand{\wincommand}[2]{\renewcommand{#1}{#2}}
+%\newcommand{\lincommand}[2]{\newcommand{#1}{#2}}
+%\newcommand{\linonlycommand}[2]{}
+%\else
+%\newcommand{\wincommand}[2]{\newcommand{#1}{#2}}
+%\newcommand{\lincommand}[2]{\renewcommand{#1}{#2}}
+%\newcommand{\linonlycommand}[2]{\newcommand{#1}{#2}}
+%\fi
+
+
+%\newcommand{\one}{1\zspace{}}
+%\newcommand{\two}{2\zspace{}}
+%\newcommand{\three}{3\zspace{}}
+%\newcommand{\four}{4\zspace{}}
+%\newcommand{\five}{5\zspace{}}
+
+
+% Definition of context sensitive articles
+% http://stackoverflow.com/questions/4233707/a-an-substitution-in-latex
+% http://tex.stackexchange.com/questions/43200/extract-first-last-characters-of-macro-argument
+%http://tex.stackexchange.com/questions/132248/test-if-the-first-character-of-a-string-is-a
+%\makeatletter
+%\newcommand\aan[1]{%
+%  a%
+%  \@for\@vowel:=a,e,i,o,u,y,A,E,I,O,U,Y\do{%
+%    \expandafter\ifx\@vowel#1%
+%      n%
+%    \fi
+%  } % keep this space
+%  #1%
+%}
+%\newcommand\Aan[1]{%
+%  A%
+%  \@for\@vowel:=a,e,i,o,u,y,A,E,I,O,U,Y\do{%
+%    \expandafter\ifx\@vowel#1%
+%      n%
+%    \fi
+%  } % keep this space
+%  #1%
+%}
+%\makeatother
+
+

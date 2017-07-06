@@ -4,11 +4,7 @@
 
 \usepackage{times}
 \usepackage{verbatim} 
-\ifusegraphics{}
-    \usepackage{graphicx}
-\else
-    \usepackage[draft]{graphicx}
-\fi
+\usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{mathrsfs} % Fancy script mathscr
 \usepackage{amsthm}
@@ -22,8 +18,8 @@
 
 \usepackage{bbm}
 
-\usepackage{ulem}
-\normalem{}
+%\usepackage{ulem}
+%\normalem{}
 
 \usepackage[binary-units=true,group-separator={,}]{siunitx} % gives \num{3002432}
 
@@ -31,30 +27,13 @@
 \usepackage{subcaption} 
 \captionsetup{compatibility=false}
 
-
-\newlength{\subfigheight} % REMOVE?
-\setlength{\subfigheight}{1in} % REMOVE?
-
-\usepackage[english]{babel} % REMOVE?
-
-\newif\ifreadable{}
-\readablefalse{}
-\ifreadable{}
-    \usepackage[none]{hyphenat} % No Hyphenations
-    \raggedright{} % No Justification
-    \usepackage[ left=2in, right=2in, top=2in, bottom=2in, paperwidth=8.5in,
-    paperheight=16383pt, textwidth=280pt,
-    %marginparsep=20pt, marginparwidth=100pt,
-    marginpar=1cm,
-    textheight=16263pt, footskip=40pt] {geometry} % One Page
-\fi
-\usepackage[marginpar=2cm] {geometry} 
+% TURN OFF FOR PRINT VERSION, ON FOR ONLINE VERSION
+%\usepackage[marginpar=2cm] {geometry} 
 
 % Include other packages here, before hyperref.
-% If you comment hyperref and then uncomment it, you should delete egpaper.aux
-% before re-running latex. 
 % http://en.wikibooks.org/wiki/LaTeX/Hyperlinks
-\usepackage[backref=page,%
+\usepackage[
+    %backref=page,%
     %pagebackref=true,%
     breaklinks=true,%
     %letterpaper=true,%
@@ -67,18 +46,6 @@
     allcolors=black % % Comment in for thesis submission
 ]{hyperref}
 
-%\usepackage[T1]{fontenc}
-\usepackage{blindtext}
-\usepackage{needspace} 
-
-\usepackage{ifxetex}
-\ifxetex{}
-    \usepackage{fontspec}
-    %\setmainfont{OpenDyslexic-Regular} %\setmainfont{Arial} %\setmonofont{Lucida Console}
-    %\setsansfont{Comic Sans MS} %\setmainfont[Scale=.8]{Mono Dyslexic}
-    \setmainfont[Scale=.815]{OpenDyslexic-Regular}
-\fi
-
 \usepackage{multirow}
 
 \usepackage{cleveref}
@@ -86,7 +53,7 @@
 \Crefname{subfigure}{Subfigure}{Subfigures}
 \crefname{subfigure}{}{}
 \Crefname{subfigure}{}{}
-% Remove the subfigure from cleveref and add parenthsis
+% Remove the subfigure from cleveref and add parenthesis
 % http://tex.stackexchange.com/questions/170408/how-to-put-numbers-in-parenthesis-using-cleveref
 \creflabelformat{subfigure}{(#2#1#3)}
 % chktex-file 9
@@ -97,118 +64,21 @@
 \crefname{appsec}{appendix}{appendices}
 \Crefname{appsec}{Appendix}{Appendices}
 
-\newif\iftempvar{}
-%\redundefcitetrue{}
-%\tempvarfalse{}
-\tempvartrue{}
-\iftempvar{}
-    % http://tex.stackexchange.com/questions/300022/replace-undefined-reference-with-custom-text/300063#300063
-    % chktex-file 26
-    \usepackage{etoolbox}
-    %\newcommand*{\undeffmt}[1]{\textcolor{red}{ref (#1)}}%
-    \newcommand*{\undeffmt}[1]{\textcolor{red}{#1}}%
-    \newcommand*{\patchsuccess}[1]{\typeout{Etoolbox patch: Success for \string#1}}
-    \newcommand*{\patchfailure}[1]{\typeout{Etoolbox patch: Failure for \string#1}}
-
-\makeatletter
-
-\patchcmd{\@setcref}%
-  {\nfss@text{\reset@font\bfseries ??}}
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcref}}
-  {\patchfailure{\@setcref}}
-
-\patchcmd{\@setcrefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcrefrange}}
-  {\patchfailure{\@setcrefrange}}
-\patchcmd{\@setcrefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#2}}}
-  {\patchsuccess{\@setcrefrange}}
-  {\patchfailure{\@setcrefrange}}
-\patchcmd{\@setcrefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcrefrange}}
-  {\patchfailure{\@setcrefrange}}
-\patchcmd{\@setcrefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#2}}}
-  {\patchsuccess{\@setcrefrange}}
-  {\patchfailure{\@setcrefrange}}
-
-\patchcmd{\@setnamecref}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setnamecref}}
-  {\patchfailure{\@setnamecref}}
-
-\patchcmd{\@setcpageref}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcpageref}}
-  {\patchfailure{\@setcpageref}}
-
-\patchcmd{\@setcpagerefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcpagerefrange}}
-  {\patchfailure{\@setcpagerefrange}}
-\patchcmd{\@setcpagerefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#2}}}
-  {\patchsuccess{\@setcpagerefrange}}
-  {\patchfailure{\@setcpagerefrange}}
-\patchcmd{\@setcpagerefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#1}}}
-  {\patchsuccess{\@setcpagerefrange}}
-  {\patchfailure{\@setcpagerefrange}}
-\patchcmd{\@setcpagerefrange}%
-  {\nfss@text{\reset@font\bfseries ??}}%
-  {\nfss@text{\reset@font\undeffmt{#2}}}
-  {\patchsuccess{\@setcpagerefrange}}
-  {\patchfailure{\@setcpagerefrange}}
-
-\makeatother
-
-\fi
+%\input{creferrors.tex}
 
 % For space after ensuremath
 \usepackage{xspace}
-\usepackage{lipsum}
-
 \usepackage{enumerate}
-%\usepackage{ifplatform} 
-
-\usepackage[toc,page]{appendix} 
-\usepackage[toc,xindy]{glossaries} 
 
 %http://tex.stackexchange.com/questions/60135/path-to-external-files-in-nested-input
-\usepackage{import}
-\usepackage{rotating}
+%\usepackage{import}
 
 \usepackage[numbers,sort]{natbib}
 
-\usepackage{silence}
-\WarningFilter{latex}{Text page}
-
 \usepackage{booktabs}
+
 \usepackage{listings}
-
-%\usepackage{fontspec}
-%\usepackage{minted}
-%\setsansfont{Calibri}
-%\setmonofont{Consolas}
-%\setmonofont{monofur}
-%\setmonofont{Inconsolata}
-
-%\usepackage[newfloat=true]{minted}
-%\usepackage{shellesc} 
 \usepackage[chapter]{minted}
-%\usepackage{minted}
 \newenvironment{code}{\captionsetup{type=listing}}{}
 
 
@@ -225,17 +95,6 @@
 \setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
 
 
-% Upside Down Text
-% References;
-% http://tex.stackexchange.com/questions/28861/text-upside-down-characters-rotated-along-baseline
-\usepackage{forloop}
-\newcounter{idx}
-\newcounter{posx}
-\DeclareRobustCommand{\rotraise}[1]{%
-  \StrLen{#1}[\slen]
-  \forloop[-1]{idx}{\slen}{\value{idx}>0}{%
-    \StrChar{#1}{\value{idx}}[\crtLetter]%
-    \IfSubStr{tlQWERTZUIOPLKJHGFDSAYXCVBNM}{\crtLetter}
-      {\raisebox{\depth}{\rotatebox{180}{\crtLetter}}}
-      {\raisebox{1ex}{\rotatebox{180}{\crtLetter}}}}%
-}
+\usepackage{makecell}
+% defines the FloatBarrier command
+\usepackage[section]{placeins}

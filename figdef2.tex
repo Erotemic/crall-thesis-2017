@@ -20,7 +20,22 @@ http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/0172
 wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
 python -m ibeis.scripts.specialdraw scalespace --dpath ~/latex/crall-thesis-2017/ --save figures2/ScaleSpaceFigure.png --dpi 300 --clipwhite --diskshow
 \end{comment}
-\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
+%\newcommand{\ScaleSpaceFigure}{
+%\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
+%% ---
+%A Gaussian pyramid is used as a scale space representation of an image.
+%A property of scale space is that doubling the scale is equivalent to
+%  downsampling the image by half.
+%The set of images of a specific size correspond to an octave.
+%The images within each octave are the intervals.
+%% ---
+%}{figures2/ScaleSpaceFigure.png}
+
+\newcommand{\ScaleSpaceFigure}{
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=.8\textwidth]{figures2/ScaleSpaceFigure.png}
+\caption[A scale space pyramid]{\caplbl{ScaleSpaceFigure}
 % ---
 A Gaussian pyramid is used as a scale space representation of an image.
 A property of scale space is that doubling the scale is equivalent to
@@ -28,7 +43,10 @@ A property of scale space is that doubling the scale is equivalent to
 The set of images of a specific size correspond to an octave.
 The images within each octave are the intervals.
 % ---
-}{figures2/ScaleSpaceFigure.png}
+}
+\label{fig:ScaleSpaceFigure}
+\end{figure}
+}
 
 
 \begin{comment}

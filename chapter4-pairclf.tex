@@ -9,7 +9,7 @@ https://www.languagetool.org/
 
 \newcommand{\nan}{\text{nan}}
 
-\chapter{Pairwise verification}\label{chap:pairclf}
+\chapter{PAIRWISE VERIFICATION}\label{chap:pairclf}
 
 In this chapter we consider the problem of verifying if two annotations are from the same animal or from different
 animals. By addressing this problem we improve upon the ranking algorithm from \cref{chap:ranking} --- which ranks
@@ -93,7 +93,7 @@ This outline of this chapter is as follows.
 \Cref{sec:pairconclusion} summarizes and concludes this chapter.
 
 
-\section{Constructing the pairwise feature vector}\label{sec:pairfeat}
+\section{CONSTRUCTING THE PAIRWISE FEATURE VECTOR}\label{sec:pairfeat}
 
 In order to use the random forest learning algorithm to address the problem of pairwise verification, we must
   construct a feature vector to representing a pair of annotations.
@@ -394,7 +394,7 @@ Note the summary statistics in this example are all computed for correspondences
 \end{figure}
 
 
-\section{Learning the match-state classifier}\label{sec:learnclf}
+\section{LEARNING THE MATCH-STATE CLASSIFIER}\label{sec:learnclf}
 
     Having defined the pairwise feature vector there are two remaining steps to constructing the pairwise
       classifier.
@@ -478,7 +478,7 @@ Note the summary statistics in this example are all computed for correspondences
     If this was not the case, then we would include an additional partition for incomparable cases.
 
 
-\section{Secondary classifier to address photobombs}\label{sec:learnpb}
+\section{SECONDARY CLASSIFIER TO ADDRESS PHOTOBOMBS}\label{sec:learnpb}
     It is useful to augment the primary match-state pairwise classifier with a secondary classifier able to
       determine if a pair of annotations contains information that might confuse the main classifier.
     These confusing annotation pairs should not be considered for automatic review.
@@ -499,7 +499,7 @@ Note the summary statistics in this example are all computed for correspondences
     Any pair in this set that is explicitly labeled as a photobomb is given that label, otherwise it is labeled
       as not a photobomb.
 
-\section{Pairwise classification experiments}\label{sec:pairexpt}
+\section{PAIRWISE CLASSIFICATION EXPERIMENTS}\label{sec:pairexpt}
 
 
     We evaluate the pairwise classifiers on two datasets, one of plains zebras and the another of Grévy's zebras
@@ -878,7 +878,7 @@ Note the summary statistics in this example are all computed for correspondences
           data from which a stronger photobomb classifier can be bootstrapped.
 
 
-\section{Summary of pairwise classification}\label{sec:pairconclusion}
+\section{SUMMARY OF PAIRWISE CLASSIFICATION}\label{sec:pairconclusion}
 
     In this chapter we have constructed a verification mechanism that can predict the probability that a pair of
       annotations is positive, negative, or incomparable.

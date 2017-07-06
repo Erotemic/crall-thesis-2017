@@ -6,7 +6,7 @@
     fixtex --fpaths chapter3-matching.tex --outline --asmarkdown --numlines=999 --shortcite -w && ./checklang.py outline_chapter3-matching.md
 \end{comment}
 
-\chapter{Identification using a ranking algorithm}\label{chap:ranking}
+\chapter{IDENTIFICATION USING A RANKING ALGORITHM}\label{chap:ranking}
 
     This chapter addresses the problem of computer-assisted animal identification, where an algorithm suggests
       likely possibilities, but a human reviewer always makes the final decision.
@@ -53,7 +53,7 @@
 
     \rankedmatches{}
 
-\section{Annotation representation}\label{sec:annotrepr}
+\section{ANNOTATION REPRESENTATION}\label{sec:annotrepr}
   
     For each annotation in the database we (1) normalize the image geometry and intensity, (2) compute features,
     (3) and weight the features.
@@ -225,7 +225,7 @@
 \newcommand{\amechscoreop}{\opname{K_{\csum}}}
 \newcommand{\fmechscoreop}{\opname{K_{\nsum}}}
 
-\section{Matching against a database of individual animals}\label{sec:baselineranking}
+\section{MATCHING AGAINST A DATABASE OF INDIVIDUAL ANIMALS}\label{sec:baselineranking}
 
     To identify a query annotation, it is matched against a database of known \names{}. \Aan{\name{}} is a set of
     annotations known to depict the same animal. The basic matching pipeline can be summarized in \three{} steps:
@@ -504,7 +504,7 @@
 
 
 \FloatBarrier{}
-\section{Spatial verification}\label{sec:sver}
+\section{SPATIAL VERIFICATION}\label{sec:sver}
 
     The basic ranking algorithm treats each annotation as an orderless set of feature descriptors (with a small
     exception in name scoring, which has used a small amount of spatial information). This means that many of the
@@ -753,7 +753,7 @@
 
 
 \FloatBarrier{}
-\section{Exemplar selection}\label{sec:exempselect}
+\section{EXEMPLAR SELECTION}\label{sec:exempselect}
     To scale one-vs-many matching to larger databases and to allow the LNBNN mechanism to find appropriate
     normalizers we restrict the number of examples of each individual in the database to a set of exemplars.
 
@@ -771,7 +771,7 @@
     probability that a pair of annotation correctly matches.
 
 
-\section{Experiments}\label{sec:rankexpt}
+\section{EXPERIMENTS}\label{sec:rankexpt}
 
     This section presents an experimental evaluation of the identification algorithm using annotated images of
       plains zebras, Grévy's zebras, Masai giraffes, and humpback whales.
@@ -1256,7 +1256,7 @@
         there is likely benefit to performing identification using multiple parameter choices.
 
 
-\section{Rank-based identification summary}\label{sec:staticsum}
+\section{RANK-BASED IDENTIFICATION SUMMARY}\label{sec:staticsum}
 
     In this chapter we have addressed the problem of animal identification using a computer-assisted algorithm
     based on LNBNN that ranks a labeled database of \names{} by their similarity to a single query annotation. This

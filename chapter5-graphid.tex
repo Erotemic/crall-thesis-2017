@@ -9,7 +9,7 @@ fixtex --fpaths chapter1-intro.tex --outline --asmarkdown --numlines=999 --short
 % TODO: relate back to GZC, and talk about non-rally scenarios
 
 
-\chapter{Animal identification using connectivity in a decision graph}\label{chap:graphid}
+\chapter{IDENTIFICATION USING CONNECTIVITY IN A DECISION GRAPH}\label{chap:graphid}
 \newcommand{\nT}{N}
 
 In this chapter we frame the problem of animal identification in terms of constructing a %
@@ -107,7 +107,7 @@ Each of these components is then discussed in further detail
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier{}
-\section{The decision graph}\label{sec:decisiongraph}
+\section{THE DECISION GRAPH}\label{sec:decisiongraph}
 
 The graph identification algorithm is a review procedure formalized around the notion of a \glossterm{decision
   graph} $G = (V, E)$ whose nodes are annotations and whose edges are suggested by a ranking algorithm (LNBNN in
@@ -297,7 +297,7 @@ Finally, we describe the refresh and termination criteria in~\cref{sec:converge}
 %  likely to be found.
 
 \FloatBarrier{}
-\section{Positive and negative redundancy}\label{sec:redun}
+\section{POSITIVE AND NEGATIVE REDUNDANCY}\label{sec:redun}
 %One paragraph on notion.
 %One paragraph on algorithm.
 %One paragraph on book-keeping and elimination from priority queue.
@@ -455,7 +455,7 @@ Note, that we do not use this algorithm in practice because we use a probabilist
 % ~\cite{khuller_approximation_1993}.
 
 
-\section{Candidate edge generation and priorities}\label{sec:cand}
+\section{CANDIDATE EDGE GENERATION AND PRIORITIES}\label{sec:cand}
 
 In this section we describe the first step of the algorithm where candidate edges are generated and then
   prioritized for review.
@@ -517,7 +517,7 @@ This continues until the termination criterion that we will describe in~\cref{se
 At the end of this process it is guaranteed that all PCCs are consistent and positive-redundant.
 
 
-\section{Making decisions}\label{sec:decision}
+\section{MAKING DECISIONS}\label{sec:decision}
 
 Now that we have generated and prioritized a set of candidate edges we come to the core of the inner loop ---
   decision-making.
@@ -544,7 +544,7 @@ However, the user confidence contributes to the edges weights in the error detec
   from~\cref{sec:incon}.
 
 
-\section{Recovering from inconsistencies}\label{sec:incon}
+\section{RECOVERING FROM INCONSISTENCIES}\label{sec:incon}
 
 In~\cref{sec:redun} we described a redundancy criterion that exposes errors by introducing inconsistencies.
 In this section we describe an algorithm for fixing these errors and recovering from these inconsistencies.
@@ -714,7 +714,7 @@ This implementation is an important first step for generalizing the graph algori
 %exemplars in a query.
 
 
-\section{Refresh and termination criteria}\label{sec:converge}
+\section{REFRESH AND TERMINATION CRITERIA}\label{sec:converge}
 
 
 In this section we discuss the criteria we use for both determining when to refresh candidate edges and when to
@@ -896,7 +896,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
 %Re-estimating the $k\mu$ at each time-step should
 
 
-\section{Experiments}\label{sec:graphexpt}
+\section{EXPERIMENTS}\label{sec:graphexpt}
 
     In this section we design an end-to-end experiment where we start with a set of annotations without any name
       labels, and then we proceed to construct all the names.
@@ -1205,7 +1205,7 @@ After our estimated mu gets close enough to $N/D$, we can terminate.
 
  
 \FloatBarrier{}
-\section{Summary of graph identification}\label{sec:graphconclusion}
+\section{SUMMARY OF GRAPH IDENTIFICATION}\label{sec:graphconclusion}
 
 In this chapter we have described the final component in our approach to animal identification.
 The graph-based framework takes advantage of the algorithms previously developed in

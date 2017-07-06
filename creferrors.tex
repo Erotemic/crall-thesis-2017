@@ -1,0 +1,79 @@
+
+\newif\iftempvar{}
+%\redundefcitetrue{}
+%\tempvarfalse{}
+\tempvartrue{}
+\iftempvar{}
+    % http://tex.stackexchange.com/questions/300022/replace-undefined-reference-with-custom-text/300063#300063
+    % chktex-file 26
+    \usepackage{etoolbox}
+    %\newcommand*{\undeffmt}[1]{\textcolor{red}{ref (#1)}}%
+    \newcommand*{\undeffmt}[1]{\textcolor{red}{#1}}%
+    \newcommand*{\patchsuccess}[1]{\typeout{Etoolbox patch: Success for \string#1}}
+    \newcommand*{\patchfailure}[1]{\typeout{Etoolbox patch: Failure for \string#1}}
+\makeatletter
+
+\patchcmd{\@setcref}%
+  {\nfss@text{\reset@font\bfseries ??}}
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcref}}
+  {\patchfailure{\@setcref}}
+
+\patchcmd{\@setcrefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcrefrange}}
+  {\patchfailure{\@setcrefrange}}
+\patchcmd{\@setcrefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#2}}}
+  {\patchsuccess{\@setcrefrange}}
+  {\patchfailure{\@setcrefrange}}
+\patchcmd{\@setcrefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcrefrange}}
+  {\patchfailure{\@setcrefrange}}
+\patchcmd{\@setcrefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#2}}}
+  {\patchsuccess{\@setcrefrange}}
+  {\patchfailure{\@setcrefrange}}
+
+\patchcmd{\@setnamecref}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setnamecref}}
+  {\patchfailure{\@setnamecref}}
+
+\patchcmd{\@setcpageref}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcpageref}}
+  {\patchfailure{\@setcpageref}}
+
+\patchcmd{\@setcpagerefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcpagerefrange}}
+  {\patchfailure{\@setcpagerefrange}}
+\patchcmd{\@setcpagerefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#2}}}
+  {\patchsuccess{\@setcpagerefrange}}
+  {\patchfailure{\@setcpagerefrange}}
+\patchcmd{\@setcpagerefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#1}}}
+  {\patchsuccess{\@setcpagerefrange}}
+  {\patchfailure{\@setcpagerefrange}}
+\patchcmd{\@setcpagerefrange}%
+  {\nfss@text{\reset@font\bfseries ??}}%
+  {\nfss@text{\reset@font\undeffmt{#2}}}
+  {\patchsuccess{\@setcpagerefrange}}
+  {\patchfailure{\@setcpagerefrange}}
+
+\makeatother
+
+\fi
+
