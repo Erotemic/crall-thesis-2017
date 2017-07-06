@@ -20,7 +20,7 @@ fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -
     We first describe the space-time measure of distance between images and then describe the clustering
       algorithm.
 
-    \paragraph{Space-time image distance}
+    \section{SPACE-TIME IMAGE DISTANCE}
     To compute occurrences we define a space-time feature $\g_i$ for each image $i$, and a pairwise distance,
       $\Delta(\g_i, \g_j)$, between these features.
     This feature will a two-dimensional feature tuple, %
@@ -63,7 +63,7 @@ fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -
     Notice that if there is no difference in GPS location, then this measure
       becomes to a distance in time.
 
-    \paragraph{Clustering procedure}
+    \section{CLUSTERING PROCEDURE}
     Having defined pairwise a distance between two images, we use the agglomerative clustering procedures
       implemented in SciPy~\cite{eric_jones_scipy_2001} to group the images.
     There are two inputs to the agglomerative clustering algorithm:
@@ -78,7 +78,7 @@ fixtex --fpaths appendix.tex --outline --asmarkdown --numlines=999 --shortcite -
     Images that are missing either timestamp or GPS location are grouped by what data they do have and clustered
       separately.
 
-    %\paragraph{Discussion of occurrences}
+    %\section{DISCUSSION OF OCCURRENCES}
     %These computed occurrences are valuable measurements for multiple components of the IBEIS software.
     %At its core an occurrence describes \wquest{when} a group of animals was seen and \wquest{where} that group
     %  was seen.

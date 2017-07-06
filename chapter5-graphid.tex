@@ -298,9 +298,6 @@ Finally, we describe the refresh and termination criteria in~\cref{sec:converge}
 
 \FloatBarrier{}
 \section{POSITIVE AND NEGATIVE REDUNDANCY}\label{sec:redun}
-%One paragraph on notion.
-%One paragraph on algorithm.
-%One paragraph on book-keeping and elimination from priority queue.
 
 In this section we define criteria that
 (1) increases our confidence that PCCs are correct by enforcing a minimum level of redundancy and
@@ -567,7 +564,7 @@ An example of an inconsistent PCC with hypothesized edges is illustrated in \cre
 
 \inconpcc{}
 
-\paragraph{Hypothesis generation}
+\subsection{Hypothesis generation}
 The procedure alternates between steps of generating ``mistake hypothesis'' edges, and presenting these to the
   user for review.
 The ``hypothesis generation algorithm'' returns a set of negative edges or a set of positive edges, which if
@@ -618,7 +615,7 @@ Otherwise, it suggests that the negative edge should become positive.
 %In other words, if the label on these edges is changed from positive to negative or incomparable, then $s$ and
 %  $t$ would no longer be part of the same PCC and the inconsistency would be removed.
 
-\paragraph{Generalization}
+\subsection{Generalization}
 So far, we have only considered the case when only one negative edge exists in a PCC.
 %In a restricted scenario where each edge is reviewed exactly to the specifications of the algorithm, then it is
 %  only possible for one negative edge to exist in a PCC when $k=2$.
@@ -634,7 +631,7 @@ Multicut is NP-hard, but a simple approximation algorithm is to perform a minimu
 When considering which edges to return we consider all negative edges together, comparing the sum of their
   weights to the sum of the positive edge weights.
 
-\paragraph{Hypothesis review}
+\subsection{Hypothesis review}
 The user iterates through each hypothesis edge and chooses
 (1) to agree with the hypothesis and change the label of the edge, or
 (2) to disagree with the hypothesis and keep the edge label.
@@ -658,7 +655,7 @@ Therefore, we recompute positive-redundancy within each new PCC, ignoring edges 
 A similar process happens for negative-redundancy between each pair of new PCCs as well as between each new PCC
   and all other PCCs previously negative-redundant with $C$.
 
-\paragraph{Implementation details}
+\subsection{Implementation details}
 While it might be conceptually simpler to think of inconsistency recovery as a separate mode, in practice it is
   actually integrated as part of the algorithm's inner loop.
 The algorithm dynamically maintains a list of all PCCs that contains errors.

@@ -201,7 +201,7 @@ Thus, the total length of the feature vector is the number of measurements times
   times the number of ways feature correspondences are established.
 
 
-\paragraph{Establishing feature correspondences}
+\subsubsection{Establishing feature correspondences}
 To determine feature correspondences between two annotations, $\qaid$ and $\daid$, we use what we refer to as a
   one-vs-one matching algorithm.
 Each annotation's descriptors are indexed for fast nearest neighbor search~\cite{muja_fast_2009}.
@@ -219,7 +219,7 @@ Spatial verification~\cite{philbin_object_2007} is applied to further refine the
 This one-vs-one matching algorithm results in a richer set of correspondences between annotations than would be
   found using the LNBNN ranking algorithm.
 
-\paragraph{Local measurements}
+\subsubsection{Local measurements}
 After the one-vs-one matching stage, several measurements are made for each feature correspondence.
 Before describing these measurements, it will be useful to set up some notation.
 Given two annotations $\qaid$ and $\daid$, consider a feature correspondence between two features $i$ and $j$
@@ -297,7 +297,7 @@ Given these definitions, the measurements we consider are:
 
 \end{itemln}
 
-\paragraph{Summary statistics}
+\subsubsection{Summary statistics}
 Once these $15$ measurements have been made for each keypoint correspondence we summarize them using summary
   statistics.
 We consider the sum, median, mean, and standard deviation over all correspondences.
@@ -312,7 +312,7 @@ A final step we have found useful is to append an extra dimension simply indicat
   correspondences.
 So, in total there are $61$ summary statistics computed for a set of feature correspondences.
 
-\paragraph{Multiple ratio thresholds}
+\subsubsection{Multiple ratio thresholds}
 As previously noted we establish multiple groups of feature correspondences for different threshold values of the
   ratio test.
 We do this because we have observed that some positive annotation pairs had all of their correspondences filtered
@@ -344,7 +344,7 @@ Second, the resulting size of the feature vector is larger, which can make learn
 Therefore, in our implementation we choose to use only two ratio threshold values of $0.625$ and $0.8$.
 Thus, the total number of local measurements is $2 \times 61 = 122$.
 
-\paragraph{Additional notes}
+\subsubsection{Additional notes}
 We have found that, for some species like plains zebras, it is important to use the keypoint orientation
   heuristic described in \cref{sec:annotrepr} when computing one-vs-one matches.
 This heuristic causes each keypoint to extract $3$ descriptors instead of $1$.
@@ -406,7 +406,7 @@ Note the summary statistics in this example are all computed for correspondences
     Therefore, we briefly review the details of random forest learning and prediction.
     Then we describe the sampling procedure used to generate a dataset of labeled annotation pairs.
 
-    \paragraph{The random forest learning algorithm}
+    \subsection{The random forest learning algorithm}
     The random forest learning algorithm~\cite{breiman_random_2001} is well understood, so we only provide a
       brief overview.
     A random forest is constructed by learning a forest of decision trees.
@@ -434,7 +434,7 @@ Note the summary statistics in this example are all computed for correspondences
       $5$ or fewer training samples.
     For other parameters we use the implementation defaults.
 
-    \paragraph{Sampling a labeled dataset of annotation pairs}
+    \subsection{Sampling a labeled dataset of annotation pairs}
     Now that we have chosen a learning algorithm, the last remaining step is the selection of training data and
       generation of labels.
     Recall that the purpose of our classifier is to output a probability distribution over three labels:
@@ -628,7 +628,7 @@ Note the summary statistics in this example are all computed for correspondences
         \ReRank{}
         
         \FloatBarrier{}
-        \paragraph{Binary positive classification}
+        \subsubsection{Binary positive classification}
         Although the accuracy of multiclass predictions is important, the most important task in animal
           identification is to determine when a pair of annotations is positive and when it is not.
         Therefore, we design an experiment that tests how well our match-state classifier can distinguish
@@ -671,7 +671,7 @@ Note the summary statistics in this example are all computed for correspondences
         \PositiveROC{}
 
         \FloatBarrier{}
-        \paragraph{Feature importance}
+        \subsubsection{Feature importance}
 
         To better understand which feature dimensions are the most useful for classification, we measure the
           ``mean decrease impurity'' (MDI)~\cite{louppe_understanding_2014} of each feature dimension.
@@ -722,7 +722,7 @@ Note the summary statistics in this example are all computed for correspondences
 
         \FloatBarrier{}
 
-        \paragraph{Failure cases}
+        \subsubsection{Failure cases}
 
         Lastly we investigate several causes of failure.
         The primary reasons that cause the match-state classifier to fail are similar to those that create

@@ -99,7 +99,7 @@
         orthogonal directions~\cite{lindeberg_scale_space_1993}. Using the definition of an image at a single scale
         the next step is to represent an image at multiple scales.
 
-       \paragraph{Gaussian pyramid}
+       \subsubsection{Gaussian pyramid}
 
            \newcommand{\downsamp}[2]{#1[::\tightpad#2,::\tightpad#2]}
             % See page 39 of Scale-space theory.
@@ -159,7 +159,7 @@
         set of Hessian keypoints. Post processing removes non-robust keypoints and localizes all other keypoints to
         sub-pixel and sub-scale accuracy.
 
-        \paragraph{Hessian response}
+        \subsubsection{Hessian response}
             Let subscripts denote the partial derivatives of the image intensity (\eg{} $\img_{x}$ is the first $x$
             derivative, $\img_{xx}$ is the second $x$ derivative, and $\img_{xy}$ is the first derivative in both
             $x$ and $y$). The Hessian is a matrix of second order partial derivatives and is defined at each point
@@ -186,7 +186,7 @@
             scale normalized values of all its neighbors in the pyramid --- \ie{} the $8$ neighbors in its current
             interval, its $9$ neighbors in the next interval, and its $9$ neighbors in the previous interval.
 
-        \paragraph{Edge filtering}
+        \subsubsection{Edge filtering}
             Edge responses are not robust --- \ie{} the same point can not be localized reliably in two views of the
             same scene --- due to their elongated nature. Because of this, the extrema that appear too edge-like
             are filtered using a threshold $t_{\tt{edge}}$ which is compared to the ratio of the Hessian's squared
@@ -197,7 +197,7 @@
                 \kpts = \left\{(\pt, \scale) \in \kpts' \bigwhere \frac{\trfn{\hessMAT}^2}{\detfn{\hessMAT}} > t_{\tt{edge}}\right\}
             \end{equation}
 
-        \paragraph{Sub-pixel and sub-scale localization}
+        \subsubsection{Sub-pixel and sub-scale localization}
             To compensate for the discrete nature of pixel images, each keypoint detection is localized to
             sub-pixel and sub-scale accuracy. The importance of feature localization is demonstrated
             in~\cite{ke_pca_sift_2004}, where descriptors were computed on the normalized vectors of patch
@@ -474,20 +474,20 @@
         splits data vectors between the left and right children by comparing the value of the data vector at the
         assigned dimension to the assigned threshold.
 
-        \paragraph{Building a kd-tree index}
+        \subsubsection{Building a kd-tree index}
         Indexing a set of vectors involves first choosing a dimension and threshold to split the data into two
         partitions. Then this procedure is recursively applied to each of the partitions. A common measure for
         choosing the dimension is to choose the dimension with the greatest variance in the data. The threshold is
         then selected as the median value of the chosen dimension.
 
-        \paragraph{Augmenting a kd-tree index}
+        \subsubsection{Augmenting a kd-tree index}
         It is possible to augment an existing kd-tree by adding and removing vectors. Addition of a vector to a
         kd-tree is performed by appending the point to its assigned leaf. Removal of points from a kd-tree is done
         using lazy deletion --- \ie{} by masking the removed data. To avoid tree imbalance, a kd-tree is re-indexed
         after the number of points added or removed passes a threshold. Any masked point is deleted whenever the
         tree is re-indexed.
 
-        \paragraph{Searching a kd-tree index}
+        \subsubsection{Searching a kd-tree index}
         Searching for a query point's exact nearest neighbor in a kd-tree has been shown to take expected
         logarithmic time for low ($k < 16$) dimensional data~\cite{friedman_algorithm_1977}. However, for higher
         dimensional data this same method takes nearly linear time~\cite{sproull_refinements_1991}. This is because
@@ -650,7 +650,7 @@
         each matching image, the sum of the tf-idf scores of the corresponding features is used as the image score.
         Finally, the ranked list of images is returned. These steps are now described in further detail.
 
-        \paragraph{The inverted index}
+        \subsubsection{The inverted index}
             The visual vocabulary allows for a constant length image representation. An image is represented as a
             histogram of visual words called a bag-of-words. A bag-of-words histogram is sparse because each image
             contains only a handful of words from a vocabulary. The sparsity of these vectors allows for efficient
@@ -661,14 +661,14 @@
             Because all the word assignments and feature correspondences are known, the scores of all matching
             images can be efficiently computed by summing the scores of their respective feature correspondences.
 
-        \paragraph{Vocabulary tf-idf weighting}
+        \subsubsection{Vocabulary tf-idf weighting}
             Each word in the database is weighted by its inverse document frequency (idf), and each individual
             descriptor is weighted by its term-frequency (tf)~\cite{sivic_efficient_2009}. The idea behind the idf
             weight is that words appearing infrequently in the database are discriminative and should receive
             higher weight. The idea behind the tf weight is that words occurring more than once in the same image
             are more important.
 
-        \paragraph{Formal bag-of-words scoring}
+        \subsubsection{Formal bag-of-words scoring}
             Let $\X$ be the set of descriptor vectors in an image. We also use $\X$ to refer to the image in
             general. Descriptor space is quantized using a visual vocabulary where $\C$ is the set of word
             centroids and $w_\c$ is the weight of a specific word. Let $\X_\c \subset \X$ be the set of descriptors
@@ -700,7 +700,7 @@
             The second formulation unifies the bag-of-words model with other vocabulary-based methods in the SMK
             framework, which will be discussed later in~\cref{sec:smk}.
 
-        \paragraph{Extensions to bag-of-words}
+        \subsubsection{Extensions to bag-of-words}
             The main strength and the main weakness of vocabulary-based matching is its use of quantization.
             Quantization allows for large databases of images to be searched very
             rapidly~\cite{nister_scalable_2006}. However, quantization causes raw descriptors to lose much of their
@@ -1064,7 +1064,7 @@
         region~\cite{boureau_theoretical_2010, boureau_learning_2010}. Each section of the image is encoded using
         the vocabulary and images are scored based on matches in each region.
 
-        \paragraph{Enhancements to category recognition}
+        \subsubsection{Enhancements to category recognition}
         There are a wide variety of extensions and enhancements for image classification techniques based on
         bag-of-words, such as soft assignment of visual-words~\cite{liu_defense_2011} and vocabulary
         optimization~\cite{wang_locality_constrained_2010}. Numerous matching kernels --- both linear and

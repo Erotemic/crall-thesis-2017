@@ -162,7 +162,7 @@
         $\sigma = \frac{1}{\sqrt{\detfn{\vmat}}} = \frac{1}{\sqrt{ad}}$. All of this information can be encoded in
         a single affine matrix.
 
-        \paragraph{Encoding keypoint parameters in an affine matrix}
+        \subsubsection{Encoding keypoint parameters in an affine matrix}
         It will be useful to construct two transformations that encode all keypoint information in a single matrix.
         The first, $\rvmat$, maps a keypoint in an annotation into a normalized reference frame --- the unit
         circle. The second transformation, $\inv{\rvmat}$ is the inverse, which warps the normalized reference
@@ -187,7 +187,7 @@
              \rotBigMatIII{\paren{\ori}}
         \end{equation}
 
-        \paragraph{Extracting keypoint parameters from an affine matrix}
+        \subsubsection{Extracting keypoint parameters from an affine matrix}
         During the spatial verification step, described in~\cref{sec:sver}, keypoints are warped from one image
         into the space of another. It will be useful to extract the keypoint parameters from an arbitrary keypoint
         matrix. This will allow us to directly compare properties of corresponding features. Given an arbitrary
@@ -241,7 +241,7 @@
 
    \subsection{Establishing initial feature correspondence}\label{sub:featmatch}
 
-        \paragraph{Offline indexing}
+        \subsubsection{Offline indexing}
             Before feature correspondences can be established, an offline algorithm indexes descriptors from all
             database annotations for fast approximate nearest neighbor search. All database descriptor vectors are
             stacked into a single array of vectors, %
@@ -260,7 +260,7 @@
             %  nearest neighbors of a query feature's descriptor
             %$\desc$.
 
-        \paragraph{Approximate nearest neighbor search}
+        \subsubsection{Approximate nearest neighbor search}
 
             Matching begins by establishing multiple feature correspondences between each query feature and several
             visually similar database features. For each query descriptor vector $\desc_i \in \X$ the $\K + \Knorm$
@@ -274,7 +274,7 @@
             to the $i\th{}$ query feature. The remaining $\Knorm$ neighbors,%
             $\dotsubarr{\desc}{{j_{\K + 1}}}{j_{\Knorm}}$, are candidate normalizers for use in LNBNN scoring.
 
-        \paragraph{Normalizer selection}
+        \subsubsection{Normalizer selection}
             A single descriptor $\descnorm_{i}$ is selected from the $\Knorm{}$ candidate normalizers and used in
             computing the LNBNN score for all (up to $\K$) of the $i\th{}$ query descriptor's correspondences in
             the database. The purpose of a normalizing descriptor is to estimate the local density of descriptor
@@ -336,7 +336,7 @@
         $m = (i, j)$ with query descriptor $\desc_i$ and matching database descriptor $\desc_j$, several scores are
         computed which are then combined into a single feature correspondence score $s_{i,j}$.
 
-        \paragraph{LNBNN score}\label{sec:lnbnnscore}
+        \subsubsection{LNBNN score}\label{sec:lnbnnscore}
 
             The LNBNN scoring mechanism measures the difference in similarity between the query descriptor and
             (1) its match and
@@ -359,7 +359,7 @@
               convolutional neural network~\cite{zagoruyko_learning_2015}), then the maximum distance between them
               is $Z\tighteq2$.
 
-        \paragraph{Foregroundness score}
+        \subsubsection{Foregroundness score}
             To reduce the influence of background matches, each feature correspondence is assigned a score based on
             the foregroundness of both the query and database features. The geometric mean of the foregroundness of
             query feature, $w_i$, and database feature, $w_j$, drives the score to $0$ if either is certain to be
@@ -368,7 +368,7 @@
                 \fs_{{\tt fg}} \eqv \sqrt{w_i w_j}
             \end{equation}
 
-        \paragraph{Final feature correspondence score}
+        \subsubsection{Final feature correspondence score}
             The final score of the correspondence $(i, j)$ captures both the distinctiveness of the match and the
             likelihood that the match is part of the foreground.
               \begin{equation}\label{eqn:featscore}
@@ -399,7 +399,7 @@
         These mechanisms are respectively similar to the image-to-image distance and the image-to-class distance
           described in~\cite{boiman_defense_2008}.
 
-        \paragraph{The set of all feature correspondences}
+        \subsubsection{The set of all feature correspondences}
         All scoring mechanisms presented in this subsection are based on aggregating scores from features
         correspondences. The set of all feature correspondences for a query annotation $\X$ is expressed as:
         \begin{equation}
@@ -407,7 +407,7 @@
         \end{equation}
 
         % SAME AS IMAGE-TO-IMAGE
-        \paragraph{Annotation scoring}
+        \subsubsection{Annotation scoring}
             An \annotscore{} is a measure of similarity between two annotations.
             An \annotscore{} between a query annotation and a database annotation is defined as the sum of the
               feature correspondence scores matching to the features from that database annotation.
@@ -423,7 +423,7 @@
             \end{equation}
 
         % SAME AS IMAGE-TO-CLASS
-        \paragraph{Name scoring (1) --- \csumprefix{}} %
+        \subsubsection{Name scoring (1) --- \csumprefix{}} %
 
             The \cscoring{} mechanism aggregates \annotscores{} into \namescores{} by simply taking the maximum
               \annotscore{} over all annotations belonging to a \name{}.
@@ -440,8 +440,7 @@
                 }
             \end{equation}
 
-        \paragraph{Name scoring
-        (2) --- \nsumprefix{}} %
+        \subsubsection{Name scoring (2) --- \nsumprefix{}} %
             The \cscoring{} mechanism accounts for the fact that animals will be seen multiple times, but it does
               not take advantage of complementary information available when \aan{\name{}} has multiple
               annotations.
@@ -1149,7 +1148,7 @@
         defines, discusses, and provides examples of these failure cases.
 
         \FloatBarrier{}
-        \paragraph{Alignment}
+        \subsubsection{Alignment}
             
             When two annotations are not aligned (ignoring translation and small scale differences), there can be
             significant differences in appearance that can cause inconsistency in feature localization and
@@ -1172,7 +1171,7 @@
             \FailViewpoint{}
 
         \FloatBarrier{}
-        \paragraph{Quality factors}
+        \subsubsection{Quality factors}
             Factors such as low resolution, blurring, poor exposure, lighting (shadows / non-uniform illumination),
             and occlusion can significantly reduce the density of distinctive features on an annotation. Note that
             lighting and occlusion (scene quality factors) should be distinguished from the other factors (capture
@@ -1193,7 +1192,7 @@
             \FailQuality{}
 
         \FloatBarrier{}
-          \paragraph{Non-primary correspondences}
+          \subsubsection{Non-primary correspondences}
             Sometimes an annotation bounding box cannot be placed tightly around an animal (this happens often for
             some species like giraffes), which means that other objects will appear in the background. Similarly,
             objects that occlude the animal will be in the foreground. Ideally, the primary animal in each
