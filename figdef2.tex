@@ -20,22 +20,11 @@ http://opticalengineering.spiedigitallibrary.org/data/Journals/OPTICE/22119/0172
 wget http://xphilipp.developpez.com/contribuez/scalespace.png -O ~/latex/cand/figures2/ScaleSpaceFigure.png
 python -m ibeis.scripts.specialdraw scalespace --dpath ~/latex/crall-thesis-2017/ --save figures2/ScaleSpaceFigure.png --dpi 300 --clipwhite --diskshow
 \end{comment}
-%\newcommand{\ScaleSpaceFigure}{
-%\SingleImageCommand{ScaleSpaceFigure}{.8}{A scale space pyramid}{
-%% ---
-%A Gaussian pyramid is used as a scale space representation of an image.
-%A property of scale space is that doubling the scale is equivalent to
-%  downsampling the image by half.
-%The set of images of a specific size correspond to an octave.
-%The images within each octave are the intervals.
-%% ---
-%}{figures2/ScaleSpaceFigure.png}
-
 \newcommand{\ScaleSpaceFigure}{
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=.8\textwidth]{figures2/ScaleSpaceFigure.png}
-\caption[A scale space pyramid]{\caplbl{ScaleSpaceFigure}
+\captext[\caplbl{ScaleSpaceFigure}A scale space pyramid]{
 % ---
 A Gaussian pyramid is used as a scale space representation of an image.
 A property of scale space is that doubling the scale is equivalent to
@@ -84,9 +73,8 @@ python -m vtool.patch --test-draw_kp_ori_steps --fname=zebra.png --fx=121 --dpat
 \begin{subfigure}[h]{0.23\textwidth}\centering\includegraphics[height=100pt]{figures2/testfindkpdirectionH.jpg}\caption{}\label{sub:testfindkpdirectionh}\end{subfigure}
 ~~%--
 \begin{subfigure}[h]{1\textwidth}\centering\includegraphics[width=\textwidth]{figures2/testfindkpdirectionI.jpg}\caption{}\label{sub:testfindkpdirectioni}\end{subfigure}
-\caption[\caplbl{testfindkpdirection} Computing the dominant gradient orientation]{\caplbl{testfindkpdirection} 
+\captext[\caplbl{testfindkpdirection}Computing the dominant gradient orientation]{
 % ---
-Visualization of the steps involved in computing the dominant gradient orientations.
 The top row shows:
 \cref{sub:testfindkpdirectiona} the input image with a single elliptical keypoint,
   \cref{sub:testfindkpdirectionb} the normalized keypoint, \cref{sub:testfindkpdirectionc,sub:testfindkpdirectiond}
@@ -116,7 +104,7 @@ python -m plottool.viz_featrow --test-draw_feat_row --fname zebra.png --fx=121 -
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowA.jpg}\caption{}\label{sub:vizfeatrowA}\end{subfigure}
 ~~% --
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures2/vizfeatrowB.jpg}\caption{}\label{sub:vizfeatrowB}\end{subfigure}
-\caption[Example of a SIFT descriptor]{\caplbl{vizfeatrow}
+\captext[\caplbl{vizfeatrow}Example of a SIFT descriptor]{
 % ---
 \Cref{sub:vizfeatrowA} shows a SIFT feature superimposed over pixels it
   describes.
@@ -138,9 +126,9 @@ python -m plottool.draw_sv --test-show_sv_simple --dpath ~/latex/crall-thesis-20
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=.6\textwidth]{figures2/figSVInlier.jpg}
-\caption[Before and after spatial verification]{\caplbl{figSVInlier}
+\captext[\caplbl{figSVInlier}Before and after spatial verification]{
 % ---
-Matches before and after spatial verification.
+This shows the matches before and after spatial verification.
 Inconsistent matches are shown in red.
 Consistent matches are shown in blue.
 Notice that not all spatially consistent matches are correct.

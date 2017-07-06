@@ -8,12 +8,10 @@ python -m ibeis.scripts.specialdraw draw_graph_id \
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{figures5/decisiongraph.jpg}
-\caption[A synthetic decision graph]{\caplbl{decisiongraph}
+\captext[A synthetic decision graph]{\caplbl{decisiongraph}
 % ---
-An example of a consistent synthetic decision graph with positive,
-  negative, and incomparable edges.
-The color of each node represents the positive connected component (PCC)
-  it belongs to.
+This is a consistent synthetic decision graph with positive, negative, and incomparable edges.
+The color of each node represents the positive connected component (PCC) it belongs to.
 % ---
 }
 \label{fig:decisiongraph}
@@ -30,15 +28,13 @@ python -m ibeis.scripts.specialdraw draw_inconsistent_pcc \
     --dpath ~/latex/crall-thesis-2017/ --save "figures5/inconpcc.jpg" \
     --figsize=15,10 --clipwhite --dpi=300 --diskshow --saveparts
 \end{comment}
-%\MultiImageCommandII{inconpcc}{.4}{inconpcc}{
-%}{figures5/inconpccA.jpg}{figures5/inconpccB.jpg}
 \newcommand{\inconpcc}{
 \begin{figure}[ht!]
 \centering
 \begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures5/inconpccA.jpg}\caption{}\label{sub:inconpccA}\end{subfigure}
 ~~% --
 \begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[width=\textwidth]{figures5/inconpccB.jpg}\caption{}\label{sub:inconpccB}\end{subfigure}
-\caption[An inconsistent PCC]{\caplbl{inconpcc}
+\captext[An inconsistent PCC]{\caplbl{inconpcc}
 % ---
 Any PCC containing at least one negative edge is inconsistent.
 Subfigure \Cref{sub:inconpccA} shows an inconsistent PCC, and
@@ -75,51 +71,14 @@ python -m ibeis.scripts.specialdraw redun_demo2 \
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunE.jpg}\caption{}\label{sub:kredunE}\end{subfigure}
 ~~%--
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[width=\textwidth]{figures5/kredunF.jpg}\caption{}\label{sub:kredunF}\end{subfigure}
-\caption[Examples of $k$-redundant PCCs]{\caplbl{kredun}
-%--%
-Examples of positive (top) and negative (bottom) redundancy.
+\captext[\caplbl{kredun}Examples of $k$-redundant PCCs]{
+% --
+This shows examples of positive (top) and negative (bottom) redundancy.
 The positive edges are colored blue and the negative edges are colored red.
 Choosing the level of redundancy is a trade-off between the number of required
   reviews and the confidence that the reviews are correct.
-%In our current implementation we use $2$-redundancy.
-%
-} \label{fig:kredun}
-\end{figure}
-}
-
-
-
-\begin{comment}
-python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 --match \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExampleC.jpg" \
-    --figsize=9,4 --clipwhite --dpi=180 --save
-
-python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 \
-    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExample.jpg" \
-    --figsize=9,4 --clipwhite --dpi=300 --saveparts
-
-python -m ibeis.core_annots --test-compute_one_vs_one --show
-    
-\end{comment}
-
-\newcommand{\PhotobombExample}{
-\begin{figure}[h]
-\centering
-\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures5/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA} \end{subfigure}
-\begin{subfigure}[h]{0.4\textwidth} \centering \includegraphics[height=100pt]{figures5/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB} \end{subfigure}
-%\begin{subfigure}[h]{0.5\textwidth}
-%\centering
-%\includegraphics[height=60pt]{figures/PhotobombExampleC.jpg}\caption{}\label{sub:PhotobombExampleC}
-%\end{subfigure}
-\caption[\caplbl{PhotobombExample}Photobomb example]{\caplbl{PhotobombExample}
-% ---
-A secondary animal in an annotation can cause a ``photobomb''.  Notice the
-primary animal in~\cref{sub:PhotobombExampleA} appears in the background
-of~\cref{sub:PhotobombExampleB}. 
-%The matching regions are displayed in~\cref{sub:PhotobombExampleC}.
-% ---
-}
-\label{fig:PhotobombExample}
+% --
+}\label{fig:kredun}
 \end{figure}
 }
 
@@ -131,10 +90,11 @@ python -m ibeis.algo.graph.mixin_loops prob_any_remain --num_pccs=40 --size=2 --
 \newcommand{\poisson}{
 \begin{figure}[h]
     %
-    \centering \includegraphics[width=\textwidth]{figures5/poisson.png} \caption[The convergence criteria on a
-      synthetic dataset]{\caplbl{poisson}
+    \centering 
+    \includegraphics[width=\textwidth]{figures5/poisson.png} 
+    \captext[\caplbl{poisson}The convergence criteria on a synthetic dataset]{
     %--
-    The convergence criteria applied to a synthetic dataset with $40$ names and $2$ annotations per name.
+    The convergence criteria is applied to a synthetic dataset with $40$ names and $2$ annotations per name.
     The red line indicates the fraction of label-changing reviews that remain undiscovered.
     The blue line is the probability that at least one of the next $20$ reviews will be label-changing.
     Notice that the blue line dips when the red line flattens.
@@ -160,11 +120,9 @@ python -m ibeis Chap5.draw dbstats PZ_Master1,GZ_Master1
 \newcommand{\TestTrainDBStats}{
 \begin{table}[h]
     \centering
-    \caption[\caplbl{TestTrainDBStats}Database statistics for graph identification experiments]{\caplbl{TestTrainDBStats}
+    \captext[\caplbl{TestTrainDBStats}Database statistics for graph identification experiments]{
     % ---
-    Database statistics for the graph identification experiments.
     Each database is split into a training and a testing set.
-    %We use the training set to learn the pairwise classifiers, and the simulation is run on the testing set.
     We report the number of names, the number of annotations, and the average number (as the mean and standard
       deviation) of annotations per name for each set.
     Additionally, we report how many edges (pairs of annotations) were used to train the classifiers.
@@ -190,7 +148,7 @@ python -m ibeis Chap5.draw_simulation --db GZ_Master1 --diskshow
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/PZ_Master1/simulation.png}\caption{Plains zebras}\end{subfigure}
 ~
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/simulation.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{Simulation}Simulation experiment]{\caplbl{Simulation}
+\captext[\caplbl{Simulation}Simulation experiment]{
 % ---
 The user simulation experiment compares the three identification algorithms defined in this \thesis{}.
 The plot on the left indicates the identification accuracy using the number of remaining merges and the plot on
@@ -213,9 +171,8 @@ python -m ibeis Chap5.draw_refresh --db PZ_Master1 --diskshow
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/PZ_Master1/refresh.png}\caption{Plains zebras}\end{subfigure}
 ~
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/refresh.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{Refresh}Measured refresh and termination probabilities]{\caplbl{Refresh}
+\captext[\caplbl{Refresh}Measured refresh and termination probabilities]{
 % ---
-The measured refresh and termination criteria.
 The probability that the next reviews will be label-changing ($\Pr{C\teq1}$) is high while new merges are
   discovered.
 Once the probability falls under the threshold, positive redundancy is enforced (the flat areas) on existing
@@ -239,10 +196,10 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
 \newcommand{\ErrorSizeDetails}{
 \begin{table}[h]
     \centering
-    \caption[\caplbl{ErrorSizeDetails}Simulation error sizes]{\caplbl{ErrorSizeDetails}
+    \captext[\caplbl{ErrorSizeDetails}Simulation error sizes]{
     % ---
-    Analysis of the simulation errors.
-    We compare statistics of the predicted PCCs with statistics of the real \groundtruth{} PCCs.
+    This table analyzes the simulation errors.
+    We compare statistics of the predicted PCCs with statistics of the real ground truth PCCs.
     In each category ``Pred PCCs'' is the number of predicted PCCs and ``Pred PCC size'' is the average number of
       annotations in those PCCs (measured as mean and standard deviation).
     The ``Real PCCs'' and ``Real PCC size'' columns are similarly defined.
@@ -258,9 +215,9 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
 \newcommand{\ErrorGroupDetails}{
 \begin{table}[h]
     \centering
-    \caption[\caplbl{ErrorGroupDetails}Simulation error group sizes]{\caplbl{ErrorGroupDetails}
+    \captext[\caplbl{ErrorGroupDetails}Simulation error group sizes]{
     % ---
-    Analysis of the error groups in the graph algorithm.
+    This table analyzes the error groups in the graph algorithm.
     A merge error group is a set of predicted PCCs that are incorrectly disconnected,  % 
     and a split error group is a set of real PCCs that are incorrectly connected.
     For each case we report the number of error groups, the average number of PCCs in each group, and the average
@@ -281,21 +238,11 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
 \newcommand{\SplitErrorsPZ}{
     \begin{figure}[h]
     \centering
-    %\begin{subfigure}[h]{.7\textwidth}\centering
     \includegraphics[width=\textwidth]{figures5/PZ_Master1/errors/split_14,22_hdupvjwn_edge2134,2492.png}
-    %\end{subfigure}
-    %\begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,4_swpbhhis_edge1600,2066.png}\end{subfigure}
-    \caption[\caplbl{SplitErrorsPZ}Plains split case due to \groundtruth{} error]{\caplbl{SplitErrorsPZ}
+    \captext[\caplbl{SplitErrorsPZ}Plains split case due to ground truth error]{
     % ---
-    A reported split case from the plains zebras graph simulation.
-    Further inspection shows that this split case is due to a \groundtruth{} error.
+    This was incorrectly reported as a split case.
     The automatic verification algorithm correctly predicted that this pair is positive.
-    %The top shows the PCC that should be split into multiple PCCs.
-    %Annotations are colored by their \groundtruth{} label.
-    %The highlighted edges have labels that disagree with the \groundtruth{}.
-    %The bottom shows one the annotations on a highlighted edge in more detail.
-    %All $5$ split cases reported for plains zebras are discovered to be due to
-    %errors in the \groundtruth{}.
     % ---
     }
     \label{fig:SplitErrorsPZ}
@@ -307,13 +254,10 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
 \newcommand{\SplitErrorsGZ}{
     \begin{figure}[h]
     \centering
-    %\begin{subfigure}[h]{.7\textwidth}
     \includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,19_cymmmggo_edge1582,2371.png}
-    %\begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/split_4,4_swpbhhis_edge1600,2066.png}\end{subfigure}
-    \caption[\caplbl{SplitErrorsGZ}Grévy's split case due to \groundtruth{} error]{\caplbl{SplitErrorsGZ}
+    \captext[\caplbl{SplitErrorsGZ}Grévy's split case due to ground truth error]{
     % ---
-    A reported split case from the Grévy's zebras graph simulation.
-    Further inspection shows that this split case is due to a \groundtruth{} error.
+    This was incorrectly reported as a split case.
     The automatic verification algorithm correctly predicted that these annotations should be in the same PCC.
     % ---
     }
@@ -327,9 +271,8 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures5/PZ_Master1/errors/merge_4,19_ybwvbppc_edge3420,3628.png}
-    \caption[\caplbl{MergeErrorPZA}Plains merge case due to low probability]{\caplbl{MergeErrorPZA}
+    \captext[\caplbl{MergeErrorPZA}Plains merge case due to low probability]{
     % ---
-    A  merge case from the plains zebras graph simulation.
     In this case the ranking algorithm generated an edge that could have connected the PCCs.
     Because the of the low positive probability due to viewpoint and occlusion, the termination criteria stopped
       the algorithm before this edge was reviewed.
@@ -343,9 +286,8 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures5/PZ_Master1/errors/merge_5,5,11_myqqzsxq_edge16523,17208.png}
-    \caption[\caplbl{MergeErrorPZB}Plains merge case due to ranking failure]{\caplbl{MergeErrorPZB}
+    \captext[\caplbl{MergeErrorPZB}Plains merge case due to ranking failure]{
     % ---
-    A  merge case from the plains zebras graph simulation.
     In this case there are three PCCs that should have been merged into one.
     Occlusion and pose variation prevented the ranking algorithm from generating candidate edges.
     However, the positive probability of the selected pair is $0.77$, which means that the pair would have likely
@@ -362,9 +304,8 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/merge_4,11_zzdqqwzs_edge930,1045.png}
-    \caption[\caplbl{MergeErrorGZA}Grévy's merge case due to ranking failure]{\caplbl{MergeErrorGZA}
+    \captext[\caplbl{MergeErrorGZA}Grévy's merge case due to ranking failure]{
     % ---
-    A merge case from the Grévy's zebras graph simulation.
     The ranking algorithm did not generate any candidate edge that could have merged these PCCs due to viewpoint
       variations.
     Even, if the ranking algorithm had selected this edge, the positive probability on the edge would not have
@@ -379,9 +320,8 @@ python -m ibeis Chap5.draw error_tables GZ_Master1
     \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures5/GZ_Master1/errors/merge_4,29_vwajntbm_edge2146,2601.png}
-    \caption[\caplbl{MergeErrorGZB}Grévy's merge case due to low probability]{\caplbl{MergeErrorGZB}
+    \captext[\caplbl{MergeErrorGZB}Grévy's merge case due to low probability]{
     % ---
-    A merge case from the Grévy's zebras graph simulation.
     The ranking algorithm selected this edge a candidate, but due to occlusion from scenery and other animals the
       predicted positive probability is low.
     Therefore, the termination criteria stopped the algorithm before this edge was reviewed.

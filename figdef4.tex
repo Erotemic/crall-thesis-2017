@@ -1,34 +1,9 @@
-%\edef\pzcode{PZ_PB_RF_TRAIN_2567}
-%\edef\gzcode{GZ_Master1_21589}
-%%\edef\gzcode{GZ_Master1_222}
-
-
-%\newcommand{\PairFeatVec}{
-%\begin{figure}
-%\begin{minted}[gobble=4]{python}
-%    OrderedDict([('global(qual_min)',    3),
-%                 ('global(qual_max)',    nan),
-%                 ('global(qual_delta)',  nan),
-%                 ('global(gps_delta)',   5.79),
-%                 ('len(matches)',        20),
-%                 ('sum(ratio)',          10.05),
-%                 ('mean(ratio)',         0.50),
-%                 ('std(ratio)',          0.09)])
-%\end{minted}
-%\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
-%Example of a small pairwise feature vector containing local and global information.
-%In practice the pairwise feature vectors include many more dimensions.
-%}
-%\label{fig:PairFeatVec}
-%\end{figure}
-%}
 
 \newcommand{\PairDBStats}{
 \begin{table}[b]
     \centering
-    \caption[\caplbl{PairDBStats}Database statistics for the pairwise experiment]{\caplbl{PairDBStats}
+    \captext[\caplbl{PairDBStats}Database statistics for the pairwise experiment]{
     % ---
-    Database statistics for the pairwise experiment.
     Starting with a database of annotations with name labels, we sample a set of annotation pairs to evaluate our
       pairwise classifiers with.
     % ---
@@ -51,7 +26,7 @@
 \begin{subfigure}[h]{0.26\textwidth}\centering\includegraphics[height=160pt]{figures4/classesC.png}\caption{Positive}\label{sub:classesC}\end{subfigure}
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures4/classesA.png}\caption{Negative}\label{sub:classesA}\end{subfigure}
 \begin{subfigure}[h]{0.31\textwidth}\centering\includegraphics[height=160pt]{figures4/classesB.png}\caption{Incomparable}\label{sub:classesB}\end{subfigure}
-\caption[\caplbl{MatchStateExample}Match-state example]{\caplbl{MatchStateExample}
+\captext[\caplbl{MatchStateExample}Match-state example]{
 % ---
 Examples of positive \cref{sub:classesC}, negative  \cref{sub:classesA}, and incomparable \cref{sub:classesB}
 pairs of annotations. Local feature correspondences are superimposed over the pairs.
@@ -66,7 +41,7 @@ pairs of annotations. Local feature correspondences are superimposed over the pa
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures4/custom_match_leftrightface_5245_5161.jpg}
-\caption[\caplbl{LeftRightFace}A comparable pair with different viewpoints]{\caplbl{LeftRightFace}
+\captext[\caplbl{LeftRightFace}A comparable pair with different viewpoints]{
 % ---
 Even though this pair has different viewpoints, it is positive and comparable
 because we can establish a distinctive correspondence in the face. 
@@ -84,13 +59,10 @@ because we can establish a distinctive correspondence in the face.
 \begin{comment}
     python -m ibeis Chap4.measure_all --db PZ_PB_RF_TRAIN
     python -m ibeis Chap4.measure_all --db GZ_Master1 && python -m ibeis Chap4.measure_all --db PZ_Master1
-    python -m ibeis Chap4.measure_all --db PZ_MTEST
 
-    python -m ibeis Chap4.draw_all --db PZ_MTEST
     python -m ibeis Chap4.draw_all --db PZ_Master1
     python -m ibeis Chap4.draw_all --db GZ_Master1
 \end{comment}
-
 
 \newcommand{\PositiveHist}{
 \begin{figure}[h]
@@ -100,10 +72,10 @@ because we can establish a distinctive correspondence in the face.
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_lnbnn.png}\caption{Grévy's zebras LNBNN}\label{sub:pos_lnbnn_hist_gz}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/score_hist_pos_learn(sum,glob).png}\caption{Grévy's zebras learned}\label{sub:pos_hist_gz} \end{subfigure}
 %~
-\caption[\caplbl{PositiveHist}Positive score histogram experiment]{\caplbl{PositiveHist}
+\captext[\caplbl{PositiveHist}Positive score histogram experiment]{
 % ---
-Positive scores of LNBNN (left) and the pairwise algorithm (right) for pairs of plains (top) and Grévy's (bottom)
-  zebras.
+This shows positive scores of LNBNN (left) and the pairwise algorithm (right) for pairs of plains (top) and
+  Grévy's (bottom) zebras.
 The learned probabilities are more separable and more interpretable than LNBNN scores.
 %In addition to being more interpretable than LNBNN scores the learned probabilities exhibit better separability.
 Note that in this plot, negative refers to annotation pairs with a non-positive match-state label.
@@ -120,9 +92,9 @@ Note that in this plot, negative refers to annotation pairs with a non-positive 
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_match_state.png}\caption{Plains zebras}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_match_state.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{PositiveROC}Positive match-state ROC experiment]{\caplbl{PositiveROC}
+\captext[\caplbl{PositiveROC}Positive match-state ROC experiment]{
 % ---
-The positive match-state ROC for scores computed by the pairwise classifier and LNBNN.
+This shows the positive match-state ROC for scores computed by the pairwise classifier and LNBNN.
 The pairwise classifier significantly improves the separation of positive and non-positive pairs.
 %The scores from the pairwise classifier are better at separating positive and non-positive cases.
 %Additionally, operating points exist where the true positive rate is high and
@@ -141,7 +113,7 @@ The pairwise classifier significantly improves the separation of positive and no
 \centering
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/rerank.png}\caption{Plains zebras}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/rerank.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{ReRank}Re-ranking experiment]{\caplbl{ReRank}
+\captext[\caplbl{ReRank}Re-ranking experiment]{
 % ---
 Re-ranking the top LNBNN results using the positive probabilities from the match-state classifier improves the
   number of correct matches at rank $1$ for both plains and Grévy's zebras.
@@ -159,13 +131,10 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 \newcommand{\ConfusionMatch}{
 \begin{table}[b]
     \centering
-    \caption[\caplbl{ConfusionMatch}Match-state experiment confusion matrix]{\caplbl{ConfusionMatch}
+    \captext[\caplbl{ConfusionMatch}Match-state experiment confusion matrix]{
     % ---
-    Multiclass match-state confusion for plains and Grévy's zebras.
-    The rows are the real (\groundtruth{}) state, and the columns are the predicted states.
-    %The final column indicates the number of examples for each class.
-    %A pair is classified as the state (positive, negative, or incomparable) with the maximum predicted
-    %  probability.
+    This is the multiclass match-state confusion for plains and Grévy's zebras.
+    The rows are the real (ground truth) state, and the columns are the predicted states.
     Each pair is classified as positive, negative, or incomparable depending on which state has the maximum
       probability.
     % ---
@@ -179,12 +148,11 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 \newcommand{\EvalMetricsMatch}{
 \begin{table}[b]
-    \caption[\caplbl{EvalMetricsMatch}Match-state experiment evaluation metrics]{\caplbl{EvalMetricsMatch}
+    \captext[\caplbl{EvalMetricsMatch}Match-state experiment evaluation metrics]{
     % ---
-    Multiclass match-state evaluation metrics for plains and Grévy's zebras computed from the confusion matrix.
+    The multiclass match-state evaluation metrics for plains and Grévy's zebras are computed from the confusion
+      matrix.
     These metrics demonstrate that our match-state classifiers have strong predictive power.
-    %A pair is classified as positive, negative, or incomparable depending on which state has the maximum
-    %  probability.
     % ---
     }
     \label{tbl:EvalMetricsMatch}
@@ -200,10 +168,10 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 \end{comment}
 \newcommand{\ConfusionPhotobomb}{
 \begin{table}[h]
-    \caption[\caplbl{ConfusionPhotobomb}Photobomb-state experiment confusion matrix]{\caplbl{ConfusionPhotobomb}
+    \captext[\caplbl{ConfusionPhotobomb}Photobomb-state experiment confusion matrix]{
     % ---
-    The photobomb-state confusion matrix. The columns indicate predicted classes, and the rows indicate real
-    (\groundtruth{}) classes.  The final column indicates the number of examples of each class.
+    The columns indicate predicted classes, and the rows indicate real (ground truth) classes.
+    The final column indicates the number of examples of each class.
     A pair is classified as a photobomb if its probability is greater than $0.5$.
     % ---
     }
@@ -216,9 +184,9 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 \newcommand{\EvalMetricsPhotobomb}{
 \begin{table}[h]
-    \caption[\caplbl{EvalMetricsPhotobomb}Photobomb-state experiment evaluation metrics]{\caplbl{EvalMetricsPhotobomb}
+    \captext[\caplbl{EvalMetricsPhotobomb}Photobomb-state experiment evaluation metrics]{
     % ---
-    The photobomb-state evaluation metrics computed from the confusion matrix.
+    The photobomb-state evaluation metrics are computed from the confusion matrix.
     A pair is classified as a photobomb if its probability is greater than $0.5$.
     % ---
     }
@@ -232,10 +200,10 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 \newcommand{\ConfusionPhotobombII}{
 \begin{table}[p]
-    \caption[\caplbl{ConfusionPhotobombII}Photobomb-state adjusted confusion matrix]{\caplbl{ConfusionPhotobombII} 
+    \captext[\caplbl{ConfusionPhotobombII}Photobomb-state adjusted confusion matrix]{ 
     % ---
-    The photobomb-state confusion matrix after adjusting the probability threshold to maximize the MCC.
-    The columns indicate predicted classes, and the rows indicate real (\groundtruth{}) classes.
+    This shows the confusion matrix after adjusting the probability threshold to maximize the MCC.
+    The columns indicate predicted classes, and the rows indicate real (ground truth) classes.
     The final column indicates the number of examples of each class.
     % ---
     }
@@ -248,10 +216,10 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 
 \newcommand{\EvalMetricsPhotobombII}{
 \begin{table}[p]
-    \caption[\caplbl{EvalMetricsPhotobombII}Photobomb-state adjusted evaluation metrics]{\caplbl{EvalMetricsPhotobombII}
+    \captext[\caplbl{EvalMetricsPhotobombII}Photobomb-state adjusted evaluation metrics]{
     % ---
-    The photobomb-state evaluation metrics computed from the confusion matrix after adjusting the probability
-      threshold to maximize the MCC.
+    These evaluation metrics are computed from the confusion matrix after adjusting the probability threshold to
+      maximize the MCC.
     % ---
     }
     \label{tbl:EvalMetricsPhotobombII}
@@ -279,9 +247,9 @@ Re-ranking the top LNBNN results using the positive probabilities from the match
 \centering
 \begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/prune.png}\caption{Plains zebras}\end{subfigure}
 \begin{subfigure}[h]{0.49\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/prune.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{MatchPrune}Pruning feature dimensions for match classification]{\caplbl{MatchPrune}
+\captext[\caplbl{MatchPrune}Pruning feature dimensions for match classification]{
 % ---
-The effect of pruning the least important feature dimensions on the MCC of the match-state classifier.
+This shows the effect of pruning the least important feature dimensions on the MCC of the match-state classifier.
 We find that a reduced subset of feature dimensions results in a slight increase in classification accuracy over
   the original $131$ features.
 However, there is a point at which reducing the number of feature dimensions significantly degrades performance.
@@ -292,52 +260,13 @@ However, there is a point at which reducing the number of feature dimensions sig
 }
 
 
-\newcommand{\ImportantMatchFeat}{
-\begin{table}[p]
-    \centering
-    \caption[\caplbl{ImportantMatchFeat}Important features for match-state prediction]{\caplbl{ImportantMatchFeat} 
-    % ---
-    Top $10$ most important features for predicting the match-state (positive, negative, incomparable) for a pair
-      of annotations.
-    The sum of the importance for all $131$ feature dimensions is $1$.
-    % ---
-    }
-    \label{tbl:ImportantMatchFeat}
-    \begin{subtable}[h]{1.0\textwidth}
-        \centering
-        \begin{tabular}{l c}
-            \toprule
-            Dimension & Importance\\
-            \midrule
-            \input{figures4/PZ_Master1/feat_importance_match_state.tex}
-            \bottomrule
-        \end{tabular}
-        \caption{Plains zebras}
-    \end{subtable} %
-    %~~~~~~~~ 
-    \begin{subtable}[h]{1.0\textwidth}
-        \centering
-        \begin{tabular}{l c}
-            \toprule
-            Dimension & Importance\\
-            \midrule
-            \input{figures4/GZ_Master1/feat_importance_match_state.tex}
-            \bottomrule
-        \end{tabular}
-        \caption{Grévy's zebras}
-    \end{subtable} %
-\end{table}
-}
-
-
 \newcommand{\ImportantMatchFeatPrune}{
 \begin{table}[p]
     \centering
-    \caption[\caplbl{ImportantMatchFeatPrune}Important features for match-state prediction]{\caplbl{ImportantMatchFeatPrune} 
+    \captext[\caplbl{ImportantMatchFeatPrune}Important features for match-state prediction]{ 
     % ---
-    Top $10$ most important feature dimensions for predicting the match-state (positive, negative, incomparable)
-      for a pair of annotations, after removing the least important dimensions.
-    %The sum of the importance for all $131$ feature dimensions is $1$.
+    These are the top $10$ most important feature dimensions for predicting the match-state (positive, negative,
+      incomparable) for a pair of annotations, after removing the least important dimensions.
     % ---
     }
     \label{tbl:ImportantMatchFeatPrune}
@@ -371,9 +300,9 @@ However, there is a point at which reducing the number of feature dimensions sig
 \newcommand{\ImportantPBFeat}{
     \begin{table}[h]
         \centering
-        \caption[\caplbl{ImportantPBFeat}Important features for photobomb-state prediction]{\caplbl{ImportantPBFeat} 
+        \captext[\caplbl{ImportantPBFeat}Important features for photobomb-state prediction]{ 
         % ---
-        The top $10$ most important features for predicting if a pair of annotations has a photobomb.
+        These are the top $10$ most important features for predicting if a pair of annotations has a photobomb.
         Features like speed and GPS delta are important because photobombs are more common in pairs of
           annotations taken at the same time and place.
         Features related to the spatial distribution of the feature correspondences are important because
@@ -422,7 +351,7 @@ However, there is a point at which reducing the number of feature dimensions sig
 \begin{subfigure}[h]{.65\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_match_nomatch_1022_7845.jpg}\end{subfigure}
 \begin{subfigure}[h]{.65\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_match_nomatch_1511_2145.jpg}\end{subfigure}
 \begin{subfigure}[h]{.65\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_match_nomatch_1453_2042.jpg}\end{subfigure}
-\caption[\caplbl{PairFailPN}Positive pairwise failure case]{\caplbl{PairFailPN}
+\captext[\caplbl{PairFailPN}Positive pairwise failure case]{
 % ---
 These pairs are all positive, but the match-state classifier predicts each as negative.
 These failures can be attributed to poor image quality, occlusion, and viewpoint variations.
@@ -443,7 +372,7 @@ Notice that the positive probability is well above zero in all but one case.
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_nomatch_match_3550_5250.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1260_2902.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1418_1419.jpg}\end{subfigure}
-\caption[\caplbl{PairFailNP}Negative pairwise failure case]{\caplbl{PairFailNP}
+\captext[\caplbl{PairFailNP}Negative pairwise failure case]{
 % ---
 These pairs are negative, but the classifier predicts positive.
 Notice that the negative probability in each case is not close to zero.
@@ -464,7 +393,7 @@ Photobomb and scenery matches also contribute to negative failure cases.
 \begin{subfigure}[h]{.6\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_notcomp_nomatch_1195_16215.jpg}\end{subfigure}
 \begin{subfigure}[h]{.6\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_notcomp_nomatch_2847_16301.jpg}\end{subfigure}
 \begin{subfigure}[h]{.6\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_notcomp_match_5245_5676.jpg}\end{subfigure}
-\caption[\caplbl{PairFailIN}Incomparable pairwise failure case]{\caplbl{PairFailIN}
+\captext[\caplbl{PairFailIN}Incomparable pairwise failure case]{
 % ---
 These pairs are incomparable, but the classifier predicted either positive or negative.
 In part this is due to a small amount of available incomparable training data.
@@ -484,30 +413,14 @@ In the bottom two examples, scenery matches and photobombing animals hinder the 
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_match_state/fail_match_nomatch_4771_4846.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1349_3087.jpg}\end{subfigure}
 \begin{subfigure}[h]{.7\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_match_state/fail_nomatch_match_1535_2549.jpg}\end{subfigure}
-\caption[\caplbl{MatchLabelErrors}Errors in the match-state \groundtruth{}]{\caplbl{MatchLabelErrors}
+\captext[\caplbl{MatchLabelErrors}Errors in the match-state ground truth]{
 % ---
-\Groundtruth{} errors in the database are the reason for several match-state failure cases.
-In these examples the classifier picks the correct answer even though the \groundtruth{} is incorrect.
+Ground truth errors in the database are the reason for several match-state failure cases.
+In these examples the classifier picks the correct answer even though the ground truth is incorrect.
 Note that the probability assigned to the true state of each pair is close to $1.0$.
 % ---
 }
 \label{fig:MatchLabelErrors}
-\end{figure}
-}
-
-
-\newcommand{\PhotobombROC}{
-\begin{figure}[h]
-\centering
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/roc_photobomb_state.png}\caption{Plains zebras}\end{subfigure}
-\begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/roc_photobomb_state.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{PhotobombROC}Photobomb ROC experiment]{\caplbl{PhotobombROC}
-% ---
-The photobomb-state ROC curve demonstrate that both photobomb-state classifiers
-are indeed learning from the data.
-% ---
-}
-\label{fig:PhotobombROC}
 \end{figure}
 }
 
@@ -517,7 +430,7 @@ are indeed learning from the data.
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/mcc_thresh_photobomb_state.png}\caption{Plains zebras}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/mcc_thresh_photobomb_state.png}\caption{Grévy's zebras}\end{subfigure}
-\caption[\caplbl{PBThreshMCC}Photobomb ROC experiment]{\caplbl{PhotobombROC}
+\captext[\caplbl{PBThreshMCC}Maximizing the photobomb MCC]{
 % ---
 Because there are not many labeled photobomb pairs, the probabilities returned by the photobomb-state classifier
   are low.
@@ -537,7 +450,7 @@ In each plot the legend indicates the threshold corresponding to the maximum MCC
 \begin{subfigure}[h]{.63\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_photobomb_state/fail_pb_notpb_529_1785.jpg}\end{subfigure}
 \begin{subfigure}[h]{.63\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_pb_notpb_1241_1242.jpg}\end{subfigure}
 \begin{subfigure}[h]{.63\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_pb_notpb_1413_1414.jpg}\end{subfigure}
-\caption[\caplbl{PBFailures}Photobomb failure cases]{\caplbl{PBFailures}
+\captext[\caplbl{PBFailures}Photobomb failure cases]{
 % ---
 In the top example the classifier incorrectly predicts photobomb due to the alignment of the annotations.
 In the next case down, the classifier incorrectly predicts photobomb, but no matches were made between the
@@ -559,10 +472,10 @@ The last two cases the classifier incorrectly predicts not photobomb, but the co
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/PZ_Master1/cases_photobomb_state/fail_notpb_pb_3928_4880.jpg}\end{subfigure}
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_notpb_pb_1377_1378.jpg}\end{subfigure}
 \begin{subfigure}[h]{.75\textwidth}\centering\includegraphics[width=\textwidth]{figures4/GZ_Master1/cases_photobomb_state/fail_notpb_pb_1184_1185.jpg}\end{subfigure}
-\caption[\caplbl{PBLabelErrors}Errors in the photobomb-state \groundtruth{}]{\caplbl{PBLabelErrors}
+\captext[\caplbl{PBLabelErrors}Errors in the photobomb-state ground truth]{
 % ---
-\Groundtruth{} errors in the database are the reason for several photobomb-state failure cases.
-It is encouraging that the photobomb-state classifier is able to detect errors in the \groundtruth{} even given
+Ground truth errors in the database are the reason for several photobomb-state failure cases.
+It is encouraging that the photobomb-state classifier is able to detect errors in the ground truth even given
   only a few training examples.
 % ---
 }
@@ -570,3 +483,34 @@ It is encouraging that the photobomb-state classifier is able to detect errors i
 \end{figure}
 }
 
+
+
+
+\begin{comment}
+python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 --match \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExampleC.jpg" \
+    --figsize=9,4 --clipwhite --dpi=180 --save
+
+python -m ibeis.viz.viz_chip HARDCODE_SHOW_PB_PAIR --db PZ_Master1 --has_any=photobomb --index=1 \
+    --dpath ~/latex/crall-thesis-2017/ --save "figures5/PhotobombExample.jpg" \
+    --figsize=9,4 --clipwhite --dpi=300 --saveparts
+
+python -m ibeis.core_annots --test-compute_one_vs_one --show
+    
+\end{comment}
+
+\newcommand{\PhotobombExample}{
+\begin{figure}[h]
+\centering
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[height=100pt]{figures5/PhotobombExampleA.jpg}\caption{}\label{sub:PhotobombExampleA}\end{subfigure}
+\begin{subfigure}[h]{0.4\textwidth}\centering\includegraphics[height=100pt]{figures5/PhotobombExampleB.jpg}\caption{}\label{sub:PhotobombExampleB}\end{subfigure}
+\captext[\caplbl{PhotobombExample}Photobomb example]{
+% ---
+A secondary animal in an annotation can cause a ``photobomb''.  Notice the
+primary animal in~\cref{sub:PhotobombExampleA} appears in the background
+of~\cref{sub:PhotobombExampleB}. 
+% ---
+}
+\label{fig:PhotobombExample}
+\end{figure}
+}

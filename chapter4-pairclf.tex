@@ -382,9 +382,9 @@ The example in~\cref{fig:PairFeatVec} illustrates part of a final feature vector
                  ('mean(ratio_score[ratio < .8])', 0.50),
                  ('std(ratio_score[ratio < .8])',  0.09)])
 \end{minted}
-\caption[\caplbl{PairFeatVec}A pairwise feature vector]{\caplbl{PairFeatVec} %
+\captext[\caplbl{PairFeatVec}A pairwise feature vector]{
 % ---
-Example of a small pairwise feature vector containing local and global information.
+This is an example of a small pairwise feature vector containing local and global information.
 The feature vector we use in practice contains $131$ dimensions.
 Note the summary statistics in this example are all computed for correspondences with a ratio value that is less
   than $0.8$.
@@ -439,8 +439,8 @@ Note the summary statistics in this example are all computed for correspondences
       generation of labels.
     Recall that the purpose of our classifier is to output a probability distribution over three labels:
     positive, negative and incomparable.
-    Given a pair of annotations we need to assign one of these three labels using \groundtruth{} data.
-    In recent versions of our system, this \groundtruth{} label is stored along with each unordered pair of
+    Given a pair of annotations we need to assign one of these three labels using ground truth data.
+    In recent versions of our system, this ground truth label is stored along with each unordered pair of
       annotations that has been manually reviewed, but because this is a new feature, only a few pairs have been
       assigned an explicit three-state label.
     Therefore, we must make use of the name and viewpoint labels assigned to each annotation by previous versions
@@ -484,12 +484,12 @@ Note the summary statistics in this example are all computed for correspondences
     These confusing annotation pairs should not be considered for automatic review.
     One of the most challenging of these secondary states is one that we refer to as a {photobomb}.
     A pair of annotations is a photobomb if a secondary animal in one annotation matches an animal in another
-      annotation (\eg see Figure~\ref{fig:PhotobombExample}).
+      annotation (\eg see~\cref{fig:PhotobombExample}).
     Only the primary animal in each annotation should be used to determine identity, but photobombs provide
       strong evidence of matching that can confuse a verification algorithm.
-
     \PhotobombExample{}
 
+    \FloatBarrier{}
     During events like the \GZC{} we labeled several annotation pairs as photobombs.
     Using these labels we will construct a classifier in the same way that we constructed the primary match-state
       classifier.
@@ -519,7 +519,7 @@ Note the summary statistics in this example are all computed for correspondences
 
     \PairDBStats{}
 
-    After sampling, we have a set of annotation pairs and each is associated with a \groundtruth{} matching state
+    After sampling, we have a set of annotation pairs and each is associated with a ground truth matching state
       label of either positive, negative, or incomparable.
     Additionally, each pair is also labeled as either a photobomb or not a photobomb.
     For each pair we construct a pairwise feature vector as described in \cref{sec:pairfeat}.
@@ -766,9 +766,9 @@ Note the summary statistics in this example are all computed for correspondences
         The examples illustrated in ~\cref{fig:MatchLabelErrors} all show pairs of annotations with non-positive
           labels that should have been labeled as positive.
         Note that the positive probabilities from two of these examples are very close to $1.0$, indicating that
-          the classifier is confident that these \groundtruth{} labels are incorrect.
-        Furthermore, these success cases were found in the context of noisy \groundtruth{} labels, showing that our
-          classifier is robust to errors in \groundtruth{} labels.
+          the classifier is confident that these ground truth labels are incorrect.
+        Furthermore, these success cases were found in the context of noisy ground truth labels, showing that our
+          classifier is robust to errors in ground truth labels.
 
         \PairFailPN{}
 
@@ -842,7 +842,7 @@ Note the summary statistics in this example are all computed for correspondences
         Notice that many of the probabilities predicted for these cases are well above the thresholds.
         Predicting high probabilities for these undiscovered photobomb cases indicates that the photobomb-state
           classifier is stronger than our measurements suggest.
-        These mislabeled \groundtruth{} cases also help explain why the predicted probabilities are so low; the
+        These mislabeled ground truth cases also help explain why the predicted probabilities are so low; the
           learning algorithm is encouraged to incorrectly classify them.
         Reviewing and relabeling all of these cases would improve results by both removing noise from the
           training set and increasing the number of labeled examples.

@@ -17,13 +17,11 @@ ibeis ChipMatch.show_ranked_matches --qaid 79 --db PZ_MTEST \
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesA.jpg}\caption{}\label{sub:rankedmatchesa}\end{subfigure}
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesB.jpg}\caption{}\label{sub:rankedmatchesb}\end{subfigure}
 \begin{subfigure}[h]{0.7\textwidth}\centering\includegraphics[width=\textwidth]{figures3/rankedmatchesC.jpg}\caption{}\label{sub:rankedmatchesc}\end{subfigure}
-\caption[\caplbl{rankedmatches}Ranked matches]{\caplbl{rankedmatches}
+\captext[\caplbl{rankedmatches}Ranked matches]{
     % ---
-    The top three ranked results from the ranking algorithm.
-    %Each results shows the matches to a particular \name{}.
+    These are the top three results from the ranking algorithm.
     In each row, the query annotation is on the left and the exemplars of the matched name are on the right.
     Notice that the number of exemplars for each database name varies.
-    %each database \name{} may have a different number of exemplars.
     The top-ranked match in \cref{sub:rankedmatchesa} is correct.
     The other ranks in \cref{sub:rankedmatchesb,sub:rankedmatchesc} are incorrect.
     The overall matching score is shown on the top of each result.
@@ -51,11 +49,11 @@ python -m ibeis.scripts.specialdraw simple_vsone_matches \
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{figures3/SceneryMatch2.jpg}
-\caption[A scenery match]{\caplbl{SceneryMatch}
+\captext[A scenery match]{
 % ---
-An example of two different animals appearing in front of the same
-distinctive background, illustrating the importance of background
-downweighting. The matching regions are highlighted.
+This is an example of two different animals appearing in front of the same distinctive background, illustrating
+  the importance of background downweighting.
+The matching regions are highlighted.
 % ---
 }
 \label{fig:SceneryMatch}
@@ -75,14 +73,15 @@ python -m ibeis.scripts.specialdraw featweight_fig --db PZ_MTEST --aid=1 \
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightA.png}\caption{}\label{sub:fgweightA}\end{subfigure}
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightB.png}\caption{}\label{sub:fgweightB}\end{subfigure}
 \begin{subfigure}[h]{0.32\textwidth}\centering\includegraphics[width=\textwidth]{figures3/fgweightC.png}\caption{}\label{sub:fgweightC}\end{subfigure}
-\caption[Foregroundness weights]{\caplbl{fgweight}
+\captext[Foregroundness weights]{
 % ---
-Generation of foregroundness feature weights. \Cref{sub:fgweightA} shows the annotation's cropped chip.
-This chip is passed to the species detector. \Cref{sub:fgweightB} shows the species detector outputs an
-intensity image indicating the likelihood that each pixel belongs to the foreground. \Cref{sub:fgweightC}
-shows the weighted sum of the intensity under each feature is used as that feature's foregroundness score.
-}
-\label{fig:fgweight}
+\Cref{sub:fgweightA} shows the annotation's cropped chip.
+This chip is passed to the species detector.
+\Cref{sub:fgweightB} shows the species detector outputs an intensity image indicating the likelihood that each
+  pixel belongs to the foreground.
+\Cref{sub:fgweightC} shows the weighted sum of the intensity under each feature is used as that feature's
+  foregroundness score.
+} \label{fig:fgweight}
 \end{figure}
 }
 
@@ -104,13 +103,14 @@ python -m ibeis.viz.viz_nearest_descriptors --test-show_nearest_descriptors --db
 \begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormF.jpg}\caption{}\label{sub:knormh}\end{subfigure}%
 \begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormH.jpg}\caption{}\label{sub:knormi}\end{subfigure}%
 \begin{subfigure}[h]{0.2\textwidth}\centering\includegraphics[height=120pt]{figures3/knormJ.jpg}\caption{}\label{sub:knormj}\end{subfigure}
-\caption[\caplbl{knorm}LNBNN feature correspondence scoring]{
+\captext[\caplbl{knorm}LNBNN feature correspondence scoring]{
 % ---
-\caplbl{knorm} The nearest four neighbors of a distinctive query feature~\cref{sub:knormf}. The bottom row shows
-the warped and normalized features with their SIFT descriptors overlaid. The top row shows the annotation from
-which each feature was extracted. The first two neighbors~\cref{sub:knormg,sub:knormh} are correct matches, the
-third neighbor~\cref{sub:knormi} is an incorrect match, and the fourth neighbor~\cref{sub:knormj} is used as an
-LNBNN normalizer to score the first three matches.
+This shows the nearest four neighbors of a distinctive query feature~\cref{sub:knormf}.
+The bottom row shows the warped and normalized features with their SIFT descriptors overlaid.
+The top row shows the annotation from which each feature was extracted.
+The first two neighbors~\cref{sub:knormg,sub:knormh} are correct matches, the third neighbor~\cref{sub:knormi} is
+  an incorrect match, and the fourth neighbor~\cref{sub:knormj} is used as an LNBNN normalizer to score the first
+  three matches.
 % ---
 }
 \label{fig:knorm}
@@ -129,22 +129,11 @@ python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 3 --dpa
 python -m ibeis.algo.hots.chip_match --test-show_single_namematch --qaid 4 --dpath ~/latex/crall-candidacy-2015 --save figures3/namematch.jpg --diskshow --dpi=180 --clipwhite
 --verbose 
 \end{comment}
-%\SingleImageCommand{namematch}{1}{Name scoring}{
-%    % ---
-%    \Nsumprefix{} \namescoring{}.
-%    The query annotation is at the top left.
-%    Each query feature matches at most one feature in the exemplars for a name.
-%    Each line denotes a feature correspondence colored by its matching score.
-%    In the top right of each database annotation is its annotation score.
-%    Feature scores from multiple views are combined into a name score shown on top.
-%    % ---
-%}{figures3/namematch.jpg}
 \newcommand{\namematch}{
 \begin{figure}[ht!]
 \centering\includegraphics[width=\textwidth]{figures3/namematch.jpg}
-\caption[\caplbl{namematch}\Nsumprefix{} \namescoring{}]{
+\captext[\caplbl{namematch}\Nsumprefix{} \namescoring{}]{
 % ---
-\Nsumprefix{} \namescoring{}.
 The query annotation is at the top left.
 Each query feature matches at most one feature in the exemplars for a name.
 Each line denotes a feature correspondence colored by its matching score.
@@ -170,13 +159,13 @@ ibeis sver_single_chipmatch -t default:refine_method=cv2-lmeds-homog,full_homog_
 \begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsE.jpg}\caption{}\label{sub:svere}\end{subfigure}
 \begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsF.jpg}\caption{}\label{sub:sverf}\end{subfigure}
 \begin{subfigure}[h]{0.35\textwidth}\centering\includegraphics[width=\textwidth]{figures3/sverkptsG.jpg}\caption{}\label{sub:sverg}\end{subfigure}
-\caption[Spatial verification]{
+\captext[Spatial verification]{
     % ---
-    An example of spatial verification process. The three images on the top show~\cref{sub:svera} the original
-    matches, \Cref{sub:sverb} the best set of inliers from affine hypothesis generation, and \Cref{sub:sverc} the
-    final set of homography inliers. The images on the bottom show~\cref{sub:sverd,sub:sverf} the matching images
-    warped and superimposed by both the best affine \Cref{sub:svere} and estimated homography
-    transformation~\cref{sub:sverg}.
+    This shows an example of spatial verification process.
+    The three images on the top show~\cref{sub:svera} the original matches, \Cref{sub:sverb} the best set of
+      inliers from affine hypothesis generation, and \Cref{sub:sverc} the final set of homography inliers.
+    The images on the bottom show~\cref{sub:sverd,sub:sverf} the matching images warped and superimposed by both
+      the best affine \Cref{sub:svere} and estimated homography transformation~\cref{sub:sverg}.
     % ---
 }
 \label{fig:sver}
@@ -193,24 +182,26 @@ python -m ibeis Chap3.agg_dbstats
 \newcommand{\DatabaseInfo}{
 \begin{table}[ht!]
 \centering
-\caption[Database statistics]{Database statistics indicating the number of individuals and annotations in each dataset. An encounter is a group of annotations from the same individual taken at the same place and time. Resighted names contain multiple encounters.}
+\captext[Database statistics]{
+These statistics indicate the number of individuals and annotations in each dataset.
+An encounter is a group of annotations from the same individual taken at the same place and time.
+Resighted names contain multiple encounters.}
 \label{tbl:DatabaseStatistics}
 \input{figures3/agg-enc.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
-\caption[Annotations per quality]{Annotations per quality. The ``None'' column
-indicates the number of annotations without a quality label.}
+\captext[Annotations per quality]{
+    The ``None'' column indicates the number of annotations without a quality label.}
 \label{tbl:AnnotationsPerQuality}
 \input{figures3/agg-qual.tex}
 \end{table}
 %--
 \begin{table}[h!]
 \centering
-\caption[Annotations per viewpoint]{
+\captext[Annotations per viewpoint]{
     % ---
-    Annotations per viewpoint.
     Columns names are abbreviated using the first letters of front, left, back, and right.
     The ``None'' column indicates the number of annotations without a viewpoint label.
     % ---
@@ -232,9 +223,8 @@ python -m ibeis Chap3.draw time_distri --dbs=GIRM_Master1,GZ_Master1,PZ_Master1,
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/GZ_Master1/timedist.png}\caption{Grévy's zebras}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/GIRM_Master1/timedist.png}\caption{Masai giraffes}\end{subfigure}
 \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=.9\textwidth]{figures3/humpbacks_fb/timedist.png}\caption{Humpbacks}\end{subfigure}
-\caption[\caplbl{timedist}Distribution of image timestamps]{\caplbl{timedist}
+\captext[\caplbl{timedist}Distribution of image timestamps]{
 % ---
-Distribution of image timestamps.
 The y-axis is plotted on a square-root scale to emphasize times when only a few images were taken.
 For plains zebras and Grévy's zebras images were collected over many years.
 For Masai giraffes all data was collected immediately before and during the \GZC{}.
@@ -265,7 +255,7 @@ python -m ibeis Chap3.draw_all --db GIRM_Master1
 \newcommand{\BaselineExpt}{
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/agg-baseline.png}\end{subfigure}
-        \caption[\caplbl{BaselineExpt}Baseline experiment]{\caplbl{BaselineExpt}
+        \captext[\caplbl{BaselineExpt}Baseline experiment]{
     % ---
     The baseline experiment is a high-level indicator of the ranking accuracy of each species.
     We measure ranking accuracy using a single query and database annotation --- selected from different
@@ -299,12 +289,11 @@ ibeis Chap3.draw smk --dbs=GZ_Master1,PZ_Master1 --diskshow
 \begin{figure}[ht!]\centering
     \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/smk.png}\caption{Plains zebras}\label{sub:SMKExptA}\end{subfigure}
     \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/smk.png}\caption{Grévy's zebras}\label{sub:SMKExptB}\end{subfigure}
-    \caption[\caplbl{SMKExpt}SMK experiment]{\caplbl{SMKExpt}
+    \captext[\caplbl{SMKExpt}SMK experiment]{
     % ---
-    The (VLAD based) SMK algorithm compared to our LNBNN ranking algorithm.
+    In this experiment we compare the (VLAD based) SMK algorithm to our LNBNN ranking algorithm.
     The results demonstrate that LNBNN outperforms the ranking accuracy of SMK.
-    The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are
-    shown in the lower left.
+    The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
     % ---
     }
     \label{fig:SMKExpt}
@@ -325,7 +314,7 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/foregroundness_intra.png}\caption{Plains zebras}\end{subfigure}
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/foregroundness_intra.png}\caption{Grévy's zebras}\end{subfigure}
-        \caption[\caplbl{FGIntraExpt}Foregroundness experiment]{\caplbl{FGIntraExpt}
+        \captext[\caplbl{FGIntraExpt}Foregroundness experiment]{
             % ---
             Applying foregroundness weights to feature correspondences improves the identification accuracy at
               the top rank by filtering matches in scenery.
@@ -346,10 +335,10 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/invar.png}\caption{Plains zebras}\label{sub:InvarExptA}\end{subfigure}
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/invar.png}\caption{Grévy's zebras}\label{sub:InvarExptB}\end{subfigure}
-        \caption[\caplbl{InvarExpt}Feature invariance experiment]{\caplbl{InvarExpt}
+        \captext[\caplbl{InvarExpt}Feature invariance experiment]{
             % ---
-            Results of the feature invariance experiment, testing the effect of affine invariance (AI) and the
-              query-side rotation heuristic (QRH).
+            This experiment tests the effect of affine invariance (AI) and the query-side rotation heuristic
+              (QRH) on identification accuracy.
             For plains zebras circular keypoints with the QRH are the most accurate.
             For Grévy's zebras enabling affine invariance works the best.
             The number of query/database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
@@ -392,7 +381,7 @@ python -m ibeis -e draw_rank_cmc --db GZ_Master1   -a timectrl   -t baseline:fg_
         \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/pzcirckpts.jpg}\caption{}\label{sub:kptstypeB}\end{subfigure}
         \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/gzaffkpts.jpg}\caption{}\label{sub:kptstypeC}\end{subfigure}
         \begin{subfigure}[h]{.48\textwidth}\centering\includegraphics[width=\textwidth]{figures3/gzcirckpts.jpg}\caption{}\label{sub:kptstypeD}\end{subfigure}
-        \caption[\caplbl{kptstype}Examples of keypoint invariance]{\caplbl{kptstype}
+        \captext[\caplbl{kptstype}Examples of keypoint invariance]{
             % ---
             Many affine keypoints detected on plains zebras tend to encompass only one or two stripes. The distinctive stripe
             patterns on Grévy's zebras are well captured by affine keypoints, whereas circular keypoints are more spread out.
@@ -419,18 +408,14 @@ python -m ibeis Chap3.draw nsum --dbs=GZ_Master1,PZ_Master1 --diskshow
     \begin{figure}[ht!]\centering
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/nsum.png}\caption{Plains zebras}\label{sub:NScoreExptA}\end{subfigure}
         \begin{subfigure}[h]{\textwidth}\centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/nsum.png}\caption{Grévy's zebras}\label{sub:NScoreExptB}\end{subfigure}
-        \caption[\caplbl{NScoreExpt}Name scoring experiment]{\caplbl{NScoreExpt}
+        \captext[\caplbl{NScoreExpt}Name scoring experiment]{
             % ---
-            Results of the name scoring mechanism experiment.
             There is a clear separation between identification accuracy when the number of exemplars per name is
               $1$ compared to when it is $3$.
             Feature based name scoring (\nsum{}) is slightly more accurate than scoring using the annotation
               based name scoring (\csum{}).
             The number of query /database annotations (\pvar{qsize} / \pvar{dsize}) are shown in the lower left.
             Database size was normalized using confusors.
-            %Note that the scores reported here are higher than the baseline for
-            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
-            % ---
         }
         \label{fig:NScoreExpt}
     \end{figure}
@@ -449,14 +434,11 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 \newcommand{\KExptA}{
     \begin{figure}[ht!]\centering
         \centering\includegraphics[width=\textwidth]{figures3/PZ_Master1/kexpt.png}
-        \caption[\caplbl{KExptA}The $K$ experiment for plains zebras]{\caplbl{KExptA}
+        \captext[\caplbl{KExptA}The $K$ experiment for plains zebras]{
             % ---
-            Identification accuracy for plains zebras using different values of $\K$ (the number of nearest
+            This shows the identification accuracy for plains zebras using different values of $\K$ (the number of nearest
               neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
               different database sizes (\pvar{dsize}).
-            %Note that the scores reported here are higher than the baseline for
-            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
-            % ---
         }
         \label{fig:KExptA}
     \end{figure}
@@ -464,14 +446,11 @@ python -m ibeis Chap3.draw kexpt --dbs=GZ_Master1,PZ_Master1 --diskshow
 \newcommand{\KExptB}{
     \begin{figure}[ht!]\centering
         \centering\includegraphics[width=\textwidth]{figures3/GZ_Master1/kexpt.png}
-        \caption[\caplbl{KExptB}The $K$ experiment for Grévy's zebras]{\caplbl{KExptB}
+        \captext[\caplbl{KExptB}The $K$ experiment for Grévy's zebras]{
             % ---
-            Identification accuracy for Grévy's zebras using different values of $\K$ (the number of nearest
+            This shows the identification accuracy for Grévy's zebras using different values of $\K$ (the number of nearest
               neighbors assigned to each query feature), different numbers of exemplars (\pvar{dpername}), and
               different database sizes (\pvar{dsize}).
-            %Note that the scores reported here are higher than the baseline for
-            %  the same reasons as explained in~\cref{fig:DBSizeExpt}.
-            % ---
         }
         \label{fig:KExptB}
     \end{figure}
@@ -493,7 +472,7 @@ python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fai
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=250pt]{figuresC/failviewA.jpg}\caption{}\label{sub:failviewA}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=250pt]{figuresC/failviewB.jpg}\caption{}\label{sub:failviewB}\end{subfigure}
-\caption[Unaligned failure case]{\caplbl{FailViewpoint}
+\captext[Unaligned failure case]{
 % ---
 Due to pose and viewpoint variations, the correctly matching pair of annotations \cref{sub:failviewB} is returned
   at rank $22$ while the incorrect pair of annotations \cref{sub:failviewA} is returned at rank $1$.
@@ -517,7 +496,7 @@ python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,sortdsc=g
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=260pt]{figuresC/failoccluA.jpg}\caption{}\label{sub:failoccluA}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=260pt]{figuresC/failoccluB.jpg}\caption{}\label{sub:failoccluB}\end{subfigure}
-\caption[Occlusion failure case]{\caplbl{FailOcclusion}
+\captext[Occlusion failure case]{
 % ---
 The plants in the query annotation inhibit the creation of feature correspondences,
 causing the correct pair of annotations \cref{sub:failoccluB} to be returned at rank $2$.
@@ -544,7 +523,7 @@ python -m ibeis draw_match_cases -a timectrl -t best --filt :fail=True,with_tag=
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failqualityA.jpg}\caption{}\label{sub:failqualityA}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failqualityB.jpg}\caption{}\label{sub:failqualityB}\end{subfigure}
-\caption[Quality failure case]{\caplbl{FailQuality}
+\captext[\caplbl{FailQuality}Quality failure case]{
 % ---
 The low resolution of the database annotation causes the correct pair of annotations \cref{sub:failqualityB} to
   be returned at rank $43$.
@@ -568,7 +547,7 @@ python -m ibeis draw_match_cases -a timectrl -t best:fg_on=False --filt :fail=Tr
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failsceneryA.jpg}\caption{}\label{sub:failsceneryA}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=270pt]{figuresC/failsceneryB.jpg}\caption{}\label{sub:failsceneryB}\end{subfigure}
-\caption[Scenery failure case]{\caplbl{FailScenery}
+\captext[\caplbl{FailScenery}Scenery failure case]{
 % ---
 The incorrect pair of annotations \cref{sub:failsceneryA} was returned at rank $1$ because of strong matches in
   the background scenery.
@@ -595,7 +574,7 @@ python -m ibeis draw_match_cases --db PZ_Master1 -a timectrl -t best --filt :fai
 \centering
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=300pt]{figuresC/failpbA.jpg}\caption{}\label{sub:failpbA}\end{subfigure}
 \begin{subfigure}[h]{0.47\textwidth}\centering\includegraphics[height=300pt]{figuresC/failpbB.jpg}\caption{}\label{sub:failpbB}\end{subfigure}
-\caption[Photobomb failure case]{\caplbl{FailPhotobomb}
+\captext[\caplbl{FailPhotobomb}Photobomb failure case]{
 % ---
 A photobombing animal in the foreground of the database annotation causes LNBNN to return the incorrect result \cref{sub:failpbA} at rank $1$.
 The correct match \cref{sub:failpbB}, has a significant number of matches, but there is a difference of $1$ day
