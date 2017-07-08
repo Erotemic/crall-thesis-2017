@@ -8,7 +8,7 @@
 \chapter{RELATED WORK}\label{chap:relatedwork} 
 
     To address the individual animal identification problem we draw upon related research in %
-    feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2007, perdoch_efficient_2009}, %
+    feature detection~\cite{mikolajczyk_comparison_2005,tuytelaars_local_2008, perdoch_efficient_2009}, %
     feature description~\cite{lowe_distinctive_2004, mikolajczyk_performance_2005,simonyan_learning_2014,
       winder_picking_2009,zagoruyko_learning_2015,han_matchnet_2015}, %
     approximate nearest neighbor search~\cite{silpa_anan_optimised_2008, muja_fast_2009}, %
@@ -41,7 +41,7 @@
     Before an image can be analyzed, it must be broken down into smaller components. An image's visual appearance
     can be captured using a combination of local image patterns --- \glossterm{patch-based features}. The most
     informative patch-based features are typically centered on simple image structures such as junctions, corners,
-    edges, and blobs~\cite{tuytelaars_local_2007}. If these features can be reliably detected, localized, and
+    edges, and blobs~\cite{tuytelaars_local_2008}. If these features can be reliably detected, localized, and
     described then image matching can be posed as a problem in matching sets of features. This section describes
     work related to detecting features in an image, and~\cref{sec:featuredescribe} will discuss how detected
     features are then described.
@@ -56,10 +56,10 @@
     Adding these properties is said to add invariance to the feature. Invariant features can provide similar
     descriptions of the same semantic image region under different viewing conditions. However, adding invariance
     can cause features to lose distinguishing information~\cite{mikolajczyk_comparison_2005,
-    tuytelaars_local_2007, perdoch_efficient_2009, lowe_distinctive_2004}.
+    tuytelaars_local_2008, perdoch_efficient_2009, lowe_distinctive_2004}.
 
     Many detectors have been developed to detect patch-based feature keypoints~\cite{mikolajczyk_comparison_2005,
-    tuytelaars_local_2007}. Algorithms such as Harris, SUSAN, and FAST detect corners~\cite{harris_combined_1988,
+    tuytelaars_local_2008}. Algorithms such as Harris, SUSAN, and FAST detect corners~\cite{harris_combined_1988,
     mikolajczyk_indexing_2001, smith_susannew_1997, rosten_machine_2006}. Blobs and corners can be detected with
     Hessian~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994} or difference of
     Gaussians~\cite{gaussier_neural_1992, lowe_distinctive_2004} detectors. There are also region-based detectors:
@@ -69,12 +69,12 @@
     features~\cite{liu_sift_2008, revaud_deep_2015, iscen_comparison_2015}. Other applications, such as face
     recognition, use specialized keypoint detectors~\cite{dantone_real_time_2012, berg_tom_vs_pete_2012}. There
     currently exists no principled method for selecting the appropriate feature detector. Different feature
-    detectors perform differently given the application~\cite{tuytelaars_local_2007}.
+    detectors perform differently given the application~\cite{tuytelaars_local_2008}.
 
     This section describes the representation of an image over multiple scales, the detection of features to
     sub-pixel and sub-scale accuracy, and the adaption of features to specify orientation and shape. We focus on
     the Hessian-based keypoint because it has been experimentally shown to be a reliable choice for instance
-    recognition~\cite{tuytelaars_local_2007}.
+    recognition~\cite{tuytelaars_local_2008}.
 
    \subsection{Scale-space}
         Scale-space theory describes image features as existing at multiple
@@ -154,7 +154,7 @@
         Hessian-based keypoint detection searches for extrema of the Hessian operator in both space and
         scale~\cite{beaudet_rotationally_1978, lindeberg_shape_adapted_1994}. The Hessian detector can
         qualitatively be viewed as a blob detector, but it also detects corners which may appear as blobs in
-        scale-space~\cite{tuytelaars_local_2007}. The Hessian keypoint detector will compute a response value for
+        scale-space~\cite{tuytelaars_local_2008}. The Hessian keypoint detector will compute a response value for
         each point in scale space indicating how blob-like each pixel is. The extrema of this response defines a
         set of Hessian keypoints. Post processing removes non-robust keypoints and localizes all other keypoints to
         sub-pixel and sub-scale accuracy.
@@ -285,7 +285,7 @@
         in viewpoint, pose, lighting, and quality. In our baseline algorithm we choose to use a Hessian based
         detector~\cite{perdoch_efficient_2009, lindeberg_feature_1998} because it generally produces a large number
         of features and has been experimentally shown to be repeatable, accurate, and adaptable to multiple degrees
-        of invariance~\cite{tuytelaars_local_2007}.
+        of invariance~\cite{tuytelaars_local_2008}.
 
         Once a keypoint is detected, it is described using a keypoint description algorithm. It is desirable for a
         keypoint description to be invariant to small changes in viewpoint, pose, and lighting. Accurate
@@ -327,7 +327,7 @@
     A promising direction for outperforming the SIFT descriptor is descriptor
       learning~\cite{simonyan_descriptor_2012, simonyan_learning_2014, winder_picking_2009}; specifically
       descriptor learning using deep neural networks~\cite{razavian_cnn_2014, bengio_representation_2013,
-      russakovsky_imagenet_2014}.
+      russakovsky_imagenet_2015}.
     This section first describes the basic SIFT algorithm and then provides an overview of alternatives that have
       been proposed to SIFT{}.
     Work related to learning descriptor vectors using deep neural networks is discussed later in~\cref{sec:dcnn}.
@@ -1026,13 +1026,13 @@
     Different types of image recognition lie at different points on a spectrum of specificity. If instance
     recognition is at one end of the spectrum, then category recognition is at the other. The goal of a
     \glossterm{category recognition} algorithm is to assign a categorical class label to a query
-    image~\cite{everingham_pascal_2010, everingham_pascal_2015, russakovsky_imagenet_2014, deng_imagenet_2009,
+    image~\cite{everingham_pascal_2010, everingham_pascal_2015, russakovsky_imagenet_2015, deng_imagenet_2009,
     fei_fei_one_shot_2006, griffin_caltech_256_2007}. The categories often have visual appearances with a high
     degree of intra-class variance. \Eg{}, a recliner and a bench both belong to the chair category. Image
     representations and similarity measures are constructed to account for this. Despite this, techniques in
     category recognition have many similarities to instance recognition techniques. Until the neural network
     revolution~\cite{krizhevsky_imagenet_2012}, most category recognition techniques have been based on vocabulary
-    methods~\cite{csurka_visual_2004, yang_linear_2009, sanchez_compressed_2013, russakovsky_imagenet_2014,
+    methods~\cite{csurka_visual_2004, yang_linear_2009, sanchez_compressed_2013, russakovsky_imagenet_2015,
     krizhevsky_imagenet_2012} similar to those discussed in~\cref{subsec:bow}. This section first provides a brief
     overview of this literature. Then, we discuss naive Bayes classification
     techniques~\cite{boiman_defense_2008,mccann_local_2012} that play a large role in our baseline animal
@@ -1181,7 +1181,7 @@
     fukushima_neocognitron_1988}. However, they did not receive major attention from computer vision researchers
     until $2012$ when a deep convolutional neural network (DCNN)~\cite{krizhevsky_imagenet_2012} outperformed the
     best support vector machines (SVMs)~\cite{vapnik_statistical_1998} by over $10\percent$ in the ImageNet
-    category recognition challenge~\cite{russakovsky_imagenet_2014}. Since then, many successful category
+    category recognition challenge~\cite{russakovsky_imagenet_2015}. Since then, many successful category
     recognition techniques based on DCNNs have been published~\cite{simonyan_very_2015, chatfield_efficient_2015,
     chatfield_return_2014, oquab_learning_2014, szegedy_going_2015, long_convnets_2014, he_spatial_2014,
     dean_fast_2013}. DCNNs have also been shown to produce excellent results when applied to other computer vision
