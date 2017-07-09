@@ -85,7 +85,7 @@
 %http://tex.stackexchange.com/questions/60135/path-to-external-files-in-nested-input
 %\usepackage{import}
 
-\usepackage[numbers,sort]{natbib}
+%\usepackage[numbers,sort]{natbib}
 %\usepackage[numbers,sort,compress]{natbib}
 %\usepackage{cite}
 
@@ -101,6 +101,12 @@
 %  %bibencoding=utf8,
 %  backend=biber
 %]{biblatex} 
+
+% IEEE style where each reference is individually braketed
+\usepackage[noadjust]{cite}
+\renewcommand\citeform[1]{[#1]}
+\renewcommand\citeleft{}
+\renewcommand\citeright{}
 
 
 \usepackage{booktabs}

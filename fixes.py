@@ -13,6 +13,7 @@ pd.options.display.float_format = lambda x: '%.4f' % (x,)
 full_bibman = fix_bib.BibMan('FULL.bib', doc='thesis')
 
 bibman = fix_bib.BibMan('final-bib.bib', doc='thesis')
+bibman.fix_conference_years()
 bibman.printdiff()
 
 print('bibman.unregistered_pubs = {}'.format(ut.repr4(bibman.unregistered_pubs)))
