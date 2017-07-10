@@ -10,11 +10,13 @@ pd.options.display.width = 160
 pd.options.display.float_format = lambda x: '%.4f' % (x,)
 
 # PARSE DATABASE
-full_bibman = fix_bib.BibMan('FULL.bib', doc='thesis')
+# full_bibman = fix_bib.BibMan('FULL.bib', doc='thesis')
 
 bibman = fix_bib.BibMan('final-bib.bib', doc='thesis')
-bibman.fix_conference_years()
+bibman.sort_entries()
+bibman.write_testfile()
 bibman.printdiff()
+bibman.save()
 
 print('bibman.unregistered_pubs = {}'.format(ut.repr4(bibman.unregistered_pubs)))
 for pub in bibman.unregistered_pubs:

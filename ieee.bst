@@ -1938,7 +1938,8 @@ FUNCTION {format.url}
 % for articles, so the display of the number is controlled here by the
 % switch "is.use.number.for.article"
 FUNCTION {article}
-{ std.status.using.comma
+{ 
+  std.status.using.comma
   start.entry
   if.url.alt.interword.spacing
   format.authors "author" output.warn
@@ -1948,6 +1949,7 @@ FUNCTION {article}
   format.volume output
   format.number.if.use.for.article output
   format.pages output
+  std.status.using.period
   format.date "year" output.warn
   format.note output
   format.url output
@@ -2007,8 +2009,8 @@ FUNCTION {electronic}
   format.howpublished "howpublished" bibinfo.check output
   format.organization "organization" bibinfo.check output
   format.address "address" bibinfo.check output
-  format.note output
   format.url output
+  format.note output
   fin.entry
   empty.entry.warn
   if.url.std.interword.spacing
@@ -2051,8 +2053,8 @@ FUNCTION {incollection}
   format.number output
   format.chapter output
   format.pages output
-  format.note output
   format.url output
+  format.note output
   fin.entry
   if.url.std.interword.spacing
 }
@@ -2384,6 +2386,7 @@ FUNCTION {internet}{electronic}
 FUNCTION {webpage}{electronic}
 FUNCTION {www}{electronic}
 FUNCTION {default.type}{misc}
+FUNCTION {report}{techreport}
 
 
 
