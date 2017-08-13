@@ -64,71 +64,8 @@ Submit here: http://www.etdadmin.com/cgi-bin/school?siteId=489
 \listoftables{}          % required if there are tables
 \listoffigures{}         % required if there are figures
 
-\specialhead{ACKNOWLEDGMENT}
-
-% http://matt.might.net/articles/phd-school-in-pictures/
-Over the past seven years, I have devoted nearly all of my time and energy into learning the skills and
-  developing the systems that have allowed me to make this contribution.
-I would've been unable to achieve this feat without the support and guidance of others.
-
-First and foremost, I must thank my partner: Dana Cardona.
-Her love, support, and feedback has motivated and sustained me during my time as a graduate student.
-In our five years together I have found more stability and purpose than I thought was possible.
-
-I am grateful to my parents for their ongoing encouragement and for fostering my curiosity.
-Thank you for all that you have done and continue to do.
-
-Also, to my friend Lucas Cotterell:
-it was in a conversation with Luc that I decided that I could and would pursue a doctorate degree.
-His long-lasting friendship has helped me achieve this goal.
-
-Next, I thank my labmates Peter Honig, Zach Jablons, Jason Parham, and Hendrik Weideman.
-Our discussions have been invaluable and are responsible for a significant portion of my understanding of
-  computer vision, machine learning, and neural networks.
-
-I graciously thank my advisor --- Chuck Stewart --- whose guidance helped me navigate my research, grow
-  professionally and personally, and whose writing style has caused me to develop a fondness for em dashes.
-
-To my committee members:
-Barb Cutler, Rich Rake, and Bülent Yener, whose suggestions, comments, and challenges successfully pushed me from
-  my candidacy to the completion of my dissertation.
-I am thankful to them and to the other RPI professors who have taken the time to share their insight and discuss
-  research problems with me.
-
-I am immensely grateful to Bill and Naomi Hoffman for all they have done to open this path for me.
-I am filled with appreciation for them and the many others at Kitware who acted as teachers and mentors to me.
-
-
-\specialhead{ABSTRACT}
-
-In this thesis we address the problem of identifying individual animals using images in the context of assisting
-  an ecologist in performing a population census.
-We are motivated by events like the ``Great Zebra Count'' where thousands of images of zebras and giraffes were
-  collected in Nairobi National Park over two days.
-By grouping all images that contain the same individual we can census these populations.
-This problem is challenging because images are collected outdoors and contain occlusion, lighting, and quality
-  variations and because the animals exhibit viewpoint and pose variations.
-
-Our first contribution is an algorithm that ranks a database of images by their similarity to a query.
-A manual reviewer inspects only the top few results for each query --- significantly reducing the search space
-  --- and determines if the animals match.
-Using this algorithm alone, we analyzed the images from the Great Zebra Count and performed a population census.
-Our second contribution is a verification algorithm that determines the probability that two images are from the
-  same animal, that they are not, or that there is not enough to decide.
-This algorithm is used with the ranking algorithm to re-rank results and automatically verify high confidence
-  image pairs.
-
-Our third contribution is a semi-automatic graph identification algorithm.
-The approach represents each image as a node in the graph and incrementally forms edges between nodes determined
-  to the same animal.
-The ranking and verification algorithms are used to search for candidate edges and estimate their probability of
-  matching.
-Based on these probabilities, edges are prioritized for review and placed in the graph when they are
-  automatically verified or manually reviewed.
-Redundant connections are added to detect and recover from errors.
-A termination criterion determines when identification is finished.
-Using the graph algorithm we perform a population census on the scale of the Great Zebra Count using less than
-  $25\%$ of the manual reviews required by the original method.
+\input{acknowledgment}
+\input{abstract}
 
 \input{def}
 
