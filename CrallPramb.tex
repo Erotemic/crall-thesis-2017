@@ -128,3 +128,24 @@
 \newlist{enumin}{enumerate*}{2}
 \setlist[enumin]{label=(\arabic*),noitemsep,nolistsep}
 
+
+\usepackage{makecell}
+% defines the FloatBarrier command
+\usepackage[section]{placeins}
+
+% References: https://tex.stackexchange.com/questions/333906/switch-between-long-and-short-caption-in-list-of-figures
+\makeatletter
+\let\latex@@caption\caption
+%\RenewDocumentCommand{\caption}{+o+m}{%
+\NewDocumentCommand{\captext}{+o+m}{%
+  \IfValueTF{#1}{% 
+      \latex@@caption[#1]{\textbf{#1}\quad{}\@ifnextchar\par\@gobble\relax#2}%
+    %\latex@@caption[#1]{\textbf{#1.} #2}%
+  }{%
+    %\latex@@caption[#2]{#2}% No [#1] given, use the long caption then!
+    \latex@@caption[ERROR-NO-SHORT-TEXT]{#2}% No [#1] given, use the long caption then!
+  }
+}
+\makeatother
+
+
