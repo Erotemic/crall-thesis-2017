@@ -34,7 +34,9 @@ Using the graph algorithm we perform a population census on the scale of the Gre
 
 -----
 
-#### Citation
+The PDF can be found here: https://github.com/Erotemic/crall-thesis-2017/blob/master/crall-thesis_2017-08-10_compressed.pdf
+
+The bibtex citation entry is: 
 
 ```bibtex
 @phdthesis{crall_identifying_2017,
