@@ -32,3 +32,22 @@ A termination criterion determines when identification is finished.
 Using the graph algorithm we perform a population census on the scale of the Great Zebra Count using less than
   25% of the manual reviews required by the original method.
 
+-----
+
+#### Citation
+
+```bibtex
+@phdthesis{crall_identifying_2017,
+  address = {Troy, NY},
+  author = {Crall, Jonathan P.},
+  keyword = {animal, instance recognition},
+  pub_abbrev = {None},
+  pub_accro = {None},
+  pub_full = {None},
+  pub_type = {thesis},
+  school = {Department of Computer Science, Rensselaer Polytechnic Institute},
+  title = {Identifying {Individual} {Animals} using {Ranking}, {Verification}, and {Connectivity}},
+  type = {Ph.{D}. {Thesis}},
+  year = {2017}
+}
+```
