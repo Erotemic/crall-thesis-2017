@@ -40,7 +40,6 @@ Using the graph algorithm we perform a population census on the scale of the Gre
 @phdthesis{crall_identifying_2017,
   address = {Troy, NY},
   author = {Crall, Jonathan P.},
-  keyword = {animal, instance recognition},
   school = {Department of Computer Science, Rensselaer Polytechnic Institute},
   title = {Identifying {Individual} {Animals} using {Ranking}, {Verification}, and {Connectivity}},
   type = {Ph.{D}. {Thesis}},
