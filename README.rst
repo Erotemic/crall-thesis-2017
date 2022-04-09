@@ -1,7 +1,7 @@
 Identifying Individual Animals using Ranking, Verification, and Connectivity
 ============================================================================
 
-.. image:: https://i.imgur.com/d9kLQFM.png
+.. image:: https://i.imgur.com/qAW51Uc.png
 
 Abstract
 --------
