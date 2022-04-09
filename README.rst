@@ -91,6 +91,26 @@ CIDS are:
     QmQd9zEb2SxbweNcLMGmnx34AvBJWCp4PUbrdgZkP1RTVG crall-thesis-2017/tmp/figures_pairclf
     QmTD1nZ4pbrB1SnjkLGt9Cs37mZbabXqjn6YZaAKVEoSvY crall-thesis-2017
 
+Software
+--------
+
+The software developed while working on this thesis is free and open source.
+
+The primary software is the IBEIS package: https://github.com/Erotemic/ibeis
+
+An older version of the software is the HotSpotter application:
+https://github.com/Erotemic/hotspotter
+
+
+The modern versions of these algorithms are brought together in the WildBook
+framework for mark-recapture, molecular ecology, and social ecology studies:
+https://github.com/WildMeOrg/Wildbook
+
+Services providing a web-based infastructure for the algorithms described in
+this thesis and others are provided by the WildMe organization:
+https://www.wildme.org/
+
+
 Selected Figures
 ----------------
 
