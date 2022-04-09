@@ -116,7 +116,7 @@ Related Work
 
 `Parham, Jason. "Animal Detection for Photographic Censusing" RPI PhD Thesis 2021 <https://github.com/bluemellophone/dissertation>`__
 
-`Weideman, Hendrik. "Contour-Based Instance Recognition of Animals" RPI PhD Thesis 2021 <https://hjweide.github.io/research/>`__
+`Weideman, Hendrik. "Contour-Based Instance Recognition of Animals" RPI PhD Thesis 2019 <https://hjweide.github.io/research/>`__
 
 .. https://web.archive.org/web/20160706072208/http://cs.rpi.edu/hotspotter/crall-hotspotter-wacv-2013.pdf
 
