@@ -61,7 +61,7 @@ The full text PDF is available on GitHub to be
 
 Google slides hosts my original 
 `defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__  and 
-`candidacy presentation (2016-05)<https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4`__. These can
+`candidacy presentation (2016-05) <https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4>`__. These can
 also be found on IPFS via the following CIDS: ``QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi`` and ``QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs``.
 
 Full Source
