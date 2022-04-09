@@ -52,12 +52,17 @@ The bibtex citation entry is:
       year = {2017}
     }
 
-Full Text
----------
+Full Text and Slides
+--------------------
 
-The PDF can be viewed via this link: https://github.com/Erotemic/crall-thesis-2017/blob/master/crall-thesis_2017-08-10_compressed.pdf 
+The full text PDF can be 
+`viewed <https://github.com/Erotemic/crall-thesis-2017/blob/master/crall-thesis_2017-08-10_compressed.pdf>`__ or 
+`downloaded <https://github.com/Erotemic/crall-thesis-2017/raw/master/crall-thesis_2017-08-10_compressed.pdf>`__.
 
-and downloaded via this link: https://github.com/Erotemic/crall-thesis-2017/raw/master/crall-thesis_2017-08-10_compressed.pdf
+I've hosted my `defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__ on Google slides 
+and on IPFS: QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi
+
+I've hosted my `candidacy presentation (2016-05)<https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4`__ on Google slides and IPFS: QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs
 
 Full Source
 -----------
@@ -67,39 +72,23 @@ have been uploaded to IPFS (as of 2022-04-09).  The root CID is:
 `QmZWPX28XZeR8YuR5EqJcyYgbkTg9mwknDsLmRQQMRmiET`. And the main relevant data
 CIDS are:
 
-```
-Qmb7H2PUU2bAmb42E5FaPGAkFVV57AZRZTDRhRfEX2Pm6A crall-thesis-2017/chapter5-main.pdf
-QmT6Pw1D9rS4cLmGNkAX9mQaL7Z4hzvh1Lu3hYzLFe3UGY crall-thesis-2017/crall-thesis_2017-06-25_compressed.pdf
-QmX2u9PtmcsXhDoDyitT1XvZkVCXtS7q31N8ANR3jvJ4HP crall-thesis-2017/crall-thesis_2017-08-10_compressed.pdf
-QmNaEvLnt5SL8rf4vRg3aqw8rUg3YATkr9DBrnirUjzfS3 crall-thesis-2017/crall-thesis_2017-08-19_compressed.pdf
-QmUkJhNSLDSgBnvxu5TLiXGU8LCR7tfS9s2meWCZZQ6bnL crall-thesis-2017/guts
-QmScScfpeKA2CtShuin5o5af5MN3NFhQBLeDqEUb435qXu crall-thesis-2017/notes
-QmPmpgBGw2kHPRVBg6z9m28PNLAzCKMe29QvJ3YvWZRo1G crall-thesis-2017/tmp/figures1
-QmUYQFvdWEVYEsmf5wNfHTPzWrHtaiZjcSanf5FsD74NYu crall-thesis-2017/tmp/figures2
-QmNqvbG1ng6z3bATR4XRyPiSGVExHaoLUQszqYFeARrBoc crall-thesis-2017/tmp/figures3
-QmeuC9tYezC75yRLrG7tvCT7tXrQYsLWtvVw62ZYGDEBBw crall-thesis-2017/tmp/figures4
-QmWmkVJv48A5RTGSm8H92qUHvcKeKsKugHbYsua8ktMjQV crall-thesis-2017/tmp/figures5
-QmTs6PB5148DouDWKAv8WB9Q2zdx3crCBb3W88bHjLLkfM crall-thesis-2017/tmp/figuresC
-QmUf1YkuEdmEczm6j237rgtUwSKaNkL4uCCq4QFZrfDL2c crall-thesis-2017/tmp/figuresGraph
-QmajtiHvGuQ4vbVPH36R6E5KAxpQao5R7XGre8aqa8iWPK crall-thesis-2017/tmp/figuresX
-QmXwq83V6WBtd8vSV3JNHTyYvH3HiU6CzA46jDtSV6xGwD crall-thesis-2017/tmp/figuresY
-QmZKeYDeVkKMbmEvL7ue8r8uG2TqB6aJXhX2dhNLKsawD3 crall-thesis-2017/tmp/figures_graph
-QmZuc9FyH6mJ1hsMwKv77rbyGeWzLGCjrCd8gyXNtCh9JJ crall-thesis-2017/tmp/figures_new3
-QmQd9zEb2SxbweNcLMGmnx34AvBJWCp4PUbrdgZkP1RTVG crall-thesis-2017/tmp/figures_pairclf
-QmXGXAdFB9hKbN5vegP8sQikX1xfq8PawCrgEWsYYPtyT6 crall-thesis-2017/tmp
-QmTD1nZ4pbrB1SnjkLGt9Cs37mZbabXqjn6YZaAKVEoSvY crall-thesis-2017
-```
+.. code:: 
 
-Slides
-------
-
-Google slides of my defense presentation (2017-07) can be found on Google slides:
-https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g
-and on IPFS: QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi
-
-Google slides of my candidacy presentation (2016-05) can be found on Google slides:
-https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4
-and on IPFS: QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs
+    QmUkJhNSLDSgBnvxu5TLiXGU8LCR7tfS9s2meWCZZQ6bnL crall-thesis-2017/guts
+    QmScScfpeKA2CtShuin5o5af5MN3NFhQBLeDqEUb435qXu crall-thesis-2017/notes
+    QmPmpgBGw2kHPRVBg6z9m28PNLAzCKMe29QvJ3YvWZRo1G crall-thesis-2017/tmp/figures1
+    QmUYQFvdWEVYEsmf5wNfHTPzWrHtaiZjcSanf5FsD74NYu crall-thesis-2017/tmp/figures2
+    QmNqvbG1ng6z3bATR4XRyPiSGVExHaoLUQszqYFeARrBoc crall-thesis-2017/tmp/figures3
+    QmeuC9tYezC75yRLrG7tvCT7tXrQYsLWtvVw62ZYGDEBBw crall-thesis-2017/tmp/figures4
+    QmWmkVJv48A5RTGSm8H92qUHvcKeKsKugHbYsua8ktMjQV crall-thesis-2017/tmp/figures5
+    QmTs6PB5148DouDWKAv8WB9Q2zdx3crCBb3W88bHjLLkfM crall-thesis-2017/tmp/figuresC
+    QmUf1YkuEdmEczm6j237rgtUwSKaNkL4uCCq4QFZrfDL2c crall-thesis-2017/tmp/figuresGraph
+    QmajtiHvGuQ4vbVPH36R6E5KAxpQao5R7XGre8aqa8iWPK crall-thesis-2017/tmp/figuresX
+    QmXwq83V6WBtd8vSV3JNHTyYvH3HiU6CzA46jDtSV6xGwD crall-thesis-2017/tmp/figuresY
+    QmZKeYDeVkKMbmEvL7ue8r8uG2TqB6aJXhX2dhNLKsawD3 crall-thesis-2017/tmp/figures_graph
+    QmZuc9FyH6mJ1hsMwKv77rbyGeWzLGCjrCd8gyXNtCh9JJ crall-thesis-2017/tmp/figures_new3
+    QmQd9zEb2SxbweNcLMGmnx34AvBJWCp4PUbrdgZkP1RTVG crall-thesis-2017/tmp/figures_pairclf
+    QmTD1nZ4pbrB1SnjkLGt9Cs37mZbabXqjn6YZaAKVEoSvY crall-thesis-2017
 
 Selected Figures
 ----------------
