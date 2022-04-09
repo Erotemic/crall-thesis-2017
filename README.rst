@@ -55,14 +55,14 @@ The bibtex citation entry is:
 Full Text and Slides
 --------------------
 
-The full text PDF can be 
+The full text PDF is available on GitHub to be 
 `viewed <https://github.com/Erotemic/crall-thesis-2017/blob/master/crall-thesis_2017-08-10_compressed.pdf>`__ or 
 `downloaded <https://github.com/Erotemic/crall-thesis-2017/raw/master/crall-thesis_2017-08-10_compressed.pdf>`__.
 
-I've hosted my `defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__ on Google slides 
-and on IPFS: QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi
-
-I've hosted my `candidacy presentation (2016-05)<https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4`__ on Google slides and IPFS: QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs
+Google slides hosts my original 
+`defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__  and 
+`candidacy presentation (2016-05)<https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4`__. These can
+also be found on IPFS via the following CIDS: ``QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi`` and ``QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs``.
 
 Full Source
 -----------
