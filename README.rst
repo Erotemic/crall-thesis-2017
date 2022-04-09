@@ -111,6 +111,14 @@ this thesis and others are provided by the WildMe organization:
 https://www.wildme.org/
 
 
+Related Work
+------------
+
+https://github.com/bluemellophone/dissertation
+
+https://hjweide.github.io/research/
+
+
 Selected Figures
 ----------------
 
