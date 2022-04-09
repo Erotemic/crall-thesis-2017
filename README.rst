@@ -1,6 +1,7 @@
 Identifying Individual Animals using Ranking, Verification, and Connectivity
 ============================================================================
 
+.. image:: https://i.imgur.com/d9kLQFM.png
 
 Abstract
 --------
@@ -69,7 +70,7 @@ Full Source
 
 The final state of the repo including all images needed to reproduce the PDF
 have been uploaded to IPFS (as of 2022-04-09).  The root CID is:
-`QmZWPX28XZeR8YuR5EqJcyYgbkTg9mwknDsLmRQQMRmiET`. And the main relevant data
+``QmTD1nZ4pbrB1SnjkLGt9Cs37mZbabXqjn6YZaAKVEoSvY``. And the main relevant data
 CIDS are:
 
 .. code:: 
@@ -95,6 +96,7 @@ Selected Figures
 
 The following is a selection of figures from the this that provides a visual
 summary of the contents.
+
 
 .. image:: https://i.imgur.com/yvRcGu7.png
 .. image:: https://i.imgur.com/5XYRAly.png
