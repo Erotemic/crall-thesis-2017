@@ -57,8 +57,8 @@ Full Text and Slides
 --------------------
 
 The full text PDF is available on GitHub to be 
-`viewed <https://github.com/Erotemic/crall-thesis-2017/blob/master/crall-thesis_2017-08-10_compressed.pdf>`__ or 
-`downloaded <https://github.com/Erotemic/crall-thesis-2017/raw/master/crall-thesis_2017-08-10_compressed.pdf>`__.
+`viewed <https://github.com/Erotemic/crall-thesis-2017/blob/main/crall-thesis_2017-08-10_compressed.pdf>`__ or 
+`downloaded <https://github.com/Erotemic/crall-thesis-2017/raw/main/crall-thesis_2017-08-10_compressed.pdf>`__.
 
 Google slides hosts my original 
 `defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__  and 
