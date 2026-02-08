@@ -40,7 +40,7 @@ required by the original method.
 Citation
 --------
 
-The bibtex citation entry is: 
+The bibtex citation entry is:
 
 .. code:: bibtex
 
@@ -56,12 +56,14 @@ The bibtex citation entry is:
 Full Text and Slides
 --------------------
 
-The full text PDF is available on GitHub to be 
-`viewed <https://github.com/Erotemic/crall-thesis-2017/blob/main/crall-thesis_2017-08-10_compressed.pdf>`__ or 
+The full text PDF is available on GitHub to be
+`viewed <https://github.com/Erotemic/crall-thesis-2017/blob/main/crall-thesis_2017-08-10_compressed.pdf>`__ or
 `downloaded <https://github.com/Erotemic/crall-thesis-2017/raw/main/crall-thesis_2017-08-10_compressed.pdf>`__.
 
-Google slides hosts my original 
-`defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__  and 
+The paper is also `hosted on DeSci <https://nodes.desci.com/node/0LvWmUdQYgMqTOCGT5h4Nz8CBZBHTpWWg18ROeUikxg?shareId=j3uW5AxBvd>`__.
+
+Google slides hosts my original
+`defense presentation (2017-07) <https://docs.google.com/presentation/d/1mhq76mL98ViPaIELM8-t1786RGg5cPFLJcZxPAMhM8g>`__  and
 `candidacy presentation (2016-05) <https://docs.google.com/presentation/d/1OHchKzz6-hoh8imlrrP-SkpW7YKEbF2GF7Pdl8bzWW4>`__. These can
 also be found on IPFS via the following CIDS: ``QmezNaQ2GypcN8951DxXWEkZdwxtZb8tohWKjHqqGVRDUi`` and ``QmZDsmeJTwiQKFeCAWA5Vpq1hrK96xkmmLfgkSQ2DDp5qs``.
 
@@ -73,7 +75,7 @@ have been uploaded to IPFS (as of 2022-04-09).  The root CID is:
 ``QmTD1nZ4pbrB1SnjkLGt9Cs37mZbabXqjn6YZaAKVEoSvY``. And the main relevant data
 CIDS are:
 
-.. code:: 
+.. code::
 
     QmUkJhNSLDSgBnvxu5TLiXGU8LCR7tfS9s2meWCZZQ6bnL crall-thesis-2017/guts
     QmScScfpeKA2CtShuin5o5af5MN3NFhQBLeDqEUb435qXu crall-thesis-2017/notes
