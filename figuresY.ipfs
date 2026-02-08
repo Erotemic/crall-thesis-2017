@@ -1,0 +1,17 @@
+type: ipfs-sidecar
+cid: bafybeihy43zzpirzedtg4oioam4t2rq4ut3no7eeskx5i6ufu633so6jpq
+rel_path: figuresY
+size: 10.10 MiB
+num_items: 114
+add_config:
+  path: figuresY
+  name:
+  recursive: true
+  progress: true
+  cid_version: 1
+  raw_leaves: false
+  only_hash: false
+  pin: true
+  sidecar: true
+add_datetime: 2026-02-07T194132-5
+add_duration: 0.3338940649991855

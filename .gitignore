@@ -32,6 +32,7 @@
 figures/*
 figures[1-9]/*
 figures[A-Z]/*
+figuresGraph
 _oldfigures
 unused_figures
 
